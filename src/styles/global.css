@@ -64,14 +64,22 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
+  max-width: calc(100% - 180px);
+  overflow-x: auto;
   padding: 5px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
+  scrollbar-width: none;
+}
+
+.site-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .site-nav a {
-  min-width: 52px;
+  flex: 0 0 auto;
+  min-width: max-content;
   padding: 8px 12px;
   border-radius: 6px;
   color: var(--muted);
@@ -343,12 +351,8 @@ h2 {
   }
 
   .site-nav {
+    max-width: 100%;
     width: 100%;
-    justify-content: space-between;
-  }
-
-  .site-nav a {
-    flex: 1;
   }
 
   .hero {

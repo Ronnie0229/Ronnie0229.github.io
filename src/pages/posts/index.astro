@@ -39,13 +39,34 @@ const categories = [...new Set(posts.map((post) => post.data.category))].sort();
   <script>
     const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
     const cards = document.querySelectorAll<HTMLElement>("[data-category]");
+    const availableFilters = new Set(
+      Array.from(buttons, (button) => button.dataset.filter).filter(Boolean)
+    );
+
+    const applyFilter = (filter: string) => {
+      const selectedFilter = availableFilters.has(filter) ? filter : "全部";
+      buttons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.filter === selectedFilter);
+      });
+      cards.forEach((card) => {
+        card.hidden = selectedFilter !== "全部" && card.dataset.category !== selectedFilter;
+      });
+    };
+
+    const initialFilter = new URLSearchParams(window.location.search).get("category") || "全部";
+    applyFilter(initialFilter);
+
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        const filter = button.dataset.filter;
-        buttons.forEach((item) => item.classList.toggle("active", item === button));
-        cards.forEach((card) => {
-          card.hidden = filter !== "全部" && card.dataset.category !== filter;
-        });
+        const filter = button.dataset.filter || "全部";
+        applyFilter(filter);
+        const url = new URL(window.location.href);
+        if (filter === "全部") {
+          url.searchParams.delete("category");
+        } else {
+          url.searchParams.set("category", filter);
+        }
+        window.history.replaceState({}, "", url);
       });
     });
   </script>
