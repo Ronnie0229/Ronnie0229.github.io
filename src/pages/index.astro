@@ -10,13 +10,13 @@ const latestPost = posts[0];
 const otherPosts = posts.slice(1, 4);
 ---
 
-<BaseLayout title="Ronnie | 个人文章主页" description="Ronnie 的个人主页，记录文章、思考和生活片段。">
+<BaseLayout title="Ronnie | 讲道文章主页" description="Ronnie 的个人主页，整理和发布中文讲道文章。">
   <section class="hero">
     <div class="hero-copy">
       <p class="eyebrow">Latest writing</p>
-      <h1>把最近的想法，整理成可以反复阅读的文字。</h1>
+      <h1>把讲道内容，整理成可以安静阅读的文字。</h1>
       <p class="hero-text">
-        这里是 Ronnie 的个人文章主页。先从几篇占位文章开始，等设计满意后，可以把它们替换成真实的经历、随笔和学习记录。
+        这里是 Ronnie 的个人文章主页。讲道内容已经按时间整理为 Markdown，最新内容会优先显示，方便阅读和后续继续发布。
       </p>
     </div>
     {
@@ -57,9 +57,9 @@ const otherPosts = posts.slice(1, 4);
 
   <section id="about" class="about-panel">
     <p class="eyebrow">About Ronnie</p>
-    <h2>这是一个安静的个人空间。</h2>
+    <h2>这是一个整理讲道文章的空间。</h2>
     <p>
-      可以用来发布个人文章、学习笔记、项目复盘和生活记录。当前内容是占位文案，后续只需要新增或修改 Markdown 文件，就能更新网站。
+      原始资料保留在本地目录中，网站发布使用整理后的 Markdown 文件。后续新增讲道内容时，可以继续运行导入脚本生成新的文章。
     </p>
   </section>
 </BaseLayout>
