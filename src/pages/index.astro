@@ -27,6 +27,7 @@ const otherPosts = posts.slice(1, 4);
           date={latestPost.data.date}
           href={`/posts/${latestPost.slug}/`}
           tags={latestPost.data.tags}
+          category={latestPost.data.category}
           featured
         />
       )
@@ -50,6 +51,7 @@ const otherPosts = posts.slice(1, 4);
           date={post.data.date}
           href={`/posts/${post.slug}/`}
           tags={post.data.tags}
+          category={post.data.category}
         />
       ))
     }

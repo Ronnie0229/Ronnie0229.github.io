@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 教会讲道/
+分享/
 
 .DS_Store
 Thumbs.db

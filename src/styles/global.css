@@ -233,6 +233,35 @@ h2 {
   padding-bottom: 72px;
 }
 
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -22px 0 26px;
+}
+
+.category-filter button {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 9px 13px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.category-filter button:hover,
+.category-filter button.active {
+  border-color: rgba(102, 163, 255, 0.48);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.post-card[hidden] {
+  display: none;
+}
+
 .about-panel {
   margin: 72px 0;
   border: 1px solid var(--line);

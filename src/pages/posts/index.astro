@@ -6,6 +6,7 @@ import PostCard from "../../components/PostCard.astro";
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
+const categories = [...new Set(posts.map((post) => post.data.category))].sort();
 ---
 
 <BaseLayout title="全部讲道文章 | Ronnie" description="Ronnie 的全部讲道文章列表。">
@@ -14,6 +15,11 @@ const posts = (await getCollection("posts")).sort(
     <h1>全部讲道文章</h1>
     <p>这里按发布时间展示整理后的中文讲道文章，最新内容排在最前面。</p>
   </section>
+
+  <div class="category-filter" aria-label="文章分类筛选">
+    <button class="active" type="button" data-filter="全部">全部</button>
+    {categories.map((category) => <button type="button" data-filter={category}>{category}</button>)}
+  </div>
 
   <section class="post-list" aria-label="全部文章列表">
     {
@@ -24,8 +30,23 @@ const posts = (await getCollection("posts")).sort(
           date={post.data.date}
           href={`/posts/${post.slug}/`}
           tags={post.data.tags}
+          category={post.data.category}
         />
       ))
     }
   </section>
+
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+    const cards = document.querySelectorAll<HTMLElement>("[data-category]");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter;
+        buttons.forEach((item) => item.classList.toggle("active", item === button));
+        cards.forEach((card) => {
+          card.hidden = filter !== "全部" && card.dataset.category !== filter;
+        });
+      });
+    });
+  </script>
 </BaseLayout>
