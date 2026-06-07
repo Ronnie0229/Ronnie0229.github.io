@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Ronnie",
+  description = "Ronnie 的个人主页与文章空间"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Ronnie 首页">Ronnie</a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/">首页</a>
+          <a href="/posts/">文章</a>
+          <a href="#about">关于</a>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span>Ronnie</span>
+        <span>写下思考，也整理生活。</span>
+      </footer>
+    </div>
+  </body>
+</html>

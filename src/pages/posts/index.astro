@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="全部文章 | Ronnie" description="Ronnie 的全部文章列表。">
+  <section class="page-heading">
+    <p class="eyebrow">All posts</p>
+    <h1>全部文章</h1>
+    <p>这里会按发布时间展示所有 Markdown 文章。</p>
+  </section>
+
+  <section class="post-list" aria-label="全部文章列表">
+    {
+      posts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          href={`/posts/${post.slug}/`}
+          tags={post.data.tags}
+        />
+      ))
+    }
+  </section>
+</BaseLayout>

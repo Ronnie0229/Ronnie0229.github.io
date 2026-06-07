@@ -1,0 +1,15 @@
+{
+  "name": "ronnie-homepage",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "set ASTRO_TELEMETRY_DISABLED=1&& astro dev",
+    "build": "set ASTRO_TELEMETRY_DISABLED=1&& astro build",
+    "preview": "set ASTRO_TELEMETRY_DISABLED=1&& astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {}
+}

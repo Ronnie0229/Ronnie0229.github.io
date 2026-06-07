@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  href: string;
+  tags?: string[];
+  featured?: boolean;
+}
+
+const { title, description, date, href, tags = [], featured = false } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+}).format(date);
+---
+
+<article class:list={["post-card", { featured }]}>
+  <a href={href} class="post-card-link">
+    <div class="post-card-meta">
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+      {featured && <span>最新</span>}
+    </div>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    {
+      tags.length > 0 && (
+        <div class="tag-list" aria-label="文章标签">
+          {tags.map((tag) => <span>{tag}</span>)}
+        </div>
+      )
+    }
+  </a>
+</article>
