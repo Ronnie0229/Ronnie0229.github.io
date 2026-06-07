@@ -6,7 +6,9 @@ import PostCard from "../../components/PostCard.astro";
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-const categories = [...new Set(posts.map((post) => post.data.category))].sort();
+const categoryOrder = ["圣经学习", "灵命成长", "分享见证", "圣诞节", "复活节", "婚姻家庭"];
+const availableCategories = new Set(posts.map((post) => post.data.category));
+const categories = categoryOrder.filter((category) => availableCategories.has(category));
 ---
 
 <BaseLayout title="全部讲道文章 | Ronnie" description="Ronnie 的全部讲道文章列表。">
