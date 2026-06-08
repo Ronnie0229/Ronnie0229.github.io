@@ -72,12 +72,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
             }
 
             if (counter && Number.isFinite(data.count)) {
-              counter.textContent = Number(data.count).toLocaleString("zh-CN");
-              counter.closest("[data-visit-counter]")?.removeAttribute("hidden");
+              counter.textContent = `${Number(data.count).toLocaleString("zh-CN")} 次`;
             }
           })
           .catch(() => {
-            // Keep the optional counter hidden if the service is unavailable.
+            if (counter) counter.textContent = "暂时无法读取";
           });
       })();
     </script>
