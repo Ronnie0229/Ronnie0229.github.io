@@ -118,6 +118,8 @@ def scripture_from_body(body: str) -> str:
 
 
 def category_for(title: str) -> str:
+    if "使徒行传22" in title.replace(" ", "") and "保罗的见证" in title:
+        return "圣经学习"
     for category, keywords in CATEGORY_RULES:
         if any(keyword.lower() in title.lower() for keyword in keywords):
             return category
