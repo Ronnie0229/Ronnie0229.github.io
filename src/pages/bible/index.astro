@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  getBooksForScripture,
+  NEW_TESTAMENT_BOOKS,
+  OLD_TESTAMENT_BOOKS
+} from "../../data/bible";
+
+const posts = await getCollection("posts");
+const bookCounts = new Map<string, number>();
+
+for (const post of posts) {
+  for (const book of getBooksForScripture(post.data.scripture)) {
+    bookCounts.set(book, (bookCounts.get(book) ?? 0) + 1);
+  }
+}
+
+const testamentSections = [
+  {
+    title: "旧约",
+    books: OLD_TESTAMENT_BOOKS.filter((book) => bookCounts.has(book))
+  },
+  {
+    title: "新约",
+    books: NEW_TESTAMENT_BOOKS.filter((book) => bookCounts.has(book))
+  }
+];
+---
+
+<BaseLayout title="圣经书卷 | Ronnie" description="按照圣经书卷浏览已发布的文章。">
+  <section class="page-heading bible-heading">
+    <p class="eyebrow">圣经书卷</p>
+    <h1>按书卷阅读</h1>
+    <p>从已发布文章的经文字段自动整理，按圣经书卷顺序浏览。</p>
+  </section>
+
+  <div class="bible-sections">
+    {
+      testamentSections.map((section) => (
+        <section class="bible-section" aria-labelledby={`${section.title}-heading`}>
+          <div class="bible-section-heading">
+            <h2 id={`${section.title}-heading`}>{section.title}</h2>
+            <span>{section.books.length} 卷</span>
+          </div>
+          <div class="book-grid">
+            {section.books.map((book) => (
+              <a class="book-link" href={`/bible/${book}/`}>
+                <strong>{book}</strong>
+                <span>{bookCounts.get(book)} 篇文章</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

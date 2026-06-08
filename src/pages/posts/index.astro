@@ -6,22 +6,14 @@ import PostCard from "../../components/PostCard.astro";
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-const categoryOrder = ["教会讲道", "灵命成长"];
-const availableCategories = new Set(posts.map((post) => post.data.category));
-const categories = categoryOrder.filter((category) => availableCategories.has(category));
 ---
 
 <BaseLayout title="全部文章 | Ronnie" description="Ronnie 的全部文章列表。">
-  <section class="page-heading">
-    <p class="eyebrow">全部文章</p>
-    <h1>文章列表</h1>
-    <p>这里按发布时间展示整理后的中文文章，最新内容排在最前面。</p>
+  <section class="page-heading posts-heading">
+    <p class="eyebrow" data-category-eyebrow>全部文章</p>
+    <h1 data-category-title>文章总览</h1>
+    <p data-category-description>汇集所有已发布的文章，按发布时间从新到旧排列。</p>
   </section>
-
-  <div class="category-filter" aria-label="文章分类筛选">
-    <button class="active" type="button" data-filter="全部">全部</button>
-    {categories.map((category) => <button type="button" data-filter={category}>{category}</button>)}
-  </div>
 
   <section class="post-list" aria-label="全部文章列表">
     {
@@ -41,15 +33,34 @@ const categories = categoryOrder.filter((category) => availableCategories.has(ca
 
   <script>
     const pageSize = 20;
-    const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
     const cards = document.querySelectorAll<HTMLElement>("[data-category]");
     const pagination = document.querySelector<HTMLElement>(".pagination");
-    const availableFilters = new Set(
-      Array.from(buttons, (button) => button.dataset.filter).filter(Boolean)
-    );
+    const availableFilters = new Set(Array.from(cards, (card) => card.dataset.category));
+    const headingEyebrow = document.querySelector<HTMLElement>("[data-category-eyebrow]");
+    const headingTitle = document.querySelector<HTMLElement>("[data-category-title]");
+    const headingDescription = document.querySelector<HTMLElement>("[data-category-description]");
+    const categoryHeadings = {
+      全部: {
+        eyebrow: "全部文章",
+        title: "文章总览",
+        description: "汇集所有已发布的文章，按发布时间从新到旧排列。"
+      },
+      教会讲道: {
+        eyebrow: "教会讲道",
+        title: "聆听与研读",
+        description: "收录明确归类为教会讲道的内容，整理经文信息，方便安静阅读与回顾。"
+      },
+      灵命成长: {
+        eyebrow: "灵命成长",
+        title: "信仰与生活",
+        description: "收录个人分享、见证与信仰生活的整理，在日常经历中学习并活出真理。"
+      }
+    } as const;
 
     const applyFilter = (filter: string, requestedPage = 1) => {
       const selectedFilter = availableFilters.has(filter) ? filter : "全部";
+      const heading =
+        categoryHeadings[selectedFilter as keyof typeof categoryHeadings] ?? categoryHeadings.全部;
       const filteredCards = Array.from(cards).filter(
         (card) => selectedFilter === "全部" || card.dataset.category === selectedFilter
       );
@@ -58,12 +69,14 @@ const categories = categoryOrder.filter((category) => availableCategories.has(ca
       const firstIndex = (currentPage - 1) * pageSize;
       const visibleCards = new Set(filteredCards.slice(firstIndex, firstIndex + pageSize));
 
-      buttons.forEach((button) => {
-        button.classList.toggle("active", button.dataset.filter === selectedFilter);
-      });
       cards.forEach((card) => {
         card.hidden = !visibleCards.has(card);
       });
+
+      if (headingEyebrow) headingEyebrow.textContent = heading.eyebrow;
+      if (headingTitle) headingTitle.textContent = heading.title;
+      if (headingDescription) headingDescription.textContent = heading.description;
+      document.title = `${heading.eyebrow} | Ronnie`;
 
       if (pagination) {
         pagination.replaceChildren();
@@ -104,19 +117,12 @@ const categories = categoryOrder.filter((category) => availableCategories.has(ca
         url.searchParams.set("page", String(state.currentPage));
       }
       window.history.replaceState({}, "", url);
-      document.querySelector(".page-heading")?.scrollIntoView({ behavior: "smooth" });
+      document.querySelector(".posts-heading")?.scrollIntoView({ behavior: "smooth" });
     };
 
     const params = new URLSearchParams(window.location.search);
     const initialFilter = params.get("category") || "全部";
     const initialPage = Number.parseInt(params.get("page") || "1", 10);
     applyFilter(initialFilter, Number.isFinite(initialPage) ? initialPage : 1);
-
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const filter = button.dataset.filter || "全部";
-        updateView(filter, 1);
-      });
-    });
   </script>
 </BaseLayout>

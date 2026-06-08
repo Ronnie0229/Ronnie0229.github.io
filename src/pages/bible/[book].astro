@@ -1,0 +1,112 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { BIBLE_BOOKS, getBooksForScripture } from "../../data/bible";
+
+interface Props {
+  book: string;
+  posts: CollectionEntry<"posts">[];
+}
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("posts")).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  );
+
+  return BIBLE_BOOKS.map((book) => ({
+    book,
+    posts: posts.filter((post) => getBooksForScripture(post.data.scripture).includes(book))
+  }))
+    .filter(({ posts }) => posts.length > 0)
+    .map(({ book, posts }) => ({
+      params: { book },
+      props: { book, posts }
+    }));
+}
+
+const { book, posts } = Astro.props;
+---
+
+<BaseLayout title={`${book} | 圣经书卷 | Ronnie`} description={`浏览与${book}有关的已发布文章。`}>
+  <section class="page-heading bible-book-heading">
+    <p class="eyebrow"><a href="/bible/">圣经书卷</a></p>
+    <h1>{book}</h1>
+    <p>共 {posts.length} 篇相关文章，按发布时间从新到旧排列。</p>
+  </section>
+
+  <section class="post-list bible-post-list" aria-label={`${book}文章列表`}>
+    {
+      posts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          href={`/posts/${post.slug}/`}
+          tags={post.data.tags}
+          category={post.data.category}
+        />
+      ))
+    }
+  </section>
+  <nav class="pagination bible-pagination" aria-label={`${book}文章分页`}></nav>
+
+  <script>
+    const pageSize = 20;
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>(".bible-post-list > .post-card")
+    );
+    const pagination = document.querySelector<HTMLElement>(".bible-pagination");
+
+    const showPage = (requestedPage: number) => {
+      const pageCount = Math.max(1, Math.ceil(cards.length / pageSize));
+      const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
+      const firstIndex = (currentPage - 1) * pageSize;
+
+      cards.forEach((card, index) => {
+        card.hidden = index < firstIndex || index >= firstIndex + pageSize;
+      });
+
+      if (pagination) {
+        pagination.replaceChildren();
+        if (pageCount > 1) {
+          const addButton = (label: string, page: number, active = false, disabled = false) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = label;
+            button.classList.toggle("active", active);
+            button.disabled = disabled;
+            button.setAttribute("aria-label", label);
+            button.addEventListener("click", () => updatePage(page));
+            pagination.append(button);
+          };
+
+          addButton("上一页", currentPage - 1, false, currentPage === 1);
+          for (let page = 1; page <= pageCount; page += 1) {
+            addButton(String(page), page, page === currentPage);
+          }
+          addButton("下一页", currentPage + 1, false, currentPage === pageCount);
+        }
+      }
+
+      return currentPage;
+    };
+
+    const updatePage = (page: number) => {
+      const currentPage = showPage(page);
+      const url = new URL(window.location.href);
+      if (currentPage === 1) {
+        url.searchParams.delete("page");
+      } else {
+        url.searchParams.set("page", String(currentPage));
+      }
+      window.history.replaceState({}, "", url);
+      document.querySelector(".bible-book-heading")?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const initialPage = Number.parseInt(params.get("page") || "1", 10);
+    showPage(Number.isFinite(initialPage) ? initialPage : 1);
+  </script>
+</BaseLayout>

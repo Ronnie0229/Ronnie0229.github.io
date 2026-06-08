@@ -284,28 +284,72 @@ h2 {
   padding-bottom: 72px;
 }
 
-.category-filter {
+.bible-heading {
+  padding-bottom: 30px;
+}
+
+.bible-sections {
+  display: grid;
+  gap: 52px;
+  padding-bottom: 80px;
+}
+
+.bible-section-heading {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: -22px 0 26px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
 }
 
-.category-filter button {
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 9px 13px;
-  background: rgba(255, 255, 255, 0.04);
+.bible-section-heading h2 {
+  margin: 0;
+}
+
+.bible-section-heading span {
   color: var(--muted);
-  font: inherit;
   font-size: 14px;
-  cursor: pointer;
 }
 
-.category-filter button:hover,
-.category-filter button.active {
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.book-link {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 17px 18px;
+  background: var(--panel);
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.book-link:hover {
   border-color: rgba(102, 163, 255, 0.48);
-  background: var(--accent-soft);
+  background: var(--panel-strong);
+}
+
+.book-link strong {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.book-link span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.bible-book-heading .eyebrow a:hover {
   color: var(--text);
 }
 
@@ -358,21 +402,94 @@ h2 {
   padding: 86px 0 48px;
 }
 
-.about-page {
-  width: min(760px, 100%);
-  min-height: 56vh;
-  padding: 120px 0 72px;
+.page-heading {
+  position: relative;
+  isolation: isolate;
+  min-height: 300px;
+  margin: 8px 0 48px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 72px 32px 42px;
+  background: #0a1018;
 }
 
-.about-page p {
+.page-heading::before,
+.page-heading::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+
+.page-heading::before {
+  background-image: url("/images/quiet-study-hero.png");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.66;
+}
+
+.page-heading::after {
+  background: rgba(3, 7, 12, 0.58);
+}
+
+.page-heading h1,
+.page-heading p {
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.72);
+}
+
+.about-page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: min(760px, 100%);
+  min-height: 56vh;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 120px 0 72px;
+  background: #0a1018;
+  place-items: center;
+}
+
+.about-page::before,
+.about-page::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+
+.about-page::before {
+  background-image: url("/images/quiet-study-hero.png");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.7;
+}
+
+.about-page::after {
+  background: rgba(3, 7, 12, 0.58);
+}
+
+.copyright-notice {
+  padding: 24px;
+  text-align: center;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.72);
+}
+
+.copyright-notice p {
   margin: 0;
   color: var(--soft);
   font-size: 18px;
   line-height: 1.9;
 }
 
-.about-page a {
+.copyright-notice a {
   color: var(--accent);
+  overflow-wrap: anywhere;
 }
 
 .page-heading h1,
@@ -454,6 +571,11 @@ h2 {
     padding: 40px 22px 24px;
   }
 
+  .page-heading {
+    min-height: 260px;
+    padding: 54px 22px 32px;
+  }
+
   .hero::before {
     background-position: 62% center;
     opacity: 0.52;
@@ -470,6 +592,10 @@ h2 {
 
   .post-grid {
     grid-template-columns: 1fr;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .site-footer {
@@ -490,6 +616,10 @@ h2 {
     padding: 34px 18px 18px;
   }
 
+  .page-heading {
+    padding: 44px 18px 28px;
+  }
+
   .hero-text,
   .page-heading p,
   .about-panel p,
@@ -500,5 +630,9 @@ h2 {
 
   .post-card-link {
     padding: 20px;
+  }
+
+  .book-grid {
+    grid-template-columns: 1fr;
   }
 }
