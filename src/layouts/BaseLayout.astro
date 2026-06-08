@@ -42,5 +42,44 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
         <span>活出耶稣的样式</span>
       </footer>
     </div>
+    <script is:inline>
+      (() => {
+        const storageKey = "ronniecross-visit-counted";
+        const counterUrl = "https://api.counterapi.dev/v1/ronniecross-com/site-visits";
+        const counter = document.querySelector("[data-site-visits]");
+        let counted = false;
+
+        try {
+          counted = window.sessionStorage.getItem(storageKey) === "1";
+        } catch {
+          counted = false;
+        }
+
+        if (counted && !counter) return;
+
+        fetch(counted ? counterUrl : `${counterUrl}/up`)
+          .then((response) => {
+            if (!response.ok) throw new Error("Counter request failed");
+            return response.json();
+          })
+          .then((data) => {
+            if (!counted) {
+              try {
+                window.sessionStorage.setItem(storageKey, "1");
+              } catch {
+                // The counter still works when session storage is unavailable.
+              }
+            }
+
+            if (counter && Number.isFinite(data.count)) {
+              counter.textContent = Number(data.count).toLocaleString("zh-CN");
+              counter.closest("[data-visit-counter]")?.removeAttribute("hidden");
+            }
+          })
+          .catch(() => {
+            // Keep the optional counter hidden if the service is unavailable.
+          });
+      })();
+    </script>
   </body>
 </html>
