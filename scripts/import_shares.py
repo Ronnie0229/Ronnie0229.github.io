@@ -33,7 +33,7 @@ THEOLOGY_REVIEW = (
 OVERRIDES = {
     "100不贫穷也不富足": ("箴言 30:1-9", "不贫穷也不富足：亚古珥关于知足的祷告", "教会讲道"),
     "114主祷文的奥秘": ("马太福音 6:9-13", "主祷文：从天父关系理解祷告", "灵命成长"),
-    "20220402 婚姻和教会": ("创世记 2:18-25", "婚姻与教会：在盟约中学习彼此相爱", "婚姻家庭"),
+    "20220402 婚姻和教会": ("创世记 2:18-25", "婚姻与教会：在盟约中学习彼此相爱", "灵命成长"),
     "20220423_悔改": ("路加福音 24:47", "悔改：蒙赦免并回转归向神", "灵命成长"),
     "20220520_新人而非好人": ("约翰福音 3:1-15", "成为新人，而不只是成为好人", "灵命成长"),
     "20220628‗受苦的意义": ("约伯记 42:1-6", "受苦的意义：从约伯的经历认识神", "教会讲道"),
@@ -136,16 +136,6 @@ BOOK_ALIASES = {
     "启": "启示录", "启示录": "启示录",
 }
 
-CATEGORY_RULES = [
-    ("圣诞节", ("圣诞", "降生", "马槽", "博士来朝")),
-    ("复活节", ("复活节", "复活", "十字架", "巴拉巴", "受难")),
-    ("VBS", ("vbs", "暑期圣经学校")),
-    ("分享见证", ("见证", "我的故事", "生命故事")),
-    ("婚姻家庭", ("婚姻", "家庭", "夫妻", "儿女", "父母")),
-    ("灵命成长", ("灵程", "祷告", "悔改", "重生", "信心", "恩典", "骄傲", "神的旨意", "门徒", "得救")),
-]
-
-
 def read_docx(path: Path) -> str:
     document = Document(path)
     paragraphs = [p.text.strip() for p in document.paragraphs if p.text.strip()]
@@ -233,14 +223,6 @@ def find_scripture(title: str, body: str) -> str:
     return ""
 
 
-def category_for(title: str, body: str) -> str:
-    sample = title.lower()
-    for category, keywords in CATEGORY_RULES:
-        if any(keyword.lower() in sample for keyword in keywords):
-            return category
-    return "教会讲道"
-
-
 def slugify(value: str) -> str:
     value = value.lower()
     value = re.sub(r"[\s_：:;；,，.。()（）\[\]【】/\\|｜?？\"“”]+", "-", value)
@@ -284,10 +266,10 @@ def main() -> None:
         summary = clean_summary_title(source)
         override = OVERRIDES.get(source.stem)
         if override:
-            scripture, summary, category = override
+            scripture, summary, _previous_category = override
         else:
             scripture = find_scripture(summary, body)
-            category = category_for(summary, body)
+        category = "灵命成长"
         date = source_date(source)
         title = f"{scripture}｜{summary}" if scripture else summary
         reviewed = False

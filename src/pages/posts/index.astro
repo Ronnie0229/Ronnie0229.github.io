@@ -6,16 +6,16 @@ import PostCard from "../../components/PostCard.astro";
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-const categoryOrder = ["教会讲道", "灵命成长", "分享见证", "圣诞节", "复活节", "婚姻家庭"];
+const categoryOrder = ["教会讲道", "灵命成长"];
 const availableCategories = new Set(posts.map((post) => post.data.category));
 const categories = categoryOrder.filter((category) => availableCategories.has(category));
 ---
 
-<BaseLayout title="全部讲道文章 | Ronnie" description="Ronnie 的全部讲道文章列表。">
+<BaseLayout title="全部文章 | Ronnie" description="Ronnie 的全部文章列表。">
   <section class="page-heading">
-    <p class="eyebrow">All posts</p>
-    <h1>全部讲道文章</h1>
-    <p>这里按发布时间展示整理后的中文讲道文章，最新内容排在最前面。</p>
+    <p class="eyebrow">全部文章</p>
+    <h1>文章列表</h1>
+    <p>这里按发布时间展示整理后的中文文章，最新内容排在最前面。</p>
   </section>
 
   <div class="category-filter" aria-label="文章分类筛选">
@@ -37,38 +37,85 @@ const categories = categoryOrder.filter((category) => availableCategories.has(ca
       ))
     }
   </section>
+  <nav class="pagination" aria-label="文章分页"></nav>
 
   <script>
+    const pageSize = 20;
     const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
     const cards = document.querySelectorAll<HTMLElement>("[data-category]");
+    const pagination = document.querySelector<HTMLElement>(".pagination");
     const availableFilters = new Set(
       Array.from(buttons, (button) => button.dataset.filter).filter(Boolean)
     );
 
-    const applyFilter = (filter: string) => {
+    const applyFilter = (filter: string, requestedPage = 1) => {
       const selectedFilter = availableFilters.has(filter) ? filter : "全部";
+      const filteredCards = Array.from(cards).filter(
+        (card) => selectedFilter === "全部" || card.dataset.category === selectedFilter
+      );
+      const pageCount = Math.max(1, Math.ceil(filteredCards.length / pageSize));
+      const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
+      const firstIndex = (currentPage - 1) * pageSize;
+      const visibleCards = new Set(filteredCards.slice(firstIndex, firstIndex + pageSize));
+
       buttons.forEach((button) => {
         button.classList.toggle("active", button.dataset.filter === selectedFilter);
       });
       cards.forEach((card) => {
-        card.hidden = selectedFilter !== "全部" && card.dataset.category !== selectedFilter;
+        card.hidden = !visibleCards.has(card);
       });
+
+      if (pagination) {
+        pagination.replaceChildren();
+        if (pageCount > 1) {
+          const addButton = (label: string, page: number, active = false, disabled = false) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = label;
+            button.classList.toggle("active", active);
+            button.disabled = disabled;
+            button.setAttribute("aria-label", label);
+            button.addEventListener("click", () => updateView(selectedFilter, page));
+            pagination.append(button);
+          };
+
+          addButton("上一页", currentPage - 1, false, currentPage === 1);
+          for (let page = 1; page <= pageCount; page += 1) {
+            addButton(String(page), page, page === currentPage);
+          }
+          addButton("下一页", currentPage + 1, false, currentPage === pageCount);
+        }
+      }
+
+      return { selectedFilter, currentPage };
     };
 
-    const initialFilter = new URLSearchParams(window.location.search).get("category") || "全部";
-    applyFilter(initialFilter);
+    const updateView = (filter: string, page: number) => {
+      const state = applyFilter(filter, page);
+      const url = new URL(window.location.href);
+      if (state.selectedFilter === "全部") {
+        url.searchParams.delete("category");
+      } else {
+        url.searchParams.set("category", state.selectedFilter);
+      }
+      if (state.currentPage === 1) {
+        url.searchParams.delete("page");
+      } else {
+        url.searchParams.set("page", String(state.currentPage));
+      }
+      window.history.replaceState({}, "", url);
+      document.querySelector(".page-heading")?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const initialFilter = params.get("category") || "全部";
+    const initialPage = Number.parseInt(params.get("page") || "1", 10);
+    applyFilter(initialFilter, Number.isFinite(initialPage) ? initialPage : 1);
 
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         const filter = button.dataset.filter || "全部";
-        applyFilter(filter);
-        const url = new URL(window.location.href);
-        if (filter === "全部") {
-          url.searchParams.delete("category");
-        } else {
-          url.searchParams.set("category", filter);
-        }
-        window.history.replaceState({}, "", url);
+        updateView(filter, 1);
       });
     });
   </script>

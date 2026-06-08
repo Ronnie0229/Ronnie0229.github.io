@@ -25,13 +25,6 @@ SPEAKER_TAGS = {
     "Kaz": "Kaz",
 }
 
-CATEGORY_RULES = [
-    ("圣诞节", ("圣诞", "降生", "所应许的礼物", "礼物的宣告", "最伟大的礼物")),
-    ("复活节", ("复活节", "复活", "十字架", "伟大的交换")),
-    ("VBS", ("VBS",)),
-    ("分享见证", ("见证",)),
-]
-
 BOOKS = (
     "创世记", "出埃及记", "利未记", "民数记", "申命记", "约书亚记", "士师记", "路得记",
     "撒母耳记上", "撒母耳记下", "列王纪上", "列王纪下", "历代志上", "历代志下", "以斯拉记",
@@ -118,11 +111,6 @@ def scripture_from_body(body: str) -> str:
 
 
 def category_for(title: str) -> str:
-    if "使徒行传22" in title.replace(" ", "") and "保罗的见证" in title:
-        return "教会讲道"
-    for category, keywords in CATEGORY_RULES:
-        if any(keyword.lower() in title.lower() for keyword in keywords):
-            return category
     return "教会讲道"
 
 
@@ -258,9 +246,7 @@ def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
         body = decode_text(source_file)
     body = normalize_body(body)
     scripture = scripture or scripture_from_body(body)
-    if category == "分享见证":
-        title = f"{scripture}｜{summary or raw_title}" if scripture else (summary or raw_title)
-    elif scripture:
+    if scripture:
         title = f"{scripture}｜{summary or '经文讲解'}"
     else:
         title = summary or raw_title
