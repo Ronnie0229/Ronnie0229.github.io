@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ronniecross",
+  "compatibility_date": "2026-06-10",
+  "pages_build_output_dir": "./dist",
+  "d1_databases": [
+    {
+      "binding": "COMMENTS_DB",
+      "database_name": "ronniecross-comments",
+      "database_id": "0fabb3e7-403d-4269-a690-df7f9cb9e81f"
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+---
+interface Props {
+  postSlug: string;
+}
+
+const { postSlug } = Astro.props;
+---
+
+<section id="comments" class="comments" data-comments data-post-slug={postSlug}>
+  <div class="comments-heading">
+    <div>
+      <p class="eyebrow">留言交流</p>
+      <h2>留言</h2>
+    </div>
+    <span data-comment-count>正在读取</span>
+  </div>
+
+  <form class="comment-form" data-comment-form>
+    <input type="hidden" name="parentId" value="" />
+    <div class="replying-to" data-replying-to hidden>
+      <span></span>
+      <button type="button" data-cancel-reply>取消回复</button>
+    </div>
+    <label>
+      <span>昵称</span>
+      <input
+        name="authorName"
+        type="text"
+        maxlength="40"
+        autocomplete="name"
+        placeholder="请输入昵称"
+        required
+      />
+    </label>
+    <label>
+      <span>留言内容</span>
+      <textarea
+        name="content"
+        maxlength="2000"
+        rows="5"
+        placeholder="写下你的留言"
+        required
+      ></textarea>
+    </label>
+    <label class="comment-honeypot" aria-hidden="true">
+      <span>网站</span>
+      <input name="website" type="text" tabindex="-1" autocomplete="off" />
+    </label>
+    <div class="comment-form-footer">
+      <p data-comment-status aria-live="polite"></p>
+      <button type="submit">发布留言</button>
+    </div>
+  </form>
+
+  <div class="comment-list" data-comment-list>
+    <p class="comment-empty">正在读取留言...</p>
+  </div>
+</section>
+
+<script>
+  const formatDate = (value) =>
+    new Intl.DateTimeFormat("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).format(new Date(value));
+
+  document.querySelectorAll("[data-comments]").forEach((section) => {
+    const postSlug = section.getAttribute("data-post-slug");
+    const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    const apiUrl = localPreview
+      ? "https://ronniecross.com/api/comments"
+      : "/api/comments";
+    const form = section.querySelector("[data-comment-form]");
+    const list = section.querySelector("[data-comment-list]");
+    const count = section.querySelector("[data-comment-count]");
+    const status = section.querySelector("[data-comment-status]");
+    const parentInput = form.querySelector("[name='parentId']");
+    const authorInput = form.querySelector("[name='authorName']");
+    const contentInput = form.querySelector("[name='content']");
+    const replyingTo = form.querySelector("[data-replying-to]");
+    const replyingText = replyingTo.querySelector("span");
+    const submitButton = form.querySelector("[type='submit']");
+
+    const setReply = (comment) => {
+      parentInput.value = String(comment.id);
+      replyingText.textContent = `正在回复 ${comment.authorName}`;
+      replyingTo.hidden = false;
+      contentInput.focus();
+      form.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+
+    const clearReply = () => {
+      parentInput.value = "";
+      replyingTo.hidden = true;
+      replyingText.textContent = "";
+    };
+
+    const createComment = (comment, children, depth = 0) => {
+      const article = document.createElement("article");
+      article.className = "comment-item";
+      article.style.setProperty("--comment-depth", String(Math.min(depth, 3)));
+
+      const header = document.createElement("div");
+      header.className = "comment-meta";
+
+      const author = document.createElement("strong");
+      author.textContent = comment.authorName;
+
+      const time = document.createElement("time");
+      time.dateTime = comment.createdAt;
+      time.textContent = formatDate(comment.createdAt);
+
+      const content = document.createElement("p");
+      content.className = "comment-content";
+      content.textContent = comment.content;
+
+      const reply = document.createElement("button");
+      reply.className = "comment-reply";
+      reply.type = "button";
+      reply.textContent = "回复";
+      reply.addEventListener("click", () => setReply(comment));
+
+      header.append(author, time);
+      article.append(header, content, reply);
+
+      const replies = children.get(comment.id) || [];
+      replies.forEach((child) => article.append(createComment(child, children, depth + 1)));
+
+      return article;
+    };
+
+    const renderComments = (comments) => {
+      list.replaceChildren();
+      count.textContent = `${comments.length} 条留言`;
+
+      if (!comments.length) {
+        const empty = document.createElement("p");
+        empty.className = "comment-empty";
+        empty.textContent = "还没有留言，欢迎留下第一条。";
+        list.append(empty);
+        return;
+      }
+
+      const children = new Map();
+      const roots = [];
+
+      comments.forEach((comment) => {
+        if (comment.parentId) {
+          const replies = children.get(comment.parentId) || [];
+          replies.push(comment);
+          children.set(comment.parentId, replies);
+        } else {
+          roots.push(comment);
+        }
+      });
+
+      roots.reverse().forEach((comment) => list.append(createComment(comment, children)));
+    };
+
+    const loadComments = async () => {
+      try {
+        const response = await fetch(`${apiUrl}?slug=${encodeURIComponent(postSlug)}`, {
+          cache: "no-store"
+        });
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.error || "暂时无法读取留言");
+        renderComments(data.comments || []);
+      } catch (error) {
+        count.textContent = "读取失败";
+        list.innerHTML = '<p class="comment-empty">暂时无法读取留言，请稍后再试。</p>';
+      }
+    };
+
+    section.querySelector("[data-cancel-reply]").addEventListener("click", clearReply);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "正在发布...";
+      submitButton.disabled = true;
+
+      const formData = new FormData(form);
+      const payload = {
+        postSlug,
+        parentId: formData.get("parentId") || null,
+        authorName: formData.get("authorName"),
+        content: formData.get("content"),
+        website: formData.get("website")
+      };
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.error || "发布失败");
+
+        contentInput.value = "";
+        clearReply();
+        status.textContent = "留言已发布";
+        await loadComments();
+      } catch (error) {
+        status.textContent = error instanceof Error ? error.message : "发布失败，请稍后再试";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    try {
+      const savedName = window.localStorage.getItem("ronniecross-comment-name");
+      if (savedName) authorInput.value = savedName;
+      authorInput.addEventListener("change", () => {
+        window.localStorage.setItem("ronniecross-comment-name", authorInput.value.trim());
+      });
+    } catch {
+      // 留言功能不依赖本地存储。
+    }
+
+    loadComments();
+  });
+</script>
