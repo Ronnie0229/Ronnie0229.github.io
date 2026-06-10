@@ -573,6 +573,11 @@ h2 {
   margin-bottom: 10px;
 }
 
+.article-return-link {
+  display: inline-block;
+  margin-top: 34px;
+}
+
 .comments {
   margin-top: 64px;
   border-top: 1px solid var(--line);

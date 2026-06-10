@@ -41,20 +41,29 @@ const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.categ
     <div class="article-content">
       <Content />
     </div>
+    <a
+      class="text-link article-return-link"
+      href={fallbackReturnUrl}
+      data-return-to-post={post.slug}
+    >
+      返回文章列表
+    </a>
     <Comments postSlug={post.slug} />
   </article>
 
   <script>
-    const returnLink = document.querySelector<HTMLAnchorElement>("[data-return-to-post]");
-    const postSlug = returnLink?.dataset.returnToPost;
+    const returnLinks = document.querySelectorAll<HTMLAnchorElement>("[data-return-to-post]");
+    const postSlug = returnLinks[0]?.dataset.returnToPost;
 
-    if (returnLink && postSlug) {
+    if (returnLinks.length && postSlug) {
       try {
         const savedReturnUrl = window.sessionStorage.getItem(`ronniecross-return-${postSlug}`);
         if (savedReturnUrl) {
           const url = new URL(savedReturnUrl);
           if (url.origin === window.location.origin) {
-            returnLink.href = `${url.pathname}${url.search}${url.hash}`;
+            returnLinks.forEach((link) => {
+              link.href = `${url.pathname}${url.search}${url.hash}`;
+            });
           }
         }
       } catch {
