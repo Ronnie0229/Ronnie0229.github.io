@@ -38,6 +38,9 @@ const postSlug = href.split("/").filter(Boolean).at(-1) ?? "";
         </div>
       )
     }
+    <div class="post-card-views" aria-label="文章阅读次数">
+      阅读 <span data-post-views={postSlug}>--</span> 次
+    </div>
   </a>
 </article>
 

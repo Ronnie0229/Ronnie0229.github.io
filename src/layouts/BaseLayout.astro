@@ -85,5 +85,93 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
           });
       })();
     </script>
+    <script is:inline>
+      (() => {
+        const counters = Array.from(document.querySelectorAll("[data-post-views]"));
+        if (!counters.length) return;
+
+        const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+        const apiUrl = localPreview
+          ? "https://ronniecross.com/api/views"
+          : "/api/views";
+        const formatCount = (value) => Number(value || 0).toLocaleString("zh-CN");
+        const setCount = (slug, value) => {
+          counters
+            .filter((counter) => counter.getAttribute("data-post-views") === slug)
+            .forEach((counter) => {
+              counter.textContent = formatCount(value);
+            });
+        };
+        const slugs = [
+          ...new Set(
+            counters
+              .map((counter) => counter.getAttribute("data-post-views"))
+              .filter(Boolean)
+          )
+        ];
+        const incrementCounter = counters.find((counter) =>
+          counter.hasAttribute("data-increment-view")
+        );
+        const incrementSlug = incrementCounter?.getAttribute("data-post-views");
+        let counted = false;
+
+        if (incrementSlug) {
+          try {
+            counted =
+              window.sessionStorage.getItem(`ronniecross-viewed-${incrementSlug}`) === "1";
+          } catch {
+            counted = false;
+          }
+        }
+
+        const loadCounts = async () => {
+          const batchSize = 50;
+
+          for (let index = 0; index < slugs.length; index += batchSize) {
+            const batch = slugs.slice(index, index + batchSize);
+            const params = new URLSearchParams();
+            batch.forEach((slug) => params.append("slug", slug));
+
+            try {
+              const response = await fetch(`${apiUrl}?${params}`, { cache: "no-store" });
+              const data = await response.json();
+              if (!response.ok) throw new Error("View count request failed");
+
+              Object.entries(data.views || {}).forEach(([slug, value]) => {
+                setCount(slug, value);
+              });
+            } catch {
+              // 保留占位符，避免把接口故障误显示成零次阅读。
+            }
+          }
+        };
+
+        const incrementView = async () => {
+          if (!incrementSlug || counted) return;
+
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ postSlug: incrementSlug })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error("View count update failed");
+
+            setCount(incrementSlug, data.viewCount);
+
+            try {
+              window.sessionStorage.setItem(`ronniecross-viewed-${incrementSlug}`, "1");
+            } catch {
+              // 阅读计数不依赖本地存储才能显示。
+            }
+          } catch {
+            // 保留批量读取到的计数。
+          }
+        };
+
+        loadCounts().then(incrementView);
+      })();
+    </script>
   </body>
 </html>

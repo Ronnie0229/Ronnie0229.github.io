@@ -33,6 +33,9 @@ const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.categ
     <header class="article-header">
       <p class="eyebrow">{formattedDate}</p>
       <h1>{post.data.title}</h1>
+      <p class="article-view-count">
+        阅读 <span data-post-views={post.slug} data-increment-view>--</span> 次
+      </p>
       <p>{post.data.description}</p>
       <div class="tag-list">
         {post.data.tags.map((tag) => <span>{tag}</span>)}

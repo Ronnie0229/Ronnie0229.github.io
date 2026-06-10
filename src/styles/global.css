@@ -270,6 +270,17 @@ h2 {
   font-size: 13px;
 }
 
+.post-card-views {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-card-views span {
+  color: var(--soft);
+}
+
 .section-header {
   display: flex;
   align-items: end;
@@ -539,6 +550,17 @@ h2 {
 
 .article-header {
   padding: 34px 0 26px;
+}
+
+.article-view-count {
+  margin: -4px 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.article-view-count span {
+  color: var(--soft);
 }
 
 .article-content {
