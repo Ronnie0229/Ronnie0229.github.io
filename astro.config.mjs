@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://ronniecross.com"
+  site: "https://ronniecross.com",
+  publicDir: "./assets"
 });

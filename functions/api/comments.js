@@ -33,7 +33,46 @@ export async function onRequestGet({ request, env }) {
     return json({ error: "留言数据库尚未配置" }, 503);
   }
 
-  const postSlug = cleanText(new URL(request.url).searchParams.get("slug"));
+  const url = new URL(request.url);
+  const postSlugs = url.searchParams
+    .getAll("slug")
+    .map(cleanText)
+    .filter(Boolean);
+
+  if (url.searchParams.get("mode") === "counts") {
+    const uniqueSlugs = [...new Set(postSlugs)];
+
+    if (
+      !uniqueSlugs.length ||
+      uniqueSlugs.length > 50 ||
+      uniqueSlugs.some((slug) => slug.length > MAX_SLUG_LENGTH)
+    ) {
+      return json({ error: "文章地址无效" }, 400);
+    }
+
+    try {
+      const placeholders = uniqueSlugs.map(() => "?").join(", ");
+      const result = await env.COMMENTS_DB.prepare(
+        `SELECT post_slug AS postSlug, COUNT(*) AS commentCount
+         FROM comments
+         WHERE status = 'visible' AND post_slug IN (${placeholders})
+         GROUP BY post_slug`
+      )
+        .bind(...uniqueSlugs)
+        .all();
+      const counts = Object.fromEntries(uniqueSlugs.map((slug) => [slug, 0]));
+
+      for (const row of result.results || []) {
+        counts[row.postSlug] = Number(row.commentCount) || 0;
+      }
+
+      return json({ counts });
+    } catch {
+      return json({ error: "暂时无法读取留言数量" }, 500);
+    }
+  }
+
+  const postSlug = postSlugs[0] || "";
 
   if (!postSlug || postSlug.length > MAX_SLUG_LENGTH) {
     return json({ error: "文章地址无效" }, 400);

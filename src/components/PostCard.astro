@@ -38,8 +38,9 @@ const postSlug = href.split("/").filter(Boolean).at(-1) ?? "";
         </div>
       )
     }
-    <div class="post-card-views" aria-label="文章阅读次数">
-      阅读 <span data-post-views={postSlug}>--</span> 次
+    <div class="post-card-stats" aria-label="文章阅读和留言次数">
+      <span>阅读 <strong data-post-views={postSlug}>--</strong> 次</span>
+      <span>留言 <strong data-post-comments={postSlug}>--</strong> 条</span>
     </div>
   </a>
 </article>

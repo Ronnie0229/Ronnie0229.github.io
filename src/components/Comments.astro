@@ -136,6 +136,11 @@ const { postSlug } = Astro.props;
     const renderComments = (comments) => {
       list.replaceChildren();
       count.textContent = `${comments.length} 条留言`;
+      document
+        .querySelectorAll(`[data-post-comments="${CSS.escape(postSlug)}"]`)
+        .forEach((counter) => {
+          counter.textContent = comments.length.toLocaleString("zh-CN");
+        });
 
       if (!comments.length) {
         const empty = document.createElement("p");

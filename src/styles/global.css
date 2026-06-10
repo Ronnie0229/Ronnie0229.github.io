@@ -270,15 +270,19 @@ h2 {
   font-size: 13px;
 }
 
-.post-card-views {
+.post-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
   margin-top: 14px;
   color: var(--muted);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 
-.post-card-views span {
+.post-card-stats strong {
   color: var(--soft);
+  font-weight: 500;
 }
 
 .section-header {
@@ -552,15 +556,19 @@ h2 {
   padding: 34px 0 26px;
 }
 
-.article-view-count {
+.article-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
   margin: -4px 0 18px;
   color: var(--muted);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
-.article-view-count span {
+.article-stats strong {
   color: var(--soft);
+  font-weight: 500;
 }
 
 .article-content {

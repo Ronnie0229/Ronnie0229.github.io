@@ -173,5 +173,55 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
         loadCounts().then(incrementView);
       })();
     </script>
+    <script is:inline>
+      (() => {
+        const counters = Array.from(document.querySelectorAll("[data-post-comments]"));
+        if (!counters.length) return;
+
+        const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+        const apiUrl = localPreview
+          ? "https://ronniecross.com/api/comments"
+          : "/api/comments";
+        const formatCount = (value) => Number(value || 0).toLocaleString("zh-CN");
+        const slugs = [
+          ...new Set(
+            counters
+              .map((counter) => counter.getAttribute("data-post-comments"))
+              .filter(Boolean)
+          )
+        ];
+
+        const setCount = (slug, value) => {
+          counters
+            .filter((counter) => counter.getAttribute("data-post-comments") === slug)
+            .forEach((counter) => {
+              counter.textContent = formatCount(value);
+            });
+        };
+
+        const loadCounts = async () => {
+          const batchSize = 50;
+
+          for (let index = 0; index < slugs.length; index += batchSize) {
+            const params = new URLSearchParams({ mode: "counts" });
+            slugs.slice(index, index + batchSize).forEach((slug) => params.append("slug", slug));
+
+            try {
+              const response = await fetch(`${apiUrl}?${params}`, { cache: "no-store" });
+              const data = await response.json();
+              if (!response.ok) throw new Error("Comment count request failed");
+
+              Object.entries(data.counts || {}).forEach(([slug, value]) => {
+                setCount(slug, value);
+              });
+            } catch {
+              // 保留占位符，避免把接口故障误显示成零条留言。
+            }
+          }
+        };
+
+        loadCounts();
+      })();
+    </script>
   </body>
 </html>

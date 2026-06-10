@@ -10,10 +10,10 @@ from docx import Document
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_DIR = ROOT / "教会讲道"
-ORGANIZED_DIR = ROOT / "整理后的讲道文章"
+SOURCE_DIR = ROOT / "data" / "raw" / "教会讲道"
+ORGANIZED_DIR = ROOT / "data" / "processed" / "整理后的讲道文章"
 POSTS_DIR = ROOT / "src" / "content" / "posts"
-REPORT_DIR = ROOT / "内容整理报告"
+REPORT_DIR = ROOT / "docs" / "内容整理报告"
 
 SPEAKER_TAGS = {
     "Patrick": "Patrick",
@@ -271,7 +271,7 @@ def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
         scripture: "{yaml_escape(scripture)}"
         author: "{yaml_escape(speaker)}"
         reviewed: false
-        source: "{yaml_escape(folder.name)} / {yaml_escape(source_file.name)}"
+        source: "data/raw/教会讲道/{yaml_escape(folder.name)}/{yaml_escape(source_file.name)}"
         ---
         """
     )
