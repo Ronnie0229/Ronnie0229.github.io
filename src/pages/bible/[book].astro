@@ -107,6 +107,21 @@ const { book, posts } = Astro.props;
 
     const params = new URLSearchParams(window.location.search);
     const initialPage = Number.parseInt(params.get("page") || "1", 10);
-    showPage(Number.isFinite(initialPage) ? initialPage : 1);
+    const focusedSlug = params.get("focus");
+    const focusedCard = focusedSlug
+      ? cards.find((card) => card.dataset.postSlug === focusedSlug)
+      : undefined;
+    const focusedIndex = focusedCard ? cards.indexOf(focusedCard) : -1;
+    const focusedPage = focusedIndex >= 0 ? Math.floor(focusedIndex / pageSize) + 1 : null;
+
+    showPage(focusedPage ?? (Number.isFinite(initialPage) ? initialPage : 1));
+
+    if (focusedCard && !focusedCard.hidden) {
+      window.requestAnimationFrame(() => {
+        focusedCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        focusedCard.classList.add("post-card-focused");
+        window.setTimeout(() => focusedCard.classList.remove("post-card-focused"), 1800);
+      });
+    }
   </script>
 </BaseLayout>

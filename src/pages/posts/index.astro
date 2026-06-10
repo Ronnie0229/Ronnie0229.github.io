@@ -123,6 +123,28 @@ const posts = (await getCollection("posts")).sort(
     const params = new URLSearchParams(window.location.search);
     const initialFilter = params.get("category") || "全部";
     const initialPage = Number.parseInt(params.get("page") || "1", 10);
-    applyFilter(initialFilter, Number.isFinite(initialPage) ? initialPage : 1);
+    const focusedSlug = params.get("focus");
+    const selectedFilter = availableFilters.has(initialFilter) ? initialFilter : "全部";
+    const focusedCard = focusedSlug
+      ? Array.from(cards).find((card) => card.dataset.postSlug === focusedSlug)
+      : undefined;
+    const filteredCards = Array.from(cards).filter(
+      (card) => selectedFilter === "全部" || card.dataset.category === selectedFilter
+    );
+    const focusedIndex = focusedCard ? filteredCards.indexOf(focusedCard) : -1;
+    const focusedPage = focusedIndex >= 0 ? Math.floor(focusedIndex / pageSize) + 1 : null;
+
+    applyFilter(
+      initialFilter,
+      focusedPage ?? (Number.isFinite(initialPage) ? initialPage : 1)
+    );
+
+    if (focusedCard && !focusedCard.hidden) {
+      window.requestAnimationFrame(() => {
+        focusedCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        focusedCard.classList.add("post-card-focused");
+        window.setTimeout(() => focusedCard.classList.remove("post-card-focused"), 1800);
+      });
+    }
   </script>
 </BaseLayout>

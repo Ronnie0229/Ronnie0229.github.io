@@ -15,10 +15,16 @@ const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   month: "2-digit",
   day: "2-digit"
 }).format(date);
+const postSlug = href.split("/").filter(Boolean).at(-1) ?? "";
 ---
 
-<article class:list={["post-card", { featured }]} data-category={category}>
-  <a href={href} class="post-card-link">
+<article
+  id={`post-${postSlug}`}
+  class:list={["post-card", { featured }]}
+  data-category={category}
+  data-post-slug={postSlug}
+>
+  <a href={href} class="post-card-link" data-post-link>
     <div class="post-card-meta">
       <time datetime={date.toISOString()}>{formattedDate}</time>
       {featured && <span>最新</span>}
@@ -34,3 +40,24 @@ const formattedDate = new Intl.DateTimeFormat("zh-CN", {
     }
   </a>
 </article>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const link = (event.target as Element | null)?.closest<HTMLAnchorElement>("[data-post-link]");
+    if (!link) return;
+
+    const card = link.closest<HTMLElement>("[data-post-slug]");
+    const postSlug = card?.dataset.postSlug;
+    if (!postSlug) return;
+
+    const returnUrl = new URL(window.location.href);
+    returnUrl.searchParams.set("focus", postSlug);
+    returnUrl.hash = `post-${postSlug}`;
+
+    try {
+      window.sessionStorage.setItem(`ronniecross-return-${postSlug}`, returnUrl.toString());
+    } catch {
+      // 定位功能仍可使用文章页提供的默认返回地址。
+    }
+  });
+</script>

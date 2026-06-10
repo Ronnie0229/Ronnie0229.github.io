@@ -18,11 +18,18 @@ const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   month: "2-digit",
   day: "2-digit"
 }).format(post.data.date);
+const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.category)}&focus=${encodeURIComponent(post.slug)}#post-${post.slug}`;
 ---
 
 <BaseLayout title={`${post.data.title} | Ronnie`} description={post.data.description}>
   <article class="article-page">
-    <a class="text-link" href="/posts/">返回文章列表</a>
+    <a
+      class="text-link"
+      href={fallbackReturnUrl}
+      data-return-to-post={post.slug}
+    >
+      返回文章列表
+    </a>
     <header class="article-header">
       <p class="eyebrow">{formattedDate}</p>
       <h1>{post.data.title}</h1>
@@ -36,4 +43,23 @@ const formattedDate = new Intl.DateTimeFormat("zh-CN", {
     </div>
     <Comments postSlug={post.slug} />
   </article>
+
+  <script>
+    const returnLink = document.querySelector<HTMLAnchorElement>("[data-return-to-post]");
+    const postSlug = returnLink?.dataset.returnToPost;
+
+    if (returnLink && postSlug) {
+      try {
+        const savedReturnUrl = window.sessionStorage.getItem(`ronniecross-return-${postSlug}`);
+        if (savedReturnUrl) {
+          const url = new URL(savedReturnUrl);
+          if (url.origin === window.location.origin) {
+            returnLink.href = `${url.pathname}${url.search}${url.hash}`;
+          }
+        }
+      } catch {
+        // 使用服务端生成的默认文章列表地址。
+      }
+    }
+  </script>
 </BaseLayout>

@@ -242,6 +242,18 @@ h2 {
   transition: border-color 180ms ease, transform 180ms ease;
 }
 
+.post-card {
+  scroll-margin: 110px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.post-card-focused {
+  border-color: rgba(102, 163, 255, 0.72);
+  box-shadow:
+    0 0 0 2px rgba(102, 163, 255, 0.2),
+    var(--shadow);
+}
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;
