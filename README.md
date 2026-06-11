@@ -28,5 +28,8 @@ npm.cmd run build
 - 整理报告：`docs/内容整理报告/`
 - 导入脚本：`scripts/import_sermons.py`、`scripts/import_shares.py`
 - 数据库迁移：`scripts/migrations/`
+- 网页管理后台：`https://ronniecross.com/admin/`
+- 后台配置与使用：`docs/网站后台使用与配置.md`
+- 本地开始编辑前同步：`scripts/sync_from_github.ps1`
 
 完整目录用途参见 `docs/目录说明.md`。

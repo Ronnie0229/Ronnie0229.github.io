@@ -11,7 +11,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const posts = (await getCollection("posts")).sort(
+  const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
   );
 

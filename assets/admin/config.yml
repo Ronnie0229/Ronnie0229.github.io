@@ -1,0 +1,93 @@
+locale: "zh_Hans"
+
+backend:
+  name: "github"
+  repo: "Ronnie0229/Ronnie0229.github.io"
+  branch: "main"
+  site_domain: "ronniecross.com"
+  base_url: "https://ronniecross.com"
+  auth_endpoint: "/admin/api/auth"
+  use_graphql: true
+
+media_folder: "assets/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "posts"
+    label: "文章"
+    label_singular: "文章"
+    folder: "src/content/posts"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "articleId"
+    summary: "{{date}} · {{title}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    editor:
+      preview: false
+    view_filters:
+      - label: "教会讲道"
+        field: "category"
+        pattern: "教会讲道"
+      - label: "灵命成长"
+        field: "category"
+        pattern: "灵命成长"
+      - label: "草稿"
+        field: "draft"
+        pattern: true
+    fields:
+      - label: "文章固定编号"
+        name: "articleId"
+        widget: "hidden"
+        required: true
+        default: "pending"
+      - label: "标题"
+        name: "title"
+        widget: "string"
+        hint: "标题可以修改。旧文章的文件名和网址不会因此改变。"
+      - label: "内容摘要"
+        name: "description"
+        widget: "text"
+      - label: "发布日期"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+      - label: "文章分类"
+        name: "category"
+        widget: "select"
+        options:
+          - "教会讲道"
+          - "灵命成长"
+        default: "灵命成长"
+      - label: "圣经经文"
+        name: "scripture"
+        widget: "string"
+        required: false
+        hint: "例如：罗马书 8:1-11。圣经书卷页面会自动识别。"
+      - label: "标签"
+        name: "tags"
+        widget: "list"
+        required: false
+        default: []
+      - label: "作者"
+        name: "author"
+        widget: "string"
+        default: "Ronnie"
+      - label: "已经人工复核"
+        name: "reviewed"
+        widget: "boolean"
+        default: false
+      - label: "保存为草稿"
+        name: "draft"
+        widget: "boolean"
+        default: true
+        hint: "打开时文章不会显示在公开网站；准备好后关闭并再次发布。"
+      - label: "原始资料"
+        name: "source"
+        widget: "string"
+        required: false
+      - label: "正文"
+        name: "body"
+        widget: "markdown"

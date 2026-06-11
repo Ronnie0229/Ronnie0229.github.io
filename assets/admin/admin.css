@@ -1,0 +1,298 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  background: #07090d;
+  color: #f5f5f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    linear-gradient(rgba(4, 8, 14, 0.82), rgba(4, 8, 14, 0.96)),
+    url("/images/quiet-study-hero.png") center top / cover fixed;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.admin-shell {
+  width: min(1080px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 32px;
+  border: 1px solid #303640;
+  border-radius: 8px;
+  background: rgba(15, 19, 25, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.admin-header.compact {
+  padding: 24px;
+}
+
+.admin-header h1 {
+  margin: 4px 0 12px;
+  font-size: clamp(32px, 7vw, 58px);
+  letter-spacing: 0;
+}
+
+.admin-header p {
+  max-width: 700px;
+  margin: 0;
+  color: #b8bec8;
+  line-height: 1.7;
+}
+
+.admin-eyebrow {
+  color: #64a8ff !important;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.text-link,
+.admin-nav a {
+  white-space: nowrap;
+  color: #9cc7ff;
+  text-decoration: none;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.admin-card {
+  display: flex;
+  min-height: 180px;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 28px;
+  border: 1px solid #303640;
+  border-radius: 8px;
+  background: rgba(15, 19, 25, 0.94);
+  text-decoration: none;
+}
+
+.admin-card:hover {
+  border-color: #64a8ff;
+}
+
+.admin-card-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border-radius: 8px;
+  background: #16365e;
+  color: #dcecff;
+  font-weight: 700;
+}
+
+.admin-card h2 {
+  margin: 2px 0 10px;
+  font-size: 22px;
+}
+
+.admin-card p {
+  margin: 0;
+  color: #aeb5bf;
+  line-height: 1.65;
+}
+
+.comment-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px auto;
+  gap: 12px;
+  align-items: end;
+  margin: 20px 0;
+  padding: 18px;
+  border: 1px solid #303640;
+  border-radius: 8px;
+  background: rgba(15, 19, 25, 0.94);
+}
+
+.comment-toolbar label {
+  display: grid;
+  gap: 7px;
+  color: #c6cbd3;
+  font-size: 13px;
+}
+
+.comment-toolbar input,
+.comment-toolbar select,
+.comment-toolbar button,
+.admin-pagination button {
+  min-height: 42px;
+  border: 1px solid #3a424e;
+  border-radius: 6px;
+  background: #121720;
+  color: #f5f5f7;
+  padding: 9px 12px;
+}
+
+.comment-toolbar button {
+  border-color: #2e78d2;
+  background: #1f64b5;
+  cursor: pointer;
+}
+
+.admin-status {
+  margin: 16px 0;
+  color: #b8bec8;
+}
+
+.admin-comments {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-comment {
+  padding: 20px;
+  border: 1px solid #303640;
+  border-radius: 8px;
+  background: rgba(15, 19, 25, 0.96);
+}
+
+.admin-comment-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.status-badge.visible {
+  background: #153b2a;
+  color: #87ddb2;
+}
+
+.status-badge.hidden {
+  background: #3b3020;
+  color: #f1ca83;
+}
+
+.admin-comment-meta {
+  color: #8f98a5;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.admin-comment-content {
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.admin-comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.admin-comment-actions a,
+.admin-comment-actions button {
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid #3a424e;
+  border-radius: 6px;
+  background: #151b24;
+  color: #dfe5ec;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-comment-actions .danger {
+  border-color: #77404a;
+  color: #ffb1bc;
+}
+
+.admin-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.admin-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-empty {
+  padding: 40px 20px;
+  border: 1px solid #303640;
+  border-radius: 8px;
+  text-align: center;
+  color: #aeb5bf;
+}
+
+@media (max-width: 720px) {
+  .admin-shell {
+    width: min(100% - 24px, 1080px);
+    padding: 20px 0;
+  }
+
+  .admin-header,
+  .admin-header.compact {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .admin-header h1 {
+    font-size: 36px;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .comment-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-nav {
+    flex-wrap: wrap;
+  }
+}
