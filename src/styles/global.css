@@ -412,6 +412,131 @@ h2 {
   opacity: 0.38;
 }
 
+.search-page {
+  padding-bottom: 72px;
+}
+
+.search-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.search-form label {
+  color: var(--soft);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.search-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.search-input-row input {
+  min-width: 0;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  font: inherit;
+}
+
+.search-input-row input:focus {
+  border-color: rgba(102, 163, 255, 0.7);
+  outline: 2px solid rgba(102, 163, 255, 0.2);
+  outline-offset: 2px;
+}
+
+.search-input-row button {
+  min-height: 50px;
+  border: 1px solid rgba(102, 163, 255, 0.48);
+  border-radius: 8px;
+  padding: 0 22px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-input-row button:hover {
+  background: rgba(102, 163, 255, 0.24);
+}
+
+.search-status {
+  min-height: 28px;
+  margin: 0 0 18px;
+  color: var(--muted);
+}
+
+.search-results {
+  display: grid;
+  gap: 18px;
+}
+
+.search-result {
+  scroll-margin-top: 110px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.search-result a {
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+}
+
+.search-result:hover {
+  border-color: rgba(102, 163, 255, 0.4);
+  background: var(--panel-strong);
+}
+
+.search-result-focused {
+  border-color: rgba(102, 163, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(102, 163, 255, 0.16), var(--shadow);
+}
+
+.search-result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.search-result-meta span {
+  color: var(--accent);
+}
+
+.search-result h2 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.25;
+}
+
+.search-result p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.search-result mark {
+  border-radius: 3px;
+  padding: 0 2px;
+  background: rgba(102, 163, 255, 0.28);
+  color: var(--text);
+}
+
+.search-pagination {
+  padding-top: 30px;
+}
+
 .post-card[hidden] {
   display: none;
 }
@@ -887,6 +1012,18 @@ h2 {
   }
 
   .post-card-link {
+    padding: 20px;
+  }
+
+  .search-input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-input-row button {
+    width: 100%;
+  }
+
+  .search-result a {
     padding: 20px;
   }
 

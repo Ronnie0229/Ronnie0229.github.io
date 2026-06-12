@@ -1,0 +1,338 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="站内搜索 | Ronnie" description="搜索 Ronnie 已发布文章的标题、经文、标签、简介和正文。">
+  <section class="page-heading search-heading">
+    <p class="eyebrow">站内搜索</p>
+    <h1>搜索文章</h1>
+    <p>可以搜索标题、圣经经文、标签、内容简介和文章正文。</p>
+  </section>
+
+  <section class="search-page" aria-labelledby="search-form-label">
+    <form class="search-form" role="search">
+      <label id="search-form-label" for="site-search">输入关键词</label>
+      <div class="search-input-row">
+        <input
+          id="site-search"
+          name="q"
+          type="search"
+          placeholder="例如：恩典、罗马书 8、祷告"
+          autocomplete="off"
+          enterkeyhint="search"
+        />
+        <button type="submit">搜索</button>
+      </div>
+    </form>
+
+    <p class="search-status" aria-live="polite">请输入关键词开始搜索。</p>
+    <div class="search-results" aria-label="搜索结果"></div>
+    <nav class="pagination search-pagination" aria-label="搜索结果分页"></nav>
+  </section>
+
+  <script>
+    interface SearchPost {
+      articleId: string;
+      slug: string;
+      title: string;
+      description: string;
+      date: string;
+      category: string;
+      scripture: string;
+      tags: string[];
+      body: string;
+    }
+
+    interface SearchResult extends SearchPost {
+      score: number;
+      snippet: string;
+    }
+
+    const pageSize = 20;
+    const form = document.querySelector<HTMLFormElement>(".search-form");
+    const input = document.querySelector<HTMLInputElement>("#site-search");
+    const status = document.querySelector<HTMLElement>(".search-status");
+    const results = document.querySelector<HTMLElement>(".search-results");
+    const pagination = document.querySelector<HTMLElement>(".search-pagination");
+    let indexPromise: Promise<SearchPost[]> | null = null;
+
+    const normalize = (value: string) =>
+      value.normalize("NFKC").toLocaleLowerCase("zh-CN");
+
+    const getTerms = (query: string) =>
+      [...new Set(normalize(query).split(/[\s,，。；;、]+/).filter(Boolean))];
+
+    const countMatches = (text: string, term: string) => {
+      let count = 0;
+      let position = 0;
+
+      while ((position = text.indexOf(term, position)) >= 0) {
+        count += 1;
+        position += Math.max(term.length, 1);
+      }
+
+      return count;
+    };
+
+    const makeSnippet = (post: SearchPost, terms: string[]) => {
+      const source = post.body || post.description;
+      const normalizedSource = normalize(source);
+      const positions = terms
+        .map((term) => normalizedSource.indexOf(term))
+        .filter((position) => position >= 0);
+      const firstMatch = positions.length ? Math.min(...positions) : 0;
+      const start = Math.max(0, firstMatch - 70);
+      const end = Math.min(source.length, start + 190);
+      const prefix = start > 0 ? "…" : "";
+      const suffix = end < source.length ? "…" : "";
+      return `${prefix}${source.slice(start, end).trim()}${suffix}`;
+    };
+
+    const searchPosts = (posts: SearchPost[], terms: string[]) =>
+      posts
+        .map((post) => {
+          const fields = {
+            title: normalize(post.title),
+            scripture: normalize(post.scripture),
+            tags: normalize(post.tags.join(" ")),
+            description: normalize(post.description),
+            body: normalize(post.body)
+          };
+          const searchable = Object.values(fields).join(" ");
+
+          if (!terms.every((term) => searchable.includes(term))) return null;
+
+          const score = terms.reduce(
+            (total, term) =>
+              total +
+              countMatches(fields.title, term) * 120 +
+              countMatches(fields.scripture, term) * 80 +
+              countMatches(fields.tags, term) * 60 +
+              countMatches(fields.description, term) * 30 +
+              Math.min(countMatches(fields.body, term), 12) * 2,
+            0
+          );
+
+          return { ...post, score, snippet: makeSnippet(post, terms) };
+        })
+        .filter((post): post is SearchResult => post !== null)
+        .sort(
+          (a, b) =>
+            b.score - a.score ||
+            new Date(b.date).valueOf() - new Date(a.date).valueOf()
+        );
+
+    const appendHighlightedText = (
+      container: HTMLElement,
+      text: string,
+      terms: string[]
+    ) => {
+      if (!terms.length) {
+        container.textContent = text;
+        return;
+      }
+
+      const normalizedText = normalize(text);
+      let cursor = 0;
+
+      while (cursor < text.length) {
+        let nextIndex = -1;
+        let nextTerm = "";
+
+        terms.forEach((term) => {
+          const index = normalizedText.indexOf(term, cursor);
+          if (index >= 0 && (nextIndex < 0 || index < nextIndex)) {
+            nextIndex = index;
+            nextTerm = term;
+          }
+        });
+
+        if (nextIndex < 0) {
+          container.append(document.createTextNode(text.slice(cursor)));
+          break;
+        }
+
+        container.append(document.createTextNode(text.slice(cursor, nextIndex)));
+        const mark = document.createElement("mark");
+        mark.textContent = text.slice(nextIndex, nextIndex + nextTerm.length);
+        container.append(mark);
+        cursor = nextIndex + nextTerm.length;
+      }
+    };
+
+    const loadIndex = () => {
+      indexPromise ??= fetch("/search-index.json", { cache: "no-cache" }).then(
+        async (response) => {
+          if (!response.ok) throw new Error("Search index request failed");
+          return response.json() as Promise<SearchPost[]>;
+        }
+      );
+      return indexPromise;
+    };
+
+    const saveReturnLocation = (slug: string) => {
+      const returnUrl = new URL(window.location.href);
+      returnUrl.hash = `result-${slug}`;
+      try {
+        window.sessionStorage.setItem(
+          `ronniecross-return-${slug}`,
+          returnUrl.toString()
+        );
+      } catch {
+        // 返回链接仍会使用文章列表作为后备地址。
+      }
+    };
+
+    const renderPagination = (
+      query: string,
+      currentPage: number,
+      pageCount: number
+    ) => {
+      if (!pagination) return;
+      pagination.replaceChildren();
+      if (pageCount <= 1) return;
+
+      const addButton = (
+        label: string,
+        page: number,
+        active = false,
+        disabled = false
+      ) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        button.classList.toggle("active", active);
+        button.disabled = disabled;
+        button.setAttribute("aria-label", label);
+        button.addEventListener("click", () => updateSearch(query, page, true));
+        pagination.append(button);
+      };
+
+      addButton("上一页", currentPage - 1, false, currentPage === 1);
+      for (let page = 1; page <= pageCount; page += 1) {
+        addButton(String(page), page, page === currentPage);
+      }
+      addButton("下一页", currentPage + 1, false, currentPage === pageCount);
+    };
+
+    const renderResults = (
+      matches: SearchResult[],
+      terms: string[],
+      currentPage: number
+    ) => {
+      if (!results) return;
+      results.replaceChildren();
+      const firstIndex = (currentPage - 1) * pageSize;
+
+      matches.slice(firstIndex, firstIndex + pageSize).forEach((post) => {
+        const article = document.createElement("article");
+        article.id = `result-${post.slug}`;
+        article.className = "search-result";
+
+        const link = document.createElement("a");
+        link.href = `/posts/${post.slug}/`;
+        link.addEventListener("click", () => saveReturnLocation(post.slug));
+
+        const meta = document.createElement("div");
+        meta.className = "search-result-meta";
+        const date = document.createElement("time");
+        date.dateTime = post.date;
+        date.textContent = new Intl.DateTimeFormat("zh-CN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).format(new Date(post.date));
+        const category = document.createElement("span");
+        category.textContent = post.category;
+        meta.append(date, category);
+
+        const title = document.createElement("h2");
+        appendHighlightedText(title, post.title, terms);
+
+        const snippet = document.createElement("p");
+        appendHighlightedText(snippet, post.snippet, terms);
+
+        link.append(meta, title, snippet);
+        article.append(link);
+        results.append(article);
+      });
+    };
+
+    const updateSearch = async (
+      rawQuery: string,
+      requestedPage = 1,
+      scrollToResults = false
+    ) => {
+      const query = rawQuery.trim();
+      const terms = getTerms(query);
+      const url = new URL(window.location.href);
+
+      if (input) input.value = query;
+      if (scrollToResults) url.hash = "";
+      if (!terms.length) {
+        url.searchParams.delete("q");
+        url.searchParams.delete("page");
+        window.history.replaceState({}, "", url);
+        results?.replaceChildren();
+        pagination?.replaceChildren();
+        if (status) status.textContent = "请输入关键词开始搜索。";
+        return;
+      }
+
+      url.searchParams.set("q", query);
+      if (status) status.textContent = "正在搜索…";
+
+      try {
+        const posts = await loadIndex();
+        const matches = searchPosts(posts, terms);
+        const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
+        const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
+
+        if (currentPage === 1) url.searchParams.delete("page");
+        else url.searchParams.set("page", String(currentPage));
+        window.history.replaceState({}, "", url);
+
+        renderResults(matches, terms, currentPage);
+        renderPagination(query, currentPage, pageCount);
+        if (status) {
+          status.textContent = matches.length
+            ? `找到 ${matches.length.toLocaleString("zh-CN")} 篇相关文章`
+            : "没有找到相关文章，请尝试其他关键词。";
+        }
+        document.title = `${query}的搜索结果 | Ronnie`;
+
+        if (scrollToResults) {
+          status?.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (window.location.hash.startsWith("#result-")) {
+          const focusedResult = document.getElementById(
+            decodeURIComponent(window.location.hash.slice(1))
+          );
+          if (focusedResult) {
+            window.requestAnimationFrame(() => {
+              focusedResult.scrollIntoView({ behavior: "smooth", block: "center" });
+              focusedResult.classList.add("search-result-focused");
+              window.setTimeout(
+                () => focusedResult.classList.remove("search-result-focused"),
+                1800
+              );
+            });
+          }
+        }
+      } catch {
+        results?.replaceChildren();
+        pagination?.replaceChildren();
+        if (status) status.textContent = "搜索暂时无法使用，请稍后重试。";
+      }
+    };
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      updateSearch(input?.value ?? "", 1, true);
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get("q") ?? "";
+    const initialPage = Number.parseInt(params.get("page") ?? "1", 10);
+    updateSearch(initialQuery, Number.isFinite(initialPage) ? initialPage : 1);
+  </script>
+</BaseLayout>
