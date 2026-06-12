@@ -428,6 +428,10 @@ summary {
   background: rgba(20, 26, 35, 0.98);
 }
 
+.article-edit-button {
+  display: none;
+}
+
 .article-row-main {
   display: grid;
   position: relative;
@@ -602,7 +606,9 @@ summary {
 .editor-fields input,
 .editor-fields select,
 .editor-fields textarea {
+  display: block;
   width: 100%;
+  max-width: 100%;
   min-width: 0;
   min-height: 44px;
   border: 1px solid #3a424e;
@@ -614,6 +620,13 @@ summary {
 
 .editor-fields textarea {
   resize: vertical;
+}
+
+.editor-fields input[type="date"] {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .field-wide {
