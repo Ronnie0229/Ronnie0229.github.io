@@ -308,6 +308,7 @@ async function loadPosts() {
 function showManager() {
   editor.hidden = true;
   manager.hidden = false;
+  renderPosts();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -514,6 +515,7 @@ async function savePost(draft) {
     document.querySelector("[data-save-draft]").textContent = draft
       ? "保存草稿"
       : "转为草稿";
+    renderPosts();
   } catch (error) {
     editorMessage.textContent = error.message || "保存失败，请稍后重试。";
   } finally {
