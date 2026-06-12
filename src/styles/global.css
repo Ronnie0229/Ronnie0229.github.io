@@ -696,6 +696,40 @@ h2 {
   font-weight: 500;
 }
 
+.article-toc {
+  margin: 8px 0 38px;
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 22px;
+}
+
+.article-toc p {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.article-toc ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-toc li.nested {
+  padding-left: 18px;
+}
+
+.article-toc a {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.article-toc a:hover {
+  color: var(--accent);
+}
+
 .article-content {
   border-top: 1px solid var(--line);
   padding-top: 34px;
@@ -731,6 +765,38 @@ h2 {
 .article-return-link {
   display: inline-block;
   margin-top: 34px;
+}
+
+.article-adjacent {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 48px;
+}
+
+.article-adjacent > a {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--panel);
+}
+
+.article-adjacent > a:last-of-type {
+  text-align: right;
+}
+
+.article-adjacent span {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.article-adjacent strong {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .comments {
@@ -1049,6 +1115,18 @@ h2 {
 
   .comment-form-footer button {
     width: 100%;
+  }
+
+  .article-adjacent {
+    grid-template-columns: 1fr;
+  }
+
+  .article-adjacent > span[aria-hidden="true"] {
+    display: none;
+  }
+
+  .article-adjacent > a:last-of-type {
+    text-align: left;
   }
 
   .book-grid {

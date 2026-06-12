@@ -14,8 +14,10 @@ const form = document.querySelector("[data-article-form]");
 const bodyInput = document.querySelector("[data-body]");
 const preview = document.querySelector("[data-preview]");
 const editorMessage = document.querySelector("[data-editor-message]");
+const backupStatus = document.querySelector("[data-backup-status]");
 const imageInput = document.querySelector("[data-image-input]");
 const pagination = document.querySelector("[data-pagination]");
+const BACKUP_PREFIX = "ronniecross-editor-backup-";
 
 let token = "";
 let posts = [];
@@ -25,6 +27,10 @@ let currentSha = "";
 let currentPath = "";
 let currentFrontmatter = {};
 let currentView = "edit";
+let cleanSnapshot = "";
+let isDirty = false;
+let backupTimer = 0;
+let deploymentMonitorToken = 0;
 
 function setEditorMessage(message = "", state = "") {
   editorMessage.textContent = message;
@@ -37,6 +43,114 @@ function setEditorMessage(message = "", state = "") {
 
 function revealEditorMessage() {
   editorMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function getBackupKey() {
+  const articleId = currentFrontmatter.articleId;
+  return `${BACKUP_PREFIX}${currentPath && articleId ? articleId : "new"}`;
+}
+
+function getEditorSnapshot() {
+  return {
+    title: form.elements.title.value,
+    description: form.elements.description.value,
+    date: form.elements.date.value,
+    category: form.elements.category.value,
+    scripture: form.elements.scripture.value,
+    tags: form.elements.tags.value,
+    author: form.elements.author.value,
+    reviewed: form.elements.reviewed.checked,
+    source: form.elements.source.value,
+    body: bodyInput.value
+  };
+}
+
+function snapshotValue(snapshot = getEditorSnapshot()) {
+  return JSON.stringify(snapshot);
+}
+
+function setBackupStatus(message = "") {
+  backupStatus.textContent = message;
+}
+
+function clearCurrentBackup(key = getBackupKey()) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // 浏览器禁用本机存储时，文章仍可正常保存到 GitHub。
+  }
+}
+
+function markEditorClean(backupKey = getBackupKey(), clearBackup = true) {
+  window.clearTimeout(backupTimer);
+  cleanSnapshot = snapshotValue();
+  isDirty = false;
+  if (clearBackup) clearCurrentBackup(backupKey);
+  setBackupStatus();
+}
+
+function applySnapshot(snapshot) {
+  [
+    "title",
+    "description",
+    "date",
+    "category",
+    "scripture",
+    "tags",
+    "author",
+    "source"
+  ].forEach((name) => {
+    if (typeof snapshot[name] === "string") {
+      form.elements[name].value = snapshot[name];
+    }
+  });
+  form.elements.reviewed.checked = Boolean(snapshot.reviewed);
+  bodyInput.value = snapshot.body || "";
+}
+
+function restoreBackupIfAvailable() {
+  try {
+    const key = getBackupKey();
+    const saved = JSON.parse(localStorage.getItem(key) || "null");
+    if (!saved?.snapshot || snapshotValue(saved.snapshot) === cleanSnapshot) return;
+
+    if (window.confirm("发现这篇文章有未保存的本机备份，是否恢复？")) {
+      applySnapshot(saved.snapshot);
+      isDirty = true;
+      setBackupStatus("已恢复本机备份，尚未保存到 GitHub");
+    } else {
+      clearCurrentBackup(key);
+    }
+  } catch {
+    clearCurrentBackup();
+  }
+}
+
+function scheduleAutoBackup() {
+  window.clearTimeout(backupTimer);
+  const snapshot = getEditorSnapshot();
+  isDirty = snapshotValue(snapshot) !== cleanSnapshot;
+  if (!isDirty) {
+    clearCurrentBackup();
+    setBackupStatus();
+    return;
+  }
+
+  backupTimer = window.setTimeout(() => {
+    try {
+      localStorage.setItem(
+        getBackupKey(),
+        JSON.stringify({ snapshot, savedAt: new Date().toISOString() })
+      );
+      const time = new Intl.DateTimeFormat("zh-CN", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date());
+      setBackupStatus(`已自动备份到本机 · ${time}`);
+    } catch {
+      setBackupStatus("本机自动备份不可用，请及时保存草稿");
+    }
+  }, 900);
 }
 
 function getToken() {
@@ -318,7 +432,15 @@ async function loadPosts() {
   }
 }
 
-function showManager() {
+function showManager(force = false) {
+  if (
+    !force &&
+    isDirty &&
+    !window.confirm("当前修改还没有保存到 GitHub，确定返回文章列表吗？")
+  ) {
+    return;
+  }
+  isDirty = false;
   editor.hidden = true;
   manager.hidden = false;
   renderPosts();
@@ -340,6 +462,7 @@ function resetForm() {
   document.querySelector("[data-editor-title]").textContent = "填写文章内容";
   document.querySelector("[data-save-draft]").textContent = "保存草稿";
   setView("edit");
+  markEditorClean(getBackupKey(), false);
 }
 
 function showEditor() {
@@ -351,6 +474,7 @@ function showEditor() {
 function newPost() {
   resetForm();
   showEditor();
+  restoreBackupIfAvailable();
   form.elements.title.focus();
 }
 
@@ -392,6 +516,8 @@ async function openPost(post) {
     setEditorMessage();
     showEditor();
     setView("edit");
+    markEditorClean(getBackupKey(), false);
+    restoreBackupIfAvailable();
   } catch (error) {
     listStatus.textContent = error.message || "打开文章失败。";
   }
@@ -448,6 +574,7 @@ async function savePost(draft) {
   }
   const data = formData(draft);
   const isNew = !currentPath;
+  const backupKey = getBackupKey();
   let path =
     currentPath ||
     `${POSTS_FOLDER}/${data.date}-${slugify(data.title)}.md`;
@@ -504,9 +631,9 @@ async function savePost(draft) {
     currentFrontmatter = data;
     setEditorMessage(
       draft
-        ? "草稿保存成功"
-        : "文章提交成功，Cloudflare 正在自动发布。",
-      "success"
+        ? "草稿已保存到 GitHub，正在等待管理列表更新。"
+        : "文章已保存到 GitHub，正在等待网站发布。",
+      "deploying"
     );
     revealEditorMessage();
 
@@ -537,6 +664,8 @@ async function savePost(draft) {
       ? "保存草稿"
       : "转为草稿";
     renderPosts();
+    markEditorClean(backupKey);
+    monitorDeployment(result.commit.sha, draft);
   } catch (error) {
     setEditorMessage(
       error.message || "保存失败，请稍后重试。",
@@ -573,6 +702,44 @@ function insertText(prefix, suffix = "") {
   const selected = bodyInput.value.slice(start, end);
   bodyInput.setRangeText(`${prefix}${selected}${suffix}`, start, end, "end");
   bodyInput.focus();
+  scheduleAutoBackup();
+}
+
+async function monitorDeployment(commitSha, draft) {
+  const monitorToken = ++deploymentMonitorToken;
+  const deadline = Date.now() + 5 * 60 * 1000;
+
+  while (monitorToken === deploymentMonitorToken && Date.now() < deadline) {
+    try {
+      const response = await fetch(
+        `/deployment.json?commit=${encodeURIComponent(commitSha)}&time=${Date.now()}`,
+        { cache: "no-store" }
+      );
+      if (response.ok) {
+        const deployment = await response.json();
+        if (deployment.commit === commitSha) {
+          setEditorMessage(
+            draft
+              ? "草稿保存成功，管理列表已更新。"
+              : "文章发布成功，网站已更新。",
+            "success"
+          );
+          revealEditorMessage();
+          return;
+        }
+      }
+    } catch {
+      // 部署期间可能短暂无法读取，继续等待下一次检查。
+    }
+    await new Promise((resolve) => window.setTimeout(resolve, 7000));
+  }
+
+  if (monitorToken === deploymentMonitorToken) {
+    setEditorMessage(
+      "内容已保存到 GitHub，Cloudflare 仍在部署，可稍后刷新查看。",
+      "deploying"
+    );
+  }
 }
 
 async function uploadImage(file) {
@@ -631,7 +798,8 @@ async function deletePost() {
       (post) => post.articleId !== currentFrontmatter.articleId
     );
     renderPosts();
-    showManager();
+    markEditorClean();
+    showManager(true);
   } catch (error) {
     setEditorMessage(error.message || "删除失败。", "error");
     revealEditorMessage();
@@ -641,8 +809,8 @@ async function deletePost() {
 }
 
 document.querySelector("[data-new]").addEventListener("click", newPost);
-document.querySelector("[data-back]").addEventListener("click", showManager);
-document.querySelector("[data-cancel]").addEventListener("click", showManager);
+document.querySelector("[data-back]").addEventListener("click", () => showManager());
+document.querySelector("[data-cancel]").addEventListener("click", () => showManager());
 document.querySelector("[data-save-draft]").addEventListener("click", () => {
   savePost(true);
 });
@@ -675,6 +843,13 @@ document.querySelector("[data-image]").addEventListener("click", () => {
   imageInput.click();
 });
 imageInput.addEventListener("change", () => uploadImage(imageInput.files[0]));
+form.addEventListener("input", scheduleAutoBackup);
+form.addEventListener("change", scheduleAutoBackup);
+window.addEventListener("beforeunload", (event) => {
+  if (!isDirty) return;
+  event.preventDefault();
+  event.returnValue = "";
+});
 
 token = getToken();
 if (token) {

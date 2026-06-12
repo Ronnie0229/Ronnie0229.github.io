@@ -757,6 +757,14 @@ summary {
   min-height: 20px;
 }
 
+.editor-backup-status {
+  min-height: 22px;
+  margin: 10px 2px 0;
+  color: #8fa2b8;
+  font-size: 13px;
+  text-align: right;
+}
+
 .editor-message {
   display: flex;
   align-items: center;
@@ -799,6 +807,18 @@ summary {
 
 .editor-message[data-state="saving"]::before {
   content: "...";
+}
+
+.editor-message[data-state="deploying"] {
+  border-color: #8b6d2f;
+  color: #fff0c2;
+  background: #2a2110;
+}
+
+.editor-message[data-state="deploying"]::before {
+  content: "↻";
+  color: #281d05;
+  background: #efc968;
 }
 
 .editor-message[data-state="success"] {

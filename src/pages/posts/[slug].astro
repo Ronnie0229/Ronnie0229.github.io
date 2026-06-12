@@ -4,15 +4,26 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Comments from "../../components/Comments.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts", ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+    (a, b) =>
+      a.data.date.valueOf() - b.data.date.valueOf() ||
+      a.data.title.localeCompare(b.data.title, "zh-CN")
+  );
+  return posts.map((post, index) => ({
     params: { slug: post.slug },
-    props: { post }
+    props: {
+      post,
+      previousPost: posts[index - 1] || null,
+      nextPost: posts[index + 1] || null
+    }
   }));
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { post, previousPost, nextPost } = Astro.props;
+const { Content, headings } = await render(post);
+const tableOfContents = headings.filter(
+  (heading) => heading.depth === 2 || heading.depth === 3
+);
 const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
   month: "2-digit",
@@ -42,9 +53,45 @@ const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.categ
         {post.data.tags.map((tag) => <span>{tag}</span>)}
       </div>
     </header>
+    {
+      tableOfContents.length > 0 && (
+        <nav class="article-toc" aria-label="文章目录">
+          <p>文章目录</p>
+          <ol>
+            {tableOfContents.map((heading) => (
+              <li class:list={[heading.depth === 3 && "nested"]}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
     <div class="article-content">
       <Content />
     </div>
+    {
+      (previousPost || nextPost) && (
+        <nav class="article-adjacent" aria-label="上一篇和下一篇">
+          {previousPost ? (
+            <a href={`/posts/${previousPost.slug}/`}>
+              <span>上一篇</span>
+              <strong>{previousPost.data.title}</strong>
+            </a>
+          ) : (
+            <span aria-hidden="true"></span>
+          )}
+          {nextPost ? (
+            <a href={`/posts/${nextPost.slug}/`}>
+              <span>下一篇</span>
+              <strong>{nextPost.data.title}</strong>
+            </a>
+          ) : (
+            <span aria-hidden="true"></span>
+          )}
+        </nav>
+      )
+    }
     <a
       class="text-link article-return-link"
       href={fallbackReturnUrl}
