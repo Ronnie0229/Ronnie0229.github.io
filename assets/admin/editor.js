@@ -534,6 +534,7 @@ imageInput.addEventListener("change", () => uploadImage(imageInput.files[0]));
 
 token = getToken();
 if (token) {
+  authPanel.hidden = true;
   manager.hidden = false;
   loadPosts();
 } else {
