@@ -26,6 +26,19 @@ let currentPath = "";
 let currentFrontmatter = {};
 let currentView = "edit";
 
+function setEditorMessage(message = "", state = "") {
+  editorMessage.textContent = message;
+  if (state) {
+    editorMessage.dataset.state = state;
+  } else {
+    delete editorMessage.dataset.state;
+  }
+}
+
+function revealEditorMessage() {
+  editorMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 function getToken() {
   try {
     const user = JSON.parse(localStorage.getItem("decap-cms-user") || "null");
@@ -321,7 +334,7 @@ function resetForm() {
   currentSha = "";
   currentPath = "";
   currentFrontmatter = { articleId: `post-${crypto.randomUUID()}` };
-  editorMessage.textContent = "";
+  setEditorMessage();
   document.querySelector("[data-delete]").hidden = true;
   document.querySelector("[data-editor-mode]").textContent = "新建文章";
   document.querySelector("[data-editor-title]").textContent = "填写文章内容";
@@ -376,7 +389,7 @@ async function openPost(post) {
     document.querySelector("[data-save-draft]").textContent = parsed.data.draft
       ? "保存草稿"
       : "转为草稿";
-    editorMessage.textContent = "";
+    setEditorMessage();
     showEditor();
     setView("edit");
   } catch (error) {
@@ -428,8 +441,9 @@ async function savePost(draft) {
     return;
   }
   if (!draft && !bodyInput.value.trim()) {
-    editorMessage.textContent = "发布文章前请填写正文。";
+    setEditorMessage("发布文章前请填写正文。", "error");
     bodyInput.focus();
+    revealEditorMessage();
     return;
   }
   const data = formData(draft);
@@ -439,7 +453,10 @@ async function savePost(draft) {
     `${POSTS_FOLDER}/${data.date}-${slugify(data.title)}.md`;
   let targetSha = currentSha;
   const raw = serializeMarkdown(data, bodyInput.value);
-  editorMessage.textContent = draft ? "正在保存草稿..." : "正在发布文章...";
+  setEditorMessage(
+    draft ? "正在保存草稿，请稍候..." : "正在提交文章，请稍候...",
+    "saving"
+  );
   setSaving(true);
 
   try {
@@ -485,9 +502,13 @@ async function savePost(draft) {
     currentPath = path;
     currentSha = result.content.sha;
     currentFrontmatter = data;
-    editorMessage.textContent = draft
-      ? "草稿已保存。"
-      : "文章已提交，Cloudflare 正在自动发布。";
+    setEditorMessage(
+      draft
+        ? "草稿保存成功"
+        : "文章提交成功，Cloudflare 正在自动发布。",
+      "success"
+    );
+    revealEditorMessage();
 
     const updated = {
       ...(currentPost || {}),
@@ -517,7 +538,11 @@ async function savePost(draft) {
       : "转为草稿";
     renderPosts();
   } catch (error) {
-    editorMessage.textContent = error.message || "保存失败，请稍后重试。";
+    setEditorMessage(
+      error.message || "保存失败，请稍后重试。",
+      "error"
+    );
+    revealEditorMessage();
   } finally {
     setSaving(false);
   }
@@ -557,7 +582,7 @@ async function uploadImage(file) {
     .replace(/[^\p{L}\p{N}._-]+/gu, "-")
     .replace(/-+/g, "-");
   const path = `${UPLOADS_FOLDER}/${Date.now()}-${safeName}`;
-  editorMessage.textContent = "正在上传图片...";
+  setEditorMessage("正在上传图片，请稍候...", "saving");
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     let binary = "";
@@ -574,9 +599,11 @@ async function uploadImage(file) {
       })
     });
     insertText(`![图片说明](/uploads/${path.split("/").pop()})`);
-    editorMessage.textContent = "图片已上传并插入正文。";
+    setEditorMessage("图片上传成功，已插入正文。", "success");
+    revealEditorMessage();
   } catch (error) {
-    editorMessage.textContent = error.message || "图片上传失败。";
+    setEditorMessage(error.message || "图片上传失败。", "error");
+    revealEditorMessage();
   } finally {
     imageInput.value = "";
   }
@@ -588,7 +615,7 @@ async function deletePost() {
     "删除后文章会从 GitHub 移除。请输入“删除”确认："
   );
   if (confirmation !== "删除") return;
-  editorMessage.textContent = "正在删除文章...";
+  setEditorMessage("正在删除文章，请稍候...", "saving");
   setSaving(true);
   try {
     await github(`/repos/${REPO}/contents/${encodePath(currentPath)}`, {
@@ -606,7 +633,8 @@ async function deletePost() {
     renderPosts();
     showManager();
   } catch (error) {
-    editorMessage.textContent = error.message || "删除失败。";
+    setEditorMessage(error.message || "删除失败。", "error");
+    revealEditorMessage();
   } finally {
     setSaving(false);
   }

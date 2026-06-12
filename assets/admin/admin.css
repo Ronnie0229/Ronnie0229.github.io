@@ -758,9 +758,71 @@ summary {
 }
 
 .editor-message {
-  min-height: 28px;
-  padding: 14px 4px 90px;
-  color: #b8bec8;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0;
+  border: 1px solid #3a424e;
+  border-radius: 8px;
+  padding: 15px 18px;
+  color: #dfe5ec;
+  background: #151b24;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.editor-message:empty {
+  display: none;
+}
+
+.editor-message::before {
+  display: grid;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  content: "i";
+  color: #07111f;
+  background: #78b6ff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.editor-message[data-state="saving"] {
+  border-color: #356da8;
+  color: #d9ebff;
+  background: #10243b;
+}
+
+.editor-message[data-state="saving"]::before {
+  content: "...";
+}
+
+.editor-message[data-state="success"] {
+  border-color: #39845d;
+  color: #dcfbe8;
+  background: #10291e;
+}
+
+.editor-message[data-state="success"]::before {
+  content: "✓";
+  color: #082015;
+  background: #62d394;
+}
+
+.editor-message[data-state="error"] {
+  border-color: #a84d58;
+  color: #ffe1e5;
+  background: #32151a;
+}
+
+.editor-message[data-state="error"]::before {
+  content: "!";
+  color: #2d090e;
+  background: #ff8f9d;
 }
 
 .editor-actions {
