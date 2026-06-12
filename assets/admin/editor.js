@@ -74,6 +74,30 @@ async function github(path, options = {}) {
   return data;
 }
 
+async function findGithubFile(path) {
+  const response = await fetch(
+    `https://api.github.com/repos/${REPO}/contents/${encodePath(path)}?ref=${BRANCH}`,
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28"
+      }
+    }
+  );
+  if (response.status === 404) return null;
+
+  const data = await response.json();
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem("decap-cms-user");
+      throw new Error("GitHub 登录已失效，请重新连接。");
+    }
+    throw new Error(data?.message || "检查文章文件失败，请稍后重试。");
+  }
+  return data;
+}
+
 function parseValue(value) {
   const trimmed = value.trim();
   if (trimmed === "true") return true;
@@ -295,11 +319,12 @@ function resetForm() {
   currentPost = null;
   currentSha = "";
   currentPath = "";
-  currentFrontmatter = {};
+  currentFrontmatter = { articleId: `post-${crypto.randomUUID()}` };
   editorMessage.textContent = "";
   document.querySelector("[data-delete]").hidden = true;
   document.querySelector("[data-editor-mode]").textContent = "新建文章";
   document.querySelector("[data-editor-title]").textContent = "填写文章内容";
+  document.querySelector("[data-save-draft]").textContent = "保存草稿";
   setView("edit");
 }
 
@@ -347,6 +372,9 @@ async function openPost(post) {
       : "编辑文章";
     document.querySelector("[data-editor-title]").textContent =
       parsed.data.title || "编辑文章";
+    document.querySelector("[data-save-draft]").textContent = parsed.data.draft
+      ? "保存草稿"
+      : "转为草稿";
     editorMessage.textContent = "";
     showEditor();
     setView("edit");
@@ -390,6 +418,14 @@ function formData(draft) {
 
 async function savePost(draft) {
   if (!form.reportValidity()) return;
+  if (
+    draft &&
+    currentPost &&
+    !currentPost.draft &&
+    !window.confirm("保存为草稿后，这篇文章会暂时从网站撤下。确定继续吗？")
+  ) {
+    return;
+  }
   if (!draft && !bodyInput.value.trim()) {
     editorMessage.textContent = "发布文章前请填写正文。";
     bodyInput.focus();
@@ -397,20 +433,45 @@ async function savePost(draft) {
   }
   const data = formData(draft);
   const isNew = !currentPath;
-  const path =
+  let path =
     currentPath ||
     `${POSTS_FOLDER}/${data.date}-${slugify(data.title)}.md`;
+  let targetSha = currentSha;
   const raw = serializeMarkdown(data, bodyInput.value);
   editorMessage.textContent = draft ? "正在保存草稿..." : "正在发布文章...";
   setSaving(true);
 
   try {
+    if (isNew) {
+      const existing = await findGithubFile(path);
+      if (existing) {
+        const existingArticle = parseMarkdown(decodeBase64(existing.content));
+        if (existingArticle.data.articleId === data.articleId) {
+          targetSha = existing.sha;
+        } else {
+          const suffix = data.articleId.replace(/^post-/, "").slice(0, 8);
+          path = `${POSTS_FOLDER}/${data.date}-${slugify(data.title)}-${suffix}.md`;
+          const uniqueExisting = await findGithubFile(path);
+          if (uniqueExisting) {
+            const uniqueArticle = parseMarkdown(
+              decodeBase64(uniqueExisting.content)
+            );
+            if (uniqueArticle.data.articleId === data.articleId) {
+              targetSha = uniqueExisting.sha;
+            } else {
+              throw new Error("文章文件名发生冲突，请稍微修改标题后再保存。");
+            }
+          }
+        }
+      }
+    }
+
     const payload = {
       message: `${isNew ? "Create" : "Update"} article: ${data.title}`,
       content: encodeBase64(raw),
       branch: BRANCH
     };
-    if (currentSha) payload.sha = currentSha;
+    if (targetSha) payload.sha = targetSha;
 
     const result = await github(
       `/repos/${REPO}/contents/${encodePath(path)}`,
@@ -438,13 +499,21 @@ async function savePost(draft) {
       draft
     };
     posts = posts.filter((post) => post.articleId !== updated.articleId);
-    posts.unshift(updated);
+    posts.push(updated);
+    posts.sort(
+      (a, b) =>
+        new Date(b.date).valueOf() - new Date(a.date).valueOf() ||
+        a.title.localeCompare(b.title, "zh-CN")
+    );
     currentPost = updated;
     document.querySelector("[data-delete]").hidden = false;
     document.querySelector("[data-editor-mode]").textContent = draft
       ? "编辑草稿"
       : "编辑文章";
     document.querySelector("[data-editor-title]").textContent = data.title;
+    document.querySelector("[data-save-draft]").textContent = draft
+      ? "保存草稿"
+      : "转为草稿";
   } catch (error) {
     editorMessage.textContent = error.message || "保存失败，请稍后重试。";
   } finally {
