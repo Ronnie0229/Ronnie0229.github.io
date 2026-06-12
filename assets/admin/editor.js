@@ -15,9 +15,11 @@ const bodyInput = document.querySelector("[data-body]");
 const preview = document.querySelector("[data-preview]");
 const editorMessage = document.querySelector("[data-editor-message]");
 const imageInput = document.querySelector("[data-image-input]");
+const pagination = document.querySelector("[data-pagination]");
 
 let token = "";
 let posts = [];
+let currentPage = 1;
 let currentPost = null;
 let currentSha = "";
 let currentPath = "";
@@ -183,8 +185,15 @@ function renderPosts() {
     return matchesQuery && matchesFilter;
   });
 
+  const pageCount = Math.max(1, Math.ceil(filtered.length / 20));
+  currentPage = Math.min(currentPage, pageCount);
+  const pagePosts = filtered.slice((currentPage - 1) * 20, currentPage * 20);
+
   list.replaceChildren();
-  listStatus.textContent = `共 ${filtered.length} 篇文章`;
+  pagination.replaceChildren();
+  listStatus.textContent = filtered.length
+    ? `共 ${filtered.length} 篇文章 · 第 ${currentPage} / ${pageCount} 页`
+    : "共 0 篇文章";
   if (!filtered.length) {
     const empty = document.createElement("p");
     empty.className = "admin-empty";
@@ -193,7 +202,7 @@ function renderPosts() {
     return;
   }
 
-  filtered.forEach((post) => {
+  pagePosts.forEach((post) => {
     const article = document.createElement("article");
     article.className = "article-row";
     article.id = `article-${post.articleId || post.slug}`;
@@ -210,6 +219,10 @@ function renderPosts() {
     const title = document.createElement("strong");
     title.textContent = post.title;
 
+    const scripture = document.createElement("span");
+    scripture.className = "article-row-scripture";
+    scripture.textContent = post.scripture || "点击打开并编辑文章";
+
     const badges = document.createElement("span");
     badges.className = "article-row-badges";
     if (post.draft) {
@@ -219,15 +232,41 @@ function renderPosts() {
       badges.append(draft);
     }
 
-    content.append(meta, title, badges);
-    const edit = document.createElement("button");
-    edit.type = "button";
-    edit.className = "article-edit-button";
-    edit.textContent = "编辑";
-    edit.addEventListener("click", () => openPost(post));
-    article.append(content, edit);
+    const action = document.createElement("span");
+    action.className = "article-row-action";
+    action.textContent = "编辑";
+
+    content.append(meta, title, scripture, badges, action);
+    article.append(content);
     list.append(article);
   });
+
+  if (pageCount > 1) {
+    const previous = document.createElement("button");
+    previous.type = "button";
+    previous.textContent = "上一页";
+    previous.disabled = currentPage === 1;
+    previous.addEventListener("click", () => {
+      currentPage -= 1;
+      renderPosts();
+      manager.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    const pageLabel = document.createElement("span");
+    pageLabel.textContent = `${currentPage} / ${pageCount}`;
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.textContent = "下一页";
+    next.disabled = currentPage === pageCount;
+    next.addEventListener("click", () => {
+      currentPage += 1;
+      renderPosts();
+      manager.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    pagination.append(previous, pageLabel, next);
+  }
 }
 
 async function loadPosts() {
@@ -509,8 +548,14 @@ document.querySelector("[data-save-draft]").addEventListener("click", () => {
   savePost(true);
 });
 document.querySelector("[data-delete]").addEventListener("click", deletePost);
-searchInput.addEventListener("input", renderPosts);
-filterSelect.addEventListener("change", renderPosts);
+searchInput.addEventListener("input", () => {
+  currentPage = 1;
+  renderPosts();
+});
+filterSelect.addEventListener("change", () => {
+  currentPage = 1;
+  renderPosts();
+});
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   savePost(false);

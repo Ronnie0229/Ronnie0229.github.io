@@ -13,7 +13,7 @@ export async function GET() {
       scripture: post.data.scripture,
       draft: post.data.draft
     }))
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
 
   return new Response(JSON.stringify(result), {
     headers: {
