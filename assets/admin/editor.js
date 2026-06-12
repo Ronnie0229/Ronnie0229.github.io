@@ -778,8 +778,9 @@ async function uploadImage(file) {
 
 async function deletePost() {
   if (!currentPath || !currentSha) return;
+  const title = form.elements.title.value.trim() || "这篇文章";
   const confirmation = window.prompt(
-    "删除后文章会从 GitHub 移除。请输入“删除”确认："
+    `即将永久删除《${title}》。\n\n删除后文章会从 GitHub 和网站移除，无法在管理页恢复。\n请输入“删除”确认：`
   );
   if (confirmation !== "删除") return;
   setEditorMessage("正在删除文章，请稍候...", "saving");
@@ -800,6 +801,9 @@ async function deletePost() {
     renderPosts();
     markEditorClean();
     showManager(true);
+    listStatus.textContent =
+      "文章已从 GitHub 删除，Cloudflare 正在更新网站。";
+    listStatus.scrollIntoView({ behavior: "smooth", block: "center" });
   } catch (error) {
     setEditorMessage(error.message || "删除失败。", "error");
     revealEditorMessage();

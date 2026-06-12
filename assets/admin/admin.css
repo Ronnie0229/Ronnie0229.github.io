@@ -573,6 +573,17 @@ summary {
   color: #ffb1bc;
 }
 
+.danger-button {
+  border: 1px solid #82404a;
+  color: #ffd7dc;
+  background: #32151a;
+}
+
+.danger-button:hover {
+  border-color: #b45865;
+  background: #491d24;
+}
+
 .editor-section {
   margin-top: 14px;
   padding: 22px;
@@ -859,6 +870,10 @@ summary {
   backdrop-filter: blur(18px);
 }
 
+.editor-actions .danger-button {
+  margin-right: auto;
+}
+
 @media (max-width: 720px) {
   .admin-shell {
     width: min(100% - 24px, 1080px);
@@ -995,6 +1010,12 @@ summary {
   .editor-actions .primary-button {
     grid-column: 1 / -1;
     grid-row: 1;
+  }
+
+  .editor-actions .danger-button {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-right: 0;
   }
 
   .editor-actions button {
