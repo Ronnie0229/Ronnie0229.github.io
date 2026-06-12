@@ -209,7 +209,10 @@ const { postSlug } = Astro.props;
 
         contentInput.value = "";
         clearReply();
-        status.textContent = "留言已发布";
+        status.textContent =
+          data.status === "hidden"
+            ? "留言已提交，因含有多个链接，需要审核后显示"
+            : "留言已发布";
         await loadComments();
       } catch (error) {
         status.textContent = error instanceof Error ? error.message : "发布失败，请稍后再试";

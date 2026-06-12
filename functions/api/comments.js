@@ -17,6 +17,11 @@ function cleanText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function requiresModeration(content) {
+  const links = content.match(/(?:https?:\/\/|www\.)\S+/gi) || [];
+  return links.length >= 2 || /(?:javascript:|data:text\/html|bit\.ly|tinyurl\.com)/i.test(content);
+}
+
 async function hashVisitor(request) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const userAgent = request.headers.get("User-Agent") || "unknown";
@@ -154,6 +159,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     const visitorHash = await hashVisitor(request);
+    const status = requiresModeration(content) ? "hidden" : "visible";
     const recent = await env.COMMENTS_DB.prepare(
       `SELECT COUNT(*) AS count
        FROM comments
@@ -182,10 +188,10 @@ export async function onRequestPost({ request, env }) {
 
     const result = await env.COMMENTS_DB.prepare(
       `INSERT INTO comments
-       (post_slug, parent_id, author_name, content, visitor_hash)
-       VALUES (?, ?, ?, ?, ?)`
+       (post_slug, parent_id, author_name, content, visitor_hash, status)
+       VALUES (?, ?, ?, ?, ?, ?)`
     )
-      .bind(postSlug, parentId, authorName, content, visitorHash)
+      .bind(postSlug, parentId, authorName, content, visitorHash, status)
       .run();
 
     const comment = await env.COMMENTS_DB.prepare(
@@ -195,7 +201,7 @@ export async function onRequestPost({ request, env }) {
       .bind(result.meta.last_row_id)
       .first();
 
-    return json({ comment }, 201);
+    return json({ comment, status }, 201);
   } catch {
     return json({ error: "暂时无法提交留言" }, 500);
   }

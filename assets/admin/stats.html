@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>数据概览 | Ronnie</title>
+    <link rel="stylesheet" href="/admin/admin.css?v=20260613-3">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header compact">
+        <div>
+          <p class="admin-eyebrow">数据概览</p>
+          <h1>阅读与留言</h1>
+          <p>只统计文章阅读次数和每日总量，不记录游客身份。</p>
+        </div>
+        <nav class="admin-nav">
+          <a href="/admin/">管理首页</a>
+          <a href="/admin/editor.html">文章管理</a>
+          <a href="/">返回网站</a>
+        </nav>
+      </header>
+      <div class="admin-status" data-stats-status>正在读取数据...</div>
+      <section class="stats-summary" data-stats-summary></section>
+      <section class="stats-grid">
+        <article class="stats-panel">
+          <h2>热门文章</h2>
+          <ol class="popular-list" data-popular-list></ol>
+        </article>
+        <article class="stats-panel">
+          <h2>近 30 天阅读趋势</h2>
+          <div class="trend-chart" data-trend-chart></div>
+        </article>
+      </section>
+    </main>
+    <script src="/admin/stats.js?v=20260613-3"></script>
+  </body>
+</html>

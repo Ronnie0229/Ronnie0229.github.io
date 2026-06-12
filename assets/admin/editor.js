@@ -16,6 +16,10 @@ const preview = document.querySelector("[data-preview]");
 const editorMessage = document.querySelector("[data-editor-message]");
 const backupStatus = document.querySelector("[data-backup-status]");
 const imageInput = document.querySelector("[data-image-input]");
+const imageDialog = document.querySelector("[data-image-dialog]");
+const imageGrid = document.querySelector("[data-image-grid]");
+const imageStatus = document.querySelector("[data-image-status]");
+const revisionMeta = document.querySelector("[data-revision-meta]");
 const pagination = document.querySelector("[data-pagination]");
 const BACKUP_PREFIX = "ronniecross-editor-backup-";
 
@@ -31,6 +35,7 @@ let cleanSnapshot = "";
 let isDirty = false;
 let backupTimer = 0;
 let deploymentMonitorToken = 0;
+let deployingArticleId = "";
 
 function setEditorMessage(message = "", state = "") {
   editorMessage.textContent = message;
@@ -318,6 +323,25 @@ function formatDate(value) {
   }).format(new Date(`${String(value).slice(0, 10)}T00:00:00`));
 }
 
+function normalizeScripture(value) {
+  return String(value || "")
+    .trim()
+    .replace(/[：﹕]/g, ":")
+    .replace(/[－–—]/g, "-")
+    .replace(/\s*:\s*/g, ":")
+    .replace(/\s*-\s*/g, "-")
+    .replace(/\s+/g, " ");
+}
+
+function articleStatus(post) {
+  if (deployingArticleId && post.articleId === deployingArticleId) {
+    return { label: "部署中", className: "deploying" };
+  }
+  return post.draft
+    ? { label: "草稿", className: "hidden" }
+    : { label: "已发布", className: "visible" };
+}
+
 function encodePath(path) {
   return path.split("/").map(encodeURIComponent).join("/");
 }
@@ -376,12 +400,11 @@ function renderPosts() {
 
     const badges = document.createElement("span");
     badges.className = "article-row-badges";
-    if (post.draft) {
-      const draft = document.createElement("span");
-      draft.className = "status-badge hidden";
-      draft.textContent = "草稿";
-      badges.append(draft);
-    }
+    const status = articleStatus(post);
+    const badge = document.createElement("span");
+    badge.className = `status-badge ${status.className}`;
+    badge.textContent = status.label;
+    badges.append(badge);
 
     const action = document.createElement("span");
     action.className = "article-row-action";
@@ -456,6 +479,8 @@ function resetForm() {
   currentSha = "";
   currentPath = "";
   currentFrontmatter = { articleId: `post-${crypto.randomUUID()}` };
+  revisionMeta.hidden = true;
+  revisionMeta.replaceChildren();
   setEditorMessage();
   document.querySelector("[data-delete]").hidden = true;
   document.querySelector("[data-editor-mode]").textContent = "新建文章";
@@ -518,8 +543,41 @@ async function openPost(post) {
     setView("edit");
     markEditorClean(getBackupKey(), false);
     restoreBackupIfAvailable();
+    loadRevision(path);
   } catch (error) {
     listStatus.textContent = error.message || "打开文章失败。";
+  }
+}
+
+async function loadRevision(path) {
+  revisionMeta.hidden = false;
+  revisionMeta.textContent = "正在读取最近修改记录...";
+  try {
+    const commits = await github(
+      `/repos/${REPO}/commits?path=${encodeURIComponent(path)}&sha=${BRANCH}&per_page=1`
+    );
+    const latest = commits?.[0];
+    if (!latest) {
+      revisionMeta.textContent = "暂无修订记录";
+      return;
+    }
+    const date = new Intl.DateTimeFormat("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(new Date(latest.commit.committer.date));
+    const text = document.createElement("span");
+    text.textContent = `最近修改：${date}`;
+    const link = document.createElement("a");
+    link.href = `https://github.com/${REPO}/commits/${BRANCH}/${path}`;
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    link.textContent = "查看修订记录";
+    revisionMeta.replaceChildren(text, link);
+  } catch {
+    revisionMeta.textContent = "暂时无法读取修订记录";
   }
 }
 
@@ -548,12 +606,35 @@ function formData(draft) {
     date: form.elements.date.value,
     tags,
     category: form.elements.category.value,
-    scripture: form.elements.scripture.value.trim(),
+    scripture: normalizeScripture(form.elements.scripture.value),
     author: form.elements.author.value.trim() || "Ronnie",
     reviewed: form.elements.reviewed.checked,
     draft,
     source: form.elements.source.value.trim()
   };
+}
+
+function validatePost(data, draft) {
+  const errors = [];
+  const warnings = [];
+  if (!data.title) errors.push("请填写文章标题");
+  if (!data.date) errors.push("请选择发布日期");
+  if (!data.category) errors.push("请选择文章分类");
+  if (!draft && !bodyInput.value.trim()) errors.push("请填写文章正文");
+  if (!draft && !data.description) errors.push("请填写内容摘要");
+  if (
+    data.scripture &&
+    !/[\u4e00-\u9fff]+\s*\d+(?::\d+)?(?:-\d+)?/.test(data.scripture)
+  ) {
+    warnings.push("经文格式建议写成“罗马书 8:1-4”");
+  }
+  const duplicate = posts.find(
+    (post) =>
+      post.articleId !== data.articleId &&
+      post.title.trim().toLowerCase() === data.title.toLowerCase()
+  );
+  if (duplicate) warnings.push(`已有同名文章：${duplicate.title}`);
+  return { errors, warnings };
 }
 
 async function savePost(draft) {
@@ -566,13 +647,20 @@ async function savePost(draft) {
   ) {
     return;
   }
-  if (!draft && !bodyInput.value.trim()) {
-    setEditorMessage("发布文章前请填写正文。", "error");
-    bodyInput.focus();
+  const data = formData(draft);
+  form.elements.scripture.value = data.scripture;
+  const validation = validatePost(data, draft);
+  if (validation.errors.length) {
+    setEditorMessage(`请先处理：${validation.errors.join("；")}`, "error");
     revealEditorMessage();
     return;
   }
-  const data = formData(draft);
+  if (
+    validation.warnings.length &&
+    !window.confirm(`${validation.warnings.join("\n")}\n\n仍要继续${draft ? "保存草稿" : "发布"}吗？`)
+  ) {
+    return;
+  }
   const isNew = !currentPath;
   const backupKey = getBackupKey();
   let path =
@@ -587,6 +675,18 @@ async function savePost(draft) {
   setSaving(true);
 
   try {
+    if (!isNew) {
+      const latest = await findGithubFile(path);
+      if (!latest) {
+        throw new Error("远端文章已经不存在，请返回列表重新确认。");
+      }
+      if (latest.sha !== currentSha) {
+        throw new Error(
+          "这篇文章刚刚在其他设备上被修改过。为避免覆盖，请返回文章列表重新打开，再继续编辑。"
+        );
+      }
+      targetSha = latest.sha;
+    }
     if (isNew) {
       const existing = await findGithubFile(path);
       if (existing) {
@@ -655,6 +755,7 @@ async function savePost(draft) {
         a.title.localeCompare(b.title, "zh-CN")
     );
     currentPost = updated;
+    deployingArticleId = data.articleId;
     document.querySelector("[data-delete]").hidden = false;
     document.querySelector("[data-editor-mode]").textContent = draft
       ? "编辑草稿"
@@ -718,6 +819,8 @@ async function monitorDeployment(commitSha, draft) {
       if (response.ok) {
         const deployment = await response.json();
         if (deployment.commit === commitSha) {
+          deployingArticleId = "";
+          renderPosts();
           setEditorMessage(
             draft
               ? "草稿保存成功，管理列表已更新。"
@@ -739,6 +842,43 @@ async function monitorDeployment(commitSha, draft) {
       "内容已保存到 GitHub，Cloudflare 仍在部署，可稍后刷新查看。",
       "deploying"
     );
+  }
+}
+
+async function openImageLibrary() {
+  imageGrid.replaceChildren();
+  imageStatus.textContent = "正在读取图片...";
+  imageDialog.showModal();
+  try {
+    const items = await github(
+      `/repos/${REPO}/contents/${encodePath(UPLOADS_FOLDER)}?ref=${BRANCH}`
+    );
+    const images = (Array.isArray(items) ? items : [])
+      .filter((item) => item.type === "file" && /\.(avif|gif|jpe?g|png|webp)$/i.test(item.name))
+      .sort((a, b) => b.name.localeCompare(a.name));
+    imageStatus.textContent = images.length
+      ? `共 ${images.length} 张图片，点击即可插入正文`
+      : "还没有上传图片";
+    images.forEach((image) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "image-library-item";
+      const previewImage = document.createElement("img");
+      previewImage.src = `/uploads/${image.name}`;
+      previewImage.alt = "";
+      previewImage.loading = "lazy";
+      const name = document.createElement("span");
+      name.textContent = image.name.replace(/^\d+-/, "");
+      button.append(previewImage, name);
+      button.addEventListener("click", () => {
+        insertText(`![图片说明](/uploads/${image.name})`);
+        imageDialog.close();
+        setEditorMessage("图片已插入正文。", "success");
+      });
+      imageGrid.append(button);
+    });
+  } catch (error) {
+    imageStatus.textContent = error.message || "暂时无法读取图片库";
   }
 }
 
@@ -846,6 +986,8 @@ document.querySelector("[data-link]").addEventListener("click", () => {
 document.querySelector("[data-image]").addEventListener("click", () => {
   imageInput.click();
 });
+document.querySelector("[data-image-library]").addEventListener("click", openImageLibrary);
+document.querySelector("[data-image-close]").addEventListener("click", () => imageDialog.close());
 imageInput.addEventListener("change", () => uploadImage(imageInput.files[0]));
 form.addEventListener("input", scheduleAutoBackup);
 form.addEventListener("change", scheduleAutoBackup);

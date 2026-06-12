@@ -78,14 +78,28 @@ export async function onRequestPost({ request, env }) {
 
   try {
     await env.COMMENTS_DB.prepare(
-      `INSERT INTO post_views (post_slug, view_count)
-       VALUES (?, 1)
-       ON CONFLICT(post_slug) DO UPDATE SET
-         view_count = view_count + 1,
-         updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`
-    )
-      .bind(postSlug)
-      .run();
+      `CREATE TABLE IF NOT EXISTS daily_views (
+         view_date TEXT NOT NULL,
+         post_slug TEXT NOT NULL,
+         view_count INTEGER NOT NULL DEFAULT 0,
+         PRIMARY KEY (view_date, post_slug)
+       )`
+    ).run();
+    await env.COMMENTS_DB.batch([
+      env.COMMENTS_DB.prepare(
+        `INSERT INTO post_views (post_slug, view_count)
+         VALUES (?, 1)
+         ON CONFLICT(post_slug) DO UPDATE SET
+           view_count = view_count + 1,
+           updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`
+      ).bind(postSlug),
+      env.COMMENTS_DB.prepare(
+        `INSERT INTO daily_views (view_date, post_slug, view_count)
+         VALUES (date('now'), ?, 1)
+         ON CONFLICT(view_date, post_slug) DO UPDATE SET
+           view_count = view_count + 1`
+      ).bind(postSlug)
+    ]);
 
     const result = await env.COMMENTS_DB.prepare(
       `SELECT view_count AS viewCount

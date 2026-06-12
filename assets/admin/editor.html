@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
     <title>文章管理 | Ronnie</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=20260613-2">
+    <link rel="stylesheet" href="/admin/admin.css?v=20260613-3">
   </head>
   <body>
     <main class="admin-shell editor-shell">
@@ -59,6 +59,7 @@
           <div>
             <p class="admin-eyebrow" data-editor-mode>新建文章</p>
             <h2 data-editor-title>填写文章内容</h2>
+            <p class="revision-meta" data-revision-meta hidden></p>
           </div>
             <details class="more-menu" data-more-menu>
               <summary>更多</summary>
@@ -107,7 +108,8 @@
               <button type="button" data-wrap="**">粗体</button>
               <button type="button" data-insert="> ">引用</button>
               <button type="button" data-link>链接</button>
-              <button type="button" data-image>图片</button>
+              <button type="button" data-image>上传图片</button>
+              <button type="button" data-image-library>图片库</button>
               <input type="file" accept="image/*" data-image-input hidden>
             </div>
             <textarea
@@ -160,6 +162,17 @@
         </form>
       </section>
     </main>
-    <script src="/admin/editor.js?v=20260613-2"></script>
+    <dialog class="image-library" data-image-dialog>
+      <div class="image-library-heading">
+        <div>
+          <p class="admin-eyebrow">图片管理</p>
+          <h2>选择已上传图片</h2>
+        </div>
+        <button class="secondary-button" type="button" data-image-close>关闭</button>
+      </div>
+      <p class="admin-status" data-image-status>正在读取图片...</p>
+      <div class="image-library-grid" data-image-grid></div>
+    </dialog>
+    <script src="/admin/editor.js?v=20260613-3"></script>
   </body>
 </html>

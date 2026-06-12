@@ -21,6 +21,18 @@
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html {
   min-width: 320px;
   background: var(--bg);
@@ -673,12 +685,16 @@ h2 {
 }
 
 .article-page {
-  width: min(820px, 100%);
+  width: min(720px, 100%);
   margin: 0 auto;
 }
 
 .article-header {
   padding: 34px 0 26px;
+}
+
+.article-header h1 {
+  font-weight: 650;
 }
 
 .article-stats {
@@ -694,6 +710,13 @@ h2 {
 .article-stats strong {
   color: var(--soft);
   font-weight: 500;
+}
+
+.article-scripture {
+  margin: -8px 0 16px;
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .article-toc {
@@ -732,10 +755,66 @@ h2 {
 
 .article-content {
   border-top: 1px solid var(--line);
-  padding-top: 34px;
+  border-radius: 6px;
+  padding: 34px clamp(0px, 2vw, 18px) 8px;
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
   color: var(--soft);
   font-size: 18px;
-  line-height: 1.9;
+  line-height: 1.82;
+}
+
+.reading-progress {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  pointer-events: none;
+}
+
+.reading-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.related-posts {
+  margin-top: 48px;
+  border-top: 1px solid var(--line);
+  padding-top: 30px;
+}
+
+.related-posts h2 {
+  margin: 5px 0 18px;
+  font-size: 26px;
+}
+
+.related-posts > div {
+  display: grid;
+  gap: 10px;
+}
+
+.related-posts a {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--panel);
+}
+
+.related-posts a span {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.related-posts a strong {
+  color: var(--text);
+  line-height: 1.5;
 }
 
 .article-content h2 {
