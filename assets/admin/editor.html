@@ -5,9 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
     <title>文章管理 | Ronnie</title>
+    <link rel="stylesheet" href="/admin/admin.css">
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@3.14.0/dist/decap-cms.js"></script>
+    <main class="admin-shell editor-shell">
+      <header class="admin-header compact">
+        <div>
+          <p class="admin-eyebrow">文章管理</p>
+          <h1>文章与草稿</h1>
+          <p>在手机或电脑上新建、修改和发布文章。</p>
+        </div>
+        <nav class="admin-nav" aria-label="管理导航">
+          <a href="/admin/">管理首页</a>
+          <a href="/admin/comments.html">留言管理</a>
+          <a href="/">返回网站</a>
+        </nav>
+      </header>
+
+      <section class="auth-panel" data-auth-panel hidden>
+        <h2>连接 GitHub</h2>
+        <p>文章保存在 GitHub。连接成功后才能读取和保存文章。</p>
+        <a class="primary-button" href="/admin/api/auth">连接 GitHub</a>
+      </section>
+
+      <section class="article-manager" data-manager hidden>
+        <div class="article-toolbar">
+          <label class="article-search">
+            <span class="sr-only">搜索文章</span>
+            <input type="search" placeholder="搜索标题或经文" data-search>
+          </label>
+          <label>
+            <span class="sr-only">筛选文章</span>
+            <select data-filter>
+              <option value="all">全部文章</option>
+              <option value="教会讲道">教会讲道</option>
+              <option value="灵命成长">灵命成长</option>
+              <option value="draft">草稿</option>
+            </select>
+          </label>
+          <button class="primary-button" type="button" data-new>新建文章</button>
+        </div>
+
+        <div class="admin-status" data-list-status aria-live="polite">
+          正在读取文章...
+        </div>
+        <section class="article-list" data-article-list></section>
+      </section>
+
+      <section class="article-editor" data-editor hidden>
+        <div class="editor-heading">
+          <button class="text-button" type="button" data-back>返回文章列表</button>
+          <div>
+            <p class="admin-eyebrow" data-editor-mode>新建文章</p>
+            <h2 data-editor-title>填写文章内容</h2>
+          </div>
+          <details class="more-menu" data-more-menu>
+            <summary>更多</summary>
+            <div>
+              <a href="/admin/decap.html">打开备用编辑器</a>
+              <button class="danger-text" type="button" data-delete hidden>
+                删除这篇文章
+              </button>
+            </div>
+          </details>
+        </div>
+
+        <form data-article-form>
+          <section class="editor-section">
+            <h3>基本信息</h3>
+            <div class="editor-fields two-columns">
+              <label class="field-wide">
+                <span>文章标题</span>
+                <input name="title" required placeholder="输入清楚、完整的标题">
+              </label>
+              <label>
+                <span>发布日期</span>
+                <input name="date" type="date" required>
+              </label>
+              <label>
+                <span>文章分类</span>
+                <select name="category">
+                  <option value="灵命成长">灵命成长</option>
+                  <option value="教会讲道">教会讲道</option>
+                </select>
+              </label>
+              <label class="field-wide">
+                <span>圣经经文</span>
+                <input name="scripture" placeholder="例如：罗马书 8:1-11">
+              </label>
+            </div>
+          </section>
+
+          <section class="editor-section content-section">
+            <div class="section-heading">
+              <h3>文章内容</h3>
+              <div class="segmented-control" role="group" aria-label="内容显示方式">
+                <button class="active" type="button" data-view="edit">编辑</button>
+                <button type="button" data-view="preview">预览</button>
+              </div>
+            </div>
+            <div class="compact-toolbar" aria-label="正文工具">
+              <button type="button" data-insert="## ">标题</button>
+              <button type="button" data-wrap="**">粗体</button>
+              <button type="button" data-insert="> ">引用</button>
+              <button type="button" data-link>链接</button>
+              <button type="button" data-image>图片</button>
+              <input type="file" accept="image/*" data-image-input hidden>
+            </div>
+            <textarea
+              class="body-editor"
+              name="body"
+              placeholder="从这里开始写正文..."
+              data-body
+            ></textarea>
+            <article class="body-preview" data-preview hidden></article>
+          </section>
+
+          <details class="editor-section advanced-section">
+            <summary>摘要与其他设置</summary>
+            <div class="editor-fields two-columns advanced-fields">
+              <label class="field-wide">
+                <span>内容摘要</span>
+                <textarea name="description" rows="4" placeholder="用于文章列表的简短介绍"></textarea>
+              </label>
+              <label class="field-wide">
+                <span>标签</span>
+                <input name="tags" placeholder="多个标签用逗号分隔">
+              </label>
+              <label>
+                <span>作者</span>
+                <input name="author" value="Ronnie">
+              </label>
+              <label>
+                <span>原始资料</span>
+                <input name="source">
+              </label>
+              <label class="check-field">
+                <input name="reviewed" type="checkbox">
+                <span>已经人工复核</span>
+              </label>
+            </div>
+          </details>
+
+          <div class="editor-message" data-editor-message aria-live="polite"></div>
+          <div class="editor-actions">
+            <button class="secondary-button" type="button" data-cancel>取消</button>
+            <button class="secondary-button" type="button" data-save-draft>
+              保存草稿
+            </button>
+            <button class="primary-button" type="submit">发布文章</button>
+          </div>
+        </form>
+      </section>
+    </main>
     <script src="/admin/editor.js"></script>
   </body>
 </html>
