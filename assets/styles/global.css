@@ -87,9 +87,10 @@ a {
 
 .brand img {
   display: block;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
+  transform: translateY(1px);
 }
 
 .site-nav {
@@ -1095,8 +1096,8 @@ h2 {
   }
 
   .brand img {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
   }
 
   .site-nav {
