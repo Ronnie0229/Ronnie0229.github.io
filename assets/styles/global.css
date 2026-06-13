@@ -77,8 +77,19 @@ a {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
   font-size: 18px;
   font-weight: 600;
+}
+
+.brand img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
 }
 
 .site-nav {
@@ -1081,6 +1092,11 @@ h2 {
     align-items: flex-start;
     gap: 14px;
     flex-direction: column;
+  }
+
+  .brand img {
+    width: 30px;
+    height: 30px;
   }
 
   .site-nav {
