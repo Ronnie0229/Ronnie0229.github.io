@@ -90,7 +90,6 @@ a {
   width: 18px;
   height: 18px;
   object-fit: contain;
-  transform: translateY(1px);
 }
 
 .site-nav {
