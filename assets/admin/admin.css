@@ -171,6 +171,60 @@ select {
   color: #b8bec8;
 }
 
+.admin-operation-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 8px;
+  border: 1px solid #8b6d2f;
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #fff0c2;
+  background: #2a2110;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.admin-operation-status[hidden] {
+  display: none;
+}
+
+.admin-operation-status::before {
+  display: grid;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  content: "↻";
+  color: #281d05;
+  background: #efc968;
+}
+
+.admin-operation-status[data-state="success"] {
+  border-color: #39845d;
+  color: #dcfbe8;
+  background: #10291e;
+}
+
+.admin-operation-status[data-state="success"]::before {
+  content: "✓";
+  color: #082015;
+  background: #62d394;
+}
+
+.admin-operation-status[data-state="error"] {
+  border-color: #a84d58;
+  color: #ffe1e5;
+  background: #32151a;
+}
+
+.admin-operation-status[data-state="error"]::before {
+  content: "!";
+  color: #2d090e;
+  background: #ff8f9d;
+}
+
 .admin-comments {
   display: grid;
   gap: 12px;
@@ -299,6 +353,11 @@ select {
 .status-badge.deploying {
   background: #16365e;
   color: #a9d1ff;
+}
+
+.status-badge.deleting {
+  background: #4a2026;
+  color: #ffbdc6;
 }
 
 .admin-comment-meta {
@@ -527,6 +586,16 @@ summary {
 .article-row:hover {
   border-color: #4c6480;
   background: rgba(20, 26, 35, 0.98);
+}
+
+.article-row.is-deleting {
+  border-color: #74434b;
+  background: rgba(39, 20, 24, 0.96);
+}
+
+.article-row.is-deleting .article-row-main {
+  cursor: wait;
+  opacity: 0.74;
 }
 
 .article-edit-button {

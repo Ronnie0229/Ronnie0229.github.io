@@ -8,6 +8,7 @@ const manager = document.querySelector("[data-manager]");
 const editor = document.querySelector("[data-editor]");
 const list = document.querySelector("[data-article-list]");
 const listStatus = document.querySelector("[data-list-status]");
+const operationStatus = document.querySelector("[data-operation-status]");
 const searchInput = document.querySelector("[data-search]");
 const filterSelect = document.querySelector("[data-filter]");
 const form = document.querySelector("[data-article-form]");
@@ -36,6 +37,7 @@ let isDirty = false;
 let backupTimer = 0;
 let deploymentMonitorToken = 0;
 let deployingArticleId = "";
+let pendingOperation = null;
 
 function setEditorMessage(message = "", state = "") {
   editorMessage.textContent = message;
@@ -44,6 +46,24 @@ function setEditorMessage(message = "", state = "") {
   } else {
     delete editorMessage.dataset.state;
   }
+}
+
+function setOperationStatus(message = "", state = "") {
+  operationStatus.textContent = message;
+  operationStatus.hidden = !message;
+  if (state) {
+    operationStatus.dataset.state = state;
+  } else {
+    delete operationStatus.dataset.state;
+  }
+}
+
+function focusArticle(articleId) {
+  if (!articleId) return;
+  window.requestAnimationFrame(() => {
+    const article = document.getElementById(`article-${articleId}`);
+    article?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 }
 
 function revealEditorMessage() {
@@ -334,6 +354,14 @@ function normalizeScripture(value) {
 }
 
 function articleStatus(post) {
+  if (pendingOperation?.articleId === post.articleId) {
+    if (pendingOperation.type === "delete") {
+      return { label: "删除中", className: "deleting" };
+    }
+    if (pendingOperation.type === "publish") {
+      return { label: "发布中", className: "deploying" };
+    }
+  }
   if (deployingArticleId && post.articleId === deployingArticleId) {
     return { label: "部署中", className: "deploying" };
   }
@@ -381,10 +409,15 @@ function renderPosts() {
     const article = document.createElement("article");
     article.className = "article-row";
     article.id = `article-${post.articleId || post.slug}`;
+    const isDeleting =
+      pendingOperation?.type === "delete" &&
+      pendingOperation.articleId === post.articleId;
+    article.classList.toggle("is-deleting", isDeleting);
 
     const content = document.createElement("button");
     content.type = "button";
     content.className = "article-row-main";
+    content.disabled = isDeleting;
     content.addEventListener("click", () => openPost(post));
 
     const meta = document.createElement("span");
@@ -408,7 +441,7 @@ function renderPosts() {
 
     const action = document.createElement("span");
     action.className = "article-row-action";
-    action.textContent = "编辑";
+    action.textContent = isDeleting ? "请稍候" : "编辑";
 
     content.append(meta, title, scripture, badges, action);
     article.append(content);
@@ -766,7 +799,27 @@ async function savePost(draft) {
       : "转为草稿";
     renderPosts();
     markEditorClean(backupKey);
-    monitorDeployment(result.commit.sha, draft);
+    if (draft) {
+      monitorDeployment(result.commit.sha, { type: "draft", articleId: data.articleId });
+    } else {
+      pendingOperation = {
+        type: "publish",
+        articleId: data.articleId,
+        title: data.title
+      };
+      if (isNew) currentPage = 1;
+      setOperationStatus(
+        `《${data.title}》已提交到 GitHub，正在发布到网站。`,
+        "deploying"
+      );
+      showManager(true);
+      focusArticle(data.articleId);
+      monitorDeployment(result.commit.sha, {
+        type: "publish",
+        articleId: data.articleId,
+        title: data.title
+      });
+    }
   } catch (error) {
     setEditorMessage(
       error.message || "保存失败，请稍后重试。",
@@ -806,7 +859,7 @@ function insertText(prefix, suffix = "") {
   scheduleAutoBackup();
 }
 
-async function monitorDeployment(commitSha, draft) {
+async function monitorDeployment(commitSha, operation) {
   const monitorToken = ++deploymentMonitorToken;
   const deadline = Date.now() + 5 * 60 * 1000;
 
@@ -820,14 +873,24 @@ async function monitorDeployment(commitSha, draft) {
         const deployment = await response.json();
         if (deployment.commit === commitSha) {
           deployingArticleId = "";
+          if (operation.type === "delete") {
+            posts = posts.filter(
+              (post) => post.articleId !== operation.articleId
+            );
+          }
+          pendingOperation = null;
           renderPosts();
-          setEditorMessage(
-            draft
-              ? "草稿保存成功，管理列表已更新。"
-              : "文章发布成功，网站已更新。",
-            "success"
-          );
-          revealEditorMessage();
+          if (operation.type === "draft") {
+            setEditorMessage("草稿保存成功，管理列表已更新。", "success");
+            revealEditorMessage();
+          } else {
+            setOperationStatus(
+              operation.type === "delete"
+                ? `《${operation.title}》删除成功，网站已更新。`
+                : `《${operation.title}》发布成功，网站已更新。`,
+              "success"
+            );
+          }
           return;
         }
       }
@@ -838,10 +901,19 @@ async function monitorDeployment(commitSha, draft) {
   }
 
   if (monitorToken === deploymentMonitorToken) {
-    setEditorMessage(
-      "内容已保存到 GitHub，Cloudflare 仍在部署，可稍后刷新查看。",
-      "deploying"
-    );
+    if (operation.type === "draft") {
+      setEditorMessage(
+        "内容已保存到 GitHub，Cloudflare 仍在部署，可稍后刷新查看。",
+        "deploying"
+      );
+    } else {
+      setOperationStatus(
+        operation.type === "delete"
+          ? `《${operation.title}》已从 GitHub 删除，Cloudflare 仍在更新网站。`
+          : `《${operation.title}》已保存到 GitHub，Cloudflare 仍在发布。`,
+        "deploying"
+      );
+    }
   }
 }
 
@@ -923,30 +995,54 @@ async function deletePost() {
     `即将永久删除《${title}》。\n\n删除后文章会从 GitHub 和网站移除，无法在管理页恢复。\n请输入“删除”确认：`
   );
   if (confirmation !== "删除") return;
-  setEditorMessage("正在删除文章，请稍候...", "saving");
+  const articleId = currentFrontmatter.articleId;
+  const path = currentPath;
+  const fallbackSha = currentSha;
+  pendingOperation = { type: "delete", articleId, title };
+  setOperationStatus(
+    `正在删除《${title}》，请不要重复点击。`,
+    "deleting"
+  );
+  showManager(true);
+  focusArticle(articleId);
   setSaving(true);
   try {
-    await github(`/repos/${REPO}/contents/${encodePath(currentPath)}`, {
+    const latest = await findGithubFile(path);
+    if (!latest) {
+      posts = posts.filter((post) => post.articleId !== articleId);
+      pendingOperation = null;
+      renderPosts();
+      setOperationStatus(
+        `《${title}》在 GitHub 中已经不存在，列表已更新。`,
+        "success"
+      );
+      return;
+    }
+    const result = await github(`/repos/${REPO}/contents/${encodePath(path)}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: `Delete article: ${form.elements.title.value.trim()}`,
-        sha: currentSha,
+        message: `Delete article: ${title}`,
+        sha: latest.sha || fallbackSha,
         branch: BRANCH
       })
     });
-    posts = posts.filter(
-      (post) => post.articleId !== currentFrontmatter.articleId
-    );
     renderPosts();
     markEditorClean();
-    showManager(true);
-    listStatus.textContent =
-      "文章已从 GitHub 删除，Cloudflare 正在更新网站。";
-    listStatus.scrollIntoView({ behavior: "smooth", block: "center" });
+    setOperationStatus(
+      `《${title}》已从 GitHub 删除，Cloudflare 正在更新网站。`,
+      "deploying"
+    );
+    focusArticle(articleId);
+    monitorDeployment(result.commit.sha, { type: "delete", articleId, title });
   } catch (error) {
-    setEditorMessage(error.message || "删除失败。", "error");
-    revealEditorMessage();
+    pendingOperation = null;
+    renderPosts();
+    setOperationStatus(
+      `《${title}》删除失败：${error.message || "请稍后重试。"}`,
+      "error"
+    );
+    focusArticle(articleId);
   } finally {
     setSaving(false);
   }
