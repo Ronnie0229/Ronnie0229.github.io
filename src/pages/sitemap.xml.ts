@@ -1,10 +1,18 @@
 import { getCollection } from "astro:content";
+import { getBooksForScripture } from "../data/bible";
 
 export async function GET({ site }: { site: URL }) {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
+  const books = [
+    ...new Set(posts.flatMap((post) => getBooksForScripture(post.data.scripture)))
+  ];
   const staticPaths = ["/", "/posts/", "/bible/", "/search/", "/about/"];
   const urls = [
     ...staticPaths.map((path) => ({ path, date: "" })),
+    ...books.map((book) => ({
+      path: `/bible/${encodeURIComponent(book)}/`,
+      date: ""
+    })),
     ...posts.map((post) => ({
       path: `/posts/${post.slug}/`,
       date: post.data.date.toISOString()

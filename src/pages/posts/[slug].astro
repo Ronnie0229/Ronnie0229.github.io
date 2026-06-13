@@ -65,7 +65,14 @@ const formattedScripture = post.data.scripture
 const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.category)}&focus=${encodeURIComponent(post.slug)}#post-${post.slug}`;
 ---
 
-<BaseLayout title={`${post.data.title} | Ronnie`} description={post.data.description} type="article">
+<BaseLayout
+  title={`${post.data.title} | Ronnie`}
+  description={post.data.description}
+  type="article"
+  publishedTime={post.data.date}
+  author={post.data.author || "Ronnie"}
+  keywords={[post.data.category, post.data.scripture, ...post.data.tags].filter(Boolean)}
+>
   <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
   <article class="article-page">
     <a
