@@ -252,9 +252,6 @@ def format_body(text: str) -> str:
 def main() -> None:
     ORGANIZED_DIR.mkdir(exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
-    for path in ORGANIZED_DIR.glob("*.md"):
-        path.unlink()
-
     rows = []
     copyright_rows = []
     for source in sorted(SOURCE_DIR.glob("*.docx")):

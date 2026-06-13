@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "set ASTRO_TELEMETRY_DISABLED=1&& astro dev",
-    "build": "set ASTRO_TELEMETRY_DISABLED=1&& astro build",
-    "preview": "set ASTRO_TELEMETRY_DISABLED=1&& astro preview"
+    "dev": "node scripts/run_astro.mjs dev",
+    "build": "node scripts/run_astro.mjs build",
+    "preview": "node scripts/run_astro.mjs preview",
+    "sync": "node scripts/sync_from_github.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0"

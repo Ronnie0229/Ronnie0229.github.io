@@ -203,7 +203,14 @@ def folder_meta(folder: Path) -> tuple[str, str, str]:
 
 
 def choose_source_file(folder: Path) -> Path | None:
-    txt_files = sorted(folder.glob("*.txt"), key=lambda p: p.name)
+    txt_files = sorted(
+        (
+            path
+            for path in folder.glob("*.txt")
+            if not path.name.lower().endswith(".extracted.txt")
+        ),
+        key=lambda p: p.name,
+    )
     docx_files = sorted(folder.glob("*.docx"), key=lambda p: p.name)
 
     preferred_txt = [
@@ -285,12 +292,6 @@ def main() -> None:
     ORGANIZED_DIR.mkdir(exist_ok=True)
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
-
-    for old_file in ORGANIZED_DIR.glob("*.md"):
-        old_file.unlink()
-
-    for old_file in POSTS_DIR.glob("*.md"):
-        old_file.unlink()
 
     imported = 0
     skipped: list[str] = []

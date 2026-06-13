@@ -4,17 +4,17 @@
 
 ## 本地运行
 
-```powershell
-npm.cmd install
-npm.cmd run dev
+```shell
+npm install
+npm run dev
 ```
 
 浏览器打开 `http://127.0.0.1:4321`。
 
 ## 构建
 
-```powershell
-npm.cmd run build
+```shell
+npm run build
 ```
 
 构建结果输出到 `dist/`。
@@ -30,6 +30,7 @@ npm.cmd run build
 - 数据库迁移：`scripts/migrations/`
 - 网页管理后台：`https://ronniecross.com/admin/`
 - 后台配置与使用：`docs/网站后台使用与配置.md`
-- 本地开始编辑前同步：`scripts/sync_from_github.ps1`
+- 本地开始编辑前同步：`npm run sync`
+- 分享与讲道统一流程：`docs/统一内容整理与发布流程.md`
 
 完整目录用途参见 `docs/目录说明.md`。
