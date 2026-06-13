@@ -293,9 +293,18 @@ def main() -> None:
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
 
+    report_path = REPORT_DIR / "讲道文章目录.csv"
+    rows_by_folder: dict[str, tuple[str, ...]] = {}
+    if report_path.exists():
+        with report_path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.reader(handle)
+            next(reader, None)
+            for row in reader:
+                if len(row) == 7:
+                    rows_by_folder[row[0]] = tuple(row)
+
     imported = 0
     skipped: list[str] = []
-    rows = []
     for folder in sorted(p for p in SOURCE_DIR.iterdir() if p.is_dir()):
         source_file = choose_source_file(folder)
         if source_file is None:
@@ -317,13 +326,15 @@ def main() -> None:
             scripture_match = re.search(r'^scripture: "(.+)"$', markdown, flags=re.MULTILINE)
             scripture = scripture_match.group(1) if scripture_match else ""
         category = category_for(raw_title)
-        rows.append((folder.name, date, scripture, category, speaker, publish_title, source_file.name))
+        rows_by_folder[folder.name] = (
+            folder.name, date, scripture, category, speaker, publish_title, source_file.name
+        )
         imported += 1
 
-    with (REPORT_DIR / "讲道文章目录.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+    with report_path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(("源目录", "日期", "经文", "分类", "讲员", "发布标题", "正文来源"))
-        writer.writerows(rows)
+        writer.writerows(sorted(rows_by_folder.values(), key=lambda row: (row[1], row[0])))
 
     print(f"Imported: {imported}")
     print(f"Skipped: {len(skipped)}")
