@@ -31,6 +31,11 @@ THEOLOGY_REVIEW = (
 )
 
 OVERRIDES = {
+    "圣经中麦子和稗子的意义是什么？": (
+        "马太福音 13:24-30",
+        "麦子和稗子的比喻：等候神最终的审判",
+        "灵命成长",
+    ),
     "100不贫穷也不富足": ("箴言 30:1-9", "不贫穷也不富足：亚古珥关于知足的祷告", "教会讲道"),
     "114主祷文的奥秘": ("马太福音 6:9-13", "主祷文：从天父关系理解祷告", "灵命成长"),
     "20220402 婚姻和教会": ("创世记 2:18-25", "婚姻与教会：在盟约中学习彼此相爱", "灵命成长"),
@@ -70,6 +75,11 @@ OVERRIDES = {
     "承载恩典": ("罗马书 1:11-12", "承载恩典：在共同信心中彼此坚固", "灵命成长"),
     "寻求神的旨意": ("彼得后书 3:9；提摩太前书 2:3-4", "寻求神的旨意：从得救开始明白神的带领", "灵命成长"),
     "恩典": ("以弗所书 2:8-9", "恩典：白白得来的救恩", "灵命成长"),
+}
+
+DESCRIPTION_OVERRIDES = {
+    "圣经中麦子和稗子的意义是什么？":
+        "耶稣借麦子和稗子的比喻说明善恶暂时并存、最终审判属于神，并呼召信徒忠心成长、结出生命的果子。",
 }
 
 TEXT_REPLACEMENTS = {
@@ -147,8 +157,31 @@ def read_docx(path: Path) -> str:
     return "\n\n".join(paragraphs)
 
 
+def read_source(path: Path) -> str:
+    if path.suffix.lower() == ".txt":
+        return path.read_text(encoding="utf-8-sig")
+    return read_docx(path)
+
+
+def source_files() -> list[Path]:
+    return sorted(
+        path for path in SOURCE_DIR.iterdir()
+        if path.is_file() and path.suffix.lower() in {".docx", ".txt"}
+    )
+
+
+def load_csv_rows(path: Path, columns: int) -> dict[tuple[str, ...], tuple[str, ...]]:
+    if not path.exists():
+        return {}
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.reader(handle)
+        next(reader, None)
+        rows = (tuple(row) for row in reader if len(row) == columns)
+        return {(row[0],): row for row in rows}
+
+
 def normalize_text(text: str) -> str:
-    text = unicodedata.normalize("NFKC", text)
+    text = unicodedata.normalize("NFC", text)
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = text.replace("‗", " ").replace("﹕", ":").replace("﹣", "-")
     text = re.sub(r"[ \t]+", " ", text)
@@ -233,6 +266,13 @@ def yaml_escape(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
+def strip_leading_title(text: str, source: Path) -> str:
+    first, separator, remainder = text.partition("\n\n")
+    if separator and first.strip(" ?？") == source.stem.strip(" ?？"):
+        return remainder.lstrip()
+    return text
+
+
 def format_body(text: str) -> str:
     blocks = []
     for block in re.split(r"\n\s*\n", text):
@@ -240,7 +280,11 @@ def format_body(text: str) -> str:
         if not lines:
             continue
         joined = " ".join(lines)
-        if re.match(r"^(?:[一二三四五六七八九十]+、|\d+[.、])", joined) and len(joined) <= 80:
+        if joined in {"⸻", "---"}:
+            continue
+        if joined.endswith(("?", "？")) and len(joined) <= 40:
+            blocks.append(f"## {joined}")
+        elif re.match(r"^(?:[一二三四五六七八九十]+、|\d+[.、])", joined) and len(joined) <= 80:
             blocks.append(f"## {joined}")
         elif joined.startswith(("经文:", "经文：", "读经:", "读经：", "圣经:", "圣经：")):
             blocks.append(f"> {joined}")
@@ -251,15 +295,24 @@ def format_body(text: str) -> str:
 
 def main() -> None:
     ORGANIZED_DIR.mkdir(exist_ok=True)
+    POSTS_DIR.mkdir(parents=True, exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
-    rows = []
-    copyright_rows = []
-    for source in sorted(SOURCE_DIR.glob("*.docx")):
+    sources = source_files()
+    catalog_path = REPORT_DIR / "分享文章目录.csv"
+    copyright_path = REPORT_DIR / "待确认版权.csv"
+    missing_path = REPORT_DIR / "待补经文.csv"
+    risk_path = REPORT_DIR / "待神学事实复核.csv"
+    catalog_rows = load_csv_rows(catalog_path, 6)
+    copyright_rows = load_csv_rows(copyright_path, 2)
+    missing_rows = load_csv_rows(missing_path, 4)
+    risk_rows = load_csv_rows(risk_path, 3)
+    imported = 0
+    for source in sources:
         if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
-            copyright_rows.append((source.name, "来源或版权需要确认，暂不发布"))
+            copyright_rows[(source.name,)] = (source.name, "来源或版权需要确认，暂不发布")
             continue
 
-        body = normalize_text(read_docx(source))
+        body = strip_leading_title(normalize_text(read_source(source)), source)
         summary = clean_summary_title(source)
         override = OVERRIDES.get(source.stem)
         if override:
@@ -270,7 +323,9 @@ def main() -> None:
         date = source_date(source)
         title = f"{scripture}｜{summary}" if scripture else summary
         reviewed = False
-        description = re.sub(r"\s+", " ", body)[:90] or summary
+        description = DESCRIPTION_OVERRIDES.get(
+            source.stem, re.sub(r"\s+", " ", body)[:90] or summary
+        )
         slug = f"{date}-{slugify(title)}"
 
         markdown = (
@@ -295,54 +350,65 @@ def main() -> None:
         if publishable:
             shutil.copyfile(output, POSTS_DIR / output.name)
         status = "待神学复核" if requires_theology_review else ("待补经文" if not scripture else "已完成基础校订")
-        rows.append((source.name, date, scripture, category, title, status))
-
-    with (REPORT_DIR / "分享文章目录.csv").open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "日期", "经文", "分类", "发布标题", "校订状态"))
-        writer.writerows(rows)
-
-    with (REPORT_DIR / "待确认版权.csv").open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "原因"))
-        writer.writerows(copyright_rows)
-
-    missing = [row for row in rows if not row[2]]
-    with (REPORT_DIR / "待补经文.csv").open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "日期", "分类", "暂定标题"))
-        writer.writerows((row[0], row[1], row[3], row[4]) for row in missing)
-
-    audit_lines = ["# 分享文章审计摘录", ""]
-    for source in sorted(SOURCE_DIR.glob("*.docx")):
-        if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
-            continue
-        body = normalize_text(read_docx(source))
-        blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
-        audit_lines.extend((f"## {source.name}", ""))
-        for block in blocks[:10]:
-            audit_lines.append(block[:500])
-            audit_lines.append("")
-    (REPORT_DIR / "分享文章审计摘录.md").write_text("\n".join(audit_lines), encoding="utf-8")
-
-    risk_rows = []
-    for source in sorted(SOURCE_DIR.glob("*.docx")):
-        if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
-            continue
-        body = normalize_text(read_docx(source))
+        row = (source.name, date, scripture, category, title, status)
+        catalog_rows[(source.name,)] = row
+        if scripture:
+            missing_rows.pop((source.name,), None)
+        else:
+            missing_rows[(source.name,)] = (source.name, date, category, title)
+        risk_rows.pop((source.name,), None)
         for phrase in RISK_PHRASES:
             if phrase in body:
                 snippet_start = max(body.find(phrase) - 80, 0)
                 snippet = re.sub(r"\s+", " ", body[snippet_start:snippet_start + 240])
-                risk_rows.append((source.name, phrase, snippet))
-    with (REPORT_DIR / "待神学事实复核.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+                risk_rows[(source.name,)] = (source.name, phrase, snippet)
+                break
+        imported += 1
+
+    with catalog_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(("源文件", "日期", "经文", "分类", "发布标题", "校订状态"))
+        writer.writerows(catalog_rows.values())
+
+    with copyright_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(("源文件", "原因"))
+        writer.writerows(copyright_rows.values())
+
+    with missing_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(("源文件", "日期", "分类", "暂定标题"))
+        writer.writerows(missing_rows.values())
+
+    audit_path = REPORT_DIR / "分享文章审计摘录.md"
+    audit_text = audit_path.read_text(encoding="utf-8") if audit_path.exists() else "# 分享文章审计摘录\n"
+    audit_sections = []
+    for source in sources:
+        if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
+            continue
+        if f"## {source.name}\n" in audit_text:
+            continue
+        body = normalize_text(read_source(source))
+        blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
+        audit_lines = [f"## {source.name}", ""]
+        for block in blocks[:10]:
+            audit_lines.append(block[:500])
+            audit_lines.append("")
+        audit_sections.append("\n".join(audit_lines))
+    if audit_sections:
+        audit_text = audit_text.rstrip() + "\n\n" + "\n\n".join(
+            section.rstrip() for section in audit_sections
+        ) + "\n"
+        audit_path.write_text(audit_text, encoding="utf-8")
+
+    with risk_path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(("源文件", "风险表达", "上下文摘录"))
-        writer.writerows(risk_rows)
+        writer.writerows(risk_rows.values())
 
-    print(f"Imported shares: {len(rows)}")
+    print(f"Imported shares: {imported}")
     print(f"Copyright review: {len(copyright_rows)}")
-    print(f"Missing scripture: {len(missing)}")
+    print(f"Missing scripture: {len(missing_rows)}")
 
 
 if __name__ == "__main__":
