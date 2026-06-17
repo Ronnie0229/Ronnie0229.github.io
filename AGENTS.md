@@ -32,4 +32,15 @@
 - 导入脚本不得删除或覆盖另一类别的文章。
 - `node_modules/`、`.astro/`、`dist/` 和 Python 虚拟环境只保留在本机，不同步到 NAS 或 Git。
 
+## Article Workflow
+
+整理文章、发布分享资料或发布讲道资料时，必须先阅读：
+
+- `skills/article-workflow.md`
+- `docs/content-style.md`
+- `docs/codex-handoff-memory.md`
+- `docs/统一内容整理与发布流程.md`
+
+这些文件是给其他 Codex 账号使用的项目级记忆和工作流，不依赖任何单个账号的聊天记忆。
+
 完整步骤和成功标准参见 `docs/统一内容整理与发布流程.md`。

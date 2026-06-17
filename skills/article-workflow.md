@@ -1,0 +1,216 @@
+# Article Workflow
+
+## Purpose
+
+This document is the operating workflow for another Codex account handling RonnieCross content. It covers two related but different tasks:
+
+1. Publishing content to the RonnieCross website.
+2. Rewriting or adapting source material into Chinese faith articles suitable for public reading.
+
+When the user says “分享”, “讲道”, “整理发布”, or asks to publish material already placed in the intake folders, follow the website publishing workflow first. When the user asks for公众号版本 or article variants, follow the article adaptation workflow.
+
+## Required Reading
+
+Before doing any content task, read these files in this repository:
+
+- `AGENTS.md`
+- `docs/codex-handoff-memory.md`
+- `docs/统一内容整理与发布流程.md`
+- `docs/content-style.md`
+
+## Source Of Truth
+
+- Formal local development repository: `C:\Users\caoyi\Projects\各人网页项目`
+- GitHub repository is the durable code/content source of truth.
+- NAS is for intake, raw material, and protected archive. Do not run Node, Astro, Git, or file watchers on NAS.
+- Share intake: `\\RonnieNAS\tmp\分享`
+- Sermon intake: `\\RonnieNAS\tmp\讲道`
+- Protected sermon archive: `\\RonnieNAS\share\教会讲道`
+
+## Website Publishing Workflow
+
+### Step 1: Inspect
+
+Start with read-only checks:
+
+- Check Git status in the formal local repository.
+- Inspect the relevant NAS intake directory.
+- Identify file names, sizes, dates, and whether the task is “分享” or “讲道”.
+
+Do not move or edit files before this check.
+
+### Step 2: Ingest Raw Material
+
+Use the unified script when possible:
+
+```shell
+python scripts/content_workflow.py inspect share
+python scripts/content_workflow.py ingest share
+```
+
+For sermons:
+
+```shell
+python scripts/content_workflow.py inspect sermon
+python scripts/content_workflow.py ingest sermon --date YYYYMMDD --title "经文与标题" --speaker "讲员"
+```
+
+Rules:
+
+- Move new sources into `data/raw/分享/` or `data/raw/教会讲道/`.
+- Verify moves with SHA-256.
+- After verified ingest, the intake folder should no longer contain processed files.
+- Do not overwrite an existing raw file or folder.
+
+### Step 3: Prepare Content
+
+For share articles:
+
+- Preserve the source’s main scripture anchor when clear.
+- Clean OCR or formatting problems.
+- Keep the article category normally as `灵命成长` unless the project has an explicit mapping.
+
+For sermon material:
+
+- Confirm date, scripture, title, and speaker.
+- Extract PDF text into `*.extracted.txt`.
+- Produce a final Chinese TXT.
+- Exclude `*.extracted.txt` from publishing; it is only a machine extraction aid.
+- Follow the translation fidelity rules in `docs/content-style.md`.
+
+### Step 4: Archive Sermons
+
+For sermons only, copy the completed sermon folder to:
+
+```text
+\\RonnieNAS\share\教会讲道
+```
+
+Rules:
+
+- `share` is protected archive storage.
+- Only add and read there.
+- Do not move, delete, overwrite, rename, or clean up files in `share`.
+- Verify archive file count, byte total, and SHA-256.
+
+### Step 5: Publish
+
+Use the import script through the unified entry point:
+
+```shell
+python scripts/content_workflow.py publish share
+python scripts/content_workflow.py publish sermon
+```
+
+Then add missing article IDs:
+
+```shell
+node scripts/add_article_ids.mjs
+```
+
+Check generated files:
+
+- `data/processed/整理后的分享文章/`
+- `data/processed/整理后的讲道文章/`
+- `src/content/posts/`
+- `docs/内容整理报告/`
+
+### Step 6: Verify Locally
+
+Run:
+
+```shell
+npm run build
+```
+
+If Astro shows a stale duplicate-content warning after deleted or renamed content, clear `.astro/data-store.json` and rebuild. This cache is local build state, not source content.
+
+### Step 7: Commit, Push, Verify Online
+
+Before commit:
+
+- Review `git diff`.
+- Ensure only the intended category changed.
+- Ensure import scripts did not delete unrelated posts or reports.
+- Ignore unrelated untracked folders unless the user asks about them.
+
+After push:
+
+- Verify the live article URL returns `200`.
+- Confirm the live page contains expected title, category, scripture, author/speaker, and representative body text.
+
+## Article Adaptation Workflow
+
+Use this when the user asks for article drafts, WeChat/公众号 style, or multiple publication variants rather than direct website publishing.
+
+### Default Output
+
+Unless the user says otherwise, produce three versions:
+
+1. 忠实整理版
+2. 公众号温和版
+3. 更安全表达版
+
+### Step 1: Understand The Source
+
+Identify:
+
+- Main topic
+- Scripture anchor
+- Core argument
+- Important examples
+- Intended application
+- Sensitive or easily misunderstood wording
+
+### Step 2: Structure
+
+Default structure:
+
+1. 引言
+2. 经文背景
+3. 核心观察
+4. 生命反思
+5. 结尾呼应
+
+### Step 3: Language
+
+Shape the writing to be:
+
+- Warm
+- Clear
+- Sincere
+- Companionable
+- Suitable for Chinese public reading
+- Less argumentative unless the source itself requires direct confrontation
+
+### Step 4: Safer Expression
+
+When publishing context requires softer wording, consider replacements such as:
+
+- “教会” -> “群体 / 信仰群体”
+- “讲道” -> “分享 / 信息”
+- “罪” -> “偏离 / 破碎 / 深处的问题”
+- “悔改” -> “转向 / 重新回到正确方向”
+
+Do not use these replacements mechanically. Preserve the theological meaning and scripture logic.
+
+### Step 5: Output Format
+
+Default output:
+
+- Title
+- Short summary if needed
+- Body
+- Subheadings
+- Closing reflection
+
+For a draft-only request, do not run build, commit, or push unless the user explicitly asks to publish.
+
+## Non-Negotiable Rules
+
+- Do not summarize when the user asks for translation.
+- Do not convert sermon translation into a shorter sermon outline.
+- Do not invent missing metadata.
+- Do not change scripture meaning to make the text smoother.
+- Do not delete, move, or overwrite NAS protected archive files.
+- Do not touch unrelated untracked files.
