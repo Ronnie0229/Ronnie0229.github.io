@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Logo from "../../components/Logo.astro";
 import PostCard from "../../components/PostCard.astro";
 
 const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
@@ -10,14 +11,7 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
 
 <BaseLayout title="全部文章 | Ronnie" description="Ronnie 的全部文章列表。">
   <section class="page-heading posts-heading">
-    <img
-      class="page-brand-mark"
-      src="/images/ronniecross-mark.png"
-      alt=""
-      width="48"
-      height="49"
-      aria-hidden="true"
-    />
+    <Logo size="md" showText={false} class="page-brand-mark" />
     <p class="eyebrow" data-category-eyebrow>全部文章</p>
     <h1 data-category-title>文章总览</h1>
     <p data-category-description>汇集所有已发布的文章，按发布时间从新到旧排列。</p>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  size?: "sm" | "md" | "lg";
+  showText?: boolean;
+  class?: string;
+}
+
+const { size = "md", showText = true, class: className = "" } = Astro.props;
+---
+
+<span class:list={["logo-lockup", `logo-lockup-${size}`, className]}>
+  <span class="logo-picture" aria-hidden="true">
+    <img class="logo-image logo-image-dark" src="/images/ronniecross-logo-theme-dark-transparent.png" alt="" loading="eager" />
+    <img class="logo-image logo-image-light" src="/images/ronniecross-logo-theme-light-transparent.png" alt="" loading="eager" />
+  </span>
+  {showText && <span class="logo-text">道路，真理，生命</span>}
+</span>

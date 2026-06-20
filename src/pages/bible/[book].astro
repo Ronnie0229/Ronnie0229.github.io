@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Logo from "../../components/Logo.astro";
 import PostCard from "../../components/PostCard.astro";
 import { BIBLE_BOOKS, getBooksForScripture } from "../../data/bible";
 
@@ -31,14 +32,7 @@ const { book, posts } = Astro.props;
 
 <BaseLayout title={`${book} | 圣经书卷 | Ronnie`} description={`浏览与${book}有关的已发布文章。`}>
   <section class="page-heading bible-book-heading">
-    <img
-      class="page-brand-mark page-brand-mark-small"
-      src="/images/ronniecross-mark.png"
-      alt=""
-      width="40"
-      height="40"
-      aria-hidden="true"
-    />
+    <Logo size="md" showText={false} class="page-brand-mark page-brand-mark-small" />
     <p class="eyebrow"><a href="/bible/">圣经书卷</a></p>
     <h1>{book}</h1>
     <p>共 {posts.length} 篇相关文章，按发布时间从新到旧排列。</p>

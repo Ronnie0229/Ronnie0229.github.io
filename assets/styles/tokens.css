@@ -1,0 +1,51 @@
+:root {
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+  --font-sans: "Source Han Sans SC", "Source Han Sans CN", "Source Han Sans", "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-serif: var(--font-sans);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #061625;
+  --color-bg-2: #0a1d30;
+  --color-sidebar: #071a2c;
+  --color-card: rgba(12, 31, 50, 0.82);
+  --color-card-solid: #0c1f32;
+  --color-card-soft: rgba(255, 255, 255, 0.035);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+  --color-text: #f5f7fa;
+  --color-text-2: #b8c4d4;
+  --color-text-3: #7f91a8;
+  --color-primary: #0e3a67;
+  --color-primary-hover: #174d84;
+  --color-gold: #d7a84f;
+  --color-gold-soft: rgba(215, 168, 79, 0.16);
+  --shadow-card: 0 18px 60px rgba(0, 0, 0, 0.3);
+  --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.22);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #ffffff;
+  --color-bg-2: #f7f9fc;
+  --color-sidebar: #ffffff;
+  --color-card: rgba(255, 255, 255, 0.92);
+  --color-card-solid: #ffffff;
+  --color-card-soft: #f5f7fa;
+  --color-border: rgba(10, 29, 48, 0.1);
+  --color-border-strong: rgba(10, 29, 48, 0.16);
+  --color-text: #0a1d30;
+  --color-text-2: #516070;
+  --color-text-3: #8a96a6;
+  --color-primary: #0e3a67;
+  --color-primary-hover: #082b4e;
+  --color-gold: #d7a84f;
+  --color-gold-soft: rgba(215, 168, 79, 0.14);
+  --shadow-card: 0 18px 60px rgba(10, 29, 48, 0.08);
+  --shadow-soft: 0 10px 32px rgba(10, 29, 48, 0.06);
+}

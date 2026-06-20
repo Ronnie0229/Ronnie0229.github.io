@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Logo from "../../components/Logo.astro";
 import {
   getBooksForScripture,
   NEW_TESTAMENT_BOOKS,
@@ -30,14 +31,7 @@ const testamentSections = [
 
 <BaseLayout title="圣经书卷 | Ronnie" description="按照圣经书卷浏览已发布的文章。">
   <section class="page-heading bible-heading">
-    <img
-      class="page-brand-mark"
-      src="/images/ronniecross-mark.png"
-      alt=""
-      width="48"
-      height="49"
-      aria-hidden="true"
-    />
+    <Logo size="md" showText={false} class="page-brand-mark" />
     <p class="eyebrow">圣经书卷</p>
     <h1>按书卷阅读</h1>
     <p>从已发布文章的经文字段自动整理，按圣经书卷顺序浏览。</p>
