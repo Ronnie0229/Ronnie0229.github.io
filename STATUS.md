@@ -89,6 +89,25 @@ git reset --hard
 git clean
 ```
 
+## 追加更新：任务交接协议
+
+执行时间：2026-06-20
+
+本次追加完成：
+
+1. 新增 `docs/task-handoff-protocol.md`，规定每次任务开始前必读文档、结束后必须更新的文件和交接成功标准。
+2. 更新 `AGENTS.md`，加入任务生命周期和一句话流程。
+3. 更新 `docs/account-switching.md`，把任务交接协议加入新账号必读文件。
+4. 更新 `docs/tasks/current.md`，记录本次追加任务和下一个账号接手提示。
+
+今后所有 Codex / ChatGPT 任务统一使用一句话流程：
+
+```text
+请先按照 AGENTS.md 和 docs/task-handoff-protocol.md 完成启动检查，然后执行任务。完成后更新 STATUS.md 和 docs/tasks/current.md，再进行交接。
+```
+
+本次追加任务只修改文档，不修改网站业务代码、文章正文、部署配置或数据目录。
+
 ## 后续建议
 
 1. 如果用户确认要处理构建警告，再单独开任务检查重复文章 id。

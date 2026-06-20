@@ -110,3 +110,35 @@ Duplicate id "2026-06-14-罗马书-14-1-23你属于哪个国度"
 1. 是否需要另开任务处理重复文章 id 的构建警告。
 2. 是否需要把本轮文档改动提交到 Git。
 3. 是否继续保持“不部署、不推送”的边界；本轮已按该边界执行。
+
+## 追加任务：固定任务交接协议
+
+执行时间：2026-06-20
+
+目标：把每次 Codex / ChatGPT 账号开始任务前读什么、结束任务后更新什么，固定为项目级协议，避免多账号切换时遗漏状态。
+
+本次已完成：
+
+1. 新增 `docs/task-handoff-protocol.md`。
+2. 在 `AGENTS.md` 中加入任务生命周期和一句话流程。
+3. 在 `docs/account-switching.md` 中加入任务交接协议作为新账号必读文件。
+4. 明确所有任务开始前必须读取 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/account-switching.md`、`docs/task-handoff-protocol.md`。
+5. 明确所有任务结束后至少更新 `STATUS.md` 和 `docs/tasks/current.md`。
+
+本次修改文件：
+
+```text
+AGENTS.md
+docs/account-switching.md
+docs/task-handoff-protocol.md
+docs/tasks/current.md
+STATUS.md
+```
+
+下一个账号接手时，请先执行：
+
+```text
+请先按照 AGENTS.md 和 docs/task-handoff-protocol.md 完成启动检查，然后执行任务。完成后更新 STATUS.md 和 docs/tasks/current.md，再进行交接。
+```
+
+仍需注意：重复文章 id 警告仍只记录，未处理。

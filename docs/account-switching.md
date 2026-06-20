@@ -23,9 +23,10 @@ C:\Users\caoyi\Projects\各人网页项目
 | 1 | `AGENTS.md` | 项目入口规则，包含路径、禁区、常用命令和协作边界。 |
 | 2 | `STATUS.md` | 当前状态、最近验证结果、未完成事项。 |
 | 3 | `docs/tasks/current.md` | 当前这一轮任务的目标、范围、验收和构建结果。 |
-| 4 | `PROJECT.md` | 项目定位、技术栈、目录职责和源码来源。 |
-| 5 | `PROJECT_DECISIONS.md` | 已确认的长期决策，避免反复讨论。 |
-| 6 | `RUNBOOK.md` | 日常开发、内容发布、排查问题的操作手册。 |
+| 4 | `docs/task-handoff-protocol.md` | 每次任务开始前读什么、结束后更新什么。 |
+| 5 | `PROJECT.md` | 项目定位、技术栈、目录职责和源码来源。 |
+| 6 | `PROJECT_DECISIONS.md` | 已确认的长期决策，避免反复讨论。 |
+| 7 | `RUNBOOK.md` | 日常开发、内容发布、排查问题的操作手册。 |
 
 ## 不同任务继续读什么
 
@@ -41,16 +42,17 @@ C:\Users\caoyi\Projects\各人网页项目
 ## 换账号前检查清单
 
 1. 运行 `git status --short`，确认有哪些未提交文件。
-2. 把当前任务进度写入 `STATUS.md` 和 `docs/tasks/current.md`。
+2. 按照 `docs/task-handoff-protocol.md` 的结束流程，把当前任务进度写入 `STATUS.md` 和 `docs/tasks/current.md`。
 3. 如果任务跨对话交接，把执行摘要写入 `.ai-bridge/agent-status.md`。
 4. 不要把临时输出、密钥、账号信息、构建缓存写进文档。
 5. 不要用旧桌面目录继续做正式开发。
+6. 在交接说明里写清楚下一个账号应该先做什么。
 
 ## 新账号开始前检查清单
 
 1. 确认当前目录是 `C:\Users\caoyi\Projects\各人网页项目`。
 2. 运行 `git status --short`，先识别已有改动，不能随意回滚。
-3. 先读 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`。
+3. 先读 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/task-handoff-protocol.md`。
 4. 只在任务允许的范围内修改文件。
 5. 涉及上线时，先确认用户是否明确允许部署和推送。
 

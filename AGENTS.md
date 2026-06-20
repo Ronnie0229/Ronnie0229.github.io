@@ -24,7 +24,8 @@
 4. `STATUS.md`
 5. `RUNBOOK.md`
 6. `docs/account-switching.md`
-7. `docs/tasks/current.md`
+7. `docs/task-handoff-protocol.md`
+8. `docs/tasks/current.md`
 
 按任务类型继续阅读：
 
@@ -49,6 +50,26 @@
 10. 新增流程或规则时，写入对应文档，而不是只留在聊天记录里。
 11. 遇到文档冲突时，以当前仓库状态、`AGENTS.md`、`STATUS.md`、`docs/tasks/current.md` 为优先。
 12. Markdown 文档中的多行命令、路径、日志和文件列表必须使用标准三反引号代码块；代码块开头可以标注 text、shell 或 powershell，结尾单独一行关闭，避免单反引号或转义字符造成格式损坏。
+
+## 任务生命周期
+
+任何账号执行任务时，统一遵守 `docs/task-handoff-protocol.md`。
+
+简化流程：请先按照 `AGENTS.md` 和 `docs/task-handoff-protocol.md` 完成启动检查，然后执行任务。完成后更新 `STATUS.md` 和 `docs/tasks/current.md`，再进行交接。
+
+任务开始前必须确认：
+
+- 已读取 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/account-switching.md`、`docs/task-handoff-protocol.md`。
+- 已根据任务类型读取对应专项文档。
+- 已确认当前 Git 状态和允许修改范围。
+- 已确认是否存在切换账号带来的新状态、新警告或未完成事项。
+
+任务结束后必须更新：
+
+- `STATUS.md`：记录项目状态、构建结果、已知警告和后续建议。
+- `docs/tasks/current.md`：记录当前任务进度、修改文件、未完成事项和下一步。
+
+如果产生新的长期规则，还要同步更新对应规范文档，例如 `DESIGN.md`、`CONTENT_WORKFLOW.md`、`SEO.md`、`DEPLOY.md` 或 `docs/branch-workflow.md`。
 
 ## 内容入口和资料位置
 
