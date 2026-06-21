@@ -1,84 +1,57 @@
-# 当前任务
+﻿# 当前任务
 
 ## 任务名称
 
-RonnieCross Project Operating System v1 文档落盘与验证。
+2026-06-21 Patrick 讲道整理与发布。
 
 ## 当前目标
 
-按照 .ai-bridge/current-plan.md，把项目级文档体系补齐到仓库中，让以后换账号、换电脑、换对话时，可以直接从仓库文档恢复上下文。
+将讲道收件目录中的 Patrick 讲道 PDF 按统一讲道流程处理：入库、提取、忠实中文翻译、受保护归档、生成网站文章、构建、推送、线上验证，并完成任务交接。
 
 ## 本任务范围
-
-本任务只处理文档体系，不修改网站业务代码。
 
 允许修改：
 
 ```text
-AGENTS.md
-PROJECT.md
-PROJECT_DECISIONS.md
-STATUS.md
-RUNBOOK.md
-DESIGN.md
-CONTENT_WORKFLOW.md
-SEO.md
-DEPLOY.md
-docs/account-switching.md
-docs/branch-workflow.md
-docs/tasks/current.md
-.ai-bridge/agent-status.md
-.ai-bridge/implementation-diff.patch
-.ai-bridge/execution-log.jsonl
-```
-
-禁止修改：
-
-```text
-src/
-functions/
-assets/
-scripts/
+data/processed/整理后的讲道文章/
 src/content/posts/
-data/raw/
-data/processed/
-wrangler.jsonc
+docs/内容整理报告/讲道文章目录.csv
+STATUS.md
+docs/tasks/current.md
 ```
 
-禁止执行：
+允许操作：
 
 ```text
-git push
-npm run deploy
-wrangler deploy
-git reset --hard
-git clean
+\\RonnieNAS\tmp\讲道         # 收件目录，处理后移动新 PDF
+\\RonnieNAS\share\教会讲道   # 受保护归档，只新增和读取
+```
+
+禁止操作：
+
+```text
+删除、移动、覆盖 \\RonnieNAS\share 中既有文件
+在 NAS 上运行 Git、Node、Astro 或文件监听
+触碰无关的 .ai-bridge/ 未跟踪目录
 ```
 
 ## 已完成
 
-1. 读取 .ai-bridge/current-plan.md。
-2. 确认正式工作目录是 C:\Users\caoyi\Projects\各人网页项目。
-3. 检查现有文档体系。
-4. 补全 docs/account-switching.md。
-5. 创建本文件作为当前任务看板。
-6. 补充 DESIGN.md、DEPLOY.md、SEO.md、RUNBOOK.md、PROJECT_DECISIONS.md、docs/branch-workflow.md 的关键说明。
-7. 运行 `npm.cmd run build` 并记录结果。
-8. 更新 .ai-bridge/agent-status.md 和 .ai-bridge/execution-log.jsonl。
+1. 完成启动检查，读取 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/account-switching.md`、`docs/task-handoff-protocol.md`、`CONTENT_WORKFLOW.md`、`SEO.md`、`docs/统一内容整理与发布流程.md`、`docs/content-style.md`、`skills/article-workflow.md`、`docs/codex-handoff-memory.md`。
+2. 检查 `\\RonnieNAS\tmp\讲道`，确认新 PDF：`[TF] Romans 15_1-13 Gospel Harmony - Google Docs.pdf`。
+3. 入库到 `data/raw/教会讲道/20260621罗马书15章1-13节福音带来的和谐_Patrick/` 并生成提取稿。
+4. 以英文稿为翻译源完成逐句忠实中文翻译，生成 `罗马书15章1-13节福音带来的和谐_中文.txt`。
+5. 归档到 `\\RonnieNAS\share\教会讲道\20260621罗马书15章1-13节福音带来的和谐_Patrick`，脚本校验通过：2 个文件，670467 字节。
+6. 生成网站文章：`src/content/posts/2026-06-21-romans-15-1-13-gospel-harmony.md`。
+7. 生成 processed 文章：`data/processed/整理后的讲道文章/2026-06-21-romans-15-1-13-gospel-harmony.md`。
+8. 更新讲道目录报告：`docs/内容整理报告/讲道文章目录.csv`。
+9. 修正本篇摘要、经文、slug 和 articleId。
+10. 构建成功，推送提交 `d695f66`。
+11. 正式域名线上验证成功。
 
 ## 构建结果
 
-执行时间：2026-06-20 20:04:34 +09:00
-
-第一次命令：
-
-```powershell
-npm run build
-```
-
-结果：失败，原因是 Windows PowerShell 执行策略阻止加载 `npm.ps1`。
-
-第二次命令：
+命令：
 
 ```powershell
 npm.cmd run build
@@ -89,56 +62,42 @@ npm.cmd run build
 关键输出：
 
 ```text
-[build] 187 page(s) built in 5.50s
+[build] 188 page(s) built in 7.37s
 [build] Complete!
 ```
 
-构建警告：
+说明：构建前曾因 Astro 本地缓存导致新文件显示异常；已清理 `.astro` 并重建，最终无 Duplicate id 警告。
+
+## 发布结果
+
+提交：
 
 ```text
-Duplicate id "2026-06-14-罗马书-14-1-23你属于哪个国度"
+d695f66 Publish Patrick sermon on Romans 15
 ```
 
-本轮任务禁止修改 src/content/posts/，所以该警告只记录，未处理。
+线上 URL：
+
+```text
+https://ronniecross.com/posts/2026-06-21-romans-15-1-13-gospel-harmony/
+```
+
+验证：HTTP 200，标题、讲员、经文、摘要和正文关键内容均存在。
 
 ## 受保护目录检查
 
-待最终 git status --short 确认。
+归档只新增了本次讲道目录，未移动、删除或覆盖 `\\RonnieNAS\share` 中既有文件。
 
-## 需要人工确认
+## 当前状态
 
-1. 是否需要另开任务处理重复文章 id 的构建警告。
-2. 是否需要把本轮文档改动提交到 Git。
-3. 是否继续保持“不部署、不推送”的边界；本轮已按该边界执行。
-
-## 追加任务：固定任务交接协议
-
-执行时间：2026-06-20
-
-目标：把每次 Codex / ChatGPT 账号开始任务前读什么、结束任务后更新什么，固定为项目级协议，避免多账号切换时遗漏状态。
-
-本次已完成：
-
-1. 新增 `docs/task-handoff-protocol.md`。
-2. 在 `AGENTS.md` 中加入任务生命周期和一句话流程。
-3. 在 `docs/account-switching.md` 中加入任务交接协议作为新账号必读文件。
-4. 明确所有任务开始前必须读取 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/account-switching.md`、`docs/task-handoff-protocol.md`。
-5. 明确所有任务结束后至少更新 `STATUS.md` 和 `docs/tasks/current.md`。
-
-本次修改文件：
+任务已完成。当前仓库只剩既有未跟踪目录：
 
 ```text
-AGENTS.md
-docs/account-switching.md
-docs/task-handoff-protocol.md
-docs/tasks/current.md
-STATUS.md
+?? .ai-bridge/
 ```
 
-下一个账号接手时，请先执行：
+## 交接注意
 
-```text
-请先按照 AGENTS.md 和 docs/task-handoff-protocol.md 完成启动检查，然后执行任务。完成后更新 STATUS.md 和 docs/tasks/current.md，再进行交接。
-```
-
-仍需注意：重复文章 id 警告仍只记录，未处理。
+1. 后续讲道翻译必须继续按 `docs/content-style.md` 的 Translation Fidelity 执行：逐句忠实翻译，不用摘要、提纲或主题整理替代翻译。
+2. 运行讲道导入脚本后要检查旧讲道 diff；本轮导入脚本曾临时重写 2026-06-14 旧讲道，已恢复到任务开始前状态。
+3. 如新文章未出现在构建产物中，优先清理 `.astro` 本地缓存后重建。
