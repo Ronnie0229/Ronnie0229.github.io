@@ -1,4 +1,4 @@
-# Codex Handoff Memory
+﻿# Codex Handoff Memory
 
 This file is the project-level memory for another Codex account. Read it before handling RonnieCross content.
 
@@ -125,3 +125,17 @@ A content task is complete only when:
 - Build passes.
 - Commit is pushed.
 - Live URL is verified with expected title, category, scripture/speaker, and body text.
+
+## Repeated Error Prevention
+
+Read `docs/content-publishing-error-prevention.md` before publishing share or sermon content. It records the concrete failures from the 2026-06-21 sermon publish and the fixed remediation steps.
+
+Key points for account handoff:
+
+- Treat `*.extracted.txt` as machine extraction only; final sermon publishing uses a complete Chinese TXT translated from the verified source-language text.
+- For bilingual PDFs, ordinary extraction can mix columns or drop lines. Verify page beginnings, page endings, scripture quotations, examples, and transitions before translating.
+- Never leave an auto-truncated `description`; write a full standalone sentence.
+- Always verify `scripture`, title, speaker, slug, `articleId`, and source path after import.
+- The sermon importer can rewrite existing sermon posts. Check `git diff` and revert unrelated old-post changes before committing.
+- Astro local cache can hide new posts or create stale duplicate-id warnings. Clearing `.astro` and rebuilding is safe when source files are correct.
+- Verify live publication on `https://ronniecross.com/`, not only the GitHub Pages default URL.

@@ -1,4 +1,4 @@
-# CONTENT_WORKFLOW.md
+﻿# CONTENT_WORKFLOW.md
 
 本文件是 RonnieCross 内容整理与发布的项目级入口。详细脚本步骤见 `docs/统一内容整理与发布流程.md`，风格规则见 `docs/content-style.md`，Codex 专项流程见 `skills/article-workflow.md`。
 
@@ -136,3 +136,21 @@ node scripts/add_article_ids.mjs
 - [ ] 是否运行文章 ID 脚本。
 - [ ] 是否运行 `npm run build`。
 - [ ] 是否更新 `docs/tasks/current.md`。
+
+## 发布防错清单
+
+每次“分享”或“讲道”整理发布，都必须同时阅读并执行：
+
+```text
+docs/content-publishing-error-prevention.md
+```
+
+上次讲道发布暴露出的固定风险：
+
+- 双语 PDF 普通文本提取可能丢句、错序，`*.extracted.txt` 只能作为辅助，不是最终翻译源。
+- 讲道翻译必须逐句忠实，不能变成摘要、提纲或主题整理。
+- 自动生成的 `description` 可能截断，发布前必须改成完整独立摘要句。
+- 自动识别的 `scripture`、中文 slug 和 `articleId` 可能不准，提交前必须人工核对。
+- 讲道 publish 脚本可能重写旧讲道文章，提交前必须检查并排除无关旧文覆盖。
+- 新文章不出现在构建产物或出现 Duplicate id 时，优先清理 `.astro` 本地缓存后重建。
+- 线上验证优先使用正式域名 `https://ronniecross.com/`，不要只凭 GitHub Pages 默认域名判断失败。

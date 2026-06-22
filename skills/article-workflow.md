@@ -1,4 +1,4 @@
-# Article Workflow
+﻿# Article Workflow
 
 ## Purpose
 
@@ -214,3 +214,20 @@ For a draft-only request, do not run build, commit, or push unless the user expl
 - Do not change scripture meaning to make the text smoother.
 - Do not delete, move, or overwrite NAS protected archive files.
 - Do not touch unrelated untracked files.
+
+## Publishing Error Prevention
+
+Before any end-to-end website publishing task, read and follow:
+
+```text
+docs/content-publishing-error-prevention.md
+```
+
+Non-negotiable checks added after the 2026-06-21 sermon workflow:
+
+- Do not publish from `*.extracted.txt`; create and inspect a final source-based Chinese TXT.
+- For bilingual PDFs, state which source language is being followed and verify that the source-language extraction did not lose page-end lines.
+- Manually check `description`, `scripture`, slug, `articleId`, `author`, `category`, `tags`, and `source` before build.
+- If the importer rewrites older posts, restore unrelated old-post changes before commit.
+- If a new post is missing from `dist` or Astro reports duplicate IDs after renames, clear `.astro` and rebuild.
+- Verify live pages on `https://ronniecross.com/` and require title, category, scripture, author/speaker, summary, and body text to be present.

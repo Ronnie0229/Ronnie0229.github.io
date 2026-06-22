@@ -1,4 +1,4 @@
-# Content Style
+﻿# Content Style
 
 ## Core Writing Principles
 
@@ -87,3 +87,14 @@ Before delivering or publishing:
 - Translation did not omit examples or transitions.
 - Generated Markdown has required frontmatter, including `articleId` when used by the site.
 - The live page, if published, contains expected title/category/body text.
+
+## Publishing Metadata Quality
+
+For website publishing, translation quality is not enough. Before build and commit, frontmatter must also be checked manually:
+
+- `description` must be a complete standalone sentence, not the first 80 characters of the body and not a half sentence.
+- `scripture` must preserve the full reference range when known, for example `罗马书 15:1-13`, not only `罗马书 15`.
+- `title` should match the scripture and article focus.
+- `author` or speaker must match the user-provided metadata.
+- `articleId` must not be empty after any slug/file rename.
+- The live page must show the corrected description and metadata, not just compile successfully.
