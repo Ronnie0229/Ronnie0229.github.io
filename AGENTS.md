@@ -25,7 +25,8 @@
 5. `RUNBOOK.md`
 6. `docs/account-switching.md`
 7. `docs/task-handoff-protocol.md`
-8. `docs/tasks/current.md`
+8. `docs/context-engineering.md`
+9. `docs/tasks/current.md`
 
 按任务类型继续阅读：
 
@@ -50,6 +51,36 @@
 10. 新增流程或规则时，写入对应文档，而不是只留在聊天记录里。
 11. 遇到文档冲突时，以当前仓库状态、`AGENTS.md`、`STATUS.md`、`docs/tasks/current.md` 为优先。
 12. Markdown 文档中的多行命令、路径、日志和文件列表必须使用标准三反引号代码块；代码块开头可以标注 text、shell 或 powershell，结尾单独一行关闭，避免单反引号或转义字符造成格式损坏。
+
+## Codex 输出控制
+
+```text
+Process_narration=false
+```
+
+所有 ChatGPT / Codex 账号在本项目执行任务时，默认关闭过程叙述和规划步骤输出。
+
+- 不输出“我正在分析……”“我准备这样做……”等过程性说明。
+- 不展示内部推理、长篇计划或逐步思考过程。
+- 任务清楚时直接执行，不反复请求确认。
+- 完成后只汇报：实际修改内容、涉及文件、验证结果、剩余问题和下一步建议。
+- 如任务存在高风险、大范围重构、删除/覆盖文件、部署发布或资料不可逆变更，仍需先明确说明风险并等待确认。
+
+## Context Engineering（上下文工程）
+
+本项目不把 Codex 对话当作长期记忆。长期事实、长期规则、当前状态、设计决策、内容流程、SEO 规则和部署流程必须写入仓库文档；Codex 对话只作为单次任务工作区。
+
+基本原则：
+
+1. 一个 Codex 对话只处理一个明确任务或一个连续 Feature。
+2. 任务完成后，应更新 `STATUS.md` 和 `docs/tasks/current.md`，再结束该对话。
+3. 不要在同一个长对话中连续处理 UI、SEO、内容发布、部署、Bug 修复等无关任务。
+4. 当任务类型明显切换时，应新开 Codex 对话，而不是继续旧对话。
+5. 新对话开始后，必须先读取 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/context-engineering.md` 和对应专项文档恢复上下文。
+6. 如果对话出现重复规划、反复 patch、忘记约定、修改范围扩大或上下文混乱，应先整理交接文档，再开启新对话继续。
+7. 临时文件、调试产物、废弃代码和无关日志不得留在仓库中污染后续上下文。
+
+详细规则见 `docs/context-engineering.md`。
 
 ## 任务生命周期
 

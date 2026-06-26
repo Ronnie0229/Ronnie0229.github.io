@@ -24,9 +24,10 @@ C:\Users\caoyi\Projects\各人网页项目
 | 2 | `STATUS.md` | 当前状态、最近验证结果、未完成事项。 |
 | 3 | `docs/tasks/current.md` | 当前这一轮任务的目标、范围、验收和构建结果。 |
 | 4 | `docs/task-handoff-protocol.md` | 每次任务开始前读什么、结束后更新什么。 |
-| 5 | `PROJECT.md` | 项目定位、技术栈、目录职责和源码来源。 |
-| 6 | `PROJECT_DECISIONS.md` | 已确认的长期决策，避免反复讨论。 |
-| 7 | `RUNBOOK.md` | 日常开发、内容发布、排查问题的操作手册。 |
+| 5 | `docs/context-engineering.md` | 新对话拆分、上下文压缩、会话预算和临时文件管理规则。 |
+| 6 | `PROJECT.md` | 项目定位、技术栈、目录职责和源码来源。 |
+| 7 | `PROJECT_DECISIONS.md` | 已确认的长期决策，避免反复讨论。 |
+| 8 | `RUNBOOK.md` | 日常开发、内容发布、排查问题的操作手册。 |
 
 ## 不同任务继续读什么
 
@@ -52,7 +53,7 @@ C:\Users\caoyi\Projects\各人网页项目
 
 1. 确认当前目录是 `C:\Users\caoyi\Projects\各人网页项目`。
 2. 运行 `git status --short`，先识别已有改动，不能随意回滚。
-3. 先读 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/task-handoff-protocol.md`。
+3. 先读 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/task-handoff-protocol.md`、`docs/context-engineering.md`。
 4. 只在任务允许的范围内修改文件。
 5. 涉及上线时，先确认用户是否明确允许部署和推送。
 

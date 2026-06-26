@@ -79,6 +79,36 @@ C:\Users\caoyi\Projects\各人网页项目-docs\
 - 每个 worktree 只做一个任务。
 - 任务结束后再清理对应 worktree。
 
+## 对话、分支、Worktree 的对应关系
+
+推荐关系：
+
+```text
+一个任务 = 一个 Codex 对话 = 一个任务分支
+大型或并行任务 = 一个独立 worktree
+```
+
+示例：
+
+```text
+UI 主题重设计：
+- 对话：theme-redesign
+- 分支：task/theme-redesign-YYYYMMDD
+- Worktree：各人网页项目-theme-redesign
+
+文章整理发布：
+- 对话：article-publishing
+- 分支：task/article-publishing-YYYYMMDD
+- Worktree：通常可使用正式目录，除非与开发任务并行
+
+SEO 改造：
+- 对话：seo-engine
+- 分支：task/seo-engine-YYYYMMDD
+- Worktree：各人网页项目-seo
+```
+
+不要在同一个分支、同一个 worktree 或同一个对话中混合多个无关任务。
+
 ## 多账号切换检查
 
 新账号接手时检查：

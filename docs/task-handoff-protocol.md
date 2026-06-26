@@ -20,6 +20,7 @@ STATUS.md
 docs/tasks/current.md
 docs/account-switching.md
 docs/task-handoff-protocol.md
+docs/context-engineering.md
 ```
 
 ### 每个文件的作用
@@ -31,6 +32,7 @@ docs/task-handoff-protocol.md
 | `docs/tasks/current.md` | 当前任务接力棒，记录上一轮做到哪里、哪些还没做。 |
 | `docs/account-switching.md` | 多账号切换规则、接手流程和常见风险。 |
 | `docs/task-handoff-protocol.md` | 本文件，规定每次任务的启动和结束流程。 |
+| `docs/context-engineering.md` | Codex 对话拆分、上下文压缩、会话预算和临时文件管理规则。 |
 
 ## 任务开始前：按任务类型继续阅读
 
@@ -128,6 +130,25 @@ wrangler.jsonc
 
 如果确实需要修改这些范围，必须在执行前说明原因、影响和验证方式。
 
+## 何时新开对话
+
+建议新开对话的情况：
+
+1. 当前任务已经完成，准备开始另一个不同类型任务。
+2. 对话已经很长，出现重复规划、忘记约定、反复修改、修改范围扩大的迹象。
+3. 任务从一个领域切换到另一个领域，例如从 UI 切换到内容发布、从 SEO 切换到部署。
+4. 上一个任务产生大量 diff、日志、构建错误或调试过程，可能污染后续上下文。
+5. 需要另一个账号接手同一项目的新任务。
+
+可以继续同一个对话的情况：
+
+1. 仍在处理同一个任务的连续步骤。
+2. 正在修复刚才同一任务产生的构建错误。
+3. 当前对话上下文仍然清晰，且没有切换任务类型。
+4. 修改范围仍然保持在本次任务允许范围内。
+
+原则：一个对话对应一个任务，不把整个项目塞进一个长对话。
+
 ## 任务执行中规则
 
 1. 不要依赖账号记忆，以仓库文档为准。
@@ -138,6 +159,28 @@ wrangler.jsonc
 6. 文档中多行命令、路径、日志和文件列表必须使用标准三反引号代码块。
 7. PowerShell 环境下构建优先使用 `npm.cmd run build`。
 8. 如果发现新警告、新风险或文档冲突，先记录到 `STATUS.md` 和 `docs/tasks/current.md`。
+
+## Conversation Budget（会话预算）
+
+如果出现以下任意情况，应考虑结束当前对话，先完成交接记录，再开启新对话继续：
+
+1. 已完成一个完整 Feature、PR 或阶段性任务。
+2. 已进行了大量 Debug 或多轮修改。
+3. 已明显开始讨论新的主题。
+4. 对话中包含大量已经无关的日志、diff 或临时方案。
+5. Codex 开始重复规划、忘记前提或扩大修改范围。
+
+## Context Compression（上下文压缩）
+
+结束一个对话前，不要把重要信息只留在聊天中。必须把可复用信息压缩回仓库文档：
+
+1. 当前状态、验证结果、已知警告写入 `STATUS.md`。
+2. 本轮目标、修改文件、未完成事项和下一步写入 `docs/tasks/current.md`。
+3. 长期技术或流程决策写入 `PROJECT_DECISIONS.md`。
+4. 设计变化写入 `DESIGN.md`。
+5. SEO / GEO 变化写入 `SEO.md` 或对应新增规范文档。
+6. 内容整理流程变化写入 `CONTENT_WORKFLOW.md`、`docs/content-style.md` 或 `skills/article-workflow.md`。
+7. 部署流程变化写入 `DEPLOY.md` 或 `RUNBOOK.md`。
 
 ## 任务结束后：必须更新的文件
 

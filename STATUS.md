@@ -1,10 +1,10 @@
 ﻿# 项目状态
 
-最后更新：2026-06-22 09:30:00 +09:00
+最后更新：2026-06-26 +09:00
 
 ## 当前结论
 
-已完成“内容整理发布防重复错误”整改：把 2026-06-21 Patrick 讲道发布中暴露的问题整理成固定防错清单，并写入仓库流程文档、交接记忆文档和 Codex 记忆更新 note，方便不同账号切换时直接读取执行。
+已完成“Context Engineering / 上下文工程规则”补充：把 Codex 长会话精简、新对话判断、会话预算、上下文压缩、对话/分支/worktree 对应关系、临时文件管理等规则写入仓库文档。
 
 正式开发目录：
 
@@ -16,36 +16,46 @@ C:\Users\caoyi\Projects\各人网页项目
 
 ## 本轮已完成
 
-1. 复盘上次讲道整理发布流程中出现的问题：PDF 提取错序/截断、翻译可能摘要化、description 截断、经文字段不完整、中文 slug 不稳定、articleId 可能失效、导入脚本重写旧文、Astro 缓存、线上验证域名选择、交接记录不足。
-2. 新增 `docs/content-publishing-error-prevention.md`，作为分享/讲道发布前强制执行的防错清单。
-3. 更新 `CONTENT_WORKFLOW.md`，加入发布防错清单入口和核心风险摘要。
-4. 更新 `skills/article-workflow.md`，让另一个 Codex 账号读取 skill 时能看到防错要求。
-5. 更新 `docs/codex-handoff-memory.md`，把防错清单加入项目级交接记忆。
-6. 更新 `docs/content-style.md`，补充网站发布 metadata 质量要求。
-7. 更新 `docs/task-handoff-protocol.md`，让内容类任务启动检查包含防错清单。
-8. 写入 Codex 记忆更新 note：`C:\Users\caoyi\.codex\memories\extensions\ad_hoc\notes\2026-06-22-ronniecross-publishing-error-prevention.md`。
-
-## 本轮整改重点
-
-- `*.extracted.txt` 只能作为机器提取辅助，不能直接作为翻译或发布源。
-- 双语 PDF 必须确认翻译源语言，并检查源语言底稿是否漏页尾、漏例子、漏经文引用或错序。
-- 讲道翻译必须逐句忠实完整，不允许用摘要、提纲、主题整理或灵修改写替代翻译。
-- 发布前必须人工核对 `description`、`scripture`、title、speaker/author、slug、source、`articleId`。
-- 讲道导入后必须检查 diff，排除旧讲道文章被批量重写带来的无关改动。
-- 新文章不出现在构建产物或出现 Duplicate id 时，先确认源文件唯一，再清理 `.astro` 本地缓存重建。
-- 线上验证优先使用正式域名 `https://ronniecross.com/`。
+1. 更新 `AGENTS.md`：
+   - 将 `docs/context-engineering.md` 加入新账号必读顺序。
+   - 新增 `Context Engineering（上下文工程）` 章节，明确一个 Codex 对话只处理一个明确任务，长期规则必须写入仓库文档。
+2. 新增 `docs/context-engineering.md`：
+   - 记录上下文工程目标、基本原则、任务类型对应的必读文档、新开对话判断、会话预算、上下文压缩、对话/分支/worktree 对应关系、临时文件管理、新对话启动 Checklist 和结束对话 Checklist。
+3. 更新 `docs/task-handoff-protocol.md`：
+   - 将 `docs/context-engineering.md` 加入一级必读文件。
+   - 新增“何时新开对话”。
+   - 新增 Conversation Budget 和 Context Compression 规则。
+4. 更新 `docs/branch-workflow.md`：
+   - 新增“对话、分支、Worktree 的对应关系”。
+5. 更新 `docs/account-switching.md`：
+   - 将 `docs/context-engineering.md` 加入新账号接手必读顺序和新账号开始前检查清单。
+6. 更新 `docs/tasks/current.md` 完成本轮交接。
 
 ## 当前工作边界
 
-本轮没有处理既有未跟踪目录：
+本轮只修改流程和规范文档，没有修改网站源码、内容文章、脚本、部署配置或后台代码。
+
+修改范围：
 
 ```text
-?? .ai-bridge/
+AGENTS.md
+STATUS.md
+docs/account-switching.md
+docs/branch-workflow.md
+docs/context-engineering.md
+docs/task-handoff-protocol.md
+docs/tasks/current.md
 ```
 
-`AGENTS.md` 在本轮开始前已经有未提交修改；本轮没有修改该文件。
+## 验证结果
 
-## 后续建议
+本轮为纯 Markdown 文档更新，未修改网站源码、Astro 内容、脚本或构建配置，因此未运行 `npm.cmd run build`。
 
-1. 后续所有“分享/讲道/整理发布”任务，启动检查必须读取 `docs/content-publishing-error-prevention.md`。
-2. 如果要进一步减少人工修正，可单独开任务改进 `scripts/import_sermons.py`：只导入指定 folder、生成完整 description、识别完整经文范围、稳定 slug、避免重写旧文。
+已通过 `git diff` 检查当前改动范围。
+
+## 已知注意事项
+
+1. 后续新开 Codex 对话时，应把 `docs/context-engineering.md` 作为一级必读文档。
+2. 以后不要在同一个长对话中混合 UI、SEO、内容发布、部署、后台、Bug 修复等无关任务。
+3. 任务结束前必须把重要上下文压缩回 `STATUS.md` 和 `docs/tasks/current.md`，必要时同步写入专项规范文档。
+4. `.ai-bridge/` 是既有未跟踪目录，本轮不纳入提交。
