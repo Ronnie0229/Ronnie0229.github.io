@@ -1,47 +1,55 @@
-﻿# 项目状态
+# 项目状态
 
 最后更新：2026-06-26 +09:00
 
 ## 当前结论
 
-已完成“Context Engineering / 上下文工程规则”补充：把 Codex 长会话精简、新对话判断、会话预算、上下文压缩、对话/分支/worktree 对应关系、临时文件管理等规则写入仓库文档。
-
-正式开发目录：
+已完成“项目状态收尾检查与清理”。正式主项目仍在：
 
 ```text
 C:\Users\caoyi\Projects\各人网页项目
 ```
 
-旧桌面目录 `C:\Users\caoyi\Desktop\Codex\这人网页项目` 只作为跳转目录保留。NAS 只作为收件、原始资料和受保护归档位置，不在 NAS 上运行 Git、Node 或 Astro。
+本轮没有部署、没有 push、没有批量重命名文章、没有删除 `data/raw/` 或 `data/processed/`。
 
 ## 本轮已完成
 
-1. 更新 `AGENTS.md`：
-   - 将 `docs/context-engineering.md` 加入新账号必读顺序。
-   - 新增 `Context Engineering（上下文工程）` 章节，明确一个 Codex 对话只处理一个明确任务，长期规则必须写入仓库文档。
-2. 新增 `docs/context-engineering.md`：
-   - 记录上下文工程目标、基本原则、任务类型对应的必读文档、新开对话判断、会话预算、上下文压缩、对话/分支/worktree 对应关系、临时文件管理、新对话启动 Checklist 和结束对话 Checklist。
-3. 更新 `docs/task-handoff-protocol.md`：
-   - 将 `docs/context-engineering.md` 加入一级必读文件。
-   - 新增“何时新开对话”。
-   - 新增 Conversation Budget 和 Context Compression 规则。
-4. 更新 `docs/branch-workflow.md`：
-   - 新增“对话、分支、Worktree 的对应关系”。
-5. 更新 `docs/account-switching.md`：
-   - 将 `docs/context-engineering.md` 加入新账号接手必读顺序和新账号开始前检查清单。
-6. 更新 `docs/tasks/current.md` 完成本轮交接。
+1. 检查正式主项目 Git 状态：开始时为 `## main...origin/main`，已有 `docs/tasks/current.md` 修改，并存在未跟踪 `.ai-bridge/`。
+2. 检查 `.ai-bridge/`：内容为本地 ChatGPT / Codex / agent 协作痕迹；未删除目录，已在 `.gitignore` 加入 `.ai-bridge/`。
+3. 检查旧 duplicate content id：只找到一篇目标文章文件：
+
+```text
+src/content/posts/2026-06-14-罗马书-14-1-23｜你属于哪个国度？.md
+```
+
+4. 运行 `npm.cmd run build`：构建成功，生成 188 个页面，旧 duplicate content id 警告未再出现。
+5. 检查主题改版 worktree：
+
+```text
+C:\Users\caoyi\Projects\各人网页项目-theme-redesign-css
+```
+
+仍显示：
+
+```text
+## design/theme-redesign-css
+ M AGENTS.md
+?? .ai-bridge/
+```
+
+本轮只记录残留，不删除 worktree，也不合并旧 worktree 改动。
+6. 将“项目文档类请求默认直接写入项目文件”的长期约定写入 `docs/context-engineering.md`，并同步到 `AGENTS.md` 与 `docs/task-handoff-protocol.md`。
 
 ## 当前工作边界
 
-本轮只修改流程和规范文档，没有修改网站源码、内容文章、脚本、部署配置或后台代码。
+本轮只修改 Git 忽略规则和流程文档，没有修改网站功能代码、部署配置、脚本、文章正文、`data/raw/` 或 `data/processed/`。
 
 修改范围：
 
 ```text
+.gitignore
 AGENTS.md
 STATUS.md
-docs/account-switching.md
-docs/branch-workflow.md
 docs/context-engineering.md
 docs/task-handoff-protocol.md
 docs/tasks/current.md
@@ -49,13 +57,31 @@ docs/tasks/current.md
 
 ## 验证结果
 
-本轮为纯 Markdown 文档更新，未修改网站源码、Astro 内容、脚本或构建配置，因此未运行 `npm.cmd run build`。
+已运行：
 
-已通过 `git diff` 检查当前改动范围。
+```powershell
+npm.cmd run build
+```
+
+结果：成功。
+
+关键结果：
+
+```text
+188 page(s) built
+旧 duplicate content id warning 未出现
+```
+
+仅出现 npm 自身版本提示，不影响项目构建。
 
 ## 已知注意事项
 
-1. 后续新开 Codex 对话时，应把 `docs/context-engineering.md` 作为一级必读文档。
-2. 以后不要在同一个长对话中混合 UI、SEO、内容发布、部署、后台、Bug 修复等无关任务。
-3. 任务结束前必须把重要上下文压缩回 `STATUS.md` 和 `docs/tasks/current.md`，必要时同步写入专项规范文档。
-4. `.ai-bridge/` 是既有未跟踪目录，本轮不纳入提交。
+1. 主题改版 worktree 仍有残留状态：`M AGENTS.md` 和 `?? .ai-bridge/`。
+2. `.ai-bridge/` 已被主项目忽略，但目录本身仍保留在本机，不属于正式项目资产。
+3. 当前任务完成后，如需让仓库回到完全干净状态，后续应单独审查并提交本轮文档改动，或按用户指令处理。
+
+## 下一步建议
+
+1. 单独检查主题改版 worktree 的 `AGENTS.md` 修改是否还有保留价值。
+2. 若确认主题改版 worktree 已无用途，再由用户明确授权后清理或删除该 worktree。
+3. 后续项目文档类请求按新规则默认直接写入项目文件。

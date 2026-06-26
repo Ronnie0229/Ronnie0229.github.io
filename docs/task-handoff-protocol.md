@@ -1,4 +1,4 @@
-﻿# 任务交接协议
+# 任务交接协议
 
 ## 目标
 
@@ -159,6 +159,7 @@ wrangler.jsonc
 6. 文档中多行命令、路径、日志和文件列表必须使用标准三反引号代码块。
 7. PowerShell 环境下构建优先使用 `npm.cmd run build`。
 8. 如果发现新警告、新风险或文档冲突，先记录到 `STATUS.md` 和 `docs/tasks/current.md`。
+9. 项目文档类请求默认直接写入项目文件；用户说“当前任务文档”时，默认指 `docs/tasks/current.md`。除非用户明确要求“只给我看看，不要改文件”，否则不要只在聊天里生成 Markdown。当前会话具备写入能力时，不需要用户每次显式指定 CodexPro。
 
 ## Conversation Budget（会话预算）
 
