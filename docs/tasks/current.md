@@ -1,28 +1,35 @@
-# Current Task: Post-Deploy Verification and Worktree Cleanup
+# Current Task: Bible Knowledge Layer v1 Completed
 
-## 背景
+## 最终状态
 
-当前主工作区：
-
-```text
-C:\Users\caoyi\Projects\各人网页项目
-```
-
-当前主分支：
+Bible Knowledge Layer v1 已完成全部流程：
 
 ```text
-main
+设计与文档 ✅
+功能开发 ✅
+本地验证 ✅
+合并 main ✅
+push 到 origin/main ✅
+线上部署验证 ✅
+临时 worktree 清理 ✅
+feature 分支清理 ✅
 ```
 
-Bible Knowledge Layer v1 已经完成、合并并推送到远程：
+## 已完成提交
+
+功能提交：
 
 ```text
-commit: 879d81d feat: add Bible Knowledge Layer v1
-branch: main
-remote: origin/main
+879d81d feat: add Bible Knowledge Layer v1
 ```
 
-已完成的能力：
+文档状态提交：
+
+```text
+59cf006 docs: update knowledge layer status and next task
+```
+
+## 已完成能力
 
 ```text
 Phase 0: docs/knowledge/ARCHITECTURE.md 与 ROADMAP.md
@@ -34,12 +41,9 @@ Phase 5: Admin description fallback 与 articleId preSave 逻辑增强
 Phase 6: scripts/check-knowledge-layer.mjs 与 check:knowledge 脚本
 ```
 
-用户已在 main 工作区完成并确认：
+## 本地验证结果
 
 ```text
-git merge feature/bible-knowledge-layer
-Fast-forward d669b3d..879d81d
-
 npm.cmd run check:knowledge
 Posts checked: 158
 Errors: 0
@@ -48,129 +52,91 @@ Warnings: 0
 npm.cmd run build
 188 page(s) built
 [build] Complete!
+```
 
+## 线上部署验证结果
+
+```text
+https://ronniecross.com/                                      OK 200
+https://ronniecross.com/bible/                                OK 200
+https://ronniecross.com/bible/%E7%BD%97%E9%A9%AC%E4%B9%A6/    OK 200, 罗马书书卷页
+https://ronniecross.com/search/                               OK 200
+https://ronniecross.com/search-index.json                     OK 200, 158 entries, Knowledge fields present
+https://ronniecross.com/sitemap.xml                           OK 200, contains /posts/ and /bible/
+https://ronniecross.com/rss.xml                               OK 200
+https://ronniecross.com/admin/                                OK 200, Cloudflare Access protected
+```
+
+之前出现的乱码 URL：
+
+```text
+https://ronniecross.com/bible/鄂鈴ｩｬ荵ｦ/
+```
+
+已确认只是中文 `罗马书` 在命令行/文件读取时产生的 mojibake 乱码，不是线上部署问题。
+
+## Worktree 清理结果
+
+已删除 Bible Knowledge Layer 临时 worktree：
+
+```text
+C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
+```
+
+已删除本地 feature 分支：
+
+```text
+feature/bible-knowledge-layer
+```
+
+清理后保留的 worktree：
+
+```text
+C:/Users/caoyi/Projects/各人网页项目                    [main]
+C:/Users/caoyi/Projects/各人网页项目-theme-redesign-css [design/theme-redesign-css]
+```
+
+确认未删除：
+
+```text
+design/theme-redesign-css
+```
+
+## 当前仓库状态
+
+当前仅有本文件作为最终任务状态记录待提交：
+
+```text
+M docs/tasks/current.md
+```
+
+建议提交信息：
+
+```text
+docs: mark bible knowledge layer complete
+```
+
+## 下一步建议
+
+先提交本最终状态记录：
+
+```powershell
+git add docs/tasks/current.md
+git commit -m "docs: mark bible knowledge layer complete"
 git status --short
-空
-
 git push
-45c184d..879d81d main -> main
 ```
 
-## 本次任务目标
+之后再开启新任务。
 
-这一步不是继续开发新功能，而是做发布后的低风险验证与清理准备：
+## 后续候选任务
 
-1. 确认 main 本地状态干净。
-2. 确认 Knowledge Layer 检查仍通过。
-3. 确认 Astro build 仍通过。
-4. 检查 `dist/` 中关键输出文件是否存在。
-5. 生成一份本地验证记录。
-6. 准备清理临时 worktree / feature 分支的手顺，但不要擅自删除，等待用户确认。
-
-## 本次允许操作
-
-允许读取：
+暂不自动开始新功能。后续可以单独开新分支或 worktree 执行：
 
 ```text
-package.json
-scripts/check-knowledge-layer.mjs
-docs/knowledge/ARCHITECTURE.md
-docs/knowledge/ROADMAP.md
-docs/tasks/current.md
-src/lib/knowledge/
-src/pages/search-index.json.ts
-src/pages/sitemap.xml.ts
-src/pages/rss.xml.ts
-assets/admin/config.yml
-assets/admin/decap.js
+Phase 7: 搜索 UI 增强
+Phase 7: Bible book 页面增强
+Phase 7: 相关文章解释与展示优化
+Phase 7: Knowledge topics 词表扩展
+Phase 7: Admin 新文章保存实际测试
 ```
-
-允许运行：
-
-```powershell
-git status --short
-git log --oneline -5
-git branch --show-current
-git worktree list
-npm.cmd run check:knowledge
-npm.cmd run build
-```
-
-可以检查这些构建产物是否存在：
-
-```text
-dist/index.html
-dist/search-index.json
-dist/sitemap.xml
-dist/rss.xml
-dist/bible/index.html
-```
-
-允许新增或更新：
-
-```text
-docs/tasks/current.md
-docs/knowledge/ROADMAP.md
-```
-
-如果需要记录验证结果，可以新增：
-
-```text
-docs/knowledge/POST_DEPLOY_CHECK.md
-```
-
-## 本次不允许操作
-
-- 不修改文章。
-- 不修改前台页面。
-- 不修改 CSS。
-- 不修改 Admin 逻辑。
-- 不修改 Knowledge Layer 代码。
-- 不新增功能。
-- 不调用外部 API。
-- 不访问外部网络。
-- 不部署。
-- 不 push。
-- 不删除 worktree。
-- 不删除 feature 分支。
-- 不自动提交 commit，除非用户明确要求。
-
-## 验收标准
-
-必须确认：
-
-- `git status --short` 为空。
-- 当前分支是 `main`。
-- `npm.cmd run check:knowledge` 通过。
-- `npm.cmd run build` 通过。
-- 构建页数仍为 188 或合理接近。
-- `dist/search-index.json`、`dist/sitemap.xml`、`dist/rss.xml` 存在。
-- 没有越界修改。
-- 给出是否可以清理 worktree 的建议。
-
-## 建议的清理手顺
-
-只有在用户确认线上部署正常后，才执行：
-
-```powershell
-cd C:\Users\caoyi\Projects\各人网页项目
-git worktree list
-git worktree remove C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
-git branch -d feature/bible-knowledge-layer
-```
-
-如果 `git worktree remove` 提示目录有未清理文件，不要强制删除，先汇报。
-
-## 完成后汇报格式
-
-完成后请汇报：
-
-1. 当前分支和 git 状态。
-2. `check:knowledge` 结果。
-3. build 结果。
-4. 关键 dist 文件是否存在。
-5. 是否发现问题。
-6. 是否建议清理 worktree。
-7. 清理命令建议。
-
-不要提交、不要 push、不要删除 worktree，等待用户确认。
