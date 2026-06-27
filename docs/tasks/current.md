@@ -210,3 +210,20 @@ Rule recorded in:
 AGENTS.md
 docs/task-handoff-protocol.md
 ```
+
+## Brand asset protection rule added
+
+Added a project rule after the incorrect temporary favicon incident on 2026-06-27:
+
+- Logo, favicon, apple-touch-icon, and manifest icons are protected brand assets.
+- Do not AI-redraw, temporarily create, replace, or redesign any brand icon without explicit user confirmation.
+- Favicon / app icon changes must use the user-approved official Logo files, or size variants derived from the official Logo without changing the design.
+- Before changing favicon-related SEO, check browser tab behavior and actual icon references in layout / manifest / image assets.
+
+Rule recorded in:
+
+```text
+AGENTS.md
+DESIGN.md
+SEO.md
+```

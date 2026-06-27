@@ -109,6 +109,19 @@ docs/task-handoff-protocol.md
 docs/tasks/current.md
 ```
 
+## 2026-06-27 补充记录：品牌资产保护规则
+
+因此前错误临时新建并使用了非正式 favicon，已追加项目级品牌资产规则：Logo、favicon、apple-touch-icon、manifest icons 都属于受保护品牌资产；未经用户明确确认，不得 AI 重绘、临时新建、替换或重新设计。favicon / app icon 只能使用用户确认过的正式 Logo 文件，或从正式 Logo 等比例裁切 / 缩放生成尺寸版本。
+
+该规则已写入：
+
+```text
+AGENTS.md
+DESIGN.md
+SEO.md
+docs/tasks/current.md
+```
+
 ## 已知注意事项
 
 1. 主题改版 worktree 仍有残留状态：`M AGENTS.md` 和 `?? .ai-bridge/`。

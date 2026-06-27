@@ -108,6 +108,16 @@ YYYY-MM-DD-short-topic.md
 
 修改 SEO 时，应检查这些文件是否与当前站点结构一致。
 
+## Favicon / 搜索结果图标规则
+
+搜索结果前的网站图标通常来自页面 head 中的 favicon 声明，以及站点 manifest / app icon 相关资源。处理搜索结果图标时必须遵守品牌资产规则：
+
+1. 不得为了修正搜索图标而临时新建、AI 重绘或重新设计 favicon。
+2. favicon、apple-touch-icon、manifest icons 必须使用用户确认过的正式 Logo，或从正式 Logo 等比例裁切 / 缩放生成尺寸版本。
+3. 修改前必须检查 `src/layouts/BaseLayout.astro`、`assets/site.webmanifest` 和 `assets/images/` 中实际被引用的图标文件。
+4. 修改后必须确认浏览器标签页显示的是正式 Logo，因为浏览器标签页和搜索结果可能使用同一 favicon 入口。
+5. 搜索结果图标不会在发布后立即刷新；需要等待搜索引擎重新抓取，也可在 Search Console 请求首页重新编入索引。
+
 ## 文章页 SEO 检查
 
 - [ ] title 是否准确。
