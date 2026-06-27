@@ -130,9 +130,11 @@ npm run dev
 
 构建验证：
 
-```shell
-npm run build
+```powershell
+npm.cmd run build
 ```
+
+Windows PowerShell 下不要直接使用 `npm run build`，否则可能因 `npm.ps1` 被 Execution Policy 阻止而失败。需要运行 npm 脚本时，优先使用 `npm.cmd ...`，例如 `npm.cmd run build`。
 
 预览构建结果：
 

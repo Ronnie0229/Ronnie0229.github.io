@@ -1,6 +1,6 @@
 # 项目状态
 
-最后更新：2026-06-26 +09:00
+最后更新：2026-06-27 +09:00
 
 ## 当前结论
 
@@ -73,6 +73,23 @@ npm.cmd run build
 ```
 
 仅出现 npm 自身版本提示，不影响项目构建。
+
+## 2026-06-27 补充记录：主题主背景纯色化
+
+已按用户要求将网页主背景从上下/叠加渐变改为纯色：
+
+- 深色模式主背景统一为深蓝色 `#061625`。
+- 浅色模式主背景统一为浅白色 `#f7f9fc`。
+- 已同步修改 `src/styles/global.css`、`src/styles/tokens.css`、`assets/styles/global.css`、`assets/styles/tokens.css`。
+- 已将 Windows PowerShell 下 npm 脚本注意事项写入 `AGENTS.md`：优先使用 `npm.cmd ...`，避免 `npm.ps1` 被 Execution Policy 阻止。
+
+用户已完成构建验证：
+
+```text
+npm.cmd run build
+188 page(s) built in 83.46s
+[build] Complete!
+```
 
 ## 已知注意事项
 

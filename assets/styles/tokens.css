@@ -11,7 +11,7 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --color-bg: #061625;
-  --color-bg-2: #0a1d30;
+  --color-bg-2: #061625;
   --color-sidebar: #071a2c;
   --color-card: rgba(12, 31, 50, 0.82);
   --color-card-solid: #0c1f32;
@@ -31,7 +31,7 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --color-bg: #ffffff;
+  --color-bg: #f7f9fc;
   --color-bg-2: #f7f9fc;
   --color-sidebar: #ffffff;
   --color-card: rgba(255, 255, 255, 0.92);

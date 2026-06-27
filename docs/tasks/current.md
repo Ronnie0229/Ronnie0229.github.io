@@ -176,3 +176,21 @@ npm.cmd run build
 188 page(s) built
 [build] Complete!
 ```
+
+## Theme background update note
+
+Completed global page background simplification on 2026-06-27.
+
+- Changed main page background from layered radial/linear gradients to a single solid `var(--color-bg)`.
+- Dark mode now uses a unified deep blue background: `#061625`.
+- Light mode now uses a unified soft off-white background: `#f7f9fc`.
+- Synced both `src/styles/` and `assets/styles/` copies.
+- Added Windows PowerShell npm reminder to `AGENTS.md`: use `npm.cmd ...` instead of direct `npm ...` when PowerShell blocks `npm.ps1`.
+
+Verification completed by user:
+
+```text
+npm.cmd run build
+188 page(s) built in 83.46s
+[build] Complete!
+```
