@@ -29,6 +29,12 @@ feature 分支清理 ✅
 59cf006 docs: update knowledge layer status and next task
 ```
 
+最终收尾提交：
+
+```text
+15679c0 docs: mark bible knowledge layer complete
+```
+
 ## 已完成能力
 
 ```text
@@ -75,6 +81,20 @@ https://ronniecross.com/bible/鄂鈴ｩｬ荵ｦ/
 
 已确认只是中文 `罗马书` 在命令行/文件读取时产生的 mojibake 乱码，不是线上部署问题。
 
+长期处理规则已记录到：
+
+```text
+docs/knowledge/URL_ENCODING.md
+```
+
+以后让 Codex、PowerShell、curl 或自动化脚本验证中文 URL 时，应优先使用 UTF-8 百分号编码 URL，例如：
+
+```text
+https://ronniecross.com/bible/%E7%BD%97%E9%A9%AC%E4%B9%A6/
+```
+
+不要把命令行中的 mojibake 乱码 URL 立即判断为网站部署问题。
+
 ## Worktree 清理结果
 
 已删除 Bible Knowledge Layer 临时 worktree：
@@ -104,25 +124,26 @@ design/theme-redesign-css
 
 ## 当前仓库状态
 
-当前仅有本文件作为最终任务状态记录待提交：
+当前仅有本文件与 URL 编码规范文档作为后续记录待提交：
 
 ```text
 M docs/tasks/current.md
+?? docs/knowledge/URL_ENCODING.md
 ```
 
 建议提交信息：
 
 ```text
-docs: mark bible knowledge layer complete
+docs: add url encoding guidelines
 ```
 
 ## 下一步建议
 
-先提交本最终状态记录：
+提交 URL 编码规范文档：
 
 ```powershell
-git add docs/tasks/current.md
-git commit -m "docs: mark bible knowledge layer complete"
+git add docs/tasks/current.md docs/knowledge/URL_ENCODING.md
+git commit -m "docs: add url encoding guidelines"
 git status --short
 git push
 ```
@@ -139,4 +160,5 @@ Phase 7: Bible book 页面增强
 Phase 7: 相关文章解释与展示优化
 Phase 7: Knowledge topics 词表扩展
 Phase 7: Admin 新文章保存实际测试
+Phase 7: Bible book URL 规范化（可选，把中文路径迁移到英文 slug）
 ```
