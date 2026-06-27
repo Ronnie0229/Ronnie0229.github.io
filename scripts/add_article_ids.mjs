@@ -13,7 +13,8 @@ let changed = 0;
 
 for (const fileName of files) {
   const filePath = path.join(postsDirectory, fileName);
-  const content = await readFile(filePath, "utf8");
+  const rawContent = await readFile(filePath, "utf8");
+  const content = rawContent.replace(/^\uFEFF/, "");
   const existing = content.match(/^---\r?\n(?:[\s\S]*?\r?\n)?articleId:\s*"?([^"\r\n]+)"?/m);
 
   if (existing) {
