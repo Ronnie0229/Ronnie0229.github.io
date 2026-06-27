@@ -8,7 +8,8 @@
     "build": "node scripts/run_astro.mjs build",
     "preview": "node scripts/run_astro.mjs preview",
     "sync": "node scripts/sync_from_github.mjs",
-    "check:knowledge": "node scripts/check-knowledge-layer.mjs"
+    "check:knowledge": "node scripts/check-knowledge-layer.mjs",
+    "check:admin-save": "node scripts/check-admin-save-flow.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0"

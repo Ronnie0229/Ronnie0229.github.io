@@ -616,7 +616,9 @@ async function loadRevision(path) {
 
 function slugify(value) {
   const slug = value
+    .normalize("NFKC")
     .trim()
+    .toLowerCase()
     .replace(/[\\/:*?"<>|｜]/g, "")
     .replace(/[，。！？；、\s]+/g, "-")
     .replace(/-+/g, "-")
