@@ -16,25 +16,60 @@ Bible Knowledge Layer 的目标是让 RonnieCross 当前的 Astro + Markdown 网
 
 ## 2. 当前状态
 
-当前 worktree：
+当前主工作区：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
+C:\Users\caoyi\Projects\各人网页项目
 ```
 
 当前分支：
 
 ```text
-feature/bible-knowledge-layer
+main
 ```
 
 当前阶段：
 
 ```text
-Phase 0: 文档补强
+Bible Knowledge Layer v1 已完成、合并 main，并已 push 到 origin/main。
 ```
 
+当前提交：
+
+```text
+879d81d feat: add Bible Knowledge Layer v1
+```
+
+最近验证结果：
+
+```text
+npm.cmd run check:knowledge
+Posts checked: 158
+Errors: 0
+Warnings: 0
+
+npm.cmd run build
+188 page(s) built
+[build] Complete!
+
+git status --short
+空
+
+git push
+45c184d..879d81d main -> main
+```
+
+当前下一步不是继续开发功能，而是：
+
+```text
+Post-Deploy Verification and Worktree Cleanup
+```
+
+目标是确认发布后输出稳定，再决定是否清理临时 worktree 与 feature 分支。
+
 ## 3. Phase 0：文档补强
+
+状态：已完成。
 
 ### 目标
 
@@ -47,44 +82,21 @@ docs/knowledge/ARCHITECTURE.md
 docs/knowledge/ROADMAP.md
 ```
 
-### 必须写清楚
+### 验收结果
 
-- 项目定位：服务 SEO / GEO / AI Search / Bible Knowledge Graph。
-- 不替代现有 Markdown 文章系统。
-- 不主动考虑文章数据库化。
-- 不改变文章标题、摘要、正文和读者页面体验。
-- 不依赖 Codex 发布。
-- 不依赖 Admin 发布。
-- 所有文章只要进入 `src/content/posts/`，就在 Astro build 时自动适用。
-- 当前项目已有文件与能力。
-- 第一阶段目标文件结构。
-- JSON-LD 的安全边界。
-- Admin 摘要自动生成与构建层 fallback 的关系。
-
-### 不允许做
-
-- 不改代码。
-- 不新增 `src/lib/knowledge/`。
-- 不修改页面。
-- 不修改 Admin。
-- 不运行大规模迁移。
-
-### 验收标准
-
-- `ARCHITECTURE.md` 能清楚指导后续实现。
-- `ROADMAP.md` 能拆分出清晰阶段。
-- Git 状态只包含文档变化。
-- 没有代码变化。
+- `ARCHITECTURE.md` 已写入。
+- `ROADMAP.md` 已写入。
+- 后续 Phase 1 - Phase 6 已基于该路线执行完成。
 
 ## 4. Phase 1：Knowledge Core
+
+状态：已完成。
 
 ### 目标
 
 建立最小可用的知识层核心模块，从现有文章 frontmatter 和正文中自动派生知识信息。
 
-### 涉及文件
-
-新增：
+### 已新增文件
 
 ```text
 src/lib/knowledge/scripture.ts
@@ -96,64 +108,22 @@ src/lib/knowledge/schema.ts
 src/lib/knowledge/index.ts
 ```
 
-可能读取但尽量少改：
+### 已实现能力
 
-```text
-src/data/bible.ts
-src/content/config.ts
-```
-
-### 主要任务
-
-1. `scripture.ts`
-   - 复用 `src/data/bible.ts` 的书卷列表。
-   - 识别 scripture 中出现的书卷。
-   - 判断旧约 / 新约 / mixed / unknown。
-   - 尝试解析常见章节目格式。
-   - 对无法解析的复杂格式保留 raw，不抛错。
-
-2. `text.ts`
-   - 从 `search-index.json.ts` 迁移或复用 Markdown 清理逻辑。
-   - 生成纯文本。
-   - 统计 wordCount。
-   - 计算 readingTimeMinutes。
-   - 生成 fallback description。
-
-3. `topics.ts`
-   - 建立本地主题词典。
-   - 根据 title、description、scripture、tags、body 推断 topics。
-   - 不调用 AI，不访问外部 API。
-
-4. `related.ts`
-   - 封装相关文章打分逻辑。
-   - 第一阶段至少保留现有能力：同书卷、同分类、同标签。
-
-5. `posts.ts`
-   - 提供 `buildPostKnowledge(post, allPosts)`。
-   - 输出统一的 PostKnowledge 对象。
-
-6. `schema.ts`
-   - 先封装现有 JSON-LD 生成逻辑的基础函数。
-   - 后续 Phase 2 再接入 Layout。
-
-### 不允许做
-
-- 不改变文章页视觉。
-- 不改变路由。
-- 不修改历史 Markdown 内容。
-- 不改 Admin。
-- 不引入数据库。
-- 不引入外部 AI API。
-
-### 验收标准
-
-- `npm run build` 通过。
-- 新增模块可以被 TypeScript / Astro 正常解析。
-- 对复杂 scripture 不报错。
-- PostKnowledge 能基于现有文章生成。
-- 没有页面视觉变化。
+- 经文字段解析。
+- 圣经书卷识别。
+- 旧约 / 新约 / mixed / unknown 判断。
+- Markdown 清理。
+- fallback description 生成。
+- wordCount / readingTimeMinutes 计算。
+- 本地 topics 推断。
+- related posts 打分。
+- PostKnowledge 统一对象。
+- JSON-LD 基础 builder。
 
 ## 5. Phase 2：JSON-LD 抽离
+
+状态：已完成。
 
 ### 目标
 
@@ -164,32 +134,28 @@ src/content/config.ts
 ```text
 src/layouts/BaseLayout.astro
 src/lib/knowledge/schema.ts
-src/lib/knowledge/index.ts
 ```
 
-### 主要任务
+### 已实现能力
 
-- 保留现有 `WebSite`、`Person`、`SearchAction`、`BlogPosting` 能力。
-- 新增或预留 `BreadcrumbList`。
-- `BaseLayout.astro` 从“自己构建 JSON-LD”改为“接收或调用 schema builder”。
-- 确保 meta / Open Graph / Twitter Card 不退化。
+- `createWebSiteSchema`
+- `createPersonSchema`
+- `createBlogPostingSchema`
+- `createSiteGraph`
+- `createCollectionPageSchema`
+- `createBibleBookPageGraph`
+- `createBreadcrumbList`
+- `createItemList`
 
-### 不允许做
+### 边界
 
-- 不改变页面视觉。
-- 不删除现有 SEO meta。
-- 不生成页面没有依据的 FAQ。
-- 不输出欺骗式隐藏内容。
-
-### 验收标准
-
-- `npm run build` 通过。
-- 任意文章页仍有 JSON-LD。
-- JSON-LD 内容不低于当前水平。
-- 页面视觉不变。
-- 页面 title / description / canonical 正常。
+- 不生成 FAQ Schema。
+- 不生成页面没有依据的隐藏内容。
+- 不降低 meta / OG / Twitter / canonical 输出。
 
 ## 6. Phase 3：文章页接入 Knowledge Layer
+
+状态：已完成。
 
 ### 目标
 
@@ -199,43 +165,21 @@ src/lib/knowledge/index.ts
 
 ```text
 src/pages/posts/[slug].astro
-src/lib/knowledge/posts.ts
 src/lib/knowledge/related.ts
-src/lib/knowledge/schema.ts
+src/lib/knowledge/posts.ts
 ```
 
-### 主要任务
+### 已实现能力
 
-- 在 `[slug].astro` 中构建 `knowledge = buildPostKnowledge(post, allPosts)`。
-- 使用 knowledge 提供：
-  - description / fallback description
-  - keywords
-  - bibleBooks
-  - topics
-  - relatedPosts
-  - structuredData
-- 相关文章视觉不变，但算法迁移到 `related.ts`。
-- 若 frontmatter description 合格，优先使用人工 description。
-- 若 description 为空或过短，使用 fallback description。
-
-### 不允许做
-
-- 不改变文章正文。
-- 不改变标题展示。
-- 不改变摘要展示样式。
-- 不改变 URL。
-- 不改变留言 / 阅读数功能。
-
-### 验收标准
-
-- `npm run build` 通过。
-- 文章页可正常打开。
-- 文章页视觉基本不变。
-- 相关文章仍正常显示。
-- 缺少 description 的文章也能生成有效 meta description。
-- JSON-LD 正常。
+- 文章页接入 `buildPostKnowledge(post)`。
+- `BaseLayout` 的 description 使用 `knowledge.description`。
+- keywords 增加 `bibleBooks` 与 `topics`。
+- 相关文章算法迁移到 `getRelatedPosts(post, posts, 3)`。
+- 页面 HTML、正文、URL、留言和阅读数 DOM 保持不变。
 
 ## 7. Phase 4：书卷页、Search Index、Sitemap、RSS 接入
+
+状态：已完成。
 
 ### 目标
 
@@ -248,53 +192,25 @@ src/pages/bible/index.astro
 src/pages/bible/[book].astro
 src/pages/search-index.json.ts
 src/pages/sitemap.xml.ts
-src/pages/rss.xml.ts
-src/lib/knowledge/*
+src/lib/knowledge/schema.ts
 ```
 
-### 主要任务
+### 已实现能力
 
-1. 书卷页
-   - 使用 knowledge layer 判断书卷关联文章。
-   - 后续为书卷页输出 `CollectionPage`、`ItemList`、`BreadcrumbList`。
-   - 不改变 `/bible/` 和 `/bible/[book]/` URL。
-
-2. Search Index
-   - 在现有字段上新增：
-     - bibleBooks
-     - testament
-     - topics
-     - wordCount
-     - readingTimeMinutes
-   - 第一阶段只生成数据，不一定改搜索 UI。
-
-3. Sitemap
-   - 保持现有 URL。
-   - 文章页继续输出。
-   - 书卷页继续输出。
-   - 可选：书卷页 lastmod 使用该书卷下最新文章日期。
-
-4. RSS
-   - 保持兼容。
-   - 不破坏订阅。
-   - 可选添加 category / tags / scripture。
-
-### 不允许做
-
-- 不破坏 RSS 格式。
-- 不删除现有 sitemap URL。
-- 不改公开 URL。
-- 不大改搜索 UI。
-
-### 验收标准
-
-- `npm run build` 通过。
-- `/search-index.json` 输出新增知识字段。
-- `/sitemap.xml` 仍包含文章页和书卷页。
-- `/rss.xml` 正常。
-- `/bible/` 和 `/bible/[book]/` 正常。
+- `/bible/` 使用 `buildPostKnowledge(post).bibleBooks` 统计书卷文章数。
+- `/bible/[book]/` 使用 Knowledge Layer 的 `bibleBooks` 筛选文章。
+- `search-index.json` 保留原字段并新增：
+  - `bibleBooks`
+  - `testament`
+  - `topics`
+  - `wordCount`
+  - `readingTimeMinutes`
+- `sitemap.xml` 保留现有 URL，并为书卷页补充基于关联文章最新日期的 `lastmod`。
+- `rss.xml` 保持原结构，避免订阅兼容风险。
 
 ## 8. Phase 5：Admin 摘要自动生成与发布体验增强
+
+状态：已完成。
 
 ### 目标
 
@@ -305,38 +221,26 @@ src/lib/knowledge/*
 ```text
 assets/admin/decap.js
 assets/admin/config.yml
-src/lib/knowledge/text.ts
 ```
 
-### 主要任务
+### 已实现能力
 
-- 在 `assets/admin/decap.js` 的 `preSave` 中扩展逻辑。
-- 保留现有 articleId 自动生成。
-- 新增 description 检查：
-  - 空值。
-  - 过短。
-  - 占位文本。
-- 根据 body 清理 Markdown 后截取 120-160 字。
-- 尽量在标点处截断。
-- `assets/admin/config.yml` 中可补充 description / scripture / tags 的提示文字。
+- `preSave` 中保留 articleId 自动生成。
+- 同一个 `preSave` listener 中处理 articleId 与 description fallback。
+- description 为空、少于 20 字或占位文本时，从 body 自动生成摘要。
+- 用户认真填写的 description 不会被覆盖。
+- `config.yml` 中 description 字段增加中文提示。
 
-### 不允许做
+### 边界
 
-- 不默认调用 AI。
-- 不覆盖用户认真填写的摘要。
-- 不改变后台认证流程。
+- 不调用 AI。
+- 不访问外部 API。
 - 不改变 GitHub OAuth / Cloudflare Access。
 - 不改变文章存储位置。
 
-### 验收标准
-
-- 新建文章 description 为空时，保存可自动补充摘要。
-- 已有合理 description 不被覆盖。
-- articleId 自动生成仍正常。
-- Admin 配置仍能被 Decap CMS 读取。
-- `npm run build` 通过。
-
 ## 9. Phase 6：验证脚本与回归检查
+
+状态：已完成。
 
 ### 目标
 
@@ -344,31 +248,14 @@ src/lib/knowledge/text.ts
 
 ### 涉及文件
 
-新增：
-
 ```text
 scripts/check-knowledge-layer.mjs
-```
-
-可能修改：
-
-```text
 package.json
-README.md
-SEO.md
-docs/knowledge/ARCHITECTURE.md
-docs/knowledge/ROADMAP.md
 ```
 
-### 主要任务
+### 已实现能力
 
-- 检查非草稿文章是否有 title / date。
-- 检查 description 是否有人工值或 fallback。
-- 检查 scripture 是否至少能识别书卷。
-- 检查 PostKnowledge 生成不报错。
-- 检查 JSON-LD 可 stringify。
-- 检查 search-index 字段完整。
-- 可选新增 npm script：
+新增 npm script：
 
 ```json
 {
@@ -378,53 +265,108 @@ docs/knowledge/ROADMAP.md
 }
 ```
 
-### 不允许做
+检查脚本会验证：
 
-- 不让检查脚本自动修改文章。
-- 不在检查脚本中调用外部 API。
-- 不把复杂规则一次性设为 hard fail。
+- 非草稿文章是否有 title / date。
+- description 或 fallback 是否可用。
+- scripture 是否可识别书卷。
+- PostKnowledge 生成是否报错。
+- topics / wordCount / readingTimeMinutes 是否正常。
+- JSON-LD 基础结构是否可 stringify。
+- Admin `preSave` 是否仍只有一个 listener。
+- Admin 是否仍包含 articleId 与 description fallback 逻辑。
 
-### 验收标准
-
-- `npm run build` 通过。
-- `npm run check:knowledge` 通过或输出清晰警告。
-- 文档说明如何处理检查结果。
-
-## 10. 推荐执行顺序
-
-建议严格按以下顺序推进：
+当前结果：
 
 ```text
-Phase 0 文档补强
-  ↓
-Phase 1 Knowledge Core
-  ↓
-Phase 2 JSON-LD 抽离
-  ↓
-Phase 3 文章页接入
-  ↓
-Phase 4 书卷页 / search-index / sitemap / RSS 接入
-  ↓
-Phase 5 Admin 摘要自动生成
-  ↓
-Phase 6 验证脚本与回归检查
+Posts checked: 158
+Errors: 0
+Warnings: 0
 ```
 
-不要跳过 Phase 1 直接改页面。不要先做 Admin。不要先做大规模数据迁移。
+## 10. 当前下一步：发布后验证与 worktree 清理准备
 
-## 11. 每次交给 Codex 的任务格式
+状态：待执行。
+
+### 目标
+
+在不开发新功能、不修改前台视觉、不部署、不 push 的前提下，确认 main 合并后的本地与构建输出稳定，并准备清理临时 worktree 的手顺。
+
+### 建议任务文件
+
+```text
+docs/tasks/current.md
+```
+
+当前任务标题：
+
+```text
+Post-Deploy Verification and Worktree Cleanup
+```
+
+### Codex 本次应做
+
+- 确认当前分支是 `main`。
+- 确认 `git status --short` 为空或只包含本次文档更新。
+- 运行 `npm.cmd run check:knowledge`。
+- 运行 `npm.cmd run build`。
+- 检查关键构建产物：
+  - `dist/index.html`
+  - `dist/search-index.json`
+  - `dist/sitemap.xml`
+  - `dist/rss.xml`
+  - `dist/bible/index.html`
+- 读取 `git worktree list`，确认 feature worktree 仍存在。
+- 给出是否可以清理 worktree 的建议。
+
+### Codex 本次不应做
+
+- 不修改文章。
+- 不修改前台页面。
+- 不修改 CSS。
+- 不修改 Knowledge Layer 代码。
+- 不新增功能。
+- 不部署。
+- 不 push。
+- 不删除 worktree。
+- 不删除 feature 分支。
+- 不自动 commit。
+
+## 11. 后续可能的 Phase 7：搜索 UI 增强
+
+状态：暂不执行。
+
+只有在发布后验证稳定、worktree 清理完成后，再考虑 Phase 7。
+
+可能方向：
+
+- 利用 `search-index.json` 新增字段，在站内搜索 UI 中增加按书卷 / 主题筛选。
+- 在搜索结果中显示阅读时间、书卷、主题。
+- 为 `/bible/[book]/` 接入更明确的 CollectionPage JSON-LD 输出。
+- 添加简单的知识统计页面，例如按书卷、主题、年份浏览。
+
+Phase 7 的边界：
+
+- 仍不修改历史文章正文。
+- 仍不改变文章 URL。
+- 仍不引入数据库。
+- 仍不调用外部 AI API。
+- 搜索 UI 改动必须单独开分支或 worktree。
+
+## 12. 每次交给 Codex 的任务格式
 
 每次给 Codex 派发任务时，建议使用以下格式：
 
 ```text
 当前 worktree：
-C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
+C:\Users\caoyi\Projects\各人网页项目
 
-当前阶段：Phase X
+当前阶段：Post-Deploy Verification and Worktree Cleanup
 
 本次只允许修改：
-- 文件 A
-- 文件 B
+- docs/tasks/current.md
+- docs/knowledge/ROADMAP.md
+- docs/knowledge/POST_DEPLOY_CHECK.md（如需要）
 
 本次不允许：
 - 不改文章正文
@@ -432,33 +374,26 @@ C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
 - 不改 URL
 - 不引入数据库
 - 不调用外部 API
+- 不部署
+- 不 push
+- 不删除 worktree
 
 完成后必须：
-- 说明改了什么
-- 运行 npm run build（如果当前环境可运行）
+- 说明检查结果
+- 运行 npm.cmd run check:knowledge
+- 运行 npm.cmd run build
 - 不提交，等待验收
 ```
 
-## 12. 合并策略
+## 13. 清理策略
 
-建议每个 Phase 独立 commit。
+确认线上部署正常后，可以清理临时 worktree 与 feature 分支：
 
-推荐 commit 粒度：
-
-```text
-Phase 0: docs for Bible Knowledge Layer
-Phase 1: add knowledge core helpers
-Phase 2: extract structured data builders
-Phase 3: integrate post knowledge layer
-Phase 4: extend bible/search/sitemap/rss outputs
-Phase 5: enhance admin description fallback
-Phase 6: add knowledge validation script
+```powershell
+cd C:\Users\caoyi\Projects\各人网页项目
+git worktree list
+git worktree remove C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
+git branch -d feature/bible-knowledge-layer
 ```
 
-合并回 main 前必须确认：
-
-- `npm run build` 通过。
-- 页面视觉没有非预期变化。
-- Admin 仍能使用。
-- sitemap / RSS / search-index 正常。
-- 没有修改历史文章正文。
+如果 `git worktree remove` 提示目录不干净，不要强制删除，先检查并汇报。
