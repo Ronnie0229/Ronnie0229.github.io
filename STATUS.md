@@ -1,135 +1,116 @@
 # 项目状态
 
-最后更新：2026-06-27 +09:00
+最后更新：2026-06-28 +09:00
 
 ## 当前结论
 
-已完成“项目状态收尾检查与清理”。正式主项目仍在：
+已完成 2026-06-28 Patrick 讲道《罗马书 15:14-33｜福音的提醒》的整理、归档、发布、构建、推送和线上验证。
+
+正式开发目录：
 
 ```text
 C:\Users\caoyi\Projects\各人网页项目
 ```
 
-本轮没有部署、没有 push、没有批量重命名文章、没有删除 `data/raw/` 或 `data/processed/`。
+本轮开始前已按规则执行远端同步：
+
+```powershell
+git pull --rebase origin main
+```
+
+结果：`Already up to date.`
 
 ## 本轮已完成
 
-1. 检查正式主项目 Git 状态：开始时为 `## main...origin/main`，已有 `docs/tasks/current.md` 修改，并存在未跟踪 `.ai-bridge/`。
-2. 检查 `.ai-bridge/`：内容为本地 ChatGPT / Codex / agent 协作痕迹；未删除目录，已在 `.gitignore` 加入 `.ai-bridge/`。
-3. 检查旧 duplicate content id：只找到一篇目标文章文件：
+1. 检查讲道收件目录：
 
 ```text
-src/content/posts/2026-06-14-罗马书-14-1-23｜你属于哪个国度？.md
+\\RonnieNAS\tmp\讲道
 ```
 
-4. 运行 `npm.cmd run build`：构建成功，生成 188 个页面，旧 duplicate content id 警告未再出现。
-5. 检查主题改版 worktree：
+发现 PDF：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目-theme-redesign-css
+[TF] Romans 15_14-33 The Gospel Reminder - Google Docs.pdf
 ```
 
-仍显示：
+2. 将 PDF 入库到本地 raw 目录，并生成机器提取稿：
 
 ```text
-## design/theme-redesign-css
- M AGENTS.md
-?? .ai-bridge/
+data/raw/教会讲道/20260628罗马书15：14-33福音的提醒_Patrick/
 ```
 
-本轮只记录残留，不删除 worktree，也不合并旧 worktree 改动。
-6. 将“项目文档类请求默认直接写入项目文件”的长期约定写入 `docs/context-engineering.md`，并同步到 `AGENTS.md` 与 `docs/task-handoff-protocol.md`。
-
-## 当前工作边界
-
-本轮只修改 Git 忽略规则和流程文档，没有修改网站功能代码、部署配置、脚本、文章正文、`data/raw/` 或 `data/processed/`。
-
-修改范围：
+3. 按防错流程处理双语 PDF：
+   - 确认本次以英文为翻译源。
+   - 机器提取稿只作为辅助，不直接发布。
+   - 生成并检查英文源稿。
+   - 按英文原文逐句完整翻译，生成中文译稿。
+4. 复制到受保护归档区：
 
 ```text
-.gitignore
-AGENTS.md
-STATUS.md
-docs/context-engineering.md
-docs/task-handoff-protocol.md
-docs/tasks/current.md
+\\RonnieNAS\share\教会讲道\20260628罗马书15：14-33福音的提醒_Patrick
 ```
+
+归档结果：3 个正式文件，761116 字节；不包含 `*.extracted.txt`。
+
+5. 发布网站文章：
+
+```text
+src/content/posts/2026-06-28-romans-15-14-33-gospel-reminder.md
+data/processed/整理后的讲道文章/2026-06-28-romans-15-14-33-gospel-reminder.md
+```
+
+6. 更新讲道目录报告：
+
+```text
+docs/内容整理报告/讲道文章目录.csv
+```
+
+7. 修复 `scripts/add_article_ids.mjs`：让脚本兼容带 UTF-8 BOM 的历史 Markdown 文件，避免再次误报“文章缺少 Frontmatter”。
+
+## 防重复错误处理记录
+
+本轮发布脚本一度批量重写旧讲道文章，并生成 2026-06-21 的重复中文文件。已按 `docs/content-publishing-error-prevention.md` 处理：
+
+- 恢复 2026-06-14 旧文和 processed 旧文改动。
+- 删除脚本生成的 2026-06-21 重复文件。
+- 恢复报告到原状态后，只追加 2026-06-28 正确记录。
+- 今天文章使用稳定英文 slug。
+- 手动校正 `description`、`scripture`、`author`、`articleId`、`source`。
 
 ## 验证结果
 
 已运行：
 
 ```powershell
+node scripts/add_article_ids.mjs --check
 npm.cmd run build
 ```
 
-结果：成功。
-
-关键结果：
+结果：
 
 ```text
-188 page(s) built
-旧 duplicate content id warning 未出现
-```
-
-仅出现 npm 自身版本提示，不影响项目构建。
-
-## 2026-06-27 补充记录：主题主背景纯色化
-
-已按用户要求将网页主背景从上下/叠加渐变改为纯色：
-
-- 深色模式主背景统一为深蓝色 `#061625`。
-- 浅色模式主背景统一为浅白色 `#f7f9fc`。
-- 已同步修改 `src/styles/global.css`、`src/styles/tokens.css`、`assets/styles/global.css`、`assets/styles/tokens.css`。
-- 已将 Windows PowerShell 下 npm 脚本注意事项写入 `AGENTS.md`：优先使用 `npm.cmd ...`，避免 `npm.ps1` 被 Execution Policy 阻止。
-
-用户已完成构建验证：
-
-```text
-npm.cmd run build
-188 page(s) built in 83.46s
+检查完成：160 篇文章，0 篇缺少 articleId。
+190 page(s) built
 [build] Complete!
 ```
 
-## 2026-06-27 补充记录：本地修改前先同步远端
-
-因用户刚通过 Admin 后台发布文章，远端 `main` 先于本地发生变化，导致本地背景纯色化提交首次 `git push` 被拒绝。已确认正确处理方式是先执行：
-
-```powershell
-git pull --rebase origin main
-```
-
-再重新构建并推送。后续任何本地修改开始前，必须先同步远端最新状态，尤其是用户可能通过 Admin 后台发布过文章时。
-
-该规则已写入：
+内容提交：
 
 ```text
-AGENTS.md
-docs/task-handoff-protocol.md
-docs/tasks/current.md
+a8f0503 Publish Patrick sermon on Romans 15 14-33
 ```
 
-## 2026-06-27 补充记录：品牌资产保护规则
-
-因此前错误临时新建并使用了非正式 favicon，已追加项目级品牌资产规则：Logo、favicon、apple-touch-icon、manifest icons 都属于受保护品牌资产；未经用户明确确认，不得 AI 重绘、临时新建、替换或重新设计。favicon / app icon 只能使用用户确认过的正式 Logo 文件，或从正式 Logo 等比例裁切 / 缩放生成尺寸版本。
-
-该规则已写入：
+线上验证：
 
 ```text
-AGENTS.md
-DESIGN.md
-SEO.md
-docs/tasks/current.md
+https://ronniecross.com/posts/2026-06-28-romans-15-14-33-gospel-reminder/
 ```
+
+正式域名返回 200，并已确认页面包含标题、经文、讲员、完整摘要关键句和正文代表句。
 
 ## 已知注意事项
 
-1. 主题改版 worktree 仍有残留状态：`M AGENTS.md` 和 `?? .ai-bridge/`。
-2. `.ai-bridge/` 已被主项目忽略，但目录本身仍保留在本机，不属于正式项目资产。
-3. 当前任务完成后，如需让仓库回到完全干净状态，后续应单独审查并提交本轮文档改动，或按用户指令处理。
-
-## 下一步建议
-
-1. 单独检查主题改版 worktree 的 `AGENTS.md` 修改是否还有保留价值。
-2. 若确认主题改版 worktree 已无用途，再由用户明确授权后清理或删除该 worktree。
-3. 后续项目文档类请求按新规则默认直接写入项目文件。
+1. `data/raw/` 被 `.gitignore` 忽略，原始 PDF、英文源稿、中文译稿保存在本机 raw 目录和 NAS 受保护归档区，不随 Git 提交。
+2. 讲道导入脚本仍是批量导入模式，后续发布讲道时仍必须检查 diff，防止旧文被重写。
+3. 本轮已修复 `add_article_ids.mjs` 的 BOM 兼容问题。
