@@ -4,7 +4,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Logo from "../../components/Logo.astro";
 import PostCard from "../../components/PostCard.astro";
-import { BIBLE_BOOKS, getBooksForScripture } from "../../data/bible";
+import { BIBLE_BOOKS } from "../../data/bible";
+import { buildPostKnowledge } from "../../lib/knowledge";
 
 interface Props {
   book: string;
@@ -18,7 +19,7 @@ export async function getStaticPaths() {
 
   return BIBLE_BOOKS.map((book) => ({
     book,
-    posts: posts.filter((post) => getBooksForScripture(post.data.scripture).includes(book))
+    posts: posts.filter((post) => buildPostKnowledge(post).bibleBooks.includes(book))
   }))
     .filter(({ posts }) => posts.length > 0)
     .map(({ book, posts }) => ({

@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Comments from "../../components/Comments.astro";
-import { getBooksForScripture } from "../../data/bible";
+import { buildPostKnowledge, getRelatedPosts } from "../../lib/knowledge";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
@@ -16,36 +16,13 @@ export async function getStaticPaths() {
       post,
       previousPost: posts[index - 1] || null,
       nextPost: posts[index + 1] || null,
-      relatedPosts: posts
-        .filter((candidate) => candidate.slug !== post.slug)
-        .map((candidate) => {
-          const books = getBooksForScripture(post.data.scripture);
-          const candidateBooks = getBooksForScripture(candidate.data.scripture);
-          const sharedBook = books.some((book) => candidateBooks.includes(book));
-          const sharedTags = candidate.data.tags.filter((tag) =>
-            post.data.tags.includes(tag)
-          ).length;
-          return {
-            candidate,
-            score:
-              (sharedBook ? 100 : 0) +
-              (candidate.data.category === post.data.category ? 20 : 0) +
-              sharedTags * 10
-          };
-        })
-        .filter(({ score }) => score > 0)
-        .sort(
-          (a, b) =>
-            b.score - a.score ||
-            b.candidate.data.date.valueOf() - a.candidate.data.date.valueOf()
-        )
-        .slice(0, 3)
-        .map(({ candidate }) => candidate)
+      relatedPosts: getRelatedPosts(post, posts, 3)
     }
   }));
 }
 
 const { post, previousPost, nextPost, relatedPosts } = Astro.props;
+const knowledge = buildPostKnowledge(post);
 const { Content, headings } = await render(post);
 const tableOfContents = headings.filter(
   (heading) => heading.depth === 2 || heading.depth === 3
@@ -67,11 +44,11 @@ const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.categ
 
 <BaseLayout
   title={`${post.data.title} | Ronnie`}
-  description={post.data.description}
+  description={knowledge.description}
   type="article"
   publishedTime={post.data.date}
   author={post.data.author || "Ronnie"}
-  keywords={[post.data.category, post.data.scripture, ...post.data.tags].filter(Boolean)}
+  keywords={[post.data.category, post.data.scripture, ...post.data.tags, ...knowledge.bibleBooks, ...knowledge.topics].filter(Boolean)}
 >
   <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
   <article class="article-page">

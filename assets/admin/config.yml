@@ -48,6 +48,7 @@ collections:
       - label: "内容摘要"
         name: "description"
         widget: "text"
+        hint: "如果留空、过短或填写占位文字，保存时会自动从正文摘取摘要；发布前建议人工检查。"
       - label: "发布日期"
         name: "date"
         widget: "datetime"

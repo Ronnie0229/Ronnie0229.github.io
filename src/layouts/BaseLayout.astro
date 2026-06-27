@@ -1,6 +1,7 @@
 ---
 import Logo from "../components/Logo.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
+import { createSiteGraph } from "../lib/knowledge/schema";
 
 interface Props {
   title?: string;
@@ -63,58 +64,22 @@ const navItems = [
     active: currentPath.startsWith("/about/")
   }
 ];
-const structuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": `${siteUrl}#website`,
-      url: siteUrl,
-      name: "道路，真理，生命",
-      alternateName: "RonnieCross",
-      description: "把听到的，看到的，学到的，整理成可以安静阅读的文字。",
-      inLanguage: "zh-CN",
-      publisher: { "@id": `${siteUrl}#person` },
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: searchUrl
-        },
-        "query-input": "required name=search_term_string"
-      }
-    },
-    {
-      "@type": "Person",
-      "@id": `${siteUrl}#person`,
-      name: "Ronnie",
-      url: siteUrl,
-      image: logoUrl
-    },
-    ...(type === "article" && publishedTime
-      ? [
-          {
-            "@type": "BlogPosting",
-            "@id": `${canonicalUrl}#article`,
-            headline: title.replace(/\s+\|\s+Ronnie$/, ""),
-            description,
-            image: socialImage,
-            datePublished: publishedTime.toISOString(),
-            dateModified: publishedTime.toISOString(),
-            author: {
-              "@type": "Person",
-              name: author || "Ronnie",
-              url: siteUrl
-            },
-            publisher: { "@id": `${siteUrl}#person` },
-            mainEntityOfPage: canonicalUrl,
-            inLanguage: "zh-CN",
-            ...(keywords.length ? { keywords: keywords.join(", ") } : {})
-          }
-        ]
-      : [])
-  ]
-};
+const structuredData = createSiteGraph({
+  siteUrl,
+  canonicalUrl,
+  logoUrl,
+  searchUrl,
+  image: socialImage,
+  name: "道路，真理，生命",
+  alternateName: "RonnieCross",
+  description: "把听到的，看到的，学到的，整理成可以安静阅读的文字。",
+  title,
+  pageDescription: description,
+  type,
+  publishedTime,
+  author,
+  keywords
+});
 const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c");
 ---
 

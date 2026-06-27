@@ -1,135 +1,186 @@
-# 当前任务
+# Current Task: Final Review and Commit Preparation
 
-## 任务名称
+## 背景
 
-项目状态收尾检查与清理。
-
-## 当前状态
-
-本任务已完成。
-
-正式开发目录：
+当前 worktree：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目
+C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
 ```
 
-本轮没有部署、没有 push、没有批量重命名文章、没有删除 `data/raw/` 或 `data/processed/`。
-
-## 本轮实际检查
-
-1. 检查正式主项目 Git 状态。
-2. 检查 `.ai-bridge/` 是否应纳入正式仓库。
-3. 检查旧 duplicate content id 目标文章是否仍有重复副本。
-4. 运行 `npm.cmd run build` 验证旧 warning 是否仍存在。
-5. 检查主题改版 worktree 残留状态。
-6. 固化“项目文档类请求默认直接写入项目文件”的长期约定。
-
-## 本轮实际修改
-
-1. `.gitignore`：新增 `.ai-bridge/`，只忽略本地 agent 协作目录，不删除内容。
-2. `docs/context-engineering.md`：新增“项目文档写入默认规则”。
-3. `AGENTS.md`：同步项目文档类请求默认落盘规则。
-4. `docs/task-handoff-protocol.md`：同步项目文档类请求默认落盘规则。
-5. `STATUS.md`：更新本轮检查、构建结果、残留问题和下一步建议。
-6. `docs/tasks/current.md`：更新本轮完成状态和后续交接。
-
-## `.ai-bridge/` 处理结果
-
-`.ai-bridge/` 判断为本地 ChatGPT / Codex / agent 协作目录，不作为正式项目资产提交。
-
-处理方式：
+当前分支：
 
 ```text
-.gitignore 添加 .ai-bridge/
+feature/bible-knowledge-layer
 ```
 
-未删除 `.ai-bridge/` 内容。
-
-## duplicate content id 检查结果
-
-旧目标：
+Bible Knowledge Layer v1 已完成 Phase 0 - Phase 6：
 
 ```text
-2026-06-14-罗马书-14-1-23你属于哪个国度
+Phase 0: docs/knowledge/ARCHITECTURE.md 与 ROADMAP.md
+Phase 1: src/lib/knowledge/ 核心 helper
+Phase 2: JSON-LD builder 抽离到 src/lib/knowledge/schema.ts
+Phase 3: 文章页接入 buildPostKnowledge
+Phase 4: 书卷页、search-index、sitemap 接入 Knowledge Layer；RSS 保持兼容
+Phase 5: Admin description fallback 与 articleId preSave 逻辑增强
+Phase 6: scripts/check-knowledge-layer.mjs 与 check:knowledge 脚本
 ```
 
-实际文件检查只发现一篇目标文章：
+最近验证结果：
 
 ```text
-src/content/posts/2026-06-14-罗马书-14-1-23｜你属于哪个国度？.md
+npm.cmd run check:knowledge 通过
+Posts checked: 158
+Errors: 0
+Warnings: 0
+
+npm.cmd run build 通过
+188 page(s) built
+[build] Complete!
 ```
 
-`npm.cmd run build` 已成功，旧 duplicate content id warning 未再出现。
+## 本次任务目标
 
-结论：当前不需要修改 `src/content/posts/`，也不需要重命名文章文件。
+最终总体验收，确认 Bible Knowledge Layer v1 可以进入提交准备阶段。
 
-## 构建验证结果
+这一步不新增功能，不改业务逻辑，只做检查、整理和提交前确认。
 
-已运行：
+## 本次允许操作
+
+允许读取和检查：
+
+```text
+全部已修改文件
+package.json
+scripts/check-knowledge-layer.mjs
+docs/knowledge/
+docs/tasks/current.md
+src/lib/knowledge/
+src/layouts/BaseLayout.astro
+src/pages/posts/[slug].astro
+src/pages/bible/index.astro
+src/pages/bible/[book].astro
+src/pages/search-index.json.ts
+src/pages/sitemap.xml.ts
+assets/admin/config.yml
+assets/admin/decap.js
+```
+
+允许运行：
 
 ```powershell
+npm.cmd run check:knowledge
+npm.cmd run build
+git status --short
+git diff --stat
+```
+
+## 本次不允许操作
+
+- 不修改文章。
+- 不修改前台视觉。
+- 不修改 CSS。
+- 不改 URL。
+- 不新增功能。
+- 不调用外部 API。
+- 不引入数据库。
+- 不部署。
+- 不 push。
+- 不自动提交 commit，除非用户明确要求。
+
+## 最终验收清单
+
+### 1. 文件范围确认
+
+确认改动只集中在：
+
+```text
+assets/admin/config.yml
+assets/admin/decap.js
+docs/knowledge/
+docs/tasks/current.md
+package.json
+scripts/check-knowledge-layer.mjs
+src/lib/knowledge/
+src/layouts/BaseLayout.astro
+src/pages/bible/index.astro
+src/pages/bible/[book].astro
+src/pages/posts/[slug].astro
+src/pages/search-index.json.ts
+src/pages/sitemap.xml.ts
+```
+
+### 2. 禁止项确认
+
+确认没有：
+
+```text
+src/content/posts/*.md 修改
+CSS 修改
+首页视觉修改
+RSS 结构破坏
+Admin 认证配置改动
+OAuth / Cloudflare Access 改动
+数据库化改造
+外部 API 调用
+FAQ Schema
+隐藏内容
+```
+
+### 3. 构建与检查
+
+确认：
+
+```powershell
+npm.cmd run check:knowledge
 npm.cmd run build
 ```
 
-结果：成功。
+都通过。
 
-关键输出：
+### 4. 编码检查
 
-```text
-188 page(s) built
-旧 duplicate content id warning 未出现
-```
-
-仅出现 npm 自身版本提示，不影响项目构建。
-
-## 主题改版 worktree 残留
-
-检查目录：
+确认新增/修改的核心文件首行没有 UTF-8 BOM：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目-theme-redesign-css
+src/lib/knowledge/*.ts
+scripts/check-knowledge-layer.mjs
+assets/admin/decap.js
+docs/knowledge/*.md
+docs/tasks/current.md
 ```
 
-状态仍为：
+### 5. 提交建议
+
+如果最终验收通过，建议分阶段提交或一次性提交。
+
+推荐一次性提交信息：
 
 ```text
-## design/theme-redesign-css
- M AGENTS.md
-?? .ai-bridge/
+feat: add Bible Knowledge Layer v1
 ```
 
-本轮只记录，不删除 worktree，不合并旧 worktree 改动。
-
-## 当前允许和禁止修改范围
-
-本轮已结束。后续新任务应重新确认允许修改范围。
-
-默认不要修改：
+如果分阶段提交，可使用：
 
 ```text
-functions/
-assets/
-scripts/
-data/raw/
-data/processed/
-wrangler.jsonc
-部署配置
-网站功能代码
-文章正文内容
+docs: add Bible Knowledge Layer architecture
+feat: add knowledge core helpers
+feat: extract JSON-LD schema builders
+feat: integrate article knowledge metadata
+feat: extend bible pages and search index
+feat: add admin description fallback
+chore: add knowledge layer validation script
 ```
 
-除非用户明确要求，否则仍然不部署、不 push、不删除资料目录、不批量重命名文章。
+## 完成后汇报格式
 
-## 未完成事项
+完成后请汇报：
 
-1. 主项目存在本轮文档和 `.gitignore` 修改，尚未提交。
-2. 主题改版 worktree 仍有 `AGENTS.md` 修改和 `.ai-bridge/` 未跟踪残留。
-3. 是否删除主题改版 worktree，需要用户后续明确授权。
+1. 最终改动范围。
+2. 检查脚本结果。
+3. build 结果。
+4. 是否发现越界修改。
+5. 是否建议提交。
+6. 推荐 commit 方式。
 
-## 下一步建议
-
-1. 先检查并确认本轮文档改动是否符合预期。
-2. 若要让主项目状态干净，后续可单独提交本轮文档和 `.gitignore` 改动。
-3. 单独审查主题改版 worktree 的 `AGENTS.md` 修改；确认无保留价值后，再按用户授权清理或删除该 worktree。
-4. 后续项目文档类请求默认直接写入项目文件；用户说“当前任务文档”时，默认指 `docs/tasks/current.md`。
+不要部署，不要 push，等待用户确认。

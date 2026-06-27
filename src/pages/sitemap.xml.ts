@@ -1,17 +1,25 @@
 import { getCollection } from "astro:content";
-import { getBooksForScripture } from "../data/bible";
+import { buildPostKnowledge, type PostLike } from "../lib/knowledge";
+
+function latestDateForBook(book: string, posts: PostLike[]): string {
+  const dates = posts
+    .filter((post) => buildPostKnowledge(post).bibleBooks.includes(book))
+    .map((post) => new Date(post.data.date ?? 0).valueOf());
+
+  if (!dates.length) return "";
+  return new Date(Math.max(...dates)).toISOString();
+}
 
 export async function GET({ site }: { site: URL }) {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
-  const books = [
-    ...new Set(posts.flatMap((post) => getBooksForScripture(post.data.scripture)))
-  ];
+  const postKnowledge = posts.map((post) => buildPostKnowledge(post));
+  const books = [...new Set(postKnowledge.flatMap((knowledge) => knowledge.bibleBooks))];
   const staticPaths = ["/", "/posts/", "/bible/", "/search/", "/about/"];
   const urls = [
     ...staticPaths.map((path) => ({ path, date: "" })),
     ...books.map((book) => ({
       path: `/bible/${encodeURIComponent(book)}/`,
-      date: ""
+      date: latestDateForBook(book, posts)
     })),
     ...posts.map((post) => ({
       path: `/posts/${post.slug}/`,
