@@ -403,3 +403,31 @@ scripts/check-knowledge-layer.mjs
 ```
 
 这条路线保留当前项目的简单性，同时提高 SEO、GEO、AI Search 与站内知识组织能力。
+
+## Phase 7-3 Topic Vocabulary
+
+Phase 7-3 expands the Knowledge topics layer without changing Markdown / MDX frontmatter.
+
+Source of truth:
+```text
+src/lib/knowledge/topics.ts
+```
+
+Each topic uses this structure:
+```ts
+interface KnowledgeTopic {
+  id: string;
+  zh: string;
+  en: string;
+  aliases: string[];
+  description: string;
+}
+```
+
+Runtime behavior:
+```text
+- inferTopics() still returns zh topic names, so existing search and Bible pages keep working.
+- TOPIC_RULES remains exported for compatibility.
+- Topic inference uses title, description, scripture, tags, and cleaned body text.
+- The vocabulary is intentionally curated; it should not force-retag posts or rewrite article content.
+```

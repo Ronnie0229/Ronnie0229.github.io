@@ -397,3 +397,25 @@ git branch -d feature/bible-knowledge-layer
 ```
 
 如果 `git worktree remove` 提示目录不干净，不要强制删除，先检查并汇报。
+
+## Phase 7-3 Topic Vocabulary Expansion
+
+Status: completed in the Phase 7 worktree.
+
+Changed source:
+```text
+src/lib/knowledge/topics.ts
+```
+
+Topic vocabulary now includes stable ids, Chinese names, English names, aliases, and descriptions. The current vocabulary covers:
+```text
+grace, faith, repentance, hope, love, church, discipleship, prayer, suffering, obedience, worship, gospel, holy-spirit, cross, resurrection, kingdom-of-god, idolatry, sanctification, sin, forgiveness, justice, identity, stewardship, wisdom, evangelism, unity, fellowship, new-life, truth, eschatology
+```
+
+Compatibility notes:
+```text
+- inferTopics() continues returning Chinese display labels for existing UI.
+- Search and Bible pages can continue using topics as display strings.
+- No frontmatter migration is required.
+- Admin flow is unchanged.
+```
