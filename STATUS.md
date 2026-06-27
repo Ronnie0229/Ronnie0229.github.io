@@ -91,6 +91,24 @@ npm.cmd run build
 [build] Complete!
 ```
 
+## 2026-06-27 补充记录：本地修改前先同步远端
+
+因用户刚通过 Admin 后台发布文章，远端 `main` 先于本地发生变化，导致本地背景纯色化提交首次 `git push` 被拒绝。已确认正确处理方式是先执行：
+
+```powershell
+git pull --rebase origin main
+```
+
+再重新构建并推送。后续任何本地修改开始前，必须先同步远端最新状态，尤其是用户可能通过 Admin 后台发布过文章时。
+
+该规则已写入：
+
+```text
+AGENTS.md
+docs/task-handoff-protocol.md
+docs/tasks/current.md
+```
+
 ## 已知注意事项
 
 1. 主题改版 worktree 仍有残留状态：`M AGENTS.md` 和 `?? .ai-bridge/`。

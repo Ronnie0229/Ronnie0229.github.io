@@ -194,3 +194,19 @@ npm.cmd run build
 188 page(s) built in 83.46s
 [build] Complete!
 ```
+
+## Remote sync rule added
+
+Added a project rule after the Admin publishing / push-rejection incident on 2026-06-27:
+
+- Before any local modification, sync the latest remote state first.
+- This is required because Admin article publishing can update GitHub directly before local work starts.
+- Default command before local changes: `git pull --rebase origin main`.
+- Do not start local edits from a stale working copy.
+
+Rule recorded in:
+
+```text
+AGENTS.md
+docs/task-handoff-protocol.md
+```
