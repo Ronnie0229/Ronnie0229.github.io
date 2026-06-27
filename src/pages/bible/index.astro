@@ -17,24 +17,37 @@ for (const post of posts) {
   }
 }
 
+const getBooksWithCounts = (books: readonly string[]) =>
+  books.map((book) => ({
+    name: book,
+    count: bookCounts.get(book) ?? 0
+  }));
+
 const testamentSections = [
   {
     title: "旧约",
-    books: OLD_TESTAMENT_BOOKS.filter((book) => bookCounts.has(book))
+    books: getBooksWithCounts(OLD_TESTAMENT_BOOKS)
   },
   {
     title: "新约",
-    books: NEW_TESTAMENT_BOOKS.filter((book) => bookCounts.has(book))
+    books: getBooksWithCounts(NEW_TESTAMENT_BOOKS)
   }
 ];
+
+const totalBooksWithPosts = [...bookCounts.values()].filter((count) => count > 0).length;
+const totalBookLinks = OLD_TESTAMENT_BOOKS.length + NEW_TESTAMENT_BOOKS.length;
 ---
 
-<BaseLayout title="圣经书卷 | Ronnie" description="按照圣经书卷浏览已发布的文章。">
+<BaseLayout title="圣经书卷 | Ronnie" description="按圣经书卷浏览 Ronnie 已发布的文章。">
   <section class="page-heading bible-heading">
     <Logo size="md" showText={false} class="page-brand-mark" />
     <p class="eyebrow">圣经书卷</p>
-    <h1>按书卷阅读</h1>
-    <p>从已发布文章的经文字段自动整理，按圣经书卷顺序浏览。</p>
+    <h1>按书卷阅读文章</h1>
+    <p>这里按旧约和新约整理已经发布的文章。有文章的书卷可以直接进入对应页面，暂无文章的书卷会保留在目录中，方便以后补充。</p>
+    <div class="bible-overview-stats" aria-label="圣经文章统计">
+      <span>{posts.length} 篇文章</span>
+      <span>{totalBooksWithPosts} / {totalBookLinks} 卷已有文章</span>
+    </div>
   </section>
 
   <div class="bible-sections">
@@ -42,16 +55,26 @@ const testamentSections = [
       testamentSections.map((section) => (
         <section class="bible-section" aria-labelledby={`${section.title}-heading`}>
           <div class="bible-section-heading">
-            <h2 id={`${section.title}-heading`}>{section.title}</h2>
-            <span>{section.books.length} 卷</span>
+            <div>
+              <p class="eyebrow">Bible</p>
+              <h2 id={`${section.title}-heading`}>{section.title}</h2>
+            </div>
+            <span>{section.books.filter((book) => book.count > 0).length} 卷已有文章</span>
           </div>
           <div class="book-grid">
-            {section.books.map((book) => (
-              <a class="book-link" href={`/bible/${book}/`}>
-                <strong>{book}</strong>
-                <span>{bookCounts.get(book)} 篇文章</span>
-              </a>
-            ))}
+            {section.books.map((book) =>
+              book.count > 0 ? (
+                <a class="book-link has-posts" href={`/bible/${book.name}/`}>
+                  <strong>{book.name}</strong>
+                  <span>{book.count} 篇文章</span>
+                </a>
+              ) : (
+                <div class="book-link is-empty" aria-disabled="true">
+                  <strong>{book.name}</strong>
+                  <span>暂无文章</span>
+                </div>
+              )
+            )}
           </div>
         </section>
       ))

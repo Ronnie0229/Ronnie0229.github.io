@@ -3,7 +3,6 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Logo from "../../components/Logo.astro";
-import PostCard from "../../components/PostCard.astro";
 import { BIBLE_BOOKS } from "../../data/bible";
 import { buildPostKnowledge } from "../../lib/knowledge";
 
@@ -29,28 +28,96 @@ export async function getStaticPaths() {
 }
 
 const { book, posts } = Astro.props;
+const postItems = posts.map((post) => {
+  const knowledge = buildPostKnowledge(post);
+  const relevantReferences = knowledge.scriptureKnowledge.references
+    .filter((reference) => reference.book === book)
+    .map((reference) => reference.raw);
+
+  return {
+    post,
+    knowledge,
+    references: relevantReferences.length ? relevantReferences : [knowledge.scripture].filter(Boolean)
+  };
+});
+const topicCounts = new Map<string, number>();
+
+for (const item of postItems) {
+  for (const topic of item.knowledge.topics) {
+    topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1);
+  }
+}
+
+const featuredTopics = [...topicCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN"))
+  .slice(0, 6)
+  .map(([topic]) => topic);
+const totalReadingMinutes = postItems.reduce(
+  (total, item) => total + item.knowledge.readingTimeMinutes,
+  0
+);
 ---
 
-<BaseLayout title={`${book} | 圣经书卷 | Ronnie`} description={`浏览与${book}有关的已发布文章。`}>
+<BaseLayout title={`${book} | 圣经书卷 | Ronnie`} description={`浏览 ${book} 相关的 Ronnie 已发布文章。`}>
   <section class="page-heading bible-book-heading">
     <Logo size="md" showText={false} class="page-brand-mark page-brand-mark-small" />
     <p class="eyebrow"><a href="/bible/">圣经书卷</a></p>
     <h1>{book}</h1>
-    <p>共 {posts.length} 篇相关文章，按发布时间从新到旧排列。</p>
+    <p>共 {posts.length} 篇相关文章。这里按发布时间列出文章，并显示经文、阅读时间和主题线索，方便继续阅读。</p>
+    <div class="bible-overview-stats" aria-label={`${book}文章统计`}>
+      <span>{posts.length} 篇文章</span>
+      <span>约 {totalReadingMinutes} 分钟阅读</span>
+      {featuredTopics.length > 0 && <span>{featuredTopics.length} 个常见主题</span>}
+    </div>
   </section>
+
+  {
+    featuredTopics.length > 0 && (
+      <section class="bible-section bible-topic-summary" aria-labelledby="book-topic-heading">
+        <div class="bible-section-heading">
+          <div>
+            <p class="eyebrow">Topics</p>
+            <h2 id="book-topic-heading">相关主题</h2>
+          </div>
+          <span>从本卷文章中自动整理</span>
+        </div>
+        <div class="search-result-details">
+          {featuredTopics.map((topic) => <span>{topic}</span>)}
+        </div>
+      </section>
+    )
+  }
 
   <section class="post-list bible-post-list" aria-label={`${book}文章列表`}>
     {
-      posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          href={`/posts/${post.slug}/`}
-          tags={post.data.tags}
-          category={post.data.category}
-        />
-      ))
+      postItems.map(({ post, knowledge, references }) => {
+        const postSlug = post.slug;
+        const formattedDate = new Intl.DateTimeFormat("zh-CN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).format(post.data.date);
+        const badges = [...knowledge.topics.slice(0, 3), ...post.data.tags.slice(0, 2)];
+
+        return (
+          <article id={`post-${postSlug}`} class="bible-post-card" data-post-slug={postSlug}>
+            <a href={`/posts/${postSlug}/`} class="bible-post-card-link" data-post-link>
+              <div class="search-result-meta">
+                <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+                {references.slice(0, 2).map((reference) => <span>{reference}</span>)}
+                <span>{knowledge.readingTimeMinutes} 分钟</span>
+              </div>
+              <h2>{post.data.title}</h2>
+              <p>{knowledge.description}</p>
+              {badges.length > 0 && (
+                <div class="search-result-details" aria-label="文章主题和标签">
+                  {badges.map((badge) => <span>{badge}</span>)}
+                </div>
+              )}
+            </a>
+          </article>
+        );
+      })
     }
   </section>
   <nav class="pagination bible-pagination" aria-label={`${book}文章分页`}></nav>
@@ -58,7 +125,7 @@ const { book, posts } = Astro.props;
   <script>
     const pageSize = 20;
     const cards = Array.from(
-      document.querySelectorAll<HTMLElement>(".bible-post-list > .post-card")
+      document.querySelectorAll<HTMLElement>(".bible-post-list > .bible-post-card")
     );
     const pagination = document.querySelector<HTMLElement>(".bible-pagination");
 
@@ -107,6 +174,25 @@ const { book, posts } = Astro.props;
       window.history.replaceState({}, "", url);
       document.querySelector(".bible-book-heading")?.scrollIntoView({ behavior: "smooth" });
     };
+
+    document.addEventListener("click", (event) => {
+      const link = (event.target as Element | null)?.closest<HTMLAnchorElement>("[data-post-link]");
+      if (!link) return;
+
+      const card = link.closest<HTMLElement>("[data-post-slug]");
+      const postSlug = card?.dataset.postSlug;
+      if (!postSlug) return;
+
+      const returnUrl = new URL(window.location.href);
+      returnUrl.searchParams.set("focus", postSlug);
+      returnUrl.hash = `post-${postSlug}`;
+
+      try {
+        window.sessionStorage.setItem(`ronniecross-return-${postSlug}`, returnUrl.toString());
+      } catch {
+        // The article still opens normally if sessionStorage is unavailable.
+      }
+    });
 
     const params = new URLSearchParams(window.location.search);
     const initialPage = Number.parseInt(params.get("page") || "1", 10);
