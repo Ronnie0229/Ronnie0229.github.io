@@ -162,3 +162,58 @@ Phase 7: Knowledge topics 词表扩展
 Phase 7: Admin 新文章保存实际测试
 Phase 7: Bible book URL 规范化（可选，把中文路径迁移到英文 slug）
 ```
+
+## Phase 7-1 execution note
+
+Status: completed and ready for user review.
+
+Worktree:
+```text
+C:\Users\caoyi\Projects\各人网页项目-phase7
+```
+
+Branch:
+```text
+phase7-search-bible-knowledge-admin
+```
+
+Completed scope:
+```text
+Phase 7-1 only: search UI enhancement.
+```
+
+Files changed:
+```text
+src/pages/search/index.astro
+src/styles/global.css
+docs/tasks/current.md
+```
+
+Summary:
+```text
+- Search now reads existing knowledge fields from search-index.json: bibleBooks, topics, readingTimeMinutes.
+- Search ranking now includes Bible book and topic matches.
+- Result cards now show scripture and reading time when available.
+- Result cards now show compact topic / Bible book badges.
+- Short one-character queries now show a clear prompt instead of noisy results.
+- Mobile result spacing and heading sizing were tightened.
+```
+
+Verification:
+```text
+npm.cmd run check:knowledge
+Posts checked: 158
+Errors: 0
+Warnings: 0
+
+npm.cmd run build
+188 page(s) built
+[build] Complete!
+```
+
+Notes:
+```text
+- Initial build failed because the fresh worktree had no node_modules; npm.cmd ci was run in the Phase 7 worktree.
+- npm.cmd ci reported 2 dependency audit findings, but no audit fix was run because that would be outside Phase 7-1.
+- Stop here and wait for user confirmation before Phase 7-2.
+```

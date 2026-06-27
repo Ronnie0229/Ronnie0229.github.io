@@ -43,6 +43,11 @@ import Logo from "../../components/Logo.astro";
       scripture: string;
       tags: string[];
       body: string;
+      bibleBooks?: string[];
+      testament?: string;
+      topics?: string[];
+      wordCount?: number;
+      readingTimeMinutes?: number;
     }
 
     interface SearchResult extends SearchPost {
@@ -98,7 +103,10 @@ import Logo from "../../components/Logo.astro";
             scripture: normalize(post.scripture),
             tags: normalize(post.tags.join(" ")),
             description: normalize(post.description),
-            body: normalize(post.body)
+            body: normalize(post.body),
+            bibleBooks: normalize(post.bibleBooks?.join(" ") ?? ""),
+            testament: normalize(post.testament ?? ""),
+            topics: normalize(post.topics?.join(" ") ?? "")
           };
           const searchable = Object.values(fields).join(" ");
 
@@ -110,6 +118,8 @@ import Logo from "../../components/Logo.astro";
               countMatches(fields.title, term) * 120 +
               countMatches(fields.scripture, term) * 80 +
               countMatches(fields.tags, term) * 60 +
+              countMatches(fields.bibleBooks, term) * 55 +
+              countMatches(fields.topics, term) * 45 +
               countMatches(fields.description, term) * 30 +
               Math.min(countMatches(fields.body, term), 12) * 2,
             0
@@ -247,14 +257,39 @@ import Logo from "../../components/Logo.astro";
         const category = document.createElement("span");
         category.textContent = post.category;
         meta.append(date, category);
+        if (post.scripture) {
+          const scripture = document.createElement("span");
+          scripture.textContent = post.scripture;
+          meta.append(scripture);
+        }
+        if (post.readingTimeMinutes) {
+          const readingTime = document.createElement("span");
+          readingTime.textContent = `${post.readingTimeMinutes} 分钟`;
+          meta.append(readingTime);
+        }
 
         const title = document.createElement("h2");
         appendHighlightedText(title, post.title, terms);
 
         const snippet = document.createElement("p");
+        snippet.className = "search-result-snippet";
         appendHighlightedText(snippet, post.snippet, terms);
 
         link.append(meta, title, snippet);
+        const detailItems = [
+          ...(post.topics ?? []).slice(0, 3),
+          ...(post.bibleBooks ?? []).slice(0, 2)
+        ];
+        if (detailItems.length) {
+          const details = document.createElement("div");
+          details.className = "search-result-details";
+          detailItems.forEach((item) => {
+            const badge = document.createElement("span");
+            badge.textContent = item;
+            details.append(badge);
+          });
+          link.append(details);
+        }
         article.append(link);
         results.append(article);
       });
@@ -278,6 +313,16 @@ import Logo from "../../components/Logo.astro";
         results?.replaceChildren();
         pagination?.replaceChildren();
         if (status) status.textContent = "请输入关键词开始搜索。";
+        return;
+      }
+
+      if (query.length < 2) {
+        url.searchParams.set("q", query);
+        url.searchParams.delete("page");
+        window.history.replaceState({}, "", url);
+        results?.replaceChildren();
+        pagination?.replaceChildren();
+        if (status) status.textContent = "请至少输入 2 个字符，再开始搜索。";
         return;
       }
 
