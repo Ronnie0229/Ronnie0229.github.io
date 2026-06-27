@@ -1011,19 +1011,10 @@ b {
   color: inherit;
 }
 
-:root[data-theme="dark"] .copyright-notice {
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
-}
-
 .visit-counter {
   margin: 26px auto 0;
-  color: var(--color-primary);
+  color: var(--color-text);
   text-align: center;
-}
-
-:root[data-theme="dark"] .visit-counter {
-  color: #ffffff;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
 }
 
 .visit-counter span {
