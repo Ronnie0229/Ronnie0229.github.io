@@ -16,6 +16,9 @@ const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   day: "2-digit"
 }).format(date);
 const postSlug = href.split("/").filter(Boolean).at(-1) ?? "";
+const displayTags = Array.from(
+  new Set([...tags.filter(Boolean), category].filter(Boolean))
+);
 ---
 
 <article
@@ -32,9 +35,9 @@ const postSlug = href.split("/").filter(Boolean).at(-1) ?? "";
     <h2>{title}</h2>
     <p>{description}</p>
     {
-      tags.length > 0 && (
+      displayTags.length > 0 && (
         <div class="tag-list" aria-label="文章标签">
-          {tags.map((tag) => <span>{tag}</span>)}
+          {displayTags.map((tag) => <span>{tag}</span>)}
         </div>
       )
     }

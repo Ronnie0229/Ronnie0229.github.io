@@ -1,11 +1,27 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark" data-theme-mode="system">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
+    <meta name="theme-color" id="theme-color" content="#061625">
+    <script>
+      (() => {
+        const key = "ronniecross-theme";
+        let saved = null;
+        try {
+          const value = localStorage.getItem(key);
+          saved = value === "dark" || value === "light" ? value : null;
+        } catch {}
+        const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themeMode = saved ? "manual" : "system";
+        document.querySelector("#theme-color")?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+      })();
+    </script>
     <title>文章管理 | Ronnie</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=20260613-3">
+    <link rel="stylesheet" href="/styles/tokens.css">
+    <link rel="stylesheet" href="/admin/admin.css?v=phase8">
   </head>
   <body>
     <main class="admin-shell editor-shell">
@@ -138,6 +154,10 @@
                 <span>标签</span>
                 <input name="tags" placeholder="多个标签用逗号分隔">
               </label>
+              <div class="tag-helper field-wide" aria-label="常用标签">
+                <span>常用标签</span>
+                <div class="tag-presets" data-tag-presets></div>
+              </div>
               <label>
                 <span>作者</span>
                 <input name="author" value="Ronnie">
@@ -179,6 +199,7 @@
       <p class="admin-status" data-image-status>正在读取图片...</p>
       <div class="image-library-grid" data-image-grid></div>
     </dialog>
+    <script src="/admin/theme.js?v=phase8-2"></script>
     <script src="/admin/editor.js?v=20260614-1"></script>
   </body>
 </html>
