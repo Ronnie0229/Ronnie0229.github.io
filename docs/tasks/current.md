@@ -2,92 +2,115 @@
 
 ## 任务名称
 
-2026-06-28 Patrick 讲道整理发布。
+移动端全屏 / 主题适配修正发布。
 
 ## 当前目标
 
-整理并发布用户放入讲道目录的 Patrick 讲道 PDF。严格执行本地修改前先同步远端、双语 PDF 防错、逐句忠实翻译、发布后构建和线上验证的流程。
+发布已经完成的移动端显示修正：让手机端页面向下滑动时站点顶部 header 不再固定在最上方，并补充深色 / 浅色模式的浏览器主题色，使移动端顶部状态栏区域尽量跟随网站主题色。
 
-## 本任务范围
+## 背景说明
 
-已修改并准备交接的文件：
+用户在手机截图中发现：
 
-```text
-src/content/posts/2026-06-28-romans-15-14-33-gospel-reminder.md
-data/processed/整理后的讲道文章/2026-06-28-romans-15-14-33-gospel-reminder.md
-docs/内容整理报告/讲道文章目录.csv
-scripts/add_article_ids.mjs
-STATUS.md
-docs/tasks/current.md
-```
+1. 网页在手机上不像全屏页面，最上方区域与网页视觉有割裂感。
+2. 页面向下滑动时，顶部 Logo / 菜单区域保持不变，影响阅读体验。
+3. 希望移动端自动适配深色和浅色模式。
 
-本机 raw 资料和 NAS 归档：
+需要注意：iPhone 顶部时间、电池等系统状态栏属于 iOS 系统区域，普通网页不能完全隐藏或真正接管；本任务目标是改善网页可控部分：主题色、安全区背景感、移动端 header 滚动行为。
+
+## 当前已修改文件
 
 ```text
-data/raw/教会讲道/20260628罗马书15：14-33福音的提醒_Patrick/
-\\RonnieNAS\share\教会讲道\20260628罗马书15：14-33福音的提醒_Patrick
+src/layouts/BaseLayout.astro
+src/styles/global.css
+assets/styles/global.css
 ```
 
-未修改：
+## 已完成修改
+
+1. 在 `src/layouts/BaseLayout.astro` 中，将单一 `theme-color` 改为深浅模式分别声明：
+
+```html
+<meta name="theme-color" content="#061625" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+```
+
+2. 在 `src/styles/global.css` 和 `assets/styles/global.css` 中，为 `html` 和 `body` 增加：
+
+```css
+min-height: 100%;
+```
+
+3. 在移动端媒体查询中，把 `.site-header` 改为：
+
+```css
+.site-header {
+  position: relative;
+  min-height: 68px;
+}
+```
+
+这样移动端不再继承桌面端的 `position: sticky; top: 0;`，页面滑动时 header 会随内容一起滚动。
+
+## Codex 执行要求
+
+请 Codex 从当前工作区继续执行发布流程：
+
+1. 先检查当前 Git 状态，确认只有以下 3 个文件处于修改状态：
 
 ```text
-functions/
-assets/
-wrangler.jsonc
-其他旧文章正文
+src/layouts/BaseLayout.astro
+src/styles/global.css
+assets/styles/global.css
 ```
 
-## 已完成
+以及本文件 `docs/tasks/current.md` 和 `.ai-bridge/current-plan.md` 如已写入交接计划也可能处于修改状态。
 
-1. 启动前执行远端同步：`git pull --rebase origin main`，结果为最新。
-2. 检查讲道收件目录，确认只有今天 Patrick 的 PDF。
-3. 入库 PDF，生成 `*.extracted.txt`，并确认机器提取稿只作辅助。
-4. 因 PDF 为英日双语，确认以英文为翻译源。
-5. 生成英文源稿，按英文逐句完整翻译为中文 TXT，没有用摘要代替翻译。
-6. 复制到 `\\RonnieNAS\share\教会讲道` 受保护归档区，归档校验通过：3 个正式文件，761116 字节。
-7. 生成网站文章和 processed 文章，并手动修正：
-   - `description` 为完整句。
-   - `scripture` 为 `罗马书 15:14-33`。
-   - `author` 为 `Patrick`。
-   - slug 为稳定英文 `2026-06-28-romans-15-14-33-gospel-reminder`。
-   - `articleId` 非空。
-8. 发现并处理发布脚本批量重写旧文问题：恢复 2026-06-14 旧文改动，删除 2026-06-21 重复文件，只保留今天文章。
-9. 修复 `scripts/add_article_ids.mjs` 对 UTF-8 BOM 历史文件的 frontmatter 识别问题。
-10. 构建和线上验证均完成。
+2. 不要修改 Logo / favicon / apple-touch-icon / manifest icons。品牌资产受保护，不得重绘或替换。
 
-## 验证结果
-
-已运行：
+3. 执行构建验证：
 
 ```powershell
-node scripts/add_article_ids.mjs --check
 npm.cmd run build
 ```
 
-结果：
+4. 如果构建成功，提交并推送：
 
-```text
-检查完成：160 篇文章，0 篇缺少 articleId。
-190 page(s) built
-[build] Complete!
+```powershell
+git add src/layouts/BaseLayout.astro src/styles/global.css assets/styles/global.css docs/tasks/current.md .ai-bridge/current-plan.md
+git commit -m "fix: improve mobile theme viewport behavior"
+git push
 ```
 
-内容提交已推送：
+5. 如果 `git push` 被拒绝，不要 force push。执行：
 
-```text
-a8f0503 Publish Patrick sermon on Romans 15 14-33
+```powershell
+git pull --rebase origin main
+npm.cmd run build
+git push
 ```
 
-线上验证通过：
+如出现冲突，停止并回报。
 
-```text
-https://ronniecross.com/posts/2026-06-28-romans-15-14-33-gospel-reminder/
+## 验证重点
+
+构建成功后，发布到线上后重点检查手机端：
+
+1. 首页和文章页在移动端可以正常滚动。
+2. 向下滚动时顶部 Logo / 菜单区不再固定停留在最上方。
+3. 深色模式顶部浏览器状态栏区域尽量接近深蓝背景。
+4. 浅色模式顶部浏览器状态栏区域尽量接近浅白背景。
+5. 不影响桌面端 header sticky 行为。
+6. 不影响 Logo、favicon、文章内容、评论、搜索、RSS、sitemap。
+
+## 未完成事项
+
+等待 Codex 执行：
+
+```powershell
+npm.cmd run build
+git add src/layouts/BaseLayout.astro src/styles/global.css assets/styles/global.css docs/tasks/current.md .ai-bridge/current-plan.md
+git commit -m "fix: improve mobile theme viewport behavior"
+git push
 ```
-
-验证项：HTTP 200、标题、经文、讲员、摘要关键句、正文代表句均存在。
-
-## 下一步
-
-1. 后续讲道发布仍需先 `git pull --rebase origin main`。
-2. 后续讲道发布后必须检查 diff，当前 `publish sermon` 仍会批量处理旧目录。
-3. 如果要减少后续人工清理，建议单独改造 `scripts/import_sermons.py`，让它支持只发布指定讲道目录。
