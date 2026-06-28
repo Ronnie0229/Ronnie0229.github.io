@@ -22,7 +22,9 @@ const imageGrid = document.querySelector("[data-image-grid]");
 const imageStatus = document.querySelector("[data-image-status]");
 const revisionMeta = document.querySelector("[data-revision-meta]");
 const pagination = document.querySelector("[data-pagination]");
+const tagPresets = document.querySelector("[data-tag-presets]");
 const BACKUP_PREFIX = "ronniecross-editor-backup-";
+const COMMON_TAGS = ["分享", "灵命成长", "教会讲道", "查经", "生命反思"];
 
 let token = "";
 let posts = [];
@@ -96,6 +98,34 @@ function snapshotValue(snapshot = getEditorSnapshot()) {
 
 function setBackupStatus(message = "") {
   backupStatus.textContent = message;
+}
+
+function currentTags() {
+  return form.elements.tags.value
+    .split(/[,，、]/)
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function setTags(tags) {
+  form.elements.tags.value = Array.from(new Set(tags)).join(", ");
+  scheduleAutoBackup();
+}
+
+function addTag(tag) {
+  setTags([...currentTags(), tag]);
+}
+
+function renderTagPresets() {
+  if (!tagPresets) return;
+  tagPresets.replaceChildren();
+  COMMON_TAGS.forEach((tag) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = tag;
+    button.addEventListener("click", () => addTag(tag));
+    tagPresets.append(button);
+  });
 }
 
 function clearCurrentBackup(key = getBackupKey()) {
@@ -628,10 +658,7 @@ function slugify(value) {
 }
 
 function formData(draft) {
-  const tags = form.elements.tags.value
-    .split(/[,，]/)
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+  const tags = currentTags();
   return {
     ...currentFrontmatter,
     articleId:
@@ -657,6 +684,9 @@ function validatePost(data, draft) {
   if (!data.category) errors.push("请选择文章分类");
   if (!draft && !bodyInput.value.trim()) errors.push("请填写文章正文");
   if (!draft && !data.description) errors.push("请填写内容摘要");
+  if (!draft && !data.tags.length) {
+    warnings.push("标签为空时，前台会先显示文章分类标签；建议补充一个常用标签。");
+  }
   if (
     data.scripture &&
     !/[\u4e00-\u9fff]+\s*\d+(?::\d+)?(?:-\d+)?/.test(data.scripture)
@@ -1096,6 +1126,7 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 token = getToken();
+renderTagPresets();
 if (token) {
   authPanel.hidden = true;
   manager.hidden = false;

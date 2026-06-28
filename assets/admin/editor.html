@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
     <title>文章管理 | Ronnie</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=20260613-3">
+    <link rel="stylesheet" href="/styles/tokens.css">
+    <link rel="stylesheet" href="/admin/admin.css?v=phase8">
   </head>
   <body>
     <main class="admin-shell editor-shell">
@@ -138,6 +139,10 @@
                 <span>标签</span>
                 <input name="tags" placeholder="多个标签用逗号分隔">
               </label>
+              <div class="tag-helper field-wide" aria-label="常用标签">
+                <span>常用标签</span>
+                <div class="tag-presets" data-tag-presets></div>
+              </div>
               <label>
                 <span>作者</span>
                 <input name="author" value="Ronnie">

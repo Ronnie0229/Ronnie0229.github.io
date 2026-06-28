@@ -1,5 +1,51 @@
 # 当前任务
 
+## Phase 8：Admin 稳定化、标签显示修正、后台风格统一
+
+状态：已完成本地实现与构建验证，等待用户在本地或线上页面做功能确认。
+
+完成内容：
+- 修正前台文章卡片标签显示逻辑：`PostCard.astro` 现在合并 `tags` 与 `category`，并自动去重；即使 Admin 发布的新文章保存为 `tags: []`，前台也会显示分类金色标签。
+- 确认首页与文章列表页的 `PostCard` 调用已传入 `category`，不需要扩大改动。
+- Admin 文章编辑页新增常用标签快捷按钮，并在正式发布时对空标签给出确认提醒，不阻断保存、草稿或发布流程。
+- Admin 四个页面统一加载 `/styles/tokens.css`，并将 `/admin/admin.css` 缓存版本更新为 `v=phase8`。
+- Admin 样式补充 Phase 8 覆盖层，使用当前前台的深蓝背景、金色点缀、卡片、边框、文字和按钮 token，同时保留现有 DOM 与数据流程。
+
+修改文件：
+- `src/components/PostCard.astro`
+- `assets/admin/admin.css`
+- `assets/admin/index.html`
+- `assets/admin/editor.html`
+- `assets/admin/editor.js`
+- `assets/admin/comments.html`
+- `assets/admin/stats.html`
+- `docs/tasks/current.md`
+
+构建结果：
+- 已先运行 `npm.cmd run build`，因新建 worktree 缺少 `node_modules/astro/astro.js` 失败。
+- 已运行 `npm.cmd install` 补齐依赖；npm 报告 1 low、1 high vulnerability，未执行 `npm audit fix --force`，避免引入破坏性依赖变更。
+- 再次运行 `npm.cmd run build` 成功，生成 190 个页面，`[build] Complete!`。
+
+本地验证：
+- `dist/index.html` 中 2026-06-27 文章卡片已输出 `分享` 与 `灵命成长` 标签。
+- `dist/admin/editor.html` 已包含 `/styles/tokens.css` 与 `data-tag-presets`。
+- `dist/admin/index.html`、`dist/admin/comments.html`、`dist/admin/stats.html` 已包含 `/styles/tokens.css`。
+
+未完成事项：
+- 未推送远端，未合并 main。
+- 未实际登录 GitHub OAuth 做在线保存、发布、删除、上传图片、留言管理和统计页操作验证。
+- 未修改 Logo、favicon、apple-touch-icon、manifest icons，也未大规模改写文章正文。
+
+需要用户验证的页面：
+- `/`
+- `/posts/`
+- `/admin/`
+- `/admin/editor.html`
+- `/admin/comments.html`
+- `/admin/stats.html`
+
+---
+
 ## 任务名称
 
 移动端前台全屏适配修正：构建、提交并发布。
