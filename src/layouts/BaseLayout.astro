@@ -88,7 +88,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -101,9 +101,8 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <meta name="theme-color" content="#061625" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" id="theme-color" content="#061625" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <script is:inline>
       (() => {
         const storageKey = "ronniecross-theme";
@@ -116,9 +115,16 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
           savedTheme = null;
         }
 
+        const setThemeColor = (theme) => {
+          const themeColor = document.querySelector('meta[name="theme-color"]');
+          themeColor?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+        };
+
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = savedTheme || (prefersDark ? "dark" : "light");
+        const theme = savedTheme || (prefersDark ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
         document.documentElement.dataset.themeMode = savedTheme ? "manual" : "system";
+        setThemeColor(theme);
       })();
     </script>
     <link rel="icon" type="image/png" href="/images/ronniecross-logo-theme-dark-transparent.png" />
@@ -193,6 +199,11 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
 
         let manualTheme = readSavedTheme();
 
+        const setThemeColor = (theme) => {
+          const themeColor = document.querySelector('meta[name="theme-color"]');
+          themeColor?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+        };
+
         const syncThemeButton = (theme) => {
           if (!themeToggle) return;
           const nextTheme = theme === "dark" ? "light" : "dark";
@@ -206,6 +217,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
         const applyTheme = (theme, mode = "manual", persist = false) => {
           document.documentElement.dataset.theme = theme;
           document.documentElement.dataset.themeMode = mode;
+          setThemeColor(theme);
           syncThemeButton(theme);
           if (persist) saveTheme(theme);
         };
