@@ -1,5 +1,29 @@
 # 当前任务
 
+## Phase 8 第四轮：Admin hero 文案布局修正
+
+状态：已完成本地实现、构建验证和 dev server 页面检查。未 push，未合并 main。
+
+完成内容：
+- 将 `.admin-header` 改为单列左对齐布局。
+- hero Logo、eyebrow、h1、说明文字现在纵向排列，文案位于 Logo 下方。
+- 移除 hero 文案左右分栏效果，避免标题文字出现在右侧或居中。
+- 四个 Admin 页面通过共享 `.admin-header` 样式统一生效。
+
+修改文件：
+- `assets/admin/admin.css`
+- `docs/tasks/current.md`
+
+验证结果：
+- `npm.cmd run build` 成功，生成 191 个页面，`[build] Complete!`。
+- 本地 dev server 检查全部返回 200：`/admin/`、`/admin/index.html`、`/admin/editor.html`、`/admin/comments.html`、`/admin/stats.html`。
+
+未完成事项：
+- 未 push，未合并 main。
+- 未实际登录 GitHub OAuth 做保存、发布、删除、图片上传等远端操作验证。
+
+---
+
 ## Phase 8 第三轮：Admin 视觉细节修正
 
 状态：已完成本地实现、构建验证和 dev server 页面检查。未 push，未合并 main。

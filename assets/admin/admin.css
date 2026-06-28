@@ -1930,3 +1930,36 @@ body {
     margin-bottom: 8px;
   }
 }
+
+/* Phase 8 round 4: keep hero copy under the logo, aligned like the public hero. */
+.admin-header,
+.admin-header.compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-content: start;
+  justify-items: start;
+  gap: 0;
+  text-align: left;
+}
+
+.admin-hero-logo {
+  grid-column: 1;
+  margin-bottom: 20px;
+}
+
+.admin-header > div:first-of-type {
+  grid-column: 1;
+  max-width: 760px;
+}
+
+.admin-header h1,
+.admin-header p,
+.admin-eyebrow {
+  text-align: left;
+}
+
+.admin-header p {
+  margin-right: 0;
+  margin-left: 0;
+}
