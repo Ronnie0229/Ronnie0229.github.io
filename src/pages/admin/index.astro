@@ -1,11 +1,14 @@
+---
+---
+
 <!doctype html>
 <html lang="zh-CN" data-theme="dark" data-theme-mode="system">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex,nofollow">
-    <meta name="theme-color" id="theme-color" content="#061625">
-    <script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" id="theme-color" content="#061625" />
+    <script is:inline>
       (() => {
         const key = "ronniecross-theme";
         let saved = null;
@@ -20,8 +23,8 @@
       })();
     </script>
     <title>网站管理 | Ronnie</title>
-    <link rel="stylesheet" href="/styles/tokens.css">
-    <link rel="stylesheet" href="/admin/admin.css?v=phase8">
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/admin/admin.css?v=phase8" />
   </head>
   <body>
     <main class="admin-shell">
@@ -29,7 +32,7 @@
         <div>
           <p class="admin-eyebrow">RONNIECROSS</p>
           <h1>网站管理</h1>
-          <p>选择要处理的内容。文章发布后会写入 GitHub，留言操作会直接更新网站数据库。</p>
+          <p>选择需要处理的内容。文章发布会进入 GitHub，留言操作会直接更新网站数据。</p>
         </div>
         <nav class="admin-nav" aria-label="管理导航">
           <a href="/admin/editor.html">文章管理</a>
@@ -44,25 +47,25 @@
           <span class="admin-card-icon" aria-hidden="true">文</span>
           <div>
             <h2>文章管理</h2>
-            <p>新增、修改、保存草稿和发布文章，也可以上传文章图片。</p>
+            <p>新建、修改、保存草稿和发布文章，也可以上传文章图片。</p>
           </div>
         </a>
         <a class="admin-card" href="/admin/comments.html">
           <span class="admin-card-icon" aria-hidden="true">言</span>
           <div>
             <h2>留言管理</h2>
-            <p>查看、搜索、隐藏、恢复或永久删除游客留言和回复。</p>
+            <p>查看、搜索、隐藏、恢复或永久删除访客留言和回复。</p>
           </div>
         </a>
         <a class="admin-card" href="/admin/stats.html">
           <span class="admin-card-icon" aria-hidden="true">数</span>
           <div>
             <h2>数据概览</h2>
-            <p>查看热门文章、累计阅读、待审核留言和近 30 天趋势。</p>
+            <p>查看热门文章、累计阅读、待管理留言和近期趋势。</p>
           </div>
         </a>
       </section>
     </main>
-    <script src="/admin/theme.js?v=phase8-2"></script>
+    <script is:inline src="/admin/theme.js?v=phase8-2"></script>
   </body>
 </html>

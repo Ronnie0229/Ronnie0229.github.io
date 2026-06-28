@@ -1,5 +1,39 @@
 # 当前任务
 
+## Phase 8 第二轮：Admin 风格统一验收修正
+
+状态：已完成本地实现、构建验证和 dev server 路由验证，等待用户视觉验收。未 push，未合并 main。
+
+完成内容：
+- 修正 `/admin/` dev server 404：新增 `src/pages/admin/index.astro`，让 `http://localhost:4321/admin/` 和 `http://localhost:4321/admin/index.html` 都能打开 Admin 管理首页。
+- 四个 Admin 页面加入共享品牌顶部栏：使用现有正式 Logo 图片 `/images/ronniecross-logo-theme-dark-transparent.png` 与 `/images/ronniecross-logo-theme-light-transparent.png`，未重绘、未替换品牌文件。
+- Admin 顶部导航统一为：管理首页、文章管理、留言管理、数据概览、返回网站。
+- 新增 Admin 深浅模式逻辑：使用 `ronniecross-theme`，写入 `html[data-theme="dark"] / html[data-theme="light"]`，无保存值时跟随 `prefers-color-scheme`，并同步 `meta theme-color`。
+- Admin 标题区改为接近前台 `.page-heading` 风格：深色使用 `/images/ronniecross-hero-dark.png`，浅色使用 `/images/ronniecross-hero-light.png`，并保留玻璃、圆角、阴影和金色点缀。
+- 保持第一轮已通过的 PostCard 标签合并去重逻辑、Admin 标签快捷按钮和空标签发布提醒。
+
+修改文件：
+- `assets/admin/admin.css`
+- `assets/admin/index.html`
+- `assets/admin/editor.html`
+- `assets/admin/comments.html`
+- `assets/admin/stats.html`
+- `assets/admin/theme.js`
+- `src/pages/admin/index.astro`
+- `docs/tasks/current.md`
+
+验证结果：
+- `npm.cmd run build` 成功，生成 191 个页面，`[build] Complete!`。
+- `npm.cmd run dev -- --host 127.0.0.1` 已启动。
+- 本地 HTTP 检查全部返回 200：`/`、`/posts/`、`/admin/`、`/admin/index.html`、`/admin/editor.html`、`/admin/comments.html`、`/admin/stats.html`。
+- 构建产物确认 Admin 页面包含 `ronniecross-theme`、`/admin/theme.js?v=phase8-2`，并由共享脚本注入 Logo、导航和主题按钮。
+
+未完成事项：
+- 未实际登录 GitHub OAuth 做保存、发布、删除、图片上传等远端操作验证。
+- 未 push，未合并 main。
+
+---
+
 ## Phase 8：Admin 稳定化、标签显示修正、后台风格统一
 
 状态：已完成本地实现与构建验证，等待用户在本地或线上页面做功能确认。
