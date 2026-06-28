@@ -86,6 +86,22 @@
     return button;
   };
 
+  const createMenuButton = () => {
+    const button = document.createElement("button");
+    button.className = "admin-menu-toggle";
+    button.type = "button";
+    button.setAttribute("aria-controls", "admin-site-menu");
+    button.setAttribute("aria-expanded", "false");
+    button.dataset.adminMenuToggle = "";
+    button.innerHTML = `
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">打开导航菜单</span>
+    `;
+    return button;
+  };
+
   const createHeroLogo = () => {
     const logo = document.createElement("div");
     logo.className = "admin-hero-logo";
@@ -112,6 +128,11 @@
     brand.setAttribute("aria-label", "RonnieCross Admin 管理首页");
     brand.append(createLogo());
 
+    const menu = document.createElement("div");
+    menu.className = "admin-site-menu";
+    menu.id = "admin-site-menu";
+    menu.dataset.adminSiteMenu = "";
+
     const nav = document.createElement("nav");
     nav.className = "admin-site-nav";
     nav.setAttribute("aria-label", "后台导航");
@@ -128,10 +149,17 @@
       }
       nav.append(link);
     });
+    menu.append(nav);
+
+    const menuButton = createMenuButton();
+    menuButton.addEventListener("click", () => {
+      const isOpen = menu.classList.toggle("is-open");
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+    });
 
     const actions = document.createElement("div");
     actions.className = "admin-header-actions";
-    actions.append(nav, createThemeButton());
+    actions.append(menu, createThemeButton(), menuButton);
 
     topbar.append(brand, actions);
     shell.insertBefore(topbar, shell.firstChild);

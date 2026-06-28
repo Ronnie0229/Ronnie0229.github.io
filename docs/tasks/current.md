@@ -1,3 +1,27 @@
+## Phase 8 第五轮：Admin 顶部栏与手机端菜单修正
+
+状态：已完成本地实现、构建验证和 dev server 页面检查。未 push，未合并 main。
+
+完成内容：
+- Admin 顶部栏去掉外层圆角边框、卡片背景和 box-shadow，视觉接近正式网站 `.site-header`。
+- 桌面端 Admin 导航保持正式网站文字链接风格：无胶囊背景、无按钮边框，当前页/hover 使用金色文字与下划线。
+- 手机端新增 hamburger 菜单按钮，导航默认收起，点击后显示右侧下拉菜单，并同步切换 `aria-expanded`。
+- 深浅模式按钮保留在顶部右侧，未改动 Admin hero、body 纯色背景、路由和数据流程。
+
+修改文件：
+- `assets/admin/admin.css`
+- `assets/admin/theme.js`
+- `docs/tasks/current.md`
+
+验证结果：
+- `npm.cmd run build` 成功，生成 191 个页面，`[build] Complete!`。
+- 本地 dev server 页面检查全部返回 200：`/admin/`、`/admin/index.html`、`/admin/editor.html`、`/admin/comments.html`、`/admin/stats.html`。
+
+未完成事项：
+- 未 push，未合并 main。
+- 未实际登录 GitHub OAuth 验证远端保存、发布、删除、上传、留言管理和统计后台真实账号操作。
+
+---
 # 当前任务
 
 ## Phase 8 第四轮：Admin hero 文案布局修正
