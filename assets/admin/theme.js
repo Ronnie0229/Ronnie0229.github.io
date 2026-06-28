@@ -86,6 +86,17 @@
     return button;
   };
 
+  const createHeroLogo = () => {
+    const logo = document.createElement("div");
+    logo.className = "admin-hero-logo";
+    logo.setAttribute("aria-hidden", "true");
+    logo.innerHTML = `
+      <img class="admin-hero-logo-image admin-hero-logo-dark" src="/images/ronniecross-logo-theme-dark-transparent.png" alt="">
+      <img class="admin-hero-logo-image admin-hero-logo-light" src="/images/ronniecross-logo-theme-light-transparent.png" alt="">
+    `;
+    return logo;
+  };
+
   const buildTopbar = () => {
     if (document.querySelector(".admin-site-header")) return;
     const shell = document.querySelector(".admin-shell");
@@ -124,6 +135,12 @@
 
     topbar.append(brand, actions);
     shell.insertBefore(topbar, shell.firstChild);
+
+    document.querySelectorAll(".admin-header").forEach((header) => {
+      if (!header.querySelector(".admin-hero-logo")) {
+        header.insertBefore(createHeroLogo(), header.firstChild);
+      }
+    });
   };
 
   buildTopbar();

@@ -1,5 +1,31 @@
 # 当前任务
 
+## Phase 8 第三轮：Admin 视觉细节修正
+
+状态：已完成本地实现、构建验证和 dev server 页面检查。未 push，未合并 main。
+
+完成内容：
+- Admin 顶部导航改为正式网站同款文字链接风格：默认灰白文字，当前页金色，hover/当前页显示金色下划线；移除胶囊背景和按钮边框感。
+- Admin 标题背景图区域加入现有正式 Logo，深浅模式分别显示对应 Logo 文件；四个 Admin 页面通过共享脚本统一注入。
+- Admin 页面 body 背景改为纯色 `var(--admin-bg)`，不再使用 radial-gradient 或 linear-gradient；标题图区域仍保留正式网站 hero 图片和遮罩。
+
+修改文件：
+- `assets/admin/admin.css`
+- `assets/admin/theme.js`
+- `docs/tasks/current.md`
+
+验证结果：
+- `npm.cmd run build` 成功，生成 191 个页面，`[build] Complete!`。
+- `npm.cmd run dev -- --host 127.0.0.1` 已保持启动。
+- 本地 HTTP 检查全部返回 200：`/admin/`、`/admin/index.html`、`/admin/editor.html`、`/admin/comments.html`、`/admin/stats.html`。
+- 构建产物确认包含纯色 body 背景、文字下划线导航、标题区 Logo 注入逻辑和现有正式 Logo 资源。
+
+未完成事项：
+- 未实际登录 GitHub OAuth 做保存、发布、删除、图片上传等远端操作验证。
+- 未 push，未合并 main。
+
+---
+
 ## Phase 8 第二轮：Admin 风格统一验收修正
 
 状态：已完成本地实现、构建验证和 dev server 路由验证，等待用户视觉验收。未 push，未合并 main。
