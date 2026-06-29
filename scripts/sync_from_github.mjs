@@ -26,10 +26,10 @@ if (status.stdout.trim()) {
   process.exit(2);
 }
 
-console.log("Pulling the latest website changes from GitHub...");
-const pull = runGit(["pull", "--ff-only", "origin", "main"]);
+console.log("Rebasing local main onto the latest website changes from GitHub...");
+const pull = runGit(["pull", "--rebase", "origin", "main"]);
 if (pull.status !== 0) {
-  throw new Error("Sync failed. Check the network and GitHub credentials.");
+  throw new Error("Sync failed. Check the network, GitHub credentials, or rebase conflicts.");
 }
 
-console.log("Sync complete. The local project is up to date.");
+console.log("Sync complete. The local project is rebased onto origin/main.");

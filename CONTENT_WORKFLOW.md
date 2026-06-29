@@ -83,8 +83,19 @@ draft: false
 node scripts/add_article_ids.mjs
 ```
 
+## 发布前远端同步规则
+
+所有内容整理和发布任务，在开始修改、导入、导出、构建、提交或推送之前，必须先执行：
+
+```shell
+npm run sync
+```
+
+`npm run sync` 必须等价于 `git pull --rebase origin main`。如果本地已有未提交改动、同步失败或发生 rebase 冲突，必须暂停并与用户确认，不能跳过同步继续发布。
+
 ## 分享流程摘要
 
+0. 同步远端：`npm run sync`
 1. 只读检查：`python scripts/content_workflow.py inspect share`
 2. 入库：`python scripts/content_workflow.py ingest share`
 3. 发布：`python scripts/content_workflow.py publish share`
@@ -95,6 +106,7 @@ node scripts/add_article_ids.mjs
 
 ## 讲道流程摘要
 
+0. 同步远端：`npm run sync`
 1. 只读检查：`python scripts/content_workflow.py inspect sermon`
 2. 确认日期、经文标题和讲员。
 3. 入库：`python scripts/content_workflow.py ingest sermon --date YYYYMMDD --title "经文与标题" --speaker "讲员"`

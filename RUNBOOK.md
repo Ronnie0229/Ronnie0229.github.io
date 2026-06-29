@@ -60,6 +60,8 @@ npm run preview
 npm run sync
 ```
 
+`npm run sync` 是内容发布和开发前的必做步骤。它会在工作区干净时执行 `git pull --rebase origin main`，把本地 `main` rebase 到远端最新状态。若本地已有未提交改动、同步失败或发生 rebase 冲突，必须暂停并确认处理方式，不能继续修改、构建、提交或推送。
+
 ## 内容处理命令
 
 只读检查分享收件目录：
