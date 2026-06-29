@@ -8,7 +8,7 @@
 
 ## 一句话流程
 
-每次执行任务时，请先按照 `AGENTS.md` 和 `docs/task-handoff-protocol.md` 完成启动检查，然后执行任务。完成后更新 `STATUS.md` 和 `docs/tasks/current.md`，再进行交接。
+每次执行任务时，请先按照 `AGENTS.md` 和 `docs/task-handoff-protocol.md` 完成启动检查，然后执行任务。完成后更新 `STATUS.md` 和 `docs/tasks/current.md`，再进行交接。给 Codex 写任务时，必须把“完成后更新 `docs/tasks/current.md` 的任务完成状态”写入执行要求。
 
 ## 任务开始前：一级必读
 
@@ -103,7 +103,7 @@ docs/account-switching.md
 
 开始任何任务前，先确认：
 
-1. 当前目录是正式仓库：`C:\Users\caoyi\Projects\各人网页项目`。
+1. 当前目录是正式仓库：`C:\Users\caoyi\Projects\个人网页项目`。
 2. 已读取一级必读文件。
 3. 已根据任务类型读取对应专项文档。
 4. 已查看 `docs/tasks/current.md`，确认上一轮交接事项。
@@ -222,6 +222,8 @@ docs/tasks/current.md
 
 ## docs/tasks/current.md 更新要求
 
+给 Codex 写执行任务时，必须在任务中明确要求 Codex 完成后更新 `docs/tasks/current.md` 的任务完成状态。不能只让 Codex 构建、提交、push 后结束；它还应把完成情况回写到当前任务文档。
+
 任务结束时，`docs/tasks/current.md` 至少记录：
 
 1. 任务名称。
@@ -233,6 +235,7 @@ docs/tasks/current.md
 7. 未完成事项。
 8. 下一个账号应该做什么。
 9. 需要人工确认的事项。
+10. 如果任务由 Codex 执行，还要记录 Codex 是否已完成任务、构建结果、提交哈希、push 结果，以及线上验证是否仍需用户手动确认。
 
 ## 构建验证要求
 

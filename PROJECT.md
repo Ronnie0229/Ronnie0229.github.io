@@ -22,7 +22,7 @@ RonnieCross 个人文章网站。
 
 ## 正式仓库
 
-- 正式本地路径：`C:\Users\caoyi\Projects\各人网页项目`
+- 正式本地路径：`C:\Users\caoyi\Projects\个人网页项目`
 - GitHub 是代码与正式内容的长期事实来源。
 - NAS 只用于收件、原始资料和受保护归档，不是开发工作区。
 

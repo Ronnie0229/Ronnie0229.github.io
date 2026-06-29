@@ -58,6 +58,6 @@ ChatGPT 更适合先规划、整理项目规则和生成高层文档；Codex 更
 
 ## 决策：GitHub 作为代码事实来源
 
-网站代码以 GitHub 仓库为正式来源。本机 `C:\Users\caoyi\Projects\各人网页项目` 是日常开发工作区，NAS 用于资料归档、历史保留和原始材料存放。
+网站代码以 GitHub 仓库为正式来源。本机 `C:\Users\caoyi\Projects\个人网页项目` 是日常开发工作区，NAS 用于资料归档、历史保留和原始材料存放。
 
 不把 NAS 作为日常 Git、Node、Astro 或文件监听工作区，主要是为了减少 SMB 网络文件系统带来的慢、卡、监听异常和路径差异问题。需要跨 Windows/macOS 迁移时，优先重新 clone GitHub 仓库，再按文档恢复资料入口和归档路径。

@@ -4,7 +4,7 @@ This file is the project-level memory for another Codex account. Read it before 
 
 ## Canonical Project
 
-- Formal repository: `C:\Users\caoyi\Projects\各人网页项目`
+- Formal repository: `C:\Users\caoyi\Projects\个人网页项目`
 - GitHub is the source of truth for code and website content.
 - Do all Node, Astro, Git, build, commit, and push work in the formal local repository.
 - The old desktop workspace is only a pointer/transition location.

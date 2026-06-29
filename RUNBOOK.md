@@ -9,7 +9,7 @@
 正式工作目录：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目
+C:\Users\caoyi\Projects\个人网页项目
 ```
 
 不要在 NAS 路径中运行 Git、Node、Astro、Codex 或文件监听。

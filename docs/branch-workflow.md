@@ -67,9 +67,9 @@ new-branch
 示例目录：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目\
-C:\Users\caoyi\Projects\各人网页项目-theme-redesign\
-C:\Users\caoyi\Projects\各人网页项目-docs\
+C:\Users\caoyi\Projects\个人网页项目\
+C:\Users\caoyi\Projects\个人网页项目-theme-redesign\
+C:\Users\caoyi\Projects\个人网页项目-docs\
 ```
 
 注意：
@@ -94,7 +94,7 @@ C:\Users\caoyi\Projects\各人网页项目-docs\
 UI 主题重设计：
 - 对话：theme-redesign
 - 分支：task/theme-redesign-YYYYMMDD
-- Worktree：各人网页项目-theme-redesign
+- Worktree：个人网页项目-theme-redesign
 
 文章整理发布：
 - 对话：article-publishing
@@ -104,7 +104,7 @@ UI 主题重设计：
 SEO 改造：
 - 对话：seo-engine
 - 分支：task/seo-engine-YYYYMMDD
-- Worktree：各人网页项目-seo
+- Worktree：个人网页项目-seo
 ```
 
 不要在同一个分支、同一个 worktree 或同一个对话中混合多个无关任务。

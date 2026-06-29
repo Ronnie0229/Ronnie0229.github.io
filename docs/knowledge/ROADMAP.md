@@ -19,7 +19,7 @@ Bible Knowledge Layer 的目标是让 RonnieCross 当前的 Astro + Markdown 网
 当前主工作区：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目
+C:\Users\caoyi\Projects\个人网页项目
 ```
 
 当前分支：
@@ -359,7 +359,7 @@ Phase 7 的边界：
 
 ```text
 当前 worktree：
-C:\Users\caoyi\Projects\各人网页项目
+C:\Users\caoyi\Projects\个人网页项目
 
 当前阶段：Post-Deploy Verification and Worktree Cleanup
 
@@ -390,9 +390,9 @@ C:\Users\caoyi\Projects\各人网页项目
 确认线上部署正常后，可以清理临时 worktree 与 feature 分支：
 
 ```powershell
-cd C:\Users\caoyi\Projects\各人网页项目
+cd C:\Users\caoyi\Projects\个人网页项目
 git worktree list
-git worktree remove C:\Users\caoyi\Projects\各人网页项目-bible-knowledge
+git worktree remove C:\Users\caoyi\Projects\个人网页项目-bible-knowledge
 git branch -d feature/bible-knowledge-layer
 ```
 

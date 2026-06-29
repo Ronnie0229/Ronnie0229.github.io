@@ -20,7 +20,7 @@ Before doing any content task, read these files in this repository:
 
 ## Source Of Truth
 
-- Formal local development repository: `C:\Users\caoyi\Projects\各人网页项目`
+- Formal local development repository: `C:\Users\caoyi\Projects\个人网页项目`
 - GitHub repository is the durable code/content source of truth.
 - NAS is for intake, raw material, and protected archive. Do not run Node, Astro, Git, or file watchers on NAS.
 - Share intake: `\\RonnieNAS\tmp\分享`

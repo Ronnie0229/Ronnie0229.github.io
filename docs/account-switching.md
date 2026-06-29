@@ -9,7 +9,7 @@
 当前 Windows 本机正式开发目录：
 
 ```text
-C:\Users\caoyi\Projects\各人网页项目
+C:\Users\caoyi\Projects\个人网页项目
 ```
 
 旧桌面目录 `C:\Users\caoyi\Desktop\Codex\这人网页项目` 只作为跳转目录保留。收到网站开发、分享整理、讲道发布、文档维护任务时，都应先切换到正式工作目录。
@@ -51,7 +51,7 @@ C:\Users\caoyi\Projects\各人网页项目
 
 ## 新账号开始前检查清单
 
-1. 确认当前目录是 `C:\Users\caoyi\Projects\各人网页项目`。
+1. 确认当前目录是 `C:\Users\caoyi\Projects\个人网页项目`。
 2. 运行 `git status --short`，先识别已有改动，不能随意回滚。
 3. 先读 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/task-handoff-protocol.md`、`docs/context-engineering.md`。
 4. 只在任务允许的范围内修改文件。
