@@ -2115,3 +2115,209 @@ body {
     margin-left: 0;
   }
 }
+
+/* Phase 8 hotfix: polish admin visual states across themes. */
+.article-row {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.article-row:hover,
+.article-row:focus-within {
+  border-color: var(--admin-gold);
+  background: color-mix(in srgb, var(--admin-card) 96%, transparent);
+  box-shadow: var(--shadow-soft, 0 12px 36px rgba(0, 0, 0, 0.22));
+  transform: translateY(-2px);
+}
+
+:root[data-theme="light"] .article-row:hover,
+:root[data-theme="light"] .article-row:focus-within {
+  background: color-mix(in srgb, var(--admin-card-solid) 96%, var(--admin-gold) 4%);
+}
+
+.article-row.is-deleting,
+:root[data-theme="light"] .article-row.is-deleting {
+  border-color: color-mix(in srgb, #c65d6a, var(--admin-border) 30%);
+  background: color-mix(in srgb, #c65d6a 12%, var(--admin-card-solid));
+  transform: none;
+}
+
+.editor-actions {
+  border-color: var(--admin-border);
+  background: color-mix(in srgb, var(--admin-card-solid) 92%, transparent);
+  box-shadow: var(--shadow-soft, 0 12px 36px rgba(0, 0, 0, 0.22));
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+:root[data-theme="light"] .editor-actions {
+  background: color-mix(in srgb, var(--admin-card-solid) 94%, transparent);
+  box-shadow: 0 -12px 34px rgba(10, 29, 48, 0.08);
+}
+
+.admin-theme-toggle,
+.admin-menu-toggle {
+  border-color: var(--admin-border);
+  border-radius: var(--radius-pill, 999px);
+  background: color-mix(in srgb, var(--admin-card-solid), transparent 18%);
+  color: var(--admin-text);
+  box-shadow: var(--shadow-soft, 0 12px 36px rgba(0, 0, 0, 0.22));
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.admin-theme-toggle:hover,
+.admin-theme-toggle:focus-visible,
+.admin-menu-toggle:hover,
+.admin-menu-toggle:focus-visible {
+  border-color: color-mix(in srgb, var(--admin-gold), transparent 28%);
+  color: var(--admin-gold);
+  transform: translateY(-1px);
+}
+
+.admin-theme-toggle:active,
+.admin-menu-toggle:active {
+  transform: translateY(0);
+}
+
+.admin-theme-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  transform: scale(0.86) rotate(-12deg);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+:root[data-theme="dark"] .admin-theme-icon-moon,
+:root[data-theme="light"] .admin-theme-icon-sun {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+
+:root[data-theme="dark"] .admin-theme-icon-sun,
+:root[data-theme="light"] .admin-theme-icon-moon {
+  opacity: 0;
+  transform: scale(0.86) rotate(-12deg);
+}
+
+.article-toolbar input,
+.article-toolbar select,
+.comment-toolbar input,
+.comment-toolbar select,
+.editor-fields input,
+.editor-fields select,
+.editor-fields textarea,
+.body-editor,
+.body-preview,
+.segmented-control,
+.more-menu summary,
+.more-menu > div,
+.compact-toolbar button,
+.image-library,
+.image-library-item,
+.admin-comment-actions a,
+.admin-comment-actions button,
+.article-pagination button,
+.admin-pagination button {
+  border-color: var(--admin-border-strong);
+  background: var(--admin-card-solid);
+  color: var(--admin-text);
+}
+
+.body-editor,
+.body-preview {
+  background: color-mix(in srgb, var(--admin-card-solid) 96%, var(--admin-bg) 4%);
+}
+
+.image-library::backdrop {
+  background: color-mix(in srgb, var(--admin-bg) 72%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.more-menu a,
+.more-menu button {
+  color: var(--admin-text);
+}
+
+.more-menu a:hover,
+.more-menu button:hover,
+.image-library-item:hover,
+.compact-toolbar button:hover,
+.admin-comment-actions a:hover,
+.admin-comment-actions button:hover,
+.article-pagination button:not(:disabled):hover,
+.admin-pagination button:not(:disabled):hover,
+.secondary-button:hover,
+.text-button:hover,
+.article-edit-button:hover,
+.tag-presets button:hover {
+  border-color: color-mix(in srgb, var(--admin-gold), transparent 28%);
+  color: var(--admin-gold);
+  background: color-mix(in srgb, var(--admin-gold-soft) 38%, var(--admin-card-solid));
+}
+
+.segmented-control button.active {
+  border-color: var(--admin-primary);
+  background: var(--admin-primary);
+  color: #fff;
+}
+
+.admin-operation-status {
+  border-color: color-mix(in srgb, var(--admin-gold), var(--admin-border) 34%);
+  color: var(--admin-gold);
+  background: color-mix(in srgb, var(--admin-gold-soft) 72%, var(--admin-card-solid));
+}
+
+.admin-operation-status::before {
+  color: #281d05;
+  background: var(--admin-gold);
+}
+
+.admin-operation-status[data-state="success"] {
+  border-color: color-mix(in srgb, #2f9d62, var(--admin-border) 30%);
+  color: color-mix(in srgb, #2f9d62, var(--admin-text) 20%);
+  background: color-mix(in srgb, #2f9d62 12%, var(--admin-card-solid));
+}
+
+.admin-operation-status[data-state="error"],
+.danger-button,
+.admin-comment-actions .danger,
+.more-menu .danger-text {
+  border-color: color-mix(in srgb, #c65d6a, var(--admin-border) 24%);
+  color: color-mix(in srgb, #c65d6a, var(--admin-text) 16%);
+  background: color-mix(in srgb, #c65d6a 12%, var(--admin-card-solid));
+}
+
+.danger-button:hover,
+.admin-comment-actions .danger:hover,
+.more-menu .danger-text:hover {
+  border-color: #c65d6a;
+  color: color-mix(in srgb, #c65d6a, var(--admin-text) 8%);
+  background: color-mix(in srgb, #c65d6a 18%, var(--admin-card-solid));
+}
+
+.status-badge.visible,
+.status-badge.deploying,
+.status-badge.hidden,
+.status-badge.deleting {
+  background: var(--admin-gold-soft);
+  color: var(--admin-gold);
+}
+
+@media (max-width: 760px) {
+  .editor-actions {
+    background: color-mix(in srgb, var(--admin-card-solid) 94%, transparent);
+    box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.18);
+  }
+
+  :root[data-theme="light"] .editor-actions {
+    box-shadow: 0 -12px 34px rgba(10, 29, 48, 0.08);
+  }
+}
