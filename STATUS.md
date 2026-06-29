@@ -1,10 +1,10 @@
 # 项目状态
 
-最后更新：2026-06-28 +09:00
+最后更新：2026-06-29 +09:00
 
 ## 当前结论
 
-已完成 2026-06-28 Patrick 讲道《罗马书 15:14-33｜福音的提醒》的整理、归档、发布、构建、推送和线上验证。
+已完成 Admin 数据概览浅色模式文字热修：`热门文章` 的文章标题链接已改为跟随主题文字变量，浅色模式显示为深蓝色，暗色模式继续显示为浅色文字。已同步补齐 Admin 中若干残留暗色固定文字色的控件，并完成本地构建验证。
 
 正式开发目录：
 
@@ -12,105 +12,64 @@
 C:\Users\caoyi\Projects\各人网页项目
 ```
 
-本轮开始前已按规则执行远端同步：
-
-```powershell
-git pull --rebase origin main
-```
-
-结果：`Already up to date.`
-
 ## 本轮已完成
 
-1. 检查讲道收件目录：
+1. 查明原因：
+   - `assets/admin/admin.css` 中 `.popular-list a` 使用暗色模式固定色 `#dfe5ec`。
+   - 主题覆盖只包含 `.popular-list strong` 阅读次数，没有覆盖热门文章标题链接。
+2. 修复热门文章标题：
+   - `.popular-list a` 改为 `color: var(--admin-text);`。
+   - 浅色模式使用 `--admin-text: #0a1d30`，暗色模式使用 `--admin-text: #f5f7fa`。
+3. 展开同类问题检查并补齐覆盖：
+   - 热门文章序号。
+   - 近 30 天趋势日期。
+   - 分页当前页文字。
+   - 评论筛选标签。
+   - 编辑器字段标签。
+   - 空状态提示。
+   - 正文预览引用块。
+   - 分段按钮文字。
+   - 编辑器状态提示消息。
+4. 补齐 `editor-message` 各状态在深浅模式下的边框、文字和背景变量化覆盖。
+5. 更新 Admin CSS query version：
 
 ```text
-\\RonnieNAS\tmp\讲道
+/admin/admin.css?v=phase8-hotfix-2
 ```
 
-发现 PDF：
+避免浏览器继续使用旧 CSS 缓存。
+
+## 修改文件
 
 ```text
-[TF] Romans 15_14-33 The Gospel Reminder - Google Docs.pdf
+assets/admin/admin.css
+assets/admin/index.html
+assets/admin/editor.html
+assets/admin/comments.html
+assets/admin/stats.html
+src/pages/admin/index.astro
+docs/tasks/current.md
+STATUS.md
 ```
-
-2. 将 PDF 入库到本地 raw 目录，并生成机器提取稿：
-
-```text
-data/raw/教会讲道/20260628罗马书15：14-33福音的提醒_Patrick/
-```
-
-3. 按防错流程处理双语 PDF：
-   - 确认本次以英文为翻译源。
-   - 机器提取稿只作为辅助，不直接发布。
-   - 生成并检查英文源稿。
-   - 按英文原文逐句完整翻译，生成中文译稿。
-4. 复制到受保护归档区：
-
-```text
-\\RonnieNAS\share\教会讲道\20260628罗马书15：14-33福音的提醒_Patrick
-```
-
-归档结果：3 个正式文件，761116 字节；不包含 `*.extracted.txt`。
-
-5. 发布网站文章：
-
-```text
-src/content/posts/2026-06-28-romans-15-14-33-gospel-reminder.md
-data/processed/整理后的讲道文章/2026-06-28-romans-15-14-33-gospel-reminder.md
-```
-
-6. 更新讲道目录报告：
-
-```text
-docs/内容整理报告/讲道文章目录.csv
-```
-
-7. 修复 `scripts/add_article_ids.mjs`：让脚本兼容带 UTF-8 BOM 的历史 Markdown 文件，避免再次误报“文章缺少 Frontmatter”。
-
-## 防重复错误处理记录
-
-本轮发布脚本一度批量重写旧讲道文章，并生成 2026-06-21 的重复中文文件。已按 `docs/content-publishing-error-prevention.md` 处理：
-
-- 恢复 2026-06-14 旧文和 processed 旧文改动。
-- 删除脚本生成的 2026-06-21 重复文件。
-- 恢复报告到原状态后，只追加 2026-06-28 正确记录。
-- 今天文章使用稳定英文 slug。
-- 手动校正 `description`、`scripture`、`author`、`articleId`、`source`。
 
 ## 验证结果
 
 已运行：
 
 ```powershell
-node scripts/add_article_ids.mjs --check
 npm.cmd run build
 ```
 
 结果：
 
 ```text
-检查完成：160 篇文章，0 篇缺少 articleId。
-190 page(s) built
+191 page(s) built
 [build] Complete!
 ```
 
-内容提交：
-
-```text
-a8f0503 Publish Patrick sermon on Romans 15 14-33
-```
-
-线上验证：
-
-```text
-https://ronniecross.com/posts/2026-06-28-romans-15-14-33-gospel-reminder/
-```
-
-正式域名返回 200，并已确认页面包含标题、经文、讲员、完整摘要关键句和正文代表句。
+并已确认 Admin HTML / Astro 入口不再存在旧的 `admin.css?v=phase8-hotfix` 引用。
 
 ## 已知注意事项
 
-1. `data/raw/` 被 `.gitignore` 忽略，原始 PDF、英文源稿、中文译稿保存在本机 raw 目录和 NAS 受保护归档区，不随 Git 提交。
-2. 讲道导入脚本仍是批量导入模式，后续发布讲道时仍必须检查 diff，防止旧文被重写。
-3. 本轮已修复 `add_article_ids.mjs` 的 BOM 兼容问题。
+1. 尚需线上验证：`https://ronniecross.com/admin/stats.html` 在浅色模式下热门文章标题是否已正常显示为深蓝色。
+2. 若浏览器仍显示旧样式，优先强制刷新或清理页面缓存；本轮已通过 `phase8-hotfix-2` 变更 query version 降低缓存命中风险。

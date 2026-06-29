@@ -308,7 +308,7 @@ select {
 }
 
 .popular-list a {
-  color: #dfe5ec;
+  color: var(--admin-text);
 }
 
 .popular-list strong {
@@ -2309,6 +2309,70 @@ body {
 .status-badge.deleting {
   background: var(--admin-gold-soft);
   color: var(--admin-gold);
+}
+
+/* Phase 8 hotfix round 2: remove remaining dark-mode-only text colors. */
+.popular-list a,
+.article-row-main strong {
+  color: var(--admin-text);
+}
+
+.popular-list li::marker {
+  color: var(--admin-text);
+}
+
+.comment-toolbar label,
+.editor-fields label,
+.admin-empty,
+.body-preview blockquote,
+.editor-message,
+.segmented-control button {
+  color: var(--admin-text-2);
+}
+
+.trend-bar small,
+.article-pagination span,
+.editor-backup-status {
+  color: var(--admin-text-3);
+}
+
+.body-preview blockquote {
+  border-left-color: var(--admin-gold);
+}
+
+.editor-message {
+  border-color: var(--admin-border-strong);
+  background: color-mix(in srgb, var(--admin-card-solid) 94%, var(--admin-bg) 6%);
+  box-shadow: var(--shadow-soft, 0 12px 36px rgba(0, 0, 0, 0.22));
+}
+
+.editor-message::before {
+  color: #0a1d30;
+  background: var(--admin-gold);
+}
+
+.editor-message[data-state="saving"] {
+  border-color: color-mix(in srgb, var(--admin-primary), var(--admin-border) 28%);
+  color: color-mix(in srgb, var(--admin-primary), var(--admin-text) 20%);
+  background: color-mix(in srgb, var(--admin-primary) 12%, var(--admin-card-solid));
+}
+
+.editor-message[data-state="deploying"] {
+  border-color: color-mix(in srgb, var(--admin-gold), var(--admin-border) 34%);
+  color: var(--admin-gold);
+  background: color-mix(in srgb, var(--admin-gold-soft) 72%, var(--admin-card-solid));
+}
+
+.editor-message[data-state="success"] {
+  border-color: color-mix(in srgb, #2f9d62, var(--admin-border) 30%);
+  color: color-mix(in srgb, #2f9d62, var(--admin-text) 20%);
+  background: color-mix(in srgb, #2f9d62 12%, var(--admin-card-solid));
+}
+
+.editor-message[data-state="error"] {
+  border-color: color-mix(in srgb, #c65d6a, var(--admin-border) 24%);
+  color: color-mix(in srgb, #c65d6a, var(--admin-text) 16%);
+  background: color-mix(in srgb, #c65d6a 12%, var(--admin-card-solid));
 }
 
 @media (max-width: 760px) {

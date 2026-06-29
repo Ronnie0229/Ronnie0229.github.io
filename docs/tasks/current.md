@@ -1,25 +1,22 @@
-# 当前任务：Phase 8 Hotfix Admin 视觉全量检查、修正与发布
+# 当前任务：Admin 数据概览浅色模式文字热修
 
 ## 任务状态
 
-Phase 8 Admin visual hotfix 已在独立 worktree 中完成本地实现与构建验证，等待 PR 检查与线上验证。
+已在主工作树完成本地修正与构建验证，等待提交、推送和线上验证。
 
 ```text
-当前工作树：C:\Users\caoyi\Projects\各人网页项目-phase8-admin-hotfix
-当前分支：phase8/admin-visual-hotfix
-基线：origin/main 0e4c1d6
-merge 状态：未合并 main
-force push：未使用
+当前工作树：C:\Users\caoyi\Projects\各人网页项目
+当前分支：main
+CSS 缓存版本：admin.css?v=phase8-hotfix-2
 ```
 
 ## 本轮完成内容
 
-- 修正 Admin 文章一览卡片 hover：不再变黑，改为金色边框、轻微阴影和 `translateY(-2px)`。
-- 修正 Admin editor 底部 sticky 操作栏浅色模式背景：改为跟随 `--admin-card-solid` 的浅色玻璃背景。
-- 修正手机端 editor 底部操作栏浅色模式背景与阴影，避免出现深色条。
-- 对齐 Admin 深浅模式切换按钮和手机菜单按钮的 hover / focus / active / icon 动画到正式网站风格。
-- 全盘补齐 Admin 常见控件、弹出菜单、分页、图片库、正文编辑区、状态提示、危险按钮和 badge 的深浅模式状态覆盖。
-- 更新 Admin 页面中的 `/admin/admin.css` query version 为 `v=phase8-hotfix`，避免线上缓存旧 CSS。
+- 查明 `热门文章` 标题文字在浅色模式下过浅的原因：`assets/admin/admin.css` 中 `.popular-list a` 使用了暗色模式固定色 `#dfe5ec`，后续主题覆盖只包含 `.popular-list strong` 的阅读次数，没有覆盖文章标题链接。
+- 将热门文章标题链接改为 `var(--admin-text)`，使浅色模式自动使用深蓝文字、暗色模式继续使用浅色文字。
+- 顺带补齐同类问题：热门文章序号、趋势日期、分页文字、评论筛选标签、编辑器字段标签、空状态、正文预览引用、分段按钮、编辑器状态提示等剩余暗色模式专用文字颜色，统一改为 `--admin-text` / `--admin-text-2` / `--admin-text-3`。
+- 补齐 `editor-message` 各状态在深浅模式下的边框、文字和背景变量化覆盖。
+- 将 Admin CSS query version 从 `phase8-hotfix` 升到 `phase8-hotfix-2`，避免浏览器继续使用旧 CSS。
 
 ## 修改文件
 
@@ -41,35 +38,10 @@ npm.cmd run build 成功
 输出：[build] Complete!
 ```
 
-新建 worktree 首次构建因缺少 `node_modules/astro/astro.js` 失败，已执行 `npm.cmd install` 补齐依赖后重新构建成功。未执行 `npm audit fix --force`。
-
-本地 dev server 已在以下地址启动：
-
-```text
-http://127.0.0.1:4321/
-```
-
-本地检查均返回 200：
-
-```text
-http://localhost:4321/admin/
-http://localhost:4321/admin/editor.html
-http://localhost:4321/admin/comments.html
-http://localhost:4321/admin/stats.html
-```
+已检查 Admin HTML / Astro 入口，不再存在旧的 `admin.css?v=phase8-hotfix` 引用，均已更新为 `admin.css?v=phase8-hotfix-2`。
 
 ## 未完成事项
 
-- 尚未提交 hotfix commit。
-- 尚未 push `phase8/admin-visual-hotfix`。
-- 尚未创建 PR：`Phase 8 Hotfix: Admin visual polish`。
-- 尚未进行线上 OAuth、保存、发布、删除、上传、留言和统计真实账号操作验证。
-
-## 需要用户线上验证的页面
-
-```text
-https://ronniecross.com/admin/
-https://ronniecross.com/admin/editor.html
-https://ronniecross.com/admin/comments.html
-https://ronniecross.com/admin/stats.html
-```
+- 尚未提交 commit。
+- 尚未 push 到远端。
+- 尚未线上验证 `https://ronniecross.com/admin/stats.html` 的浅色模式热门文章列表显示。
