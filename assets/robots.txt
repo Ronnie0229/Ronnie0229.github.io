@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /api/
+Disallow: /posts/?*
+Disallow: /search/?*
 
 Sitemap: https://ronniecross.com/sitemap.xml

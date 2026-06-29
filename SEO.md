@@ -177,3 +177,13 @@ YYYY-MM-DD-short-topic.md
 | `category` | 文章分类 | 必须使用站点已有分类，新增分类前先确认。 |
 
 如果新增字段或调整 schema，要同步检查 `src/content/config.ts`、文章列表页和构建结果。
+
+## Search Console 索引规则
+
+- `https://ronniecross.com/` 是正式首页，`http://` 和 `www` 版本自动重定向属于正常现象，不需要单独收录。
+- 正文文章应使用 `/posts/<slug>/` 这类稳定地址进入 sitemap，并让 Google 索引这个地址。
+- `/posts/?category=...`、`/posts/?focus=...` 只是列表页筛选和返回定位，canonical 指向 `/posts/`，属于备用页，不作为独立索引页。
+- `/search/?q=...` 只是站内搜索结果页，不作为独立索引页。
+- `/api/`、`/admin/`、`/deployment.json`、`/search-index.json` 这类接口或后台数据不作为网页索引对象。
+- robots.txt 应持续屏蔽 `/admin/`、`/api/`、`/posts/?*`、`/search/?*`，避免 Google 把接口和参数页当成网页抓取。
+- 站内链接、sitemap、RSS 只放正式可索引 URL，不放筛选参数、focus 参数、API 地址。

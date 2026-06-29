@@ -10,7 +10,10 @@ export async function onRequestGet({ request }) {
     });
 
     if (!response.ok) {
-      return Response.json({ error: "Counter service unavailable" }, { status: 502 });
+      return Response.json(
+        { error: "Counter service unavailable" },
+        { status: 502, headers: { "X-Robots-Tag": "noindex, nofollow" } }
+      );
     }
 
     const data = await response.json();
@@ -20,11 +23,15 @@ export async function onRequestGet({ request }) {
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Cache-Control": "no-store"
+          "Cache-Control": "no-store",
+          "X-Robots-Tag": "noindex, nofollow"
         }
       }
     );
   } catch {
-    return Response.json({ error: "Counter service unavailable" }, { status: 502 });
+    return Response.json(
+      { error: "Counter service unavailable" },
+      { status: 502, headers: { "X-Robots-Tag": "noindex, nofollow" } }
+    );
   }
 }

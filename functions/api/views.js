@@ -5,7 +5,8 @@ function json(data, status = 200) {
   return Response.json(data, {
     status,
     headers: {
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": "noindex, nofollow"
     }
   });
 }
