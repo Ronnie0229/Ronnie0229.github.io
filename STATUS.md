@@ -1,100 +1,51 @@
 # 项目状态
 
-最后更新：2026-06-29 +09:00
+最后更新：2026-06-30 +09:00
 
 ## 当前结论
 
-Phase 8 Admin stabilization 已完成。Phase 8 Hotfix Admin visual polish 已完成。线上验证通过。
+内容整理收尾已完成：不发布清单已从发布队列清理，待神学事实复核的两篇已整理为已复核状态并通过本地构建。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-本轮基线提交：955c633
-最近构建结果：npm.cmd run build 成功，191 page(s) built
-当前任务状态：Phase 8 已完成，当前无进行中开发任务
+最近构建结果：npm.cmd run build 成功，192 page(s) built
+当前任务状态：内容整理收尾完成，待提交/推送后进行线上验证
 ```
 
-## Phase 8 完成状态
+## 本次内容整理收尾
 
-1. Admin stabilization 已完成：
-   - Admin 相关页面和后台入口已完成稳定化整理。
-   - 构建验证通过。
-   - 线上验证通过。
-2. Hotfix Admin visual polish 已完成：
-   - 已修复 Admin 数据概览浅色模式下 `热门文章` 标题文字过浅的问题。
-   - 已同步补齐 Admin 中若干残留暗色固定文字色的控件。
-   - Admin CSS 缓存版本已更新为：
+已按用户判断完成：
 
-```text
-/admin/admin.css?v=phase8-hotfix-2
-```
+1. `docs/内容整理报告/待确认版权.csv` 中的文章不发布，待确认记录已清空。
+2. `docs/内容整理报告/待补经文.csv` 中的 `属世的谎言.docx` 不发布，已从分享文章目录和 processed 中间稿清理。
+3. `docs/内容整理报告/待神学事实复核.csv` 中的两篇已判断完毕：
+   - `20230503_假信仰与假平安.docx`
+   - `和睦相处荣耀神.docx`
+4. 两篇正式文章已修正 `description`，并将 `reviewed` 标为 `true`。
+5. 对应 processed 中间稿同步更新。
 
 ## 最近验证结果
 
-已完成构建验证：
+已完成：
 
 ```powershell
+node scripts/add_article_ids.mjs --check
 npm.cmd run build
 ```
 
 结果：
 
 ```text
-191 page(s) built
+检查完成：161 篇文章，0 篇缺少 articleId。
+192 page(s) built
 [build] Complete!
 ```
 
-已完成线上验证：
-
-```text
-https://ronniecross.com/admin/stats.html
-```
-
-结论：Admin 数据概览页浅色模式下热门文章列表文字显示已通过线上检查。
-
-## Backup 分支处理状态
-
-当前保留以下 backup 分支，不直接删除，也不直接 merge：
-
-```text
-backup/local-docs-before-main-sync
-提交：74cd89d
-```
-
-已完成 docs review，检查了 backup 分支中的以下文件：
-
-```text
-AGENTS.md
-STATUS.md
-docs/task-handoff-protocol.md
-docs/tasks/phase-8-admin-stabilization.md
-```
-
-处理结果：只做内容审查和必要摘录，不把 backup 分支整体合并回 main。
-
-## Backup docs review 处理结果
-
-已检查 `backup/local-docs-before-main-sync` 中的以下文档：
-
-```text
-AGENTS.md
-STATUS.md
-docs/task-handoff-protocol.md
-docs/tasks/phase-8-admin-stabilization.md
-```
-
-处理结论：不整体 merge backup 分支；只保留其中两条仍有价值的文档规则，已同步到 `AGENTS.md` 和 `docs/task-handoff-protocol.md`。`docs/tasks/phase-8-admin-stabilization.md` 是 Phase 8 历史规划文档，当前 Phase 8 已完成，不再合回 main。
-## 修改文件
-
-本次 Phase 8.5 收尾只整理项目状态文档，没有修改代码、样式、后台函数或文章内容。
-
-```text
-STATUS.md
-docs/tasks/current.md
-```
+构建前曾因 Astro 缓存权限和 Duplicate id 缓存警告失败；已清理 `.astro` 与 `node_modules/.astro` 构建缓存后重建成功。
 
 ## 已知注意事项
 
-1. 当前无进行中的 Phase 8 / hotfix 开发任务。
-2. Backup 分支仍保留，已完成 docs 检查；当前不需要 merge 或删除。
-3. 如后续新账号接手，应先阅读 `AGENTS.md`、`STATUS.md` 和 `docs/tasks/current.md`，以当前文件记录为准。
+1. 本次没有删除 `data/raw` 原始资料。
+2. `待确认版权.csv`、`待补经文.csv`、`待神学事实复核.csv` 现在只保留表头，表示当前无待处理条目。
+3. 需要完成提交、推送和正式域名线上验证后，才算网站线上发布闭环完成。

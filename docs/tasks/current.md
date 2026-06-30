@@ -1,93 +1,65 @@
-# 当前任务：无进行中任务
+# 当前任务：内容整理收尾
 
 ## 任务状态
 
-Phase 8 已完成，当前无进行中开发任务。
+已按用户判断完成本地整理和构建验证，待提交、推送与线上验证。
 
 ```text
 当前工作树：C:\Users\caoyi\Projects\个人网页项目
 当前分支：main
-本轮基线提交：955c633
-最近构建结果：npm.cmd run build 成功，191 page(s) built
-线上验证：已通过
+最近构建结果：npm.cmd run build 成功，192 page(s) built
+本轮任务：清理不发布文章，整理待神学事实复核文章
 ```
 
-## Phase 8 完成摘要
+## 本次处理内容
 
-1. Phase 8 Admin stabilization 已完成。
-2. Phase 8 Hotfix Admin visual polish 已完成。
-3. Admin 数据概览浅色模式文字问题已修复并完成线上验证。
-4. 构建通过，生成 191 pages。
-5. 当前不再有“正在执行 Phase 8 hotfix”的任务状态。
+1. 不发布并清理：
+   - `待确认版权.csv` 中 3 篇文章已从待发布队列移除。
+   - `待补经文.csv` 中 `属世的谎言.docx` 已从待发布队列移除。
+   - 已删除对应 processed 中间稿：`data/processed/整理后的分享文章/2021-03-03-属世的谎言.md`。
+   - 未删除 `data/raw` 原始资料。
 
-## Phase 8.5 收尾处理
+2. 判断完毕并整理：
+   - `20230503_假信仰与假平安.docx` 对应正式文章已修正摘要，并标记 `reviewed: true`。
+   - `和睦相处荣耀神.docx` 对应正式文章已修正摘要，并标记 `reviewed: true`。
+   - `待神学事实复核.csv` 已清空到只保留表头。
 
-本次 Phase 8.5 只做工程状态整理，不新增功能，不修改代码。
-
-已完成：
-
-- 更新 `STATUS.md`，写入 Phase 8 / hotfix 完成状态、线上验证结果、main 最新提交和构建结果。
-- 更新 `docs/tasks/current.md`，将当前任务从 hotfix 进行中改为 Phase 8 已完成、无进行中任务。
-- 明确 backup 分支保留，不直接删除、不直接 merge。
-
-## Backup 分支后续处理
-
-保留以下 backup 分支：
+## 修改文件
 
 ```text
-backup/local-docs-before-main-sync
-提交：74cd89d
-```
-
-已完成 docs review，检查了这些文件是否有值得保留的内容：
-
-```text
-AGENTS.md
-STATUS.md
-docs/task-handoff-protocol.md
-docs/tasks/phase-8-admin-stabilization.md
-```
-
-处理结果：没有直接 merge backup；仅将有价值规则摘录到 main 的对应文档。
-
-## Backup docs review 处理结果
-
-已完成 `backup/local-docs-before-main-sync` 的文档差异检查。处理结论：不整体 merge backup 分支，只摘录仍有价值的 Codex 任务回写规则到 `AGENTS.md` 和 `docs/task-handoff-protocol.md`。Phase 8 历史任务文档不合回 main。
-## 本次修改文件
-
-```text
+data/processed/整理后的分享文章/2021-03-03-属世的谎言.md
+data/processed/整理后的分享文章/2023-05-03-马太福音-7-15-23-假信仰与假平安-从生命果子分辨真假.md
+data/processed/整理后的分享文章/2024-05-24-罗马书-12-14-18-与人和睦-以祝福和善意回应冲突.md
+docs/内容整理报告/分享文章目录.csv
+docs/内容整理报告/待确认版权.csv
+docs/内容整理报告/待补经文.csv
+docs/内容整理报告/待神学事实复核.csv
+src/content/posts/2023-05-03-马太福音-7-15-23-假信仰与假平安-从生命果子分辨真假.md
+src/content/posts/2024-05-24-罗马书-12-14-18-与人和睦-以祝福和善意回应冲突.md
 STATUS.md
 docs/tasks/current.md
 ```
 
 ## 构建与验证记录
 
-最近一次有效构建记录：
+已执行：
 
 ```powershell
+node scripts/add_article_ids.mjs --check
 npm.cmd run build
 ```
 
 结果：
 
 ```text
-191 page(s) built
+检查完成：161 篇文章，0 篇缺少 articleId。
+192 page(s) built
 [build] Complete!
 ```
 
-线上验证：已通过。
+说明：第一次构建被 Astro 缓存权限拦住，并出现缓存造成的 Duplicate id 警告；已按项目防错清单清理 `.astro` 和 `node_modules/.astro` 后重新构建成功。
 
 ## 未完成事项
 
-- 无进行中的 Phase 8 / hotfix 开发事项。
-- Backup 分支 docs 检查已完成；当前不需要 merge 或删除。
-
-## 下一步建议
-
-如果继续推进项目，建议新开任务，不要把 Phase 8 作为仍在进行中的任务继续处理。
-
-优先级较高的后续独立任务：
-
-```text
-当前没有必须继续处理的 Phase 8 或 backup docs 任务。
-```
+- 提交并推送本轮改动。
+- 推送后验证正式域名两篇文章页面和文章列表。
