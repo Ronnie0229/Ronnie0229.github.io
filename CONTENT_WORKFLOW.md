@@ -138,6 +138,10 @@ npm run sync
 
 `data/raw/` 是个人网页项目内的原始资料留存区，不是临时缓存目录。文章发布后，默认继续保留对应原始资料，以便后续追溯、复查和修订。
 
+历史文章的 `source` 可能指向当前仓库中尚未恢复的 raw 文件或 raw 目录。遇到 `scripts/check_source_paths.py` 报告 missing 时，优先判断是否为历史 raw 未入库；不要把 `source` 批量改成 processed 文件、正式 posts 文件或其他不可验证路径。
+
+当前 CodexPro 环境不能穿透 `C:\Users\caoyi\Projects\NAS` 下指向 `\\RonnieNAS\...` 的符号链接。除非用户明确提供文件到仓库内，或环境后续支持 NAS allowed roots，否则不要把 NAS raw 恢复作为本轮自动修复步骤。
+
 讲道流程中的 `archive-sermon` 表示把 `data/raw/教会讲道/<folder>` 复制到 NAS 或其他受保护归档区；它不是移动，也不代表发布后删除 `data/raw` 里的源目录。归档脚本会跳过 `*.extracted.txt`，因为 PDF 提取稿属于可再生成的中间资料。
 
 后续如需清理 `data/raw/`，必须先运行 source 路径检查：

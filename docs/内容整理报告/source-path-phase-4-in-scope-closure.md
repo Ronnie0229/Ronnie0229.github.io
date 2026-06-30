@@ -97,6 +97,16 @@ source: ""
 
 后续动作：单独追溯来源。如果能找到原始 raw，再补 `source`。
 
+## Phase 5 流程固化
+
+本结论已同步写入项目入口流程文档：
+
+```text
+CONTENT_WORKFLOW.md
+```
+
+后续处理 `source` missing 时，应先判断是否为历史 raw 未入库，不要把 `source` 批量改成 processed、posts 或其他不可验证路径；NAS raw 恢复不作为当前自动修复流程的一部分。
+
 ## Phase 4 决策
 
 本阶段不修改任何文章内容或 frontmatter。
