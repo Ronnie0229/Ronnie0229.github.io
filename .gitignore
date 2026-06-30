@@ -16,3 +16,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .ai-bridge/
+
+# Accidental npm cache directory created by CodexPro/MSYS npm runs
+=/
