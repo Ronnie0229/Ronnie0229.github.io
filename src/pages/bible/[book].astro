@@ -66,7 +66,7 @@ const totalReadingMinutes = postItems.reduce(
     <p>共 {posts.length} 篇相关文章。这里按发布时间列出文章，并显示经文、阅读时间和主题线索，方便继续阅读。</p>
     <div class="bible-overview-stats" aria-label={`${book}文章统计`}>
       <span>{posts.length} 篇文章</span>
-      <span>约 {totalReadingMinutes} 分钟阅读</span>
+      <span>阅读约 {totalReadingMinutes} 分钟</span>
       {featuredTopics.length > 0 && <span>{featuredTopics.length} 个常见主题</span>}
     </div>
   </section>
@@ -100,17 +100,17 @@ const totalReadingMinutes = postItems.reduce(
         const badges = [...knowledge.topics.slice(0, 3), ...post.data.tags.slice(0, 2)];
 
         return (
-          <article id={`post-${postSlug}`} class="bible-post-card" data-post-slug={postSlug}>
-            <a href={`/posts/${postSlug}/`} class="bible-post-card-link" data-post-link>
-              <div class="search-result-meta">
+          <article id={`post-${postSlug}`} class="post-card bible-post-card" data-post-slug={postSlug}>
+            <a href={`/posts/${postSlug}/`} class="post-card-link bible-post-card-link" data-post-link>
+              <div class="post-card-meta bible-post-meta">
                 <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
                 {references.slice(0, 2).map((reference) => <span>{reference}</span>)}
-                <span>{knowledge.readingTimeMinutes} 分钟</span>
+                <span>阅读 {knowledge.readingTimeMinutes} 分钟</span>
               </div>
               <h2>{post.data.title}</h2>
               <p>{knowledge.description}</p>
               {badges.length > 0 && (
-                <div class="search-result-details" aria-label="文章主题和标签">
+                <div class="tag-list bible-post-tags" aria-label="文章主题和标签">
                   {badges.map((badge) => <span>{badge}</span>)}
                 </div>
               )}

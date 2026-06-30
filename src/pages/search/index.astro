@@ -264,7 +264,7 @@ import Logo from "../../components/Logo.astro";
         }
         if (post.readingTimeMinutes) {
           const readingTime = document.createElement("span");
-          readingTime.textContent = `${post.readingTimeMinutes} 分钟`;
+          readingTime.textContent = `阅读 ${post.readingTimeMinutes} 分钟`;
           meta.append(readingTime);
         }
 
