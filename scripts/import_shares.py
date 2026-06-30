@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import re
 import shutil
@@ -183,6 +184,33 @@ def source_files() -> list[Path]:
     )
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Import one share source safely.")
+    parser.add_argument("--source-file", help="Single share source file to import.")
+    parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
+    parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
+    return parser.parse_args()
+
+
+def resolve_source_file(value: str) -> Path:
+    candidate = Path(value).expanduser()
+    if not candidate.is_absolute():
+        direct = (ROOT / candidate).resolve()
+        if direct.exists():
+            candidate = direct
+        else:
+            candidate = (SOURCE_DIR / value).resolve()
+    else:
+        candidate = candidate.resolve()
+    try:
+        candidate.relative_to(SOURCE_DIR.resolve())
+    except ValueError:
+        raise SystemExit(f"Share source file must be under {SOURCE_DIR}: {candidate}")
+    if not candidate.is_file() or candidate.suffix.lower() not in {".docx", ".txt"}:
+        raise SystemExit(f"Share source file not found or unsupported: {candidate}")
+    return candidate
+
+
 def load_csv_rows(path: Path, columns: int) -> dict[tuple[str, ...], tuple[str, ...]]:
     if not path.exists():
         return {}
@@ -283,6 +311,22 @@ def strip_leading_title(text: str, source: Path) -> str:
     return text
 
 
+def validate_manual_description(description: str, body: str) -> None:
+    normalized = re.sub(r"\s+", " ", description).strip()
+    placeholders = {"NEEDS_METADATA：请人工阅读文章后补充大意摘要。", "NEEDS_DESCRIPTION_REVIEW", "TODO", "TBD", "待补", "暂无"}
+    if not normalized:
+        raise SystemExit("Missing manual description. Add --description or DESCRIPTION_OVERRIDES entry.")
+    if normalized in placeholders:
+        raise SystemExit("Description is a placeholder; add a manual summary before publishing.")
+    if len(normalized) < 30:
+        raise SystemExit("Description is too short; add a complete manual summary.")
+    if not re.search(r"[。！？.!?]$", normalized):
+        raise SystemExit("Description must be a complete sentence ending with punctuation.")
+    body_head = re.sub(r"\s+", " ", body[:300]).strip()
+    if body_head and normalized[:40] in body_head:
+        raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
+
+
 def sentence_aware_description(body: str, fallback: str) -> str:
     blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
     sentences: list[str] = []
@@ -323,10 +367,18 @@ def format_body(text: str) -> str:
 
 
 def main() -> None:
-    ORGANIZED_DIR.mkdir(exist_ok=True)
-    POSTS_DIR.mkdir(parents=True, exist_ok=True)
-    REPORT_DIR.mkdir(exist_ok=True)
-    sources = source_files()
+    args = parse_args()
+    if not args.source_file:
+        raise SystemExit(
+            "import_shares.py no longer imports all share files by default. "
+            "Use --source-file to select one file; add --dry-run to preview."
+        )
+    target_source = resolve_source_file(args.source_file)
+    if not args.dry_run:
+        ORGANIZED_DIR.mkdir(exist_ok=True)
+        POSTS_DIR.mkdir(parents=True, exist_ok=True)
+        REPORT_DIR.mkdir(exist_ok=True)
+    sources = [target_source]
     catalog_path = REPORT_DIR / "分享文章目录.csv"
     copyright_path = REPORT_DIR / "待确认版权.csv"
     missing_path = REPORT_DIR / "待补经文.csv"
@@ -352,10 +404,11 @@ def main() -> None:
         date = source_date(source)
         title = f"{scripture}｜{summary}" if scripture else summary
         reviewed = False
-        description = DESCRIPTION_OVERRIDES.get(
+        description = args.description or DESCRIPTION_OVERRIDES.get(
             source.stem,
             "NEEDS_METADATA：请人工阅读文章后补充大意摘要。",
         )
+        validate_manual_description(description, body)
         slug = f"{date}-{slugify(title)}"
 
         markdown = (
@@ -374,14 +427,30 @@ def main() -> None:
             + "\n"
         )
         output = ORGANIZED_DIR / f"{slug}.md"
-        output.write_text(markdown, encoding="utf-8")
+        post_output = POSTS_DIR / output.name
+        existing_targets = [path for path in (output, post_output) if path.exists()]
+        if existing_targets:
+            details = "\n".join(f"- {path}" for path in existing_targets)
+            raise SystemExit(
+                "Target file already exists; stopping to avoid overwriting existing share posts.\n"
+                f"{details}"
+            )
+        print(f"Source file: {source.name}")
+        print(f"Title: {title}")
+        print(f"Slug: {slug}")
+        print(f"Processed target: {output}")
+        print(f"Post target: {post_output}")
+        if args.dry_run:
+            print("Dry-run: no files written.")
+        else:
+            output.write_text(markdown, encoding="utf-8")
         requires_theology_review = (
             any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_REVIEW)
             and not any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_APPROVED)
         )
         publishable = bool(scripture) and not requires_theology_review
-        if publishable:
-            shutil.copyfile(output, POSTS_DIR / output.name)
+        if publishable and not args.dry_run:
+            shutil.copyfile(output, post_output)
         status = "待神学复核" if requires_theology_review else ("待补经文" if not scripture else "已完成基础校订")
         row = (source.name, date, scripture, category, title, status)
         catalog_rows[(source.name,)] = row
@@ -398,46 +467,48 @@ def main() -> None:
                 break
         imported += 1
 
-    with catalog_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "日期", "经文", "分类", "发布标题", "校订状态"))
-        writer.writerows(catalog_rows.values())
+    if not args.dry_run:
+        with catalog_path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("源文件", "日期", "经文", "分类", "发布标题", "校订状态"))
+            writer.writerows(catalog_rows.values())
 
-    with copyright_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "原因"))
-        writer.writerows(copyright_rows.values())
+        with copyright_path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("源文件", "原因"))
+            writer.writerows(copyright_rows.values())
 
-    with missing_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "日期", "分类", "暂定标题"))
-        writer.writerows(missing_rows.values())
+        with missing_path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("源文件", "日期", "分类", "暂定标题"))
+            writer.writerows(missing_rows.values())
 
-    audit_path = REPORT_DIR / "分享文章审计摘录.md"
-    audit_text = audit_path.read_text(encoding="utf-8") if audit_path.exists() else "# 分享文章审计摘录\n"
-    audit_sections = []
-    for source in sources:
-        if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
-            continue
-        if f"## {source.name}\n" in audit_text:
-            continue
-        body = normalize_text(read_source(source))
-        blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
-        audit_lines = [f"## {source.name}", ""]
-        for block in blocks[:10]:
-            audit_lines.append(block[:500])
-            audit_lines.append("")
-        audit_sections.append("\n".join(audit_lines))
-    if audit_sections:
-        audit_text = audit_text.rstrip() + "\n\n" + "\n\n".join(
-            section.rstrip() for section in audit_sections
-        ) + "\n"
-        audit_path.write_text(audit_text, encoding="utf-8")
+    if not args.dry_run:
+        audit_path = REPORT_DIR / "分享文章审计摘录.md"
+        audit_text = audit_path.read_text(encoding="utf-8") if audit_path.exists() else "# 分享文章审计摘录\n"
+        audit_sections = []
+        for source in sources:
+            if any(keyword.lower() in source.name.lower() for keyword in COPYRIGHT_REVIEW):
+                continue
+            if f"## {source.name}\n" in audit_text:
+                continue
+            body = normalize_text(read_source(source))
+            blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
+            audit_lines = [f"## {source.name}", ""]
+            for block in blocks[:10]:
+                audit_lines.append(block[:500])
+                audit_lines.append("")
+            audit_sections.append("\n".join(audit_lines))
+        if audit_sections:
+            audit_text = audit_text.rstrip() + "\n\n" + "\n\n".join(
+                section.rstrip() for section in audit_sections
+            ) + "\n"
+            audit_path.write_text(audit_text, encoding="utf-8")
 
-    with risk_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源文件", "风险表达", "上下文摘录"))
-        writer.writerows(risk_rows.values())
+        with risk_path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("源文件", "风险表达", "上下文摘录"))
+            writer.writerows(risk_rows.values())
 
     print(f"Imported shares: {imported}")
     print(f"Copyright review: {len(copyright_rows)}")

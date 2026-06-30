@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 import re
 import shutil
 import textwrap
@@ -44,6 +47,32 @@ CHINESE_NUMBERS = {
     "六": "6", "七": "7", "八": "8", "九": "9", "十": "10",
 }
 
+ENGLISH_BOOKS = {
+    "genesis": "创世记", "gen": "创世记",
+    "exodus": "出埃及记", "exo": "出埃及记", "exod": "出埃及记",
+    "psalms": "诗篇", "psalm": "诗篇", "ps": "诗篇",
+    "matthew": "马太福音", "matt": "马太福音", "mt": "马太福音",
+    "mark": "马可福音", "mk": "马可福音",
+    "luke": "路加福音", "lk": "路加福音",
+    "john": "约翰福音", "jn": "约翰福音",
+    "acts": "使徒行传", "act": "使徒行传",
+    "romans": "罗马书", "roman": "罗马书", "rom": "罗马书",
+    "1 corinthians": "哥林多前书", "1 cor": "哥林多前书", "1cor": "哥林多前书",
+    "2 corinthians": "哥林多后书", "2 cor": "哥林多后书", "2cor": "哥林多后书",
+    "galatians": "加拉太书", "gal": "加拉太书",
+    "ephesians": "以弗所书", "eph": "以弗所书",
+    "philippians": "腓立比书", "phil": "腓立比书",
+    "colossians": "歌罗西书", "col": "歌罗西书",
+    "hebrews": "希伯来书", "heb": "希伯来书",
+    "james": "雅各书", "jas": "雅各书",
+    "1 peter": "彼得前书", "1 pet": "彼得前书", "1pet": "彼得前书",
+    "2 peter": "彼得后书", "2 pet": "彼得后书", "2pet": "彼得后书",
+    "1 john": "约翰一书", "1 jn": "约翰一书", "1jn": "约翰一书",
+    "2 john": "约翰二书", "2 jn": "约翰二书", "2jn": "约翰二书",
+    "3 john": "约翰三书", "3 jn": "约翰三书", "3jn": "约翰三书",
+    "revelation": "启示录", "rev": "启示录",
+}
+
 TEXT_REPLACEMENTS = {
     "[TF] ": "",
     "分かち合い": "分享",
@@ -73,11 +102,34 @@ TEXT_REPLACEMENTS = {
 
 
 def clean_title(value: str) -> str:
-    value = value.replace("：", ":").replace("；", ";").replace("–", "-").replace("—", "-")
+    value = value.replace("：", ":").replace("；", ";").replace("，", ";")
+    value = value.replace("–", "-").replace("—", "-").replace("_", ":")
     value = re.sub(r"\s+", " ", value)
     value = re.sub(r"\s*([:;,\-])\s*", r"\1", value)
     value = re.sub(r"(\d+:\d+-\d+):(\d+-\d+)", r"\1;\2", value)
     return value.strip(" _-:;，。")
+
+
+def english_book_pattern() -> str:
+    return "|".join(sorted((re.escape(book) for book in ENGLISH_BOOKS), key=len, reverse=True))
+
+
+def scripture_from_english(normalized: str) -> tuple[str, str]:
+    match = re.search(
+        rf"(?P<book>{english_book_pattern()})\.?\s*(?P<chapter>\d+)\s*[:.]\s*(?P<verses>\d+(?:-\d+:\d+|-\d+)?(?:[;,]\d+(?:-\d+)?)?)",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return "", normalized
+    book_key = re.sub(r"\s+", " ", match.group("book").lower().replace(".", "")).strip()
+    book = ENGLISH_BOOKS.get(book_key, "")
+    if not book:
+        return "", normalized
+    scripture = f"{book} {match.group('chapter')}:{match.group('verses').replace(',', ';')}"
+    summary = (normalized[:match.start()] + normalized[match.end():]).strip(" _-:;，。")
+    summary = re.sub(r"^(?:系列:)?", "", summary).strip(" _-:;，。")
+    return scripture, summary
 
 
 def title_parts(title: str) -> tuple[str, str]:
@@ -90,7 +142,7 @@ def title_parts(title: str) -> tuple[str, str]:
         normalized,
     )
     if not match:
-        return "", normalized
+        return scripture_from_english(normalized)
 
     book = "约拿书" if match.group("book") == "约拿" else match.group("book")
     chapter = (
@@ -114,8 +166,38 @@ def scripture_from_body(body: str) -> str:
     return scripture
 
 
+def resolve_scripture(raw_title: str, source_file: Path, body: str) -> tuple[str, str]:
+    candidates: dict[str, str] = {}
+    folder_scripture, _summary = title_parts(raw_title)
+    file_scripture, _file_summary = title_parts(source_file.stem)
+    body_scripture = scripture_from_body(body)
+    if folder_scripture:
+        candidates["folder"] = folder_scripture
+    if file_scripture:
+        candidates["file"] = file_scripture
+    if body_scripture:
+        candidates["body"] = body_scripture
+
+    unique = sorted(set(candidates.values()))
+    if len(unique) > 1:
+        details = "; ".join(f"{source}={scripture}" for source, scripture in candidates.items())
+        raise SystemExit(f"Scripture conflict detected; please confirm metadata manually: {details}")
+    if unique:
+        confidence = "high" if len(candidates) >= 2 else "medium"
+        return unique[0], confidence
+    return "", "low"
+
+
 def category_for(title: str) -> str:
     return "教会讲道"
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def decode_text(path: Path) -> str:
@@ -168,6 +250,43 @@ def normalize_body(text: str) -> str:
 
 def yaml_escape(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def read_manual_description(folder: Path, explicit: str | None = None) -> str:
+    if explicit:
+        return explicit.strip()
+
+    metadata_path = folder / "metadata.json"
+    if metadata_path.exists():
+        try:
+            data = json.loads(metadata_path.read_text(encoding="utf-8-sig"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"Invalid metadata.json: {metadata_path} ({exc})")
+        value = data.get("description") if isinstance(data, dict) else None
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+
+    description_path = folder / "description.txt"
+    if description_path.exists():
+        return description_path.read_text(encoding="utf-8-sig").strip()
+
+    return ""
+
+
+def validate_manual_description(description: str, body: str) -> None:
+    normalized = re.sub(r"\s+", " ", description).strip()
+    placeholders = {"NEEDS_DESCRIPTION_REVIEW", "TODO", "TBD", "待补", "暂无"}
+    if not normalized:
+        raise SystemExit("Missing manual description. Add --description, metadata.json, or description.txt.")
+    if normalized in placeholders:
+        raise SystemExit("Description is a placeholder; add a manual summary before publishing.")
+    if len(normalized) < 30:
+        raise SystemExit("Description is too short; add a complete manual summary.")
+    if not re.search(r"[。！？.!?]$", normalized):
+        raise SystemExit("Description must be a complete sentence ending with punctuation.")
+    body_head = re.sub(r"\s+", " ", body[:300]).strip()
+    if body_head and normalized[:40] in body_head:
+        raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
 
 
 def sentence_aware_description(body: str, fallback: str) -> str:
@@ -266,24 +385,27 @@ def choose_source_file(folder: Path) -> Path | None:
     return None
 
 
-def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
+def markdown_for(folder: Path, source_file: Path, description_override: str | None = None) -> tuple[str, str]:
     _source_date, raw_title, speaker = folder_meta(folder)
     # Website display date must be the publication date, not the source folder date.
     date = datetime.now().strftime("%Y-%m-%d")
-    scripture, summary = title_parts(raw_title)
+    _folder_scripture, summary = title_parts(raw_title)
     category = category_for(raw_title)
     if source_file.suffix.lower() == ".docx":
         body = read_docx(source_file)
     else:
         body = decode_text(source_file)
     body = normalize_body(body)
-    scripture = scripture or scripture_from_body(body)
+    scripture, scripture_confidence = resolve_scripture(raw_title, source_file, body)
+    if scripture_confidence == "low":
+        raise SystemExit("No scripture could be identified; please confirm metadata manually before publishing.")
     if scripture:
         title = f"{scripture}｜{summary or '经文讲解'}"
     else:
         title = summary or raw_title
 
-    description = "NEEDS_DESCRIPTION_REVIEW"
+    description = read_manual_description(folder, description_override)
+    validate_manual_description(description, body)
     tags = ["讲道", category]
     if speaker:
         tags.append(speaker)
@@ -297,6 +419,7 @@ def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
         tags: [{", ".join(f'"{yaml_escape(tag)}"' for tag in tags)}]
         category: "{yaml_escape(category)}"
         scripture: "{yaml_escape(scripture)}"
+        scriptureConfidence: "{yaml_escape(scripture_confidence)}"
         author: "{yaml_escape(speaker)}"
         reviewed: false
         source: "data/raw/教会讲道/{yaml_escape(folder.name)}/{yaml_escape(source_file.name)}"
@@ -306,15 +429,112 @@ def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
     return date, frontmatter + "\n" + body + "\n"
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Import one sermon folder safely.")
+    parser.add_argument("--folder", help="Single sermon folder to import.")
+    parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
+    parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
+    parser.add_argument("--update-existing", action="store_true", help="Update the already-registered post for this same source folder.")
+    return parser.parse_args()
+
+
+def resolve_folder(value: str) -> Path:
+    candidate = Path(value).expanduser()
+    if not candidate.is_absolute():
+        direct = (ROOT / candidate).resolve()
+        if direct.exists():
+            candidate = direct
+        else:
+            candidate = (SOURCE_DIR / value).resolve()
+    else:
+        candidate = candidate.resolve()
+    try:
+        candidate.relative_to(SOURCE_DIR.resolve())
+    except ValueError:
+        raise SystemExit(f"Sermon folder must be under {SOURCE_DIR}: {candidate}")
+    if not candidate.is_dir():
+        raise SystemExit(f"Sermon folder not found: {candidate}")
+    return candidate
+
+
+def target_paths_for(source_date: str, publish_title: str) -> tuple[str, Path, Path]:
+    slug = f"{source_date}-{slugify(publish_title)}"
+    return slug, ORGANIZED_DIR / f"{slug}.md", POSTS_DIR / f"{slug}.md"
+
+
+def read_sermon_registry(path: Path) -> dict[str, dict[str, str]]:
+    rows: dict[str, dict[str, str]] = {}
+    if not path.exists():
+        return rows
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            source_folder = row.get("source_folder", "").strip()
+            if source_folder:
+                rows[source_folder] = dict(row)
+    return rows
+
+
+def write_sermon_registry(path: Path, rows: dict[str, dict[str, str]]) -> None:
+    fieldnames = (
+        "source_folder",
+        "source_file",
+        "source_sha256",
+        "scripture",
+        "scripture_confidence",
+        "slug",
+        "processed_path",
+        "post_path",
+        "first_imported_date",
+        "last_checked_date",
+        "status",
+    )
+    path.parent.mkdir(exist_ok=True)
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in sorted(rows.values(), key=lambda item: item.get("source_folder", "")):
+            writer.writerow({name: row.get(name, "") for name in fieldnames})
+
+
+def ensure_safe_targets(organized_path: Path, post_path: Path, *, update_existing: bool = False) -> None:
+    existing = [path for path in (organized_path, post_path) if path.exists()]
+    if existing and not update_existing:
+        details = "\n".join(f"- {path}" for path in existing)
+        raise SystemExit(
+            "Target file already exists; stopping to avoid overwriting existing posts.\n"
+            f"{details}\n"
+            "Use --update-existing only when updating the same registered source folder."
+        )
+    missing = [path for path in (organized_path, post_path) if not path.exists()]
+    if update_existing and missing:
+        details = "\n".join(f"- {path}" for path in missing)
+        raise SystemExit(
+            "Registered update target is missing; stopping instead of creating a partial duplicate.\n"
+            f"{details}"
+        )
+
+
 def main() -> None:
+    args = parse_args()
+    if not args.folder:
+        raise SystemExit(
+            "import_sermons.py no longer imports all sermon folders by default. "
+            "Use --folder to select one folder; add --dry-run to preview."
+        )
+
     if not SOURCE_DIR.exists():
         raise SystemExit(f"找不到源目录: {SOURCE_DIR}")
 
-    ORGANIZED_DIR.mkdir(exist_ok=True)
-    POSTS_DIR.mkdir(parents=True, exist_ok=True)
-    REPORT_DIR.mkdir(exist_ok=True)
+    target_folder = resolve_folder(args.folder)
+
+    if not args.dry_run:
+        ORGANIZED_DIR.mkdir(exist_ok=True)
+        POSTS_DIR.mkdir(parents=True, exist_ok=True)
+        REPORT_DIR.mkdir(exist_ok=True)
 
     report_path = REPORT_DIR / "讲道文章目录.csv"
+    registry_path = REPORT_DIR / "sermon-import-registry.csv"
+    registry_rows = read_sermon_registry(registry_path)
     rows_by_folder: dict[str, tuple[str, ...]] = {}
     if report_path.exists():
         with report_path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -327,37 +547,85 @@ def main() -> None:
     imported = 0
     skipped: list[str] = []
     for folder in sorted(p for p in SOURCE_DIR.iterdir() if p.is_dir()):
+        if folder.resolve() != target_folder:
+            continue
         source_file = choose_source_file(folder)
         if source_file is None:
             skipped.append(folder.name)
             continue
 
-        date, markdown = markdown_for(folder, source_file)
+        source_hash = file_sha256(source_file)
+        date, markdown = markdown_for(folder, source_file, args.description)
+        source_date, _raw_title, _speaker = folder_meta(folder)
         title_match = re.search(r'^title: "([^"]+)"', markdown, flags=re.MULTILINE)
         publish_title = title_match.group(1) if title_match else folder.name
-        slug = f"{date}-{slugify(publish_title)}"
-        organized_path = ORGANIZED_DIR / f"{slug}.md"
-        post_path = POSTS_DIR / f"{slug}.md"
-        organized_path.write_text(markdown, encoding="utf-8")
-        shutil.copyfile(organized_path, post_path)
+        existing_registry = registry_rows.get(folder.name)
+        if existing_registry and not args.update_existing:
+            raise SystemExit(
+                "Source folder already exists in sermon-import-registry.csv; "
+                f"stopping to avoid duplicate publish: {folder.name} -> {existing_registry.get('slug', '')}; "
+                f"old sha256={existing_registry.get('source_sha256', '')}; new sha256={source_hash}"
+            )
+        if existing_registry:
+            slug = existing_registry.get("slug", "")
+            processed_value = existing_registry.get("processed_path", "")
+            post_value = existing_registry.get("post_path", "")
+            if not slug or not processed_value or not post_value:
+                raise SystemExit("Existing registry row is incomplete; cannot update safely.")
+            organized_path = ROOT / processed_value
+            post_path = ROOT / post_value
+        else:
+            slug, organized_path, post_path = target_paths_for(source_date, publish_title)
+        if any(row.get("slug") == slug and row.get("source_folder") != folder.name for row in registry_rows.values()):
+            raise SystemExit(f"Slug already belongs to another source folder: {slug}")
+        ensure_safe_targets(organized_path, post_path, update_existing=bool(existing_registry and args.update_existing))
+        print(f"Folder: {folder.name}")
+        print(f"Source file: {source_file.name}")
+        print(f"Title: {publish_title}")
+        print(f"Slug: {slug}")
+        print(f"Processed target: {organized_path}")
+        print(f"Post target: {post_path}")
+        if args.dry_run:
+            print("Dry-run: no files written.")
+        else:
+            organized_path.write_text(markdown, encoding="utf-8")
+            shutil.copyfile(organized_path, post_path)
 
         _source_date, raw_title, speaker = folder_meta(folder)
         scripture, _summary = title_parts(raw_title)
         if not scripture:
             scripture_match = re.search(r'^scripture: "([^"]+)"', markdown, flags=re.MULTILINE)
             scripture = scripture_match.group(1) if scripture_match else ""
+        confidence_match = re.search(r'^scriptureConfidence: "([^"]+)"', markdown, flags=re.MULTILINE)
+        scripture_confidence = confidence_match.group(1) if confidence_match else ""
         category = category_for(raw_title)
         rows_by_folder[folder.name] = (
             folder.name, date, scripture, category, speaker, publish_title, source_file.name
         )
+        registry_rows[folder.name] = {
+            "source_folder": folder.name,
+            "source_file": source_file.name,
+            "source_sha256": source_hash,
+            "scripture": scripture,
+            "scripture_confidence": scripture_confidence,
+            "slug": slug,
+            "processed_path": str(organized_path.relative_to(ROOT)),
+            "post_path": str(post_path.relative_to(ROOT)),
+            "first_imported_date": existing_registry.get("first_imported_date", date) if existing_registry else date,
+            "last_checked_date": date,
+            "status": "updated" if existing_registry else "imported",
+        }
         imported += 1
 
-    with report_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("源目录", "日期", "经文", "分类", "讲员", "发布标题", "正文来源"))
-        writer.writerows(sorted(rows_by_folder.values(), key=lambda row: (row[1], row[0])))
+    if not args.dry_run:
+        with report_path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("源目录", "日期", "经文", "分类", "讲员", "发布标题", "正文来源"))
+            writer.writerows(sorted(rows_by_folder.values(), key=lambda row: (row[1], row[0])))
+        write_sermon_registry(registry_path, registry_rows)
 
-    print(f"Imported: {imported}")
+    label = "Would import" if args.dry_run else "Imported"
+    print(f"{label}: {imported}")
     print(f"Skipped: {len(skipped)}")
     for name in skipped:
         print("Skipped: " + name.encode("unicode_escape").decode("ascii"))

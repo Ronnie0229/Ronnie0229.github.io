@@ -98,11 +98,14 @@ npm run sync
 0. 同步远端：`npm run sync`
 1. 只读检查：`python scripts/content_workflow.py inspect share`
 2. 入库：`python scripts/content_workflow.py ingest share`
-3. 发布：`python scripts/content_workflow.py publish share`
-4. 检查文章、报告、Git 差异。
-5. 运行 `node scripts/add_article_ids.mjs`（如需要）。
-6. 运行 `npm run build`。
-7. 更新 `docs/tasks/current.md`。
+3. 预览发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。"`
+4. 正式发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。"`
+5. 检查文章、报告、Git 差异。
+6. 运行 `node scripts/add_article_ids.mjs`（如需要）。
+7. 运行 `npm run build`。
+8. 更新 `docs/tasks/current.md`。
+
+分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
 
 ## 讲道流程摘要
 
@@ -113,9 +116,13 @@ npm run sync
 4. 检查 PDF 提取稿。
 5. 逐句完整翻译并校订中文 TXT。
 6. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`
-7. 发布：`python scripts/content_workflow.py publish sermon`
-8. 检查文章、报告、Git 差异。
-9. 运行构建并记录结果。
+7. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"`
+8. 正式发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"`
+9. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
+10. 检查文章、报告、Git 差异。
+11. 运行构建并记录结果。
+
+讲道发布必须指定单个 `--folder`，不得无参数全量扫描 `data/raw/教会讲道/`。脚本会记录 `docs/内容整理报告/sermon-import-registry.csv`，用于固定 source folder、slug、source SHA-256 与正式文章路径。经文识别若在 folder、文件名、正文前部之间冲突，会停止并要求人工确认。
 
 ## 公众号迁移稿
 
@@ -173,6 +180,10 @@ docs/内容整理报告/source-path-check.csv
 - 导入脚本不得清空 `src/content/posts/`。
 - 不得因为整理某一类文章而删除另一类文章。
 - 目标文件已存在时，停止并核对，不要自动覆盖。
+- 分享发布必须使用 `publish share --source-file ...`，讲道发布必须使用 `publish sermon --folder ...`；无参数全量导入已禁用。
+- 正式发布前优先运行 `--dry-run`，确认目标路径、标题、经文、摘要和 Git diff 范围。
+- `description` 必须由整理者人工概括正文主旨；脚本不得用正文前部、模板句或占位符代替。
+- 讲道 `slug` 由 source folder 日期稳定生成，正式发布记录在 `sermon-import-registry.csv`；更新旧文必须显式使用 `--update-existing`。
 
 ## 完成前检查
 

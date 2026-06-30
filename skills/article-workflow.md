@@ -95,12 +95,23 @@ Rules:
 
 ### Step 5: Publish
 
-Use the import script through the unified entry point:
+Use the import script through the unified entry point. Never run publish without selecting one source object.
+
+For a share article:
 
 ```shell
-python scripts/content_workflow.py publish share
-python scripts/content_workflow.py publish sermon
+python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。"
+python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。"
 ```
+
+For a sermon:
+
+```shell
+python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"
+python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"
+```
+
+If updating the same already-registered sermon source folder, add `--update-existing`; do not use it to create a new post or new slug.
 
 Then add missing article IDs:
 
@@ -132,6 +143,9 @@ Before commit:
 - Review `git diff`.
 - Ensure only the intended category changed.
 - Ensure import scripts did not delete unrelated posts or reports.
+- Ensure share publish used `--source-file` and sermon publish used `--folder`; unscoped publish commands are invalid.
+- Ensure `description` is a manual summary, not a body excerpt, template, or placeholder.
+- For sermons, check `sermon-import-registry.csv` and confirm slug/path stability before using `--update-existing`.
 - Ignore unrelated untracked folders unless the user asks about them.
 
 After push:

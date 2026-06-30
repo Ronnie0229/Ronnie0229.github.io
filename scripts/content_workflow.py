@@ -145,8 +145,25 @@ def archive_sermon(folder_value: str, archive_value: str | None) -> None:
     print(f"Bytes: {source_bytes}")
 
 
-def publish(kind: str) -> None:
-    subprocess.run([sys.executable, str(IMPORTERS[kind])], cwd=ROOT, check=True)
+def publish(kind: str, folder: str | None = None, source_file: str | None = None, dry_run: bool = False, description: str | None = None, update_existing: bool = False) -> None:
+    command = [sys.executable, str(IMPORTERS[kind])]
+    if kind == "sermon":
+        if not folder:
+            raise SystemExit("Sermon publish requires --folder to avoid importing all sermon folders.")
+        command.extend(["--folder", folder])
+    elif kind == "share":
+        if not source_file:
+            raise SystemExit("Share publish requires --source-file to avoid importing all share files.")
+        command.extend(["--source-file", source_file])
+    if dry_run:
+        command.append("--dry-run")
+    if description:
+        command.extend(["--description", description])
+    if update_existing:
+        command.append("--update-existing")
+    result = subprocess.run(command, cwd=ROOT, check=False)
+    if result.returncode != 0:
+        raise SystemExit(result.returncode)
 
 
 def parse_args() -> argparse.Namespace:
@@ -170,6 +187,11 @@ def parse_args() -> argparse.Namespace:
 
     publish_parser = subparsers.add_parser("publish", help="生成文章和整理报告")
     publish_parser.add_argument("kind", choices=("sermon", "share"))
+    publish_parser.add_argument("--folder", help="讲道发布时必须指定的单个 data/raw/教会讲道 子目录。")
+    publish_parser.add_argument("--source-file", help="分享发布时必须指定的单个 data/raw/分享 源文件。")
+    publish_parser.add_argument("--dry-run", action="store_true", help="只预览导入结果，不写入文件。")
+    publish_parser.add_argument("--description", help="讲道发布用的人工概括型摘要；不得使用正文截取或模板句。")
+    publish_parser.add_argument("--update-existing", action="store_true", help="只更新同一个已登记 source folder 对应的既有文章。")
     return parser.parse_args()
 
 
@@ -196,7 +218,7 @@ def main() -> None:
     elif args.command == "archive-sermon":
         archive_sermon(args.folder, args.archive)
     elif args.command == "publish":
-        publish(args.kind)
+        publish(args.kind, args.folder, args.source_file, args.dry_run, args.description, args.update_existing)
 
 
 if __name__ == "__main__":
