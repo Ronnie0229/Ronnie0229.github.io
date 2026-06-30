@@ -85,6 +85,10 @@ OVERRIDES = {
 DESCRIPTION_OVERRIDES = {
     "圣经中麦子和稗子的意义是什么？":
         "耶稣借麦子和稗子的比喻说明善恶暂时并存、最终审判属于神，并呼召信徒忠心成长、结出生命的果子。",
+    "88雅各":
+        "本文根据创世记 32:22-32，思想雅各在雅博渡口与神相遇的经历，说明神如何破碎人靠自己抓取的生命，并带领人进入降服与祝福。",
+    "91神的儿子，神的儿子们，人子":
+        "本文结合创世记、约伯记与但以理书，梳理“神的众子”“神的儿子”与“人子”三个称号的不同含义，并帮助读者更清楚认识基督的身份。",
 }
 
 TEXT_REPLACEMENTS = {
@@ -203,12 +207,9 @@ def normalize_text(text: str) -> str:
 
 
 def source_date(path: Path) -> str:
-    match = re.match(r"^(20\d{6})", path.stem)
-    if match:
-        raw = match.group(1)
-        return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}"
-    modified = datetime.fromtimestamp(path.stat().st_mtime)
-    return modified.strftime("%Y-%m-%d")
+    # Website display date must be the publication date, not the source file date,
+    # filename date, or filesystem modified time.
+    return datetime.now().strftime("%Y-%m-%d")
 
 
 def clean_summary_title(path: Path) -> str:
@@ -282,6 +283,25 @@ def strip_leading_title(text: str, source: Path) -> str:
     return text
 
 
+def sentence_aware_description(body: str, fallback: str) -> str:
+    blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
+    sentences: list[str] = []
+    for block in blocks[:8]:
+        text = re.sub(r"\s+", " ", block).strip()
+        if not text or text in {"⸻", "---"}:
+            continue
+        if len(text) <= 30 and not re.search(r"[。！？.!?]$", text):
+            continue
+        parts = re.findall(r".+?[。！？.!?](?=\s|$)|.+$", text)
+        for part in parts:
+            sentence = part.strip()
+            if len(sentence) >= 24:
+                sentences.append(sentence)
+            if len("".join(sentences)) >= 80:
+                return "".join(sentences)
+    return "".join(sentences) or fallback
+
+
 def format_body(text: str) -> str:
     blocks = []
     for block in re.split(r"\n\s*\n", text):
@@ -333,7 +353,8 @@ def main() -> None:
         title = f"{scripture}｜{summary}" if scripture else summary
         reviewed = False
         description = DESCRIPTION_OVERRIDES.get(
-            source.stem, re.sub(r"\s+", " ", body)[:90] or summary
+            source.stem,
+            "NEEDS_METADATA：请人工阅读文章后补充大意摘要。",
         )
         slug = f"{date}-{slugify(title)}"
 

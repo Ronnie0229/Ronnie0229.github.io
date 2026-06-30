@@ -4,6 +4,7 @@ import re
 import shutil
 import textwrap
 import csv
+from datetime import datetime
 from pathlib import Path
 
 from docx import Document
@@ -169,6 +170,25 @@ def yaml_escape(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
+def sentence_aware_description(body: str, fallback: str) -> str:
+    blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
+    sentences: list[str] = []
+    for block in blocks[:8]:
+        text = re.sub(r"\s+", " ", block).strip()
+        if not text or text in {"⸻", "---"}:
+            continue
+        if len(text) <= 30 and not re.search(r"[。！？.!?]$", text):
+            continue
+        parts = re.findall(r".+?[。！？.!?](?=\s|$)|.+$", text)
+        for part in parts:
+            sentence = part.strip()
+            if len(sentence) >= 24:
+                sentences.append(sentence)
+            if len("".join(sentences)) >= 80:
+                return "".join(sentences)
+    return "".join(sentences) or fallback
+
+
 def slugify(value: str) -> str:
     value = value.lower()
     value = re.sub(r"[\s_：:;；,，.。()（）\[\]【】/\\]+", "-", value)
@@ -247,7 +267,9 @@ def choose_source_file(folder: Path) -> Path | None:
 
 
 def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
-    date, raw_title, speaker = folder_meta(folder)
+    _source_date, raw_title, speaker = folder_meta(folder)
+    # Website display date must be the publication date, not the source folder date.
+    date = datetime.now().strftime("%Y-%m-%d")
     scripture, summary = title_parts(raw_title)
     category = category_for(raw_title)
     if source_file.suffix.lower() == ".docx":
@@ -261,8 +283,7 @@ def markdown_for(folder: Path, source_file: Path) -> tuple[str, str]:
     else:
         title = summary or raw_title
 
-    description_source = re.sub(r"\s+", " ", body).strip()
-    description = description_source[:80] or title
+    description = "NEEDS_DESCRIPTION_REVIEW"
     tags = ["讲道", category]
     if speaker:
         tags.append(speaker)
@@ -311,19 +332,19 @@ def main() -> None:
             skipped.append(folder.name)
             continue
 
-        markdown = markdown_for(folder, source_file)[1]
-        title_match = re.search(r'^title: "(.+)"$', markdown, flags=re.MULTILINE)
+        date, markdown = markdown_for(folder, source_file)
+        title_match = re.search(r'^title: "([^"]+)"', markdown, flags=re.MULTILINE)
         publish_title = title_match.group(1) if title_match else folder.name
-        date, _raw_title, _speaker = folder_meta(folder)
         slug = f"{date}-{slugify(publish_title)}"
         organized_path = ORGANIZED_DIR / f"{slug}.md"
         post_path = POSTS_DIR / f"{slug}.md"
         organized_path.write_text(markdown, encoding="utf-8")
         shutil.copyfile(organized_path, post_path)
-        date, raw_title, speaker = folder_meta(folder)
-        scripture, summary = title_parts(raw_title)
+
+        _source_date, raw_title, speaker = folder_meta(folder)
+        scripture, _summary = title_parts(raw_title)
         if not scripture:
-            scripture_match = re.search(r'^scripture: "(.+)"$', markdown, flags=re.MULTILINE)
+            scripture_match = re.search(r'^scripture: "([^"]+)"', markdown, flags=re.MULTILINE)
             scripture = scripture_match.group(1) if scripture_match else ""
         category = category_for(raw_title)
         rows_by_folder[folder.name] = (
