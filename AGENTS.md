@@ -123,8 +123,10 @@ Process_narration=false
 - 讲道收件目录：`\\RonnieNAS\tmp\讲道`
 - 分享原始资料：`data/raw/分享/`
 - 讲道原始资料：`data/raw/教会讲道/`
+- `data/raw/` 是原始资料留存区，发布后默认保留；归档是复制到受保护归档区，不代表删除本目录。
 - 分享中间稿：`data/processed/整理后的分享文章/`
 - 讲道中间稿：`data/processed/整理后的讲道文章/`
+- 整理后的中间稿 Markdown 文件名默认使用中文，保留 `YYYY-MM-DD-经文-中文标题.md` 或现有中文命名风格；不要把 processed 中间稿批量改成英文 slug。
 - 正式网站文章：`src/content/posts/`
 - 整理报告：`docs/内容整理报告/`
 
@@ -173,3 +175,4 @@ npm run sync
 - 是否运行过必要验证；如果没有，写明原因。
 
 `docs/tasks/current.md` 是多个账号之间的接力棒。不要只把交接信息留在聊天里。
+

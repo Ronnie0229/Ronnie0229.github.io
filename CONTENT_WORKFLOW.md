@@ -128,9 +128,43 @@ npm run sync
 5. 根据网站分类和标签重设 frontmatter。
 6. 检查公开表达是否温和、清楚、适合长期留存。
 
+## 整理后 Markdown 命名规则
+
+`data/processed/整理后的分享文章/` 和 `data/processed/整理后的讲道文章/` 中的整理后 Markdown 文件名，默认使用中文命名，格式保持为 `YYYY-MM-DD-经文-中文标题.md` 或项目现有中文命名风格。
+
+正式网站文章位于 `src/content/posts/`，可以根据公开 URL、SEO 或稳定性需要另行使用英文 slug；但 processed 中间稿用于人工复查、追溯和对照原始资料，应优先保留中文可读文件名，不要为了统一 URL 把 processed 文件批量改成英文。
+
+## data/raw 原始资料留存规则
+
+`data/raw/` 是个人网页项目内的原始资料留存区，不是临时缓存目录。文章发布后，默认继续保留对应原始资料，以便后续追溯、复查和修订。
+
+讲道流程中的 `archive-sermon` 表示把 `data/raw/教会讲道/<folder>` 复制到 NAS 或其他受保护归档区；它不是移动，也不代表发布后删除 `data/raw` 里的源目录。归档脚本会跳过 `*.extracted.txt`，因为 PDF 提取稿属于可再生成的中间资料。
+
+后续如需清理 `data/raw/`，必须先运行 source 路径检查：
+
+```shell
+python scripts/check_source_paths.py
+```
+
+然后确认：
+
+```text
+1. 对应 processed / posts 文章的 source 不再依赖该路径；或
+2. 已同步更新 source 到新的受保护归档路径；并且
+3. 用户明确同意清理。
+```
+
+检查报告输出到：
+
+```text
+docs/内容整理报告/source-path-check.csv
+```
+
+独立的 `讲道整理` 项目不得直接写入个人网页项目的 `data/raw/`。它应先在自身项目内生成 `发布前MD/待发布/` 或 `发布前MD/待补元数据/`，只有用户明确进入网站发布流程时，才由个人网页项目执行导入、发布和归档。
+
 ## 安全边界
 
-- `data/raw/` 只新增，不直接改写原始文件。
+- `data/raw/` 只新增，不直接改写或删除原始文件。
 - NAS 受保护归档区只新增和读取，不移动、不删除、不覆盖。
 - 导入脚本不得清空 `src/content/posts/`。
 - 不得因为整理某一类文章而删除另一类文章。
@@ -166,3 +200,4 @@ docs/content-publishing-error-prevention.md
 - 讲道 publish 脚本可能重写旧讲道文章，提交前必须检查并排除无关旧文覆盖。
 - 新文章不出现在构建产物或出现 Duplicate id 时，优先清理 `.astro` 本地缓存后重建。
 - 线上验证优先使用正式域名 `https://ronniecross.com/`，不要只凭 GitHub Pages 默认域名判断失败。
+
