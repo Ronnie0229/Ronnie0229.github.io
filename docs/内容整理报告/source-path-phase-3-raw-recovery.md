@@ -168,32 +168,42 @@ data/raw/教会讲道/<日期标题_讲员>/文本.txt
 
 建议从受保护讲道归档中找回完整目录，而不是只补单个 `文本.txt`。
 
-## 需要用户或环境调整的事项
+## 本轮范围调整：移除 NAS 恢复
 
-若要让 CodexPro 继续自动查找 NAS，需要把以下路径加入 CodexPro allowed roots，或把对应资料先复制到 `C:\Users\caoyi\Projects` 下的临时目录：
-
-```text
-\\RonnieNAS\tmp\分享
-\\RonnieNAS\tmp\讲道
-\\RonnieNAS\share\教会讲道
-```
-
-如果不调整 allowed roots，也可以手动把找到的 raw 文件复制到项目中的目标路径。复制后运行：
+经复核，`C:\Users\caoyi\Projects\NAS` 下的以下入口是指向 NAS 的符号链接：
 
 ```text
-python scripts/check_source_paths.py
-node scripts/create_source_raw_recovery_checklist.mjs
+分享收件 -> \\RonnieNAS\tmp\分享
+讲道收件 -> \\RonnieNAS\tmp\讲道
+教会讲道归档 -> \\RonnieNAS\share\教会讲道
 ```
 
-确认 missing 数量下降。
+CodexPro 当前 allowed roots 只允许 `C:\Users\caoyi\Projects`。当这些入口解析到 `\\RonnieNAS\...` 后，会被安全边界拒绝。因此，本轮 `source` 路径修复任务不再尝试访问 NAS，也不把 NAS raw 恢复作为当前任务的前置条件。
+
+本轮继续保留的范围：
+
+```text
+C:\Users\caoyi\Projects\个人网页项目
+```
+
+本轮明确排除：
+
+```text
+从 \\RonnieNAS\tmp\分享 恢复分享 raw 文件
+从 \\RonnieNAS\tmp\讲道 恢复讲道 raw 文件
+从 \\RonnieNAS\share\教会讲道 查找历史归档
+批量复制 NAS 文件进入 data/raw
+```
+
+若后续需要恢复 NAS raw 文件，应另开独立任务，由用户先手动复制目标文件到项目内，或在 CodexPro 环境支持 NAS allowed roots 后再处理。
 
 ## Phase 3 当前结论
 
-本阶段已经完成 raw 找回清单生成，但在当前 allowed roots 范围内没有实际找回 P0 raw 文件。
+本阶段已经完成 raw 找回清单生成，但不再继续执行 NAS raw 恢复。
 
-下一步建议：
+当前结论：
 
-1. 开放 NAS allowed roots，或手动复制 P0 的 3 个 raw 文件到 `data/raw/分享/`。
-2. 单独核对 no_source 文章来源。
-3. P0 处理后重新运行 source 检查。
-4. 再决定是否展开 P1/P2 的历史 raw 大规模补齐。
+1. 不修改文章 `source` 字段来伪造可用路径。
+2. 保留 `source-path-repair-plan.csv` 与 `source-raw-recovery-checklist.csv` 作为审计证据。
+3. 本轮只处理仓库内部可验证的问题。
+4. NAS raw 补齐、历史 raw 大规模恢复、以及 `no_source` 原始来源追溯，留作后续独立任务。
