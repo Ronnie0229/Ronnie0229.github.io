@@ -30,6 +30,11 @@ THEOLOGY_REVIEW = (
     "91神的儿子，神的儿子们，人子",
 )
 
+THEOLOGY_APPROVED = (
+    "88雅各",
+    "91神的儿子，神的儿子们，人子",
+)
+
 OVERRIDES = {
     "圣经中麦子和稗子的意义是什么？": (
         "马太福音 13:24-30",
@@ -96,8 +101,12 @@ TEXT_REPLACEMENTS = {
     "散住十二个支派": "散居各地的十二个支派",
     "这是圣经中唯一一次神在与人的对抗中输了。不是象征,不是比喻,是字面意义上的整夜摔跤,神自己承认,你得了胜。":
         "经文说雅各“与神与人较力,都得了胜”。这不是说神的能力不及雅各,而是神主动借着这场相遇破碎雅各原有的依靠,同时赐给他祝福和新的名字。",
+    "这是圣经中唯一一次神在与人的对抗中输了。不是象征，不是比喻，是字面意义上的整夜摔跤，神自己承认，你得了胜。":
+        "经文说雅各“与神与人较力，都得了胜”。这不是说神的能力不及雅各，而是神主动借着这场相遇破碎雅各原有的依靠，同时赐给他祝福和新的名字。",
     "所以,这里的神的儿子们,百分之百不可能是人类,只能是天使,是那些在人类被造之前就已经存在的灵体。这一点基本上没有什么争议。":
         "从创造大地的语境来看,许多解经者认为这里的“神的众子”是天使或属灵受造者。不过,相关称谓在不同经文中的解释仍需结合上下文谨慎判断。",
+    "所以，这里的神的儿子们，百分之百不可能是人类，只能是天使，是那些在人类被造之前就已经存在的灵体。这一点基本上没有什么争议。":
+        "从创造大地的语境来看，许多解经者认为这里的“神的众子”是天使或属灵受造者。不过，相关称谓在不同经文中的解释仍需结合上下文谨慎判断。",
     "在那个听话的长子身上藏着被99%的人都忽略的最致命的罪。":
         "在那个听话的长子身上,藏着许多读者容易忽略的属灵问题。",
     "使我们能百分之百顺服": "使我们学习全然顺服",
@@ -345,7 +354,10 @@ def main() -> None:
         )
         output = ORGANIZED_DIR / f"{slug}.md"
         output.write_text(markdown, encoding="utf-8")
-        requires_theology_review = any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_REVIEW)
+        requires_theology_review = (
+            any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_REVIEW)
+            and not any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_APPROVED)
+        )
         publishable = bool(scripture) and not requires_theology_review
         if publishable:
             shutil.copyfile(output, POSTS_DIR / output.name)
