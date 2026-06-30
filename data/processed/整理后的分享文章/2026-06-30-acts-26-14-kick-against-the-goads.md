@@ -9,7 +9,7 @@ scripture: "使徒行传 26:14"
 author: "Ronnie"
 reviewed: false
 draft: false
-source: "中文原稿/NEEDS_METADATA_unknown-date_What Does 'Kick against the Goads' Mean in the Bible_中文.txt"
+source: "data/raw/分享/NEEDS_METADATA_unknown-date_What Does 'Kick against the Goads' Mean in the Bible_中文.txt"
 ---
 圣经中“踢刺”是什么意思？
 
