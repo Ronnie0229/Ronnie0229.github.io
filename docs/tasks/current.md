@@ -2,103 +2,129 @@
 
 ## 任务名称
 
-发布正式深色背景 favicon 修正。
-
-## 当前目标
-
-把已经完成并构建通过的 favicon 修正提交并推送到 GitHub `main`，触发 Cloudflare Pages 自动部署。目标是让 Google 搜索结果和浏览器标签页使用网站已有的正式深色背景 Logo，而不是透明背景 Logo。
-
-## 问题背景
-
-Google 搜索结果中当前网站图标显示为透明背景白色字母和金色十字架，在深色搜索结果界面中不清楚。
-
-原因是 favicon / apple-touch-icon 之前指向透明背景 Logo：
-
-```text
-/images/ronniecross-logo-theme-dark-transparent.png
-```
-
-## 当前已完成修改
-
-已修改文件：
-
-```text
-src/layouts/BaseLayout.astro
-```
-
-现在应指向网站已有的正式深色背景 Logo：
-
-```html
-<link rel="icon" type="image/jpeg" href="/images/ronniecross-logo-theme-dark.jpg" />
-<link rel="apple-touch-icon" href="/images/ronniecross-logo-theme-dark.jpg" />
-```
-
-对应现有资产：
-
-```text
-assets/images/ronniecross-logo-theme-dark.jpg
-```
-
-不要新建或重绘任何 Logo。
-
-## 已完成验证
-
-ChatGPT 已运行：
-
-```powershell
-npm.cmd run build
-```
-
-结果成功：
-
-```text
-194 page(s) built in 88.26s
-[build] Complete!
-```
+手机导航与文章元信息修复收尾。
 
 ## 当前状态
 
-已完成。
+已收尾，暂停继续追修 iPhone/Safari 顶部状态栏完全融合问题。
 
-发布记录：
-
-```text
-构建结果：成功，ChatGPT 已执行 npm.cmd run build，194 page(s) built in 88.26s，[build] Complete!
-提交哈希：518a1ac
-push 结果：成功，已推送到 origin/main
-修改文件：src/layouts/BaseLayout.astro, docs/tasks/current.md
-需要用户验证：Google Search Console 对 https://ronniecross.com/ 请求重新编入索引
-```
-
-执行记录：
-
-```powershell
-git status
-git add src/layouts/BaseLayout.astro
-git commit -m "fix: use official dark logo favicon"
-git push origin main
-```
-
-## 严格限制
-
-1. 不要新建、重绘、替换或重新设计任何 Logo / favicon。
-2. 不要修改 `assets/images/` 中的图片文件。
-3. 不要修改 `assets/site.webmanifest`。
-4. 不要修改文章内容、Admin 功能文件、Cloudflare 配置或脚本。
-5. 不要使用 `git push --force`。
-
-## 发布后用户需要做的事
-
-部署完成后，用户需要在 Google Search Console 对首页执行：
+本轮已经完成并发布的相关提交：
 
 ```text
-https://ronniecross.com/
+28ce9a3 refine article metadata displays
+4bd66fb fix iOS light status bar viewport
 ```
 
-流程：
+当前 `main` 与 `origin/main` 已同步到：
 
 ```text
-网址检查 → 测试实际网址 → 请求编入索引
+4bd66fb fix iOS light status bar viewport
 ```
 
-Google 搜索结果 favicon 不会立即刷新，可能需要数天或更久。
+## 已完成内容
+
+### 1. 文章元信息显示修复
+
+已完成：
+
+```text
+首页文章卡片：日期 + 阅读 X 分钟
+全部文章页：日期 + 阅读 X 分钟
+文章详情页：日期 + 阅读 X 分钟
+书卷详情页：日期 + 阅读 X 分钟
+搜索结果页：日期 + 分类 + 阅读 X 分钟
+Admin 文章列表：发布日期 · 阅读 X 分钟 · 分类
+```
+
+已去掉前台列表中重复显示的经文标签，避免标题中已有经文时再次重复。
+
+浅色模式下 `阅读 X 分钟` 已修复为普通元信息文本，不再显示为蓝色胶囊；普通主题标签仍保持胶囊样式。
+
+### 2. 手机端导航修复
+
+已恢复手机端固定导航栏。
+
+当前做法是在手机端使用 fixed header，并给页面外层补顶部间距，避免导航遮挡正文。
+
+### 3. iPhone/Safari 顶部状态栏尝试修复
+
+已尝试并发布：
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+```
+
+即撤回前台普通页面的 `viewport-fit=cover`，目标是恢复修改全屏适配前的旧行为。
+
+构建通过并已发布：
+
+```text
+npm.cmd run build
+194 page(s) built
+Build Complete
+提交：4bd66fb fix iOS light status bar viewport
+```
+
+## 当前遗留问题
+
+用户反馈：iPhone/Safari 浅色模式最顶部状态栏区域仍未达到期望效果。
+
+当前决定：
+
+```text
+不再继续在本轮任务中追修该问题。
+```
+
+原因：
+
+1. 该问题已经多轮尝试，继续小修 CSS/meta 容易反复试错。
+2. iPhone/Safari 顶部状态栏涉及普通 Safari、PWA、viewport、安全区、浏览器 UI 等边界，不能仅靠 `npm run build` 验证。
+3. 当前网站核心功能和主要视觉问题已修复；继续处理应单独开任务，先做可控区域确认和真机验证方案。
+
+## 后续如需重启该问题
+
+必须单独开任务，任务名称建议：
+
+```text
+iOS Safari 顶部状态栏与 safe-area 专项排查
+```
+
+专项任务开始前必须先确认：
+
+1. 用户是在普通 Safari 打开，还是添加到主屏幕的 PWA 模式。
+2. 问题只发生在浅色模式，还是深色模式也有异常。
+3. 是否只发生在书卷页，还是所有页面都有。
+4. 是否与 Safari 地址栏位置、无痕模式、刷新缓存有关。
+5. 是否需要重新引入 `viewport-fit=cover`，以及是否要配套 `safe-area-inset-top` 专项设计。
+
+不要在普通样式修复任务中顺手修改：
+
+```text
+viewport-fit
+safe-area-inset-top
+apple-mobile-web-app-status-bar-style
+theme-color
+```
+
+除非任务目标就是 iOS safe-area 专项。
+
+## 收尾结论
+
+本轮任务的可交付部分已经完成：
+
+```text
+文章元信息修复：完成
+阅读时间样式修复：完成
+Admin 列表元信息修复：完成
+手机固定导航：完成
+iPhone/Safari 顶部状态栏完全融合：暂停，不再继续追修
+构建状态：通过
+远端状态：已推送 main
+```
+
+## 接手提醒
+
+1. 新任务开始前先读取 `STATUS.md` 和本文件。
+2. 目前不要继续围绕 iPhone 状态栏做零散 CSS/meta 尝试。
+3. 后续优先做已经计划好的样式入口重构，解决 `src/styles/global.css` 与 `assets/styles/global.css` 双入口混乱问题。
+4. 不要提交 `.ai-bridge` 文件。

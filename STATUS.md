@@ -1,17 +1,17 @@
 # 项目状态
 
-最后更新：2026-06-30 +09:00
+最后更新：2026-07-01 +09:00
 
 ## 当前结论
 
-“批量修复 source 路径”任务已完成审计、范围调整、流程固化和交接记录。本轮没有批量修改任何文章的 `source` 字段，也没有修改文章正文。
+手机导航与文章元信息修复已完成并发布。iPhone/Safari 浅色模式顶部状态栏完全融合问题已暂停继续追修，后续如需处理必须单独开 safe-area 专项任务。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-最新远端提交：677ae82 Document source path audit workflow
-当前任务状态：source 路径审计收尾完成
-构建状态：本轮未运行 npm.cmd run build；最终收尾仅涉及文档和审计报告
+最新远端提交：4bd66fb fix iOS light status bar viewport
+当前任务状态：手机导航与文章元信息修复收尾完成；iOS 状态栏问题暂停追修
+构建状态：npm.cmd run build 通过，194 page(s) built，Build Complete
 ```
 
 ## 本轮 source 路径审计结论
