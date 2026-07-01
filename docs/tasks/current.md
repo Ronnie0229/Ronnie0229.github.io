@@ -2,129 +2,98 @@
 
 ## 任务名称
 
-手机导航与文章元信息修复收尾。
+个人网页项目发布工作流规范同步更新。
 
 ## 当前状态
 
-已收尾，暂停继续追修 iPhone/Safari 顶部状态栏完全融合问题。
-
-本轮已经完成并发布的相关提交：
+已完成个人网页项目侧的内容发布规范同步，重点补齐本次讲道发布后发现的三个长期规则：
 
 ```text
-28ce9a3 refine article metadata displays
-4bd66fb fix iOS light status bar viewport
+1. 网站正文必须保留 Markdown 段落空行，避免前台合并成一整段。
+2. [WD]、[SLIDE]、[MAP]、[PAGE] 等讲稿/投影片来源标记不得进入中文原稿、processed 或正式 posts。
+3. 补录旧讲道、旧文章或用户明确指定发布日期时，frontmatter date 必须保留用户确认日期，不得被导出日覆盖。
 ```
 
-当前 `main` 与 `origin/main` 已同步到：
+## 已修改文件
 
 ```text
-4bd66fb fix iOS light status bar viewport
+AGENTS.md
+CONTENT_WORKFLOW.md
+docs/统一内容整理与发布流程.md
+docs/content-style.md
+docs/content-publishing-error-prevention.md
+skills/article-workflow.md
+docs/tasks/current.md
 ```
 
 ## 已完成内容
 
-### 1. 文章元信息显示修复
+### 1. 项目入口文档更新
 
-已完成：
+`AGENTS.md` 已把 `docs/content-publishing-error-prevention.md` 加入内容/文章/讲道/分享任务的必读文档。
 
-```text
-首页文章卡片：日期 + 阅读 X 分钟
-全部文章页：日期 + 阅读 X 分钟
-文章详情页：日期 + 阅读 X 分钟
-书卷详情页：日期 + 阅读 X 分钟
-搜索结果页：日期 + 分类 + 阅读 X 分钟
-Admin 文章列表：发布日期 · 阅读 X 分钟 · 分类
-```
-
-已去掉前台列表中重复显示的经文标签，避免标题中已有经文时再次重复。
-
-浅色模式下 `阅读 X 分钟` 已修复为普通元信息文本，不再显示为蓝色胶囊；普通主题标签仍保持胶囊样式。
-
-### 2. 手机端导航修复
-
-已恢复手机端固定导航栏。
-
-当前做法是在手机端使用 fixed header，并给页面外层补顶部间距，避免导航遮挡正文。
-
-### 3. iPhone/Safari 顶部状态栏尝试修复
-
-已尝试并发布：
-
-```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-```
-
-即撤回前台普通页面的 `viewport-fit=cover`，目标是恢复修改全屏适配前的旧行为。
-
-构建通过并已发布：
+同时在内容入口和资料位置中补充：
 
 ```text
-npm.cmd run build
-194 page(s) built
-Build Complete
-提交：4bd66fb fix iOS light status bar viewport
+- 正文必须保留 Markdown 段落空行。
+- 讲稿/投影片来源标记不得进入最终正文。
+- 用户指定旧发布日期时，date 不得被导出日覆盖。
 ```
 
-## 当前遗留问题
+### 2. 内容发布入口规范更新
 
-用户反馈：iPhone/Safari 浅色模式最顶部状态栏区域仍未达到期望效果。
-
-当前决定：
+`CONTENT_WORKFLOW.md` 已新增“正文 Markdown 规范”，明确：
 
 ```text
-不再继续在本轮任务中追修该问题。
+- 段落之间必须保留空行。
+- Admin 编辑区能看到换行，不代表前台会分段。
+- [WD]、[SLIDE]、[slide]、[SLIDE - ...]、[TIMELINE SLIDE - ...]、[MAP]、[PAGE ...] 等标记必须清理。
+- 清理必须覆盖中文原稿合并、发布前 Markdown 生成、导出到网站三个阶段。
 ```
 
-原因：
-
-1. 该问题已经多轮尝试，继续小修 CSS/meta 容易反复试错。
-2. iPhone/Safari 顶部状态栏涉及普通 Safari、PWA、viewport、安全区、浏览器 UI 等边界，不能仅靠 `npm run build` 验证。
-3. 当前网站核心功能和主要视觉问题已修复；继续处理应单独开任务，先做可控区域确认和真机验证方案。
-
-## 后续如需重启该问题
-
-必须单独开任务，任务名称建议：
+同时把旧规则“date 必须是实际发布当天”修正为：
 
 ```text
-iOS Safari 顶部状态栏与 safe-area 专项排查
+date 默认使用实际发布当天；但补录旧讲道、旧文章或用户明确指定发布日期时，必须使用用户确认的发布日期，不能被导出当天、文件修改时间或脚本运行日期覆盖。
 ```
 
-专项任务开始前必须先确认：
+### 3. 统一发布流程更新
 
-1. 用户是在普通 Safari 打开，还是添加到主屏幕的 PWA 模式。
-2. 问题只发生在浅色模式，还是深色模式也有异常。
-3. 是否只发生在书卷页，还是所有页面都有。
-4. 是否与 Safari 地址栏位置、无痕模式、刷新缓存有关。
-5. 是否需要重新引入 `viewport-fit=cover`，以及是否要配套 `safe-area-inset-top` 专项设计。
+`docs/统一内容整理与发布流程.md` 已新增“正文与日期质量门”，把段落空行、来源标记清理、指定日期保留写入正式流程。
 
-不要在普通样式修复任务中顺手修改：
+### 4. 内容风格规范更新
+
+`docs/content-style.md` 已在 Paragraph Formatting 和 Quality Checklist 中补充网站 Markdown 要求：
 
 ```text
-viewport-fit
-safe-area-inset-top
-apple-mobile-web-app-status-bar-style
-theme-color
+- 网站 Markdown 段落之间保留空行。
+- 不要在压缩翻译草稿时删除所有空行。
+- 清理讲稿/投影片标记。
+- 发布后检查正文是否正常分段、是否无来源标记残留。
 ```
 
-除非任务目标就是 iOS safe-area 专项。
+### 5. 防错清单更新
 
-## 收尾结论
-
-本轮任务的可交付部分已经完成：
+`docs/content-publishing-error-prevention.md` 已新增三项防错：
 
 ```text
-文章元信息修复：完成
-阅读时间样式修复：完成
-Admin 列表元信息修复：完成
-手机固定导航：完成
-iPhone/Safari 顶部状态栏完全融合：暂停，不再继续追修
-构建状态：通过
-远端状态：已推送 main
+9. 正文段落空行不能被压扁
+10. 讲稿/投影片标记不得进入正文
+11. 旧讲道补录日期不得被导出日期覆盖
 ```
 
-## 接手提醒
+并把这三项加入“发布前强制检查”。
 
-1. 新任务开始前先读取 `STATUS.md` 和本文件。
-2. 目前不要继续围绕 iPhone 状态栏做零散 CSS/meta 尝试。
-3. 后续优先做已经计划好的样式入口重构，解决 `src/styles/global.css` 与 `assets/styles/global.css` 双入口混乱问题。
-4. 不要提交 `.ai-bridge` 文件。
+### 6. Article Workflow skill 更新
+
+`skills/article-workflow.md` 已加入对应规则，确保另一个 Codex 账号处理内容发布时也会读取并执行这些检查。
+
+## 验证结果
+
+本轮只修改 Markdown 文档，没有改动网站运行代码、Astro 页面、CSS 或脚本，因此未运行 `npm run build`。
+
+已检查工作区改动范围，当前只包含上述文档修改。
+
+## 下一步
+
+如需把这些规范正式保存到远端，需要单独提交并推送本次文档修改。

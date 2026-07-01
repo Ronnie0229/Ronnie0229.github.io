@@ -61,6 +61,24 @@
 - 不把文章改成空泛鸡汤。
 - 对公众平台版本，可在不改变核心意义的前提下调整表达。
 
+## 正文 Markdown 规范
+
+网站正文必须使用标准 Markdown 段落：段落之间保留一个空行。只有单换行、没有空行时，Astro/Markdown 前台会把多行合并成同一个段落；Admin 编辑区虽然能看到换行，但公开页面不会显示为分段。
+
+讲道、分享、翻译稿进入 `data/processed/` 或 `src/content/posts/` 前，必须清理只用于讲稿制作或投影片提示的标记，例如：
+
+```text
+[WD]
+[SLIDE]
+[slide]
+[SLIDE - ...]
+[TIMELINE SLIDE - ...]
+[MAP]
+[PAGE ...]
+```
+
+如果标记独占一行，整行删除；如果标记后面还有正文，只删除标记，保留正文。清理规则必须同时应用在中文原稿合并、发布前 Markdown 生成、导出到网站三个阶段，避免任一入口漏掉。
+
 ## 网站文章 frontmatter
 
 正式文章位于 `src/content/posts/`。具体字段以 `src/content/config.ts` 为准。新增文章前必须先查看当前 schema。
@@ -192,7 +210,10 @@ docs/内容整理报告/source-path-check.csv
 - [ ] 正式文章是否在 `src/content/posts/`。
 - [ ] frontmatter 是否符合 `src/content/config.ts`。
 - [ ] 标题、日期、分类、标签是否正确。
+- [ ] 若用户指定旧讲道/旧文章发布日期，`date` 是否保留用户指定日期而非导出当天。
 - [ ] 翻译是否没有遗漏原文信息。
+- [ ] 正文段落之间是否保留 Markdown 空行，前台不会合并成一整段。
+- [ ] `[WD]`、`[SLIDE]` 等讲稿/投影片标记是否已从中文稿、processed 和 posts 中清理。
 - [ ] 是否更新整理报告。
 - [ ] 是否运行文章 ID 脚本。
 - [ ] 是否运行 `npm run build`。
@@ -211,7 +232,7 @@ docs/content-publishing-error-prevention.md
 - 双语 PDF 普通文本提取可能丢句、错序，`*.extracted.txt` 只能作为辅助，不是最终翻译源。
 - 讲道翻译必须逐句忠实，不能变成摘要、提纲或主题整理。
 - `description` 不能由脚本硬截正文、不能用模板句凑数，也不能只抽取正文原句；必须由整理者阅读标题、经文和正文主旨后，写成一两句可独立阅读的大意摘要。
-- 网站 frontmatter 的 `date` 必须是实际发布当天日期；不能使用原始讲道日期、文件名日期、资料修改时间或发布前 MD 生成日期。
+- 网站 frontmatter 的 `date` 默认使用实际发布当天日期；但补录旧讲道、旧文章或用户明确指定发布日期时，必须使用用户确认的发布日期，不能被导出当天、文件修改时间或脚本运行日期覆盖。
 - 自动识别的 `scripture`、中文 slug 和 `articleId` 可能不准，提交前必须人工核对。
 - 讲道 publish 脚本可能重写旧讲道文章，提交前必须检查并排除无关旧文覆盖。
 - 新文章不出现在构建产物或出现 Duplicate id 时，优先清理 `.astro` 本地缓存后重建。

@@ -65,6 +65,13 @@ When the user asks for a publishable article draft outside the website import sc
 - If requested for WeChat/公众号, each paragraph may begin with two full-width spaces.
 - Do not force two full-width spaces into Markdown frontmatter or website-generated content unless explicitly requested.
 
+For website Markdown generated into `data/processed/` or `src/content/posts/`:
+
+- Keep one blank line between paragraphs. A single newline is not enough for Astro/Markdown to render separate paragraphs on the public page.
+- Do not remove all blank lines while compacting translation drafts.
+- Remove production-only sermon markers such as `[WD]`, `[SLIDE]`, `[slide]`, `[SLIDE - ...]`, `[TIMELINE SLIDE - ...]`, `[MAP]`, and `[PAGE ...]` before the text reaches processed Markdown or posts.
+- If a marker line contains no正文, delete the line; if it prefixes real正文, remove only the marker and keep the正文.
+
 ## Safer Wording Examples
 
 Use only when suitable for the target platform:
@@ -87,6 +94,8 @@ Before delivering or publishing:
 - Translation did not omit examples or transitions.
 - Generated Markdown has required frontmatter, including `articleId` when used by the site.
 - The live page, if published, contains expected title/category/body text.
+- Public article body is visibly split into paragraphs, not rendered as one continuous block.
+- No `[WD]`, `[SLIDE]`, `[MAP]`, or similar source-only marker remains in the published body.
 
 ## Publishing Metadata Quality
 

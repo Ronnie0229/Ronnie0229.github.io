@@ -17,6 +17,7 @@ Before doing any content task, read these files in this repository:
 - `docs/codex-handoff-memory.md`
 - `docs/统一内容整理与发布流程.md`
 - `docs/content-style.md`
+- `docs/content-publishing-error-prevention.md`
 
 ## Source Of Truth
 
@@ -75,6 +76,8 @@ For sermon material:
 - Confirm date, scripture, title, and speaker.
 - Extract PDF text into `*.extracted.txt`.
 - Produce a final Chinese TXT.
+- Preserve Markdown paragraph blank lines in the final Chinese TXT; do not compact the whole sermon into single-newline paragraphs.
+- Remove production-only markers such as `[WD]`, `[SLIDE]`, `[slide]`, `[SLIDE - ...]`, `[TIMELINE SLIDE - ...]`, `[MAP]`, and `[PAGE ...]`. If the marker line has no正文, delete the line; if it prefixes real正文, keep the正文.
 - Exclude `*.extracted.txt` from publishing; it is only a machine extraction aid.
 - Follow the translation fidelity rules in `docs/content-style.md`.
 
@@ -145,6 +148,9 @@ Before commit:
 - Ensure import scripts did not delete unrelated posts or reports.
 - Ensure share publish used `--source-file` and sermon publish used `--folder`; unscoped publish commands are invalid.
 - Ensure `description` is a manual summary, not a body excerpt, template, or placeholder.
+- Ensure Markdown paragraph blank lines are preserved in processed and posts, so the public article page renders separate paragraphs.
+- Ensure `[WD]`, `[SLIDE]`, `[MAP]`, `[PAGE]`, and similar source-only markers are absent from the final body.
+- If the user explicitly specified a publication date for a backfilled sermon/article, ensure frontmatter `date` preserves that date rather than the export day.
 - For sermons, check `sermon-import-registry.csv` and confirm slug/path stability before using `--update-existing`.
 - Ignore unrelated untracked folders unless the user asks about them.
 
@@ -242,6 +248,7 @@ Non-negotiable checks added after the 2026-06-21 sermon workflow:
 - Do not publish from `*.extracted.txt`; create and inspect a final source-based Chinese TXT.
 - For bilingual PDFs, state which source language is being followed and verify that the source-language extraction did not lose page-end lines.
 - Manually check `description`, `scripture`, slug, `articleId`, `author`, `category`, `tags`, and `source` before build.
+- Check paragraph blank lines, source-only marker cleanup, and user-specified `date` preservation before build.
 - If the importer rewrites older posts, restore unrelated old-post changes before commit.
 - If a new post is missing from `dist` or Astro reports duplicate IDs after renames, clear `.astro` and rebuild.
 - Verify live pages on `https://ronniecross.com/` and require title, category, scripture, author/speaker, summary, and body text to be present.

@@ -31,7 +31,7 @@
 按任务类型继续阅读：
 
 - 设计 / 前端 / 主题：`DESIGN.md`、`docs/ui-spec.md`、`风格重新设计素材/ronniecross_astro_design_spec.md`
-- 内容 / 文章 / 讲道 / 分享：`CONTENT_WORKFLOW.md`、`docs/统一内容整理与发布流程.md`、`docs/content-style.md`、`skills/article-workflow.md`
+- 内容 / 文章 / 讲道 / 分享：`CONTENT_WORKFLOW.md`、`docs/统一内容整理与发布流程.md`、`docs/content-style.md`、`docs/content-publishing-error-prevention.md`、`skills/article-workflow.md`
 - SEO：`SEO.md`、`src/pages/sitemap.xml.ts`、`src/pages/rss.xml.ts`、`src/pages/search-index.json.ts`
 - 部署 / 后台：`DEPLOY.md`、`docs/网站后台使用与配置.md`、`wrangler.jsonc`、`functions/`
 - Git / worktree / 多账号协作：`docs/branch-workflow.md`、`docs/account-switching.md`
@@ -129,6 +129,9 @@ Process_narration=false
 - 整理后的中间稿 Markdown 文件名默认使用中文，保留 `YYYY-MM-DD-经文-中文标题.md` 或现有中文命名风格；不要把 processed 中间稿批量改成英文 slug。
 - 正式网站文章：`src/content/posts/`
 - 整理报告：`docs/内容整理报告/`
+- 网站正文必须保留 Markdown 段落空行；单换行在前台不会形成独立段落。
+- `[WD]`、`[SLIDE]`、`[MAP]`、`[PAGE]` 等讲稿/投影片来源标记不得进入中文原稿、processed 或正式 posts。
+- 补录旧讲道、旧文章或用户明确指定发布日期时，frontmatter `date` 必须保留用户确认日期，不得被导出日覆盖。
 
 ## 基本命令
 
