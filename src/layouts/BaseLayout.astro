@@ -102,7 +102,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="theme-color" id="theme-color" content="#061625" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" id="apple-status-bar-style" content="black-translucent" />
     <script is:inline>
       (() => {
         const storageKey = "ronniecross-theme";
@@ -117,7 +117,9 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
 
         const setThemeColor = (theme) => {
           const themeColor = document.querySelector('meta[name="theme-color"]');
+          const appleStatusBar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
           themeColor?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+          appleStatusBar?.setAttribute("content", theme === "dark" ? "black-translucent" : "default");
         };
 
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -201,7 +203,9 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
 
         const setThemeColor = (theme) => {
           const themeColor = document.querySelector('meta[name="theme-color"]');
+          const appleStatusBar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
           themeColor?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+          appleStatusBar?.setAttribute("content", theme === "dark" ? "black-translucent" : "default");
         };
 
         const syncThemeButton = (theme) => {
