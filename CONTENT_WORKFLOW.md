@@ -167,7 +167,7 @@ npm run sync
 
 当前 CodexPro 环境不能穿透 `C:\Users\caoyi\Projects\NAS` 下指向 `\\RonnieNAS\...` 的符号链接。除非用户明确提供文件到仓库内，或环境后续支持 NAS allowed roots，否则不要把 NAS raw 恢复作为本轮自动修复步骤。
 
-讲道流程中的 `archive-sermon` 表示把 `data/raw/教会讲道/<folder>` 复制到 NAS 或其他受保护归档区；它不是移动，也不代表发布后删除 `data/raw` 里的源目录。归档脚本会跳过 `*.extracted.txt`，因为 PDF 提取稿属于可再生成的中间资料。
+讲道流程中的 `archive-sermon` 表示把 `data/raw/教会讲道/<folder>` 复制到 NAS 或其他受保护归档区；它不是移动，也不代表发布后删除 `data/raw` 里的源目录。NAS 讲道归档只保存三类内容：原始文件、英文原稿文件、翻译后的中文原稿文件。除上述三类以外，不归档发布前 MD、审计报告、中间目录、网站 posts、processed 副本、脚本日志、`*.extracted.txt` 或其他可再生成资料。
 
 后续如需清理 `data/raw/`，必须先运行 source 路径检查：
 
@@ -191,6 +191,8 @@ docs/内容整理报告/source-path-check.csv
 
 独立的 `讲道整理` 项目不得直接写入个人网页项目的 `data/raw/`。它应先在自身项目内生成 `发布前MD/待发布/` 或 `发布前MD/待补元数据/`，只有用户明确进入网站发布流程时，才由个人网页项目执行导入、发布和归档。
 
+从 `讲道整理` 项目导入讲道时，不得只把发布前 MD 或导出后的 posts 文件复制进 `src/content/posts/` 就视为完整发布。个人网页项目必须确认 raw/source 资料交接、`data/processed/整理后的讲道文章/` 副本、正式 posts、`articleId`、构建、线上验证和 NAS 归档状态。讲道内容默认必须执行 `archive-sermon` 或等价的只新增复制归档，但 NAS 实际归档内容仅限原始文件、英文原稿文件、翻译后的中文原稿文件；若因权限或环境无法完成，必须记录 `archive_status=pending`，并在最终回复和交接文档中明确说明。
+
 ## 安全边界
 
 - `data/raw/` 只新增，不直接改写或删除原始文件。
@@ -208,6 +210,7 @@ docs/内容整理报告/source-path-check.csv
 - [ ] 原始资料是否已保留。
 - [ ] 中间稿是否保留。
 - [ ] 正式文章是否在 `src/content/posts/`。
+- [ ] 讲道内容是否已执行 `archive-sermon` 或等价只新增复制归档；如未完成，是否记录 `archive_status=pending`。
 - [ ] frontmatter 是否符合 `src/content/config.ts`。
 - [ ] 标题、日期、分类、标签是否正确。
 - [ ] 若用户指定旧讲道/旧文章发布日期，`date` 是否保留用户指定日期而非导出当天。

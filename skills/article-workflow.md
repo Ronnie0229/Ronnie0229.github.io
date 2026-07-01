@@ -151,6 +151,7 @@ Before commit:
 - Ensure Markdown paragraph blank lines are preserved in processed and posts, so the public article page renders separate paragraphs.
 - Ensure `[WD]`, `[SLIDE]`, `[MAP]`, `[PAGE]`, and similar source-only markers are absent from the final body.
 - If the user explicitly specified a publication date for a backfilled sermon/article, ensure frontmatter `date` preserves that date rather than the export day.
+- For sermons imported from the sermon-prep project, do not treat direct posts export as complete publishing until raw/source handoff, processed copy, articleId, build, online verification, and NAS archive status are all checked. NAS archive contents must be limited to the original source file, English source text, and final Chinese source text; do not archive prepublish MD, audit folders, website posts, or processed copies.
 - For sermons, check `sermon-import-registry.csv` and confirm slug/path stability before using `--update-existing`.
 - Ignore unrelated untracked folders unless the user asks about them.
 
@@ -249,6 +250,7 @@ Non-negotiable checks added after the 2026-06-21 sermon workflow:
 - For bilingual PDFs, state which source language is being followed and verify that the source-language extraction did not lose page-end lines.
 - Manually check `description`, `scripture`, slug, `articleId`, `author`, `category`, `tags`, and `source` before build.
 - Check paragraph blank lines, source-only marker cleanup, and user-specified `date` preservation before build.
+- Check sermon NAS archive status and archive scope before commit; if it is pending, state that explicitly and do not mark the publishing workflow fully complete. Confirm the archive does not include prepublish MD, audit folders, website posts, or processed copies.
 - If the importer rewrites older posts, restore unrelated old-post changes before commit.
 - If a new post is missing from `dist` or Astro reports duplicate IDs after renames, clear `.astro` and rebuild.
 - Verify live pages on `https://ronniecross.com/` and require title, category, scripture, author/speaker, summary, and body text to be present.

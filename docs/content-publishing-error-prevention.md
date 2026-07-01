@@ -147,9 +147,27 @@
 - 导入/导出脚本不得用文件修改时间、脚本运行日或导出当天覆盖用户指定日期。
 - 提交前检查 frontmatter 的 `date` 与用户要求一致。
 
+## 12. 讲道整理项目导入不能绕过 NAS 归档
+
+问题：从 `讲道整理` 项目生成发布前 MD 后，若直接导出到 `src/content/posts/` 并提交发布，可能绕过个人网页项目原有的 `archive-sermon` 归档步骤。
+
+原因：讲道整理项目负责整理和发布前 MD，个人网页项目负责正式发布和 NAS 归档。直接复制 posts 文件会让网站文章上线，但 raw/source 交接、processed 副本和 NAS 受保护归档可能没有完成。
+
+整改：
+
+- 从讲道整理项目导入讲道时，必须确认 raw/source 资料、processed 副本、posts 文件和发布记录一致。
+- 讲道内容默认必须执行 `archive-sermon` 或等价的只新增复制归档。
+- NAS 实际归档内容只包含三类：原始文件、英文原稿文件、翻译后的中文原稿文件；不归档发布前 MD、审计报告、中间目录、网站 posts、processed 副本或脚本日志。
+- NAS 归档目标目录已存在时停止并报告，不得合并、覆盖、重命名或清理旧资料。
+- 若因环境权限无法完成归档，必须记录 `archive_status=pending`，不得把任务写成完整完成。
+- 只有用户明确要求本次不归档时，才能记录 `archive_status=skipped_by_user`。
+
 ## 发布前强制检查
 
 - [ ] PDF/源资料已移动或复制到正确 raw 目录，并记录 SHA-256。
+- [ ] 从讲道整理项目导入的讲道已完成 raw/source 交接，不能只复制 posts 文件。
+- [ ] 讲道已完成 NAS 归档；若未完成，已记录 `archive_status=pending/skipped_by_user`。
+- [ ] NAS 归档内容仅包含原始文件、英文原稿文件、翻译后的中文原稿文件，没有归档发布前 MD、审计目录、网站 posts 或 processed 副本。
 - [ ] 讲道已生成完整中文 TXT，且不是 `*.extracted.txt`。
 - [ ] 双语资料已说明翻译源语言。
 - [ ] `description` 是完整句，不是正文截断。

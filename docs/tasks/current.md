@@ -2,98 +2,136 @@
 
 ## 任务名称
 
-个人网页项目发布工作流规范同步更新。
+讲道整理项目与个人网页项目工作流差异整改与同步。
 
 ## 当前状态
 
-已完成个人网页项目侧的内容发布规范同步，重点补齐本次讲道发布后发现的三个长期规则：
+已完成两个项目之间的内容发布工作流差异复核，并同步修正“讲道整理项目 → 个人网页项目”衔接规则。
+
+本轮重点修正：
 
 ```text
-1. 网站正文必须保留 Markdown 段落空行，避免前台合并成一整段。
-2. [WD]、[SLIDE]、[MAP]、[PAGE] 等讲稿/投影片来源标记不得进入中文原稿、processed 或正式 posts。
-3. 补录旧讲道、旧文章或用户明确指定发布日期时，frontmatter date 必须保留用户确认日期，不得被导出日覆盖。
+1. 讲道发布默认必须完成 NAS 受保护归档。
+2. 从讲道整理项目导入讲道时，不能只复制 posts 文件就视为完整发布。
+3. 未完成 NAS 归档时，必须记录 archive_status=pending，不能在交接中写成完整完成。
+4. 只有用户明确要求本次不归档时，才能记录 archive_status=skipped_by_user。
+5. 补录旧讲道、旧文章或用户明确指定发布日期时，frontmatter date 必须保留用户确认日期，不得被导出日覆盖。
 ```
 
 ## 已修改文件
 
+个人网页项目侧：
+
 ```text
-AGENTS.md
 CONTENT_WORKFLOW.md
 docs/统一内容整理与发布流程.md
-docs/content-style.md
 docs/content-publishing-error-prevention.md
 skills/article-workflow.md
 docs/tasks/current.md
 ```
 
-## 已完成内容
-
-### 1. 项目入口文档更新
-
-`AGENTS.md` 已把 `docs/content-publishing-error-prevention.md` 加入内容/文章/讲道/分享任务的必读文档。
-
-同时在内容入口和资料位置中补充：
+讲道整理项目侧也同步修改了对应流程文档：
 
 ```text
-- 正文必须保留 Markdown 段落空行。
-- 讲稿/投影片来源标记不得进入最终正文。
-- 用户指定旧发布日期时，date 不得被导出日覆盖。
+docs/prepublish-md-metadata-quality-gate.md
+docs/chinese-to-prepublish-md-workflow.md
+docs/end-to-end-content-publishing-workflow.md
+docs/workflow-sync-with-website-project-20260701.md
 ```
 
-### 2. 内容发布入口规范更新
+## 差异点与整改结果
 
-`CONTENT_WORKFLOW.md` 已新增“正文 Markdown 规范”，明确：
+### 1. NAS 归档规则差异
+
+个人网页项目原本已经有正式规则：
 
 ```text
-- 段落之间必须保留空行。
-- Admin 编辑区能看到换行，不代表前台会分段。
-- [WD]、[SLIDE]、[slide]、[SLIDE - ...]、[TIMELINE SLIDE - ...]、[MAP]、[PAGE ...] 等标记必须清理。
-- 清理必须覆盖中文原稿合并、发布前 Markdown 生成、导出到网站三个阶段。
+python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"
 ```
 
-同时把旧规则“date 必须是实际发布当天”修正为：
+讲道整理项目旧文档中有些地方写成“需要时 / 必要时归档”，容易被理解为可选步骤。
+
+现已统一为：
 
 ```text
-date 默认使用实际发布当天；但补录旧讲道、旧文章或用户明确指定发布日期时，必须使用用户确认的发布日期，不能被导出当天、文件修改时间或脚本运行日期覆盖。
+讲道内容默认必须归档到 \\RonnieNAS\share\教会讲道。
 ```
 
-### 3. 统一发布流程更新
-
-`docs/统一内容整理与发布流程.md` 已新增“正文与日期质量门”，把段落空行、来源标记清理、指定日期保留写入正式流程。
-
-### 4. 内容风格规范更新
-
-`docs/content-style.md` 已在 Paragraph Formatting 和 Quality Checklist 中补充网站 Markdown 要求：
+如果无法访问 NAS 或环境权限不足，必须记录：
 
 ```text
-- 网站 Markdown 段落之间保留空行。
-- 不要在压缩翻译草稿时删除所有空行。
-- 清理讲稿/投影片标记。
-- 发布后检查正文是否正常分段、是否无来源标记残留。
+archive_status=pending
 ```
 
-### 5. 防错清单更新
+不能把发布流程写成完整完成。
 
-`docs/content-publishing-error-prevention.md` 已新增三项防错：
+### 2. 直接导出 posts 的风险
+
+本次 2024-06-16 讲道实际走的是：
 
 ```text
-9. 正文段落空行不能被压扁
-10. 讲稿/投影片标记不得进入正文
-11. 旧讲道补录日期不得被导出日期覆盖
+讲道整理项目
+→ 发布前 MD
+→ export_to_website_project.py
+→ 个人网页项目 src/content/posts
 ```
 
-并把这三项加入“发布前强制检查”。
+这个路径容易绕过个人网页项目 `archive-sermon`。
 
-### 6. Article Workflow skill 更新
+现已在个人网页项目文档中补充：
 
-`skills/article-workflow.md` 已加入对应规则，确保另一个 Codex 账号处理内容发布时也会读取并执行这些检查。
+```text
+从讲道整理项目导入讲道时，不得只把发布前 MD 或导出后的 posts 文件复制进 src/content/posts 就视为完整发布。
+```
+
+必须检查：
+
+```text
+raw/source 资料交接
+processed 副本
+正式 posts
+articleId
+build
+线上验证
+NAS archive_status
+NAS 归档范围仅限原始文件、英文原稿文件、翻译后的中文原稿文件
+```
+
+### 3. 日期规则差异
+
+讲道整理项目旧门禁中写过：
+
+```text
+网站 frontmatter 的 date 必须是导出/发布当天日期
+```
+
+个人网页项目已改成：
+
+```text
+date 默认使用实际发布日；但补录旧讲道、旧文章或用户明确指定发布日期时，必须使用用户确认日期。
+```
+
+讲道整理项目已同步该规则。
+
+### 4. 段落与来源标记规则
+
+两个项目已统一：
+
+```text
+正文必须保留 Markdown 段落空行。
+[WD]、[SLIDE]、[MAP]、[PAGE] 等来源标记不得进入中文原稿、processed 或 posts。
+```
+
+## 当前遗留
+
+本轮已继续同步新的 NAS 归档范围规则：归档只保留原始文件、英文原稿文件、翻译后的中文原稿文件；子目录和其他文件不归档。此前补做归档时多复制的发布前 MD、审计目录、网站 posts、processed 副本等内容由用户手动处理。
+
+后续若再次由 CodexPro 执行归档，只能复制三类文件：原始文件、英文原稿文件、翻译后的中文原稿文件。
+
+旧待办已取消：2024-06-16 讲道归档目录由用户手动整理。
 
 ## 验证结果
 
-本轮只修改 Markdown 文档，没有改动网站运行代码、Astro 页面、CSS 或脚本，因此未运行 `npm run build`。
+本轮只修改工作流文档，没有改动 Astro 页面、CSS、运行脚本或文章正文，因此未运行 `npm run build`。
 
-已检查工作区改动范围，当前只包含上述文档修改。
-
-## 下一步
-
-如需把这些规范正式保存到远端，需要单独提交并推送本次文档修改。
+完成前已搜索旧规则关键词，讲道整理项目中旧的“date 必须是导出/发布当天”“必要时归档”等表述已清理；个人网页项目中已加入 archive_status、不能只复制 posts 的防错规则，以及 NAS 归档只保留三类文件的范围规则。
