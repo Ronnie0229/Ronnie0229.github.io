@@ -218,6 +218,13 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
           if (themeLabel) themeLabel.textContent = label;
         };
 
+        const shouldReloadForMobileThemeChange = () => {
+          const isSmallScreen = window.matchMedia("(max-width: 760px)").matches;
+          const isIOS = /iPad|iPhone|iPod/.test(window.navigator.userAgent)
+            || (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+          return isSmallScreen && isIOS;
+        };
+
         const applyTheme = (theme, mode = "manual", persist = false) => {
           document.documentElement.dataset.theme = theme;
           document.documentElement.dataset.themeMode = mode;
@@ -240,6 +247,11 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
           const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
           manualTheme = currentTheme === "dark" ? "light" : "dark";
           applyTheme(manualTheme, "manual", true);
+          if (shouldReloadForMobileThemeChange()) {
+            window.setTimeout(() => {
+              window.location.reload();
+            }, 80);
+          }
         });
 
         media.addEventListener?.("change", () => {
