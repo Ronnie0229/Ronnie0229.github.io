@@ -7,9 +7,10 @@ interface Props {
   tags?: string[];
   category?: string;
   featured?: boolean;
+  readingTimeMinutes?: number;
 }
 
-const { title, description, date, href, tags = [], category = "", featured = false } = Astro.props;
+const { title, description, date, href, tags = [], category = "", featured = false, readingTimeMinutes } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
   month: "2-digit",
@@ -30,6 +31,7 @@ const displayTags = Array.from(
   <a href={href} class="post-card-link" data-post-link>
     <div class="post-card-meta">
       <time datetime={date.toISOString()}>{formattedDate}</time>
+      {readingTimeMinutes && <span class="meta-text">阅读 {readingTimeMinutes} 分钟</span>}
       {featured && <span>最新</span>}
     </div>
     <h2>{title}</h2>

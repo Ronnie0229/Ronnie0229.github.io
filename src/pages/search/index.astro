@@ -257,13 +257,9 @@ import Logo from "../../components/Logo.astro";
         const category = document.createElement("span");
         category.textContent = post.category;
         meta.append(date, category);
-        if (post.scripture) {
-          const scripture = document.createElement("span");
-          scripture.textContent = post.scripture;
-          meta.append(scripture);
-        }
         if (post.readingTimeMinutes) {
           const readingTime = document.createElement("span");
+          readingTime.className = "meta-text";
           readingTime.textContent = `阅读 ${post.readingTimeMinutes} 分钟`;
           meta.append(readingTime);
         }

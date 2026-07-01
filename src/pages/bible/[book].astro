@@ -28,18 +28,10 @@ export async function getStaticPaths() {
 }
 
 const { book, posts } = Astro.props;
-const postItems = posts.map((post) => {
-  const knowledge = buildPostKnowledge(post);
-  const relevantReferences = knowledge.scriptureKnowledge.references
-    .filter((reference) => reference.book === book)
-    .map((reference) => reference.raw);
-
-  return {
-    post,
-    knowledge,
-    references: relevantReferences.length ? relevantReferences : [knowledge.scripture].filter(Boolean)
-  };
-});
+const postItems = posts.map((post) => ({
+  post,
+  knowledge: buildPostKnowledge(post)
+}));
 const topicCounts = new Map<string, number>();
 
 for (const item of postItems) {
@@ -63,7 +55,7 @@ const totalReadingMinutes = postItems.reduce(
     <Logo size="md" showText={false} class="page-brand-mark page-brand-mark-small" />
     <p class="eyebrow"><a href="/bible/">圣经书卷</a></p>
     <h1>{book}</h1>
-    <p>共 {posts.length} 篇相关文章。这里按发布时间列出文章，并显示经文、阅读时间和主题线索，方便继续阅读。</p>
+    <p>共 {posts.length} 篇相关文章。这里按发布时间列出文章，并显示阅读时间和主题线索，方便继续阅读。</p>
     <div class="bible-overview-stats" aria-label={`${book}文章统计`}>
       <span>{posts.length} 篇文章</span>
       <span>阅读约 {totalReadingMinutes} 分钟</span>
@@ -90,7 +82,7 @@ const totalReadingMinutes = postItems.reduce(
 
   <section class="post-list bible-post-list" aria-label={`${book}文章列表`}>
     {
-      postItems.map(({ post, knowledge, references }) => {
+      postItems.map(({ post, knowledge }) => {
         const postSlug = post.slug;
         const formattedDate = new Intl.DateTimeFormat("zh-CN", {
           year: "numeric",
@@ -104,8 +96,7 @@ const totalReadingMinutes = postItems.reduce(
             <a href={`/posts/${postSlug}/`} class="post-card-link bible-post-card-link" data-post-link>
               <div class="post-card-meta bible-post-meta">
                 <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
-                {references.slice(0, 2).map((reference) => <span>{reference}</span>)}
-                <span>阅读 {knowledge.readingTimeMinutes} 分钟</span>
+                <span class="meta-text">阅读 {knowledge.readingTimeMinutes} 分钟</span>
               </div>
               <h2>{post.data.title}</h2>
               <p>{knowledge.description}</p>

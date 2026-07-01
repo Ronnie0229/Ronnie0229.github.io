@@ -452,14 +452,15 @@ function renderPosts() {
 
     const meta = document.createElement("span");
     meta.className = "article-row-meta";
-    meta.textContent = `${formatDate(post.date)} · ${post.category || "未分类"}`;
+    const metaParts = [formatDate(post.date)];
+    if (post.readingTimeMinutes) {
+      metaParts.push(`阅读 ${post.readingTimeMinutes} 分钟`);
+    }
+    metaParts.push(post.category || "未分类");
+    meta.textContent = metaParts.join(" · ");
 
     const title = document.createElement("strong");
     title.textContent = post.title;
-
-    const scripture = document.createElement("span");
-    scripture.className = "article-row-scripture";
-    scripture.textContent = post.scripture || "点击打开并编辑文章";
 
     const badges = document.createElement("span");
     badges.className = "article-row-badges";
@@ -473,7 +474,7 @@ function renderPosts() {
     action.className = "article-row-action";
     action.textContent = isDeleting ? "请稍候" : "编辑";
 
-    content.append(meta, title, scripture, badges, action);
+    content.append(meta, title, badges, action);
     article.append(content);
     list.append(article);
   });
