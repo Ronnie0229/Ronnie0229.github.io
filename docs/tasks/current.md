@@ -1,5 +1,53 @@
 # 当前任务
 
+## 当前任务状态（2026-07-03）
+
+样式入口重构与 Admin 数据概览手机端适配修复已完成，并已推送到 `origin/main`。
+
+本轮完成内容：
+
+```text
+1. 前台公开页面样式入口已迁移到 Astro 源码侧：
+   - src/styles/tokens.css
+   - src/styles/global.css
+2. src/layouts/BaseLayout.astro 不再直接加载 /styles/global.css。
+3. assets/styles/global.css 已标记 DEPRECATED，暂时保留兼容旧路径。
+4. Admin 样式继续独立维护在 assets/admin/admin.css，不并入前台 global.css。
+5. AGENTS.md、DESIGN.md、docs/ui-spec.md 已用中文记录样式入口规则。
+6. Admin 数据概览页手机端溢出问题已修复：热门文章和近 30 天阅读趋势面板不再撑破手机宽度。
+7. Admin CSS 版本号已更新为 stats-mobile-1，避免线上缓存旧样式。
+```
+
+相关提交：
+
+```text
+c3b5e7c fix: adapt admin stats panels on mobile
+4163180 docs: document css source of truth
+137894f refactor: migrate frontend css entry to src styles
+```
+
+验证结果：
+
+```text
+npm run build 通过。
+线上手机端 /admin/stats.html 已确认显示正常。
+未修改文章 Markdown。
+未修改 data/processed。
+未运行 npm audit fix。
+```
+
+后续可选清理：
+
+```text
+1. 线上继续稳定一段时间后，可以单独开小任务删除 assets/styles/global.css。
+2. 确认不再需要临时 worktree 后，可以删除：
+   C:\Users\caoyi\Projects\个人网页项目-css-refactor
+```
+
+---
+
+## 上一轮任务记录
+
 ## 任务名称
 
 讲道整理项目与个人网页项目工作流差异整改与同步。
