@@ -15,7 +15,7 @@ Admin 后台样式保持独立，入口为：
 
 Admin 页面可以加载 `/styles/tokens.css` 共享变量，但不要把 Admin 的布局、表单、表格、编辑器、状态面板等样式合并进 `src/styles/global.css`。
 
-`assets/styles/global.css` 是旧的前台样式入口，本轮只保留兼容并标记废弃；不要继续把它当作主要维护文件。后续只有确认线上和构建产物都不再引用后，才考虑删除。
+`assets/styles/global.css` 已删除，不再作为前台样式入口维护。前台公开页面样式统一维护在 `src/styles/tokens.css` 与 `src/styles/global.css`。
 
 样式修改前请先确认实际页面加载的 CSS 入口：
 - 前台页面检查 `src/layouts/BaseLayout.astro`

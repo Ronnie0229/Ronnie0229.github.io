@@ -11,7 +11,7 @@
    - src/styles/tokens.css
    - src/styles/global.css
 2. src/layouts/BaseLayout.astro 不再直接加载 /styles/global.css。
-3. assets/styles/global.css 已标记 DEPRECATED，暂时保留兼容旧路径。
+3. assets/styles/global.css 已删除，不再保留旧前台样式入口。
 4. Admin 样式继续独立维护在 assets/admin/admin.css，不并入前台 global.css。
 5. AGENTS.md、DESIGN.md、docs/ui-spec.md 已用中文记录样式入口规则。
 6. Admin 数据概览页手机端溢出问题已修复：热门文章和近 30 天阅读趋势面板不再撑破手机宽度。
@@ -39,8 +39,8 @@ npm run build 通过。
 后续可选清理：
 
 ```text
-1. 线上继续稳定一段时间后，可以单独开小任务删除 assets/styles/global.css。
-2. 确认不再需要临时 worktree 后，可以删除：
+1. assets/styles/global.css 已在后续小任务中删除。
+2. 临时 worktree 已清理：
    C:\Users\caoyi\Projects\个人网页项目-css-refactor
 ```
 
