@@ -1,3 +1,12 @@
+/*
+ * DEPRECATED / 已废弃
+ * 不要继续把这个文件作为前台样式入口维护。
+ * 前台公开页面的样式源头统一维护在：
+ * - src/styles/tokens.css
+ * - src/styles/global.css
+ *
+ * 本文件暂时保留，只用于兼容旧路径；后续确认没有引用后再删除。
+ */
 @import url("/styles/tokens.css");
 
 * {

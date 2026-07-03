@@ -1,6 +1,8 @@
 ---
 import Logo from "../components/Logo.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
+import "../styles/tokens.css";
+import "../styles/global.css";
 import { createSiteGraph } from "../lib/knowledge/schema";
 
 interface Props {
@@ -133,7 +135,6 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
     <link rel="apple-touch-icon" href="/images/ronniecross-logo-theme-dark.jpg" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title="Ronnie 文章订阅" href="/rss.xml" />
-    <link rel="stylesheet" href="/styles/global.css" />
     <link rel="canonical" href={canonicalUrl} />
     <script type="application/ld+json" set:html={structuredDataJson}></script>
     <title>{title}</title>
