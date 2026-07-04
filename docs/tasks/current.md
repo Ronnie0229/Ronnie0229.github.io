@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-07-04）
 
-新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 已在用户确认后执行成功。
+新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 已在用户确认后执行成功。线上订阅、确认、退订测试已通过，D1 已确认测试邮箱状态流转正常。当前追加调整：将 About 页邮件提醒卡片统一为 30% 透明玻璃效果。
 
 本轮完成内容：
 
@@ -39,7 +39,7 @@ src/styles/global.css
 验证结果：
 
 ```text
-npm.cmd run build 通过。
+npm.cmd run build 通过；追加调整邮件提醒卡片 30% 透明玻璃效果后再次 build 通过。
 npm.cmd run check:admin-save 通过，Errors: 0。
 npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0。
 ```
@@ -98,11 +98,9 @@ npx wrangler d1 execute ronniecross-comments --local --file scripts/migrations/0
 还需要交给 Codex 或用户确认后完成：
 
 ```text
-1. 复核完整 diff，确认没有误改非本任务范围。
-2. 如有必要，小范围修正实现细节。
-3. 重新运行 build 与两个检查脚本。
-1. 等待或确认 Cloudflare Pages 部署完成。
-2. 部署后进行线上订阅、确认、退订功能测试。
+1. Cloudflare Pages 已部署完成。
+2. 线上订阅、确认、退订流程已测试通过。
+3. 当前仅需提交并 push 30% 透明玻璃效果与测试进度记录。
 ```
 
 上线后功能测试清单：
