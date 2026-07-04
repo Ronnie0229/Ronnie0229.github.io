@@ -1,7 +1,8 @@
 import { requireAdmin } from "../../../_lib/admin-auth.js";
-import { buildPostUrl, sendPostNotificationEmail } from "../../../_utils/email.js";
+import { buildNeutralPostUrl, sendPostNotificationEmail } from "../../../_utils/email.js";
 
 const DUPLICATE_STATUSES = ["pending", "sending", "sent", "success"];
+const EMAIL_SUBJECT = "RonnieCross 新文章提醒";
 
 function json(data, status = 200) {
   return Response.json(data, {
@@ -22,18 +23,14 @@ function cleanSlug(value) {
     .replace(/\/+$/, "");
 }
 
-function subjectForPost(post) {
-  return `RonnieCross: ${post.title}`;
-}
+function createNeutralId() {
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID().replace(/-/g, "");
+  }
 
-function postResponse(env, post) {
-  return {
-    slug: post.slug,
-    title: post.title,
-    description: post.description || "",
-    date: post.date || "",
-    url: buildPostUrl(env, post.slug)
-  };
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 async function readJson(request) {
@@ -91,13 +88,59 @@ async function findExistingSend(env, slug) {
     .first();
 }
 
-async function createPostSend(env, { slug, subject, recipientCount, now }) {
+async function findExistingPostLink(env, slug) {
+  return env.COMMENTS_DB.prepare(
+    `SELECT neutral_id AS neutralId
+     FROM email_post_links
+     WHERE post_slug = ?`
+  )
+    .bind(slug)
+    .first();
+}
+
+async function findPostLinkByNeutralId(env, neutralId) {
+  return env.COMMENTS_DB.prepare(
+    `SELECT id
+     FROM email_post_links
+     WHERE neutral_id = ?`
+  )
+    .bind(neutralId)
+    .first();
+}
+
+async function createUniqueNeutralId(env) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const neutralId = createNeutralId();
+    const existing = await findPostLinkByNeutralId(env, neutralId);
+    if (!existing) return neutralId;
+  }
+
+  throw new Error("Unable to generate neutral post link.");
+}
+
+async function getOrCreatePostLink(env, slug, now) {
+  const existing = await findExistingPostLink(env, slug);
+  if (existing?.neutralId) return existing.neutralId;
+
+  const neutralId = await createUniqueNeutralId(env);
+  await env.COMMENTS_DB.prepare(
+    `INSERT INTO email_post_links
+     (neutral_id, post_slug, created_at)
+     VALUES (?, ?, ?)`
+  )
+    .bind(neutralId, slug, now)
+    .run();
+
+  return neutralId;
+}
+
+async function createPostSend(env, { slug, recipientCount, now }) {
   const result = await env.COMMENTS_DB.prepare(
     `INSERT INTO email_post_sends
      (post_slug, status, subject, recipient_count, created_at)
      VALUES (?, 'sending', ?, ?, ?)`
   )
-    .bind(slug, subject, recipientCount, now)
+    .bind(slug, EMAIL_SUBJECT, recipientCount, now)
     .run();
 
   return result.meta?.last_row_id;
@@ -152,39 +195,37 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (!post) {
-    return json({ ok: false, error: "Post not found.", slug }, 404);
+    return json({ ok: false, error: "Post not found." }, 404);
   }
 
   const subscribers = await getConfirmedSubscribers(env);
-  const postData = postResponse(env, post);
+  const existing = await findExistingSend(env, slug);
+  const now = new Date().toISOString();
+  const neutralId = await getOrCreatePostLink(env, slug, now);
+  const neutralUrl = buildNeutralPostUrl(env, neutralId);
 
   if (dryRun) {
     return json({
       ok: true,
       dryRun: true,
-      post: postData,
+      neutralUrl,
       recipientCount: subscribers.length
     });
   }
 
-  const existing = await findExistingSend(env, slug);
   if (existing && DUPLICATE_STATUSES.includes(existing.status)) {
     return json(
       {
         ok: false,
         error: "This post has already been queued or sent.",
-        postSlug: slug,
         existingStatus: existing.status
       },
       409
     );
   }
 
-  const now = new Date().toISOString();
-  const subject = subjectForPost(post);
   const postSendId = await createPostSend(env, {
     slug,
-    subject,
     recipientCount: subscribers.length,
     now
   });
@@ -196,8 +237,7 @@ export async function onRequestPost({ request, env }) {
     try {
       const result = await sendPostNotificationEmail(env, {
         email: subscriber.email,
-        postTitle: post.title,
-        postUrl: postData.url,
+        neutralUrl,
         unsubscribeToken: subscriber.unsubscribeToken
       });
       successCount += 1;
@@ -250,7 +290,7 @@ export async function onRequestPost({ request, env }) {
   return json({
     ok: true,
     dryRun: false,
-    postSlug: slug,
+    neutralUrl,
     recipientCount: subscribers.length,
     successCount,
     failedCount

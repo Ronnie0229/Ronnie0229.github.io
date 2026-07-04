@@ -19,9 +19,9 @@ export function buildUnsubscribeUrl(env, token) {
   return url.toString();
 }
 
-export function buildPostUrl(env, slug) {
+export function buildNeutralPostUrl(env, neutralId) {
   const siteUrl = siteUrlFromEnv(env);
-  return new URL(`/posts/${slug}/`, siteUrl).toString();
+  return new URL(`/go/post/${neutralId}`, siteUrl).toString();
 }
 
 export async function sendConfirmEmail(env, { email, confirmToken }) {
@@ -39,7 +39,7 @@ export async function sendConfirmEmail(env, { email, confirmToken }) {
       "",
       "你正在订阅 RonnieCross 的更新提醒。",
       "",
-      "请点击下面链接确认订阅：",
+      "请点击下面的链接确认订阅：",
       "",
       confirmUrl,
       "",
@@ -48,7 +48,8 @@ export async function sendConfirmEmail(env, { email, confirmToken }) {
     html: [
       "<p>你好，</p>",
       "<p>你正在订阅 RonnieCross 的更新提醒。</p>",
-      `<p><a href=\"${escapeHtml(confirmUrl)}\">点击这里确认订阅</a></p>`,
+      "<p>请点击下面的链接确认订阅：</p>",
+      `<p><a href="${escapeHtml(confirmUrl)}">确认订阅</a></p>`,
       "<p>如果这不是你本人操作，可以忽略这封邮件。</p>"
     ].join("\n")
   };
@@ -67,38 +68,39 @@ export async function sendConfirmEmail(env, { email, confirmToken }) {
   }
 }
 
-export async function sendPostNotificationEmail(env, { email, postTitle, postUrl, unsubscribeToken }) {
+export async function sendPostNotificationEmail(env, { email, neutralUrl, unsubscribeToken }) {
   if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
     throw new Error("Email service is not configured.");
   }
 
   const unsubscribeUrl = buildUnsubscribeUrl(env, unsubscribeToken);
-  const subject = `RonnieCross: ${postTitle}`;
   const payload = {
     from: env.EMAIL_FROM,
     to: [email],
-    subject,
+    subject: "RonnieCross 新文章提醒",
     text: [
       "你好，",
       "",
-      "RonnieCross 刚刚有一篇新文章更新。",
+      "RonnieCross 有一篇新文章已经发布。",
       "",
-      postTitle,
+      "你可以点击下面的链接前往网站阅读：",
       "",
-      "你可以点击下面链接前往阅读：",
+      neutralUrl,
       "",
-      postUrl,
+      "如果你不想继续收到提醒，可以点击这里退订：",
       "",
-      "如果你不想继续收到提醒，可以点击下面链接退订：",
+      unsubscribeUrl,
       "",
-      unsubscribeUrl
+      "感谢你的阅读。"
     ].join("\n"),
     html: [
       "<p>你好，</p>",
-      "<p>RonnieCross 刚刚有一篇新文章更新。</p>",
-      `<p><strong>${escapeHtml(postTitle)}</strong></p>`,
-      `<p><a href="${escapeHtml(postUrl)}">前往阅读</a></p>`,
-      `<p>如果你不想继续收到提醒，可以点击这里退订：<a href="${escapeHtml(unsubscribeUrl)}">取消订阅</a></p>`
+      "<p>RonnieCross 有一篇新文章已经发布。</p>",
+      "<p>你可以点击下面的链接前往网站阅读：</p>",
+      `<p><a href="${escapeHtml(neutralUrl)}">前往网站阅读</a></p>`,
+      "<p>如果你不想继续收到提醒，可以点击这里退订：</p>",
+      `<p><a href="${escapeHtml(unsubscribeUrl)}">退订</a></p>`,
+      "<p>感谢你的阅读。</p>"
     ].join("\n")
   };
 
