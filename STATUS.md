@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。下一步进入 MVP 第二阶段规划：手动发送新文章提醒；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现与验证；尚未执行远程 D1 migration，尚未真实发送邮件，尚未 commit/push。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第一阶段已验收完成；第二阶段任务文档已开始准备
+当前任务状态：邮件提醒 MVP 第二阶段已完成本地实现，等待用户确认是否提交、执行远程 D1 migration 与线上 dryRun
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -75,6 +75,54 @@ Codex 收尾复核：
 5. 已重新运行 npm.cmd run check:knowledge，结果通过：Posts checked: 176，Errors: 0，Warnings: 0。
 6. 远程 D1 migration 已在用户确认后执行成功。
 7. 已提交并 push：8a352b7 feat: add email subscription confirmation flow。
+```
+
+
+## 邮件提醒 MVP 第二阶段状态
+
+本轮新增/修改：
+
+```text
+scripts/migrations/0005_create_email_post_sends.sql
+scripts/migrations/0006_create_email_send_logs.sql
+functions/api/admin/email/send-post.js
+functions/_utils/email.js
+STATUS.md
+docs/tasks/current.md
+```
+
+当前实现：
+
+```text
+1. POST /api/admin/email/send-post 已新增。
+2. API 使用 requireAdmin(request, env) 复用现有 Cloudflare Access 管理员鉴权。
+3. 默认 dryRun=true，只预览文章信息和 confirmed 订阅者数量，不写库、不发信。
+4. dryRun=false 代码路径已实现，但尚未调用，不会真实发送。
+5. 文章信息来源复用 /search-index.json。
+6. 只发送给 status='confirmed' 的订阅者。
+7. 同一文章默认防重复发送。
+8. 发送任务写入 email_post_sends，每个订阅者结果写入 email_send_logs。
+9. 邮件正文为中文温和版，包含文章标题、阅读链接和退订链接，不包含完整正文和追踪跳转。
+```
+
+本地验证：
+
+```text
+node --check functions/_utils/email.js：通过
+node --check functions/api/admin/email/send-post.js：通过
+git diff --check：通过
+npm.cmd run build：通过，212 page(s) built，Build Complete
+npm.cmd run check:admin-save：通过，Errors: 0
+npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0
+```
+
+仍未执行：
+
+```text
+1. 未执行远程 D1 migration。
+2. 未调用 dryRun 线上 API。
+3. 未真实发送邮件。
+4. 未 commit / push 第二阶段实现。
 ```
 
 ## 本轮 source 路径审计结论
@@ -168,3 +216,49 @@ data/raw/教会讲道/<历史讲道目录>/
 3. 不要把历史 missing source 批量改成不可验证路径。
 4. 如果用户提供 raw 文件，先放入对应 `data/raw/...` 路径，再重新运行 `python scripts/check_source_paths.py`。
 5. 邮件提醒第二阶段另开任务处理，不要把发送新文章提醒、后台手动发送或统计追踪混入第一阶段收尾。
+
+## 邮件提醒 MVP 第二阶段本地收尾
+
+新文章邮件提醒系统 MVP 第二阶段已完成本地代码初稿：新增手动发送文章提醒 API、发送任务/发送日志 migration 文件，并扩展邮件工具。当前只完成本地实现与验证，尚未执行远程 D1 migration，尚未真实发送邮件。
+
+```text
+第二阶段新增文件：
+scripts/migrations/0005_create_email_post_sends.sql
+scripts/migrations/0006_create_email_send_logs.sql
+functions/api/admin/email/send-post.js
+
+第二阶段修改文件：
+functions/_utils/email.js
+STATUS.md
+docs/tasks/current.md
+.ai-bridge/agent-status.md
+
+第二阶段验证：
+node --check functions/_utils/email.js 通过
+node --check functions/api/admin/email/send-post.js 通过
+npm.cmd run build 待记录
+npm.cmd run check:admin-save 待记录
+npm.cmd run check:knowledge 待记录
+
+第二阶段边界：
+未执行远程 D1 migration
+未真实发送邮件
+未新增 Cron
+未新增 /go/post/<neutral_id>
+未新增打开率/点击率统计
+未新增分类订阅
+未新增后台 UI
+```
+
+### 第二阶段验证结果（本地）
+
+```text
+node --check functions/_utils/email.js：通过
+node --check functions/api/admin/email/send-post.js：通过
+git diff --check：通过
+npm.cmd run build：通过，212 page(s) built，Build Complete
+npm.cmd run check:admin-save：通过，Errors: 0
+npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0
+```
+
+本轮未执行远程 D1 migration，未真实发送邮件。

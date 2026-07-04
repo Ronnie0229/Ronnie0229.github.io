@@ -19,6 +19,11 @@ export function buildUnsubscribeUrl(env, token) {
   return url.toString();
 }
 
+export function buildPostUrl(env, slug) {
+  const siteUrl = siteUrlFromEnv(env);
+  return new URL(`/posts/${slug}/`, siteUrl).toString();
+}
+
 export async function sendConfirmEmail(env, { email, confirmToken }) {
   if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
     throw new Error("Email service is not configured.");
@@ -60,6 +65,58 @@ export async function sendConfirmEmail(env, { email, confirmToken }) {
   if (!response.ok) {
     throw new Error(`Resend request failed: ${response.status}`);
   }
+}
+
+export async function sendPostNotificationEmail(env, { email, postTitle, postUrl, unsubscribeToken }) {
+  if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
+    throw new Error("Email service is not configured.");
+  }
+
+  const unsubscribeUrl = buildUnsubscribeUrl(env, unsubscribeToken);
+  const subject = `RonnieCross: ${postTitle}`;
+  const payload = {
+    from: env.EMAIL_FROM,
+    to: [email],
+    subject,
+    text: [
+      "你好，",
+      "",
+      "RonnieCross 刚刚有一篇新文章更新。",
+      "",
+      postTitle,
+      "",
+      "你可以点击下面链接前往阅读：",
+      "",
+      postUrl,
+      "",
+      "如果你不想继续收到提醒，可以点击下面链接退订：",
+      "",
+      unsubscribeUrl
+    ].join("\n"),
+    html: [
+      "<p>你好，</p>",
+      "<p>RonnieCross 刚刚有一篇新文章更新。</p>",
+      `<p><strong>${escapeHtml(postTitle)}</strong></p>`,
+      `<p><a href="${escapeHtml(postUrl)}">前往阅读</a></p>`,
+      `<p>如果你不想继续收到提醒，可以点击这里退订：<a href="${escapeHtml(unsubscribeUrl)}">取消订阅</a></p>`
+    ].join("\n")
+  };
+
+  const response = await fetch(RESEND_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Resend request failed: ${response.status}`);
+  }
+
+  const data = await response.json().catch(() => ({}));
+  return { id: typeof data.id === "string" ? data.id : "" };
 }
 
 function escapeHtml(value) {

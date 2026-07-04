@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段规划：手动发送新文章提醒 MVP。第二阶段任务文档已生成：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；尚未执行远程 D1 migration，尚未真实发送邮件。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -48,14 +48,28 @@ STATUS.md
 docs/tasks/current.md
 ```
 
-第二阶段开始前必须确认：
+第二阶段本地实现记录：
 
 ```text
-1. 是否采用现有 Cloudflare Access 管理员鉴权 requireAdmin(request, env)。建议采用。
-2. 文章信息来源使用现有 search-index.json，还是新增 email-post-index.json。建议先复核现有 search-index.json 字段。
-3. 真实发送前必须先 dryRun。
-4. 远程 D1 migration 需要用户明确同意后再执行。
-5. 真实邮件发送需要用户明确同意后再触发。
+1. 已采用现有 Cloudflare Access 管理员鉴权 requireAdmin(request, env)。
+2. 已复用现有 /search-index.json 作为文章信息来源；该索引包含 slug、title、description、date 等字段。
+3. 已新增 POST /api/admin/email/send-post，默认 dryRun=true。
+4. dryRun=true 时只验证文章 slug、读取 confirmed 订阅者数量、返回预览，不写库、不发信。
+5. dryRun=false 代码路径已实现，但本轮没有调用，不会真实发送。
+6. 新文章提醒邮件正文已调整为中文温和版，包含文章标题、阅读链接与退订链接，不含完整正文和追踪链接。
+7. 远程 D1 migration 需要用户明确同意后再执行。
+8. 真实邮件发送需要用户明确同意后再触发。
+```
+
+第二阶段本地验证结果：
+
+```text
+node --check functions/_utils/email.js：通过。
+node --check functions/api/admin/email/send-post.js：通过。
+git diff --check：通过。
+npm.cmd run build：通过，212 page(s) built，Build Complete。
+npm.cmd run check:admin-save：通过，Errors: 0。
+npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0。
 ```
 
 第一阶段最终提交记录：
@@ -236,3 +250,59 @@ npm run build 通过。
 2. 临时 worktree 已清理：
    C:\Users\caoyi\Projects\个人网页项目-css-refactor
 ```
+
+---
+
+## 邮件提醒 MVP 第二阶段本地收尾
+
+第二阶段本地代码初稿已完成，当前只做本地实现与验证；未执行远程 D1 migration，未真实发送邮件。
+
+本轮新增：
+
+```text
+scripts/migrations/0005_create_email_post_sends.sql
+scripts/migrations/0006_create_email_send_logs.sql
+functions/api/admin/email/send-post.js
+```
+
+本轮修改：
+
+```text
+functions/_utils/email.js
+STATUS.md
+docs/tasks/current.md
+.ai-bridge/agent-status.md
+```
+
+本轮已确认不做：
+
+```text
+不执行远程 D1 migration
+不真实发送邮件
+不新增 Cron
+不新增 /go/post/<neutral_id>
+不新增打开率/点击率统计
+不新增分类订阅
+不新增后台 UI
+```
+
+待最终记录：
+
+```text
+npm.cmd run build
+npm.cmd run check:admin-save
+npm.cmd run check:knowledge
+```
+
+### 第二阶段验证结果（本地）
+
+```text
+node --check functions/_utils/email.js：通过
+node --check functions/api/admin/email/send-post.js：通过
+git diff --check：通过
+npm.cmd run build：通过，212 page(s) built，Build Complete
+npm.cmd run check:admin-save：通过，Errors: 0
+npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0
+```
+
+本轮未执行远程 D1 migration，未真实发送邮件。
