@@ -11,6 +11,8 @@ const EXTRA_URLS = [
   "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF",
   "https://ronniecross.com/posts/category/sermons/",
   "https://ronniecross.com/posts/category/spiritual-growth/",
+  "https://ronniecross.com/bible/%E5%88%9B%E4%B8%96%E8%AE%B0/?page=2",
+  "https://ronniecross.com/bible/%E5%88%9B%E4%B8%96%E8%AE%B0/?focus=legacy-test#post-legacy-test",
   "https://ronniecross.com/search/",
   "https://ronniecross.com/search/?q=%7Bsearch_term_string%7D",
   "https://ronniecross.com/search/?q=test",

@@ -155,14 +155,7 @@ const totalReadingMinutes = postItems.reduce(
     };
 
     const updatePage = (page: number) => {
-      const currentPage = showPage(page);
-      const url = new URL(window.location.href);
-      if (currentPage === 1) {
-        url.searchParams.delete("page");
-      } else {
-        url.searchParams.set("page", String(currentPage));
-      }
-      window.history.replaceState({}, "", url);
+      showPage(page);
       document.querySelector(".bible-book-heading")?.scrollIntoView({ behavior: "smooth" });
     };
 
@@ -175,7 +168,7 @@ const totalReadingMinutes = postItems.reduce(
       if (!postSlug) return;
 
       const returnUrl = new URL(window.location.href);
-      returnUrl.searchParams.set("focus", postSlug);
+      returnUrl.search = "";
       returnUrl.hash = `post-${postSlug}`;
 
       try {
@@ -185,9 +178,19 @@ const totalReadingMinutes = postItems.reduce(
       }
     });
 
+    const readHashFocusedSlug = () => {
+      if (!window.location.hash.startsWith("#post-")) return "";
+
+      try {
+        return decodeURIComponent(window.location.hash.slice("#post-".length));
+      } catch {
+        return window.location.hash.slice("#post-".length);
+      }
+    };
+
     const params = new URLSearchParams(window.location.search);
     const initialPage = Number.parseInt(params.get("page") || "1", 10);
-    const focusedSlug = params.get("focus");
+    const focusedSlug = readHashFocusedSlug() || params.get("focus") || "";
     const focusedCard = focusedSlug
       ? cards.find((card) => card.dataset.postSlug === focusedSlug)
       : undefined;
@@ -195,6 +198,11 @@ const totalReadingMinutes = postItems.reduce(
     const focusedPage = focusedIndex >= 0 ? Math.floor(focusedIndex / pageSize) + 1 : null;
 
     showPage(focusedPage ?? (Number.isFinite(initialPage) ? initialPage : 1));
+
+    if (window.location.search) {
+      const cleanUrl = `${window.location.pathname}${focusedCard ? `#post-${focusedCard.dataset.postSlug}` : window.location.hash}`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
 
     if (focusedCard && !focusedCard.hidden) {
       window.requestAnimationFrame(() => {
