@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；尚未进行线上 dryRun，尚未真实发送邮件。第二阶段任务文档：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；尚未真实发送邮件。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -70,6 +70,17 @@ git diff --check：通过。
 npm.cmd run build：通过，212 page(s) built，Build Complete。
 npm.cmd run check:admin-save：通过，Errors: 0。
 npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0。
+```
+
+第二阶段线上 dryRun 验证结果：
+
+```text
+POST /api/admin/email/send-post dryRun=true：成功，status=200，ok=true，dryRun=true。
+测试文章：2026-07-04-马可福音-6-30-52好牧人的供应。
+返回标题：马可福音 6:30-52 | 好牧人的供应。
+返回 URL：https://ronniecross.com/posts/2026-07-04-马可福音-6-30-52好牧人的供应/。
+recipientCount=2。
+D1 验证：email_post_sends count=0，email_send_logs count=0。
 ```
 
 第二阶段远程 D1 migration 执行结果：

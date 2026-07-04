@@ -4,7 +4,7 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；尚未进行线上 dryRun，尚未真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；尚未真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
@@ -123,12 +123,24 @@ npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings
 0006_create_email_send_logs.sql：成功，Total queries executed: 4，Rows read: 7，Rows written: 5，Database size: 0.25 MB，bookmark: 00000488-00000014-0000509e-3316600230764936f85e26d508ea8992。
 ```
 
+线上 dryRun 验证结果：
+
+```text
+POST /api/admin/email/send-post dryRun=true：成功，status=200，ok=true，dryRun=true。
+测试文章：2026-07-04-马可福音-6-30-52好牧人的供应。
+返回标题：马可福音 6:30-52 | 好牧人的供应。
+返回 URL：https://ronniecross.com/posts/2026-07-04-马可福音-6-30-52好牧人的供应/。
+recipientCount=2。
+D1 验证：email_post_sends count=0，email_send_logs count=0。
+```
+
 仍未执行：
 
 ```text
 1. 远程 D1 migration 0005 / 0006 已执行成功。
-2. 未调用 dryRun 线上 API。
-3. 未真实发送邮件。
+2. 线上 dryRun 已通过：ok=true，dryRun=true，文章信息正确，recipientCount=2。
+3. dryRun 后确认 email_post_sends=0，email_send_logs=0，未写发送记录。
+4. 未真实发送邮件。
 4. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
 ```
 
