@@ -1,5 +1,5 @@
-import { requireAdmin } from "../../../../_lib/admin-auth.js";
-import { buildPostUrl, sendPostNotificationEmail } from "../../../../_utils/email.js";
+import { requireAdmin } from "../../../_lib/admin-auth.js";
+import { buildPostUrl, sendPostNotificationEmail } from "../../../_utils/email.js";
 
 const DUPLICATE_STATUSES = ["pending", "sending", "sent", "success"];
 
