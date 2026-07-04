@@ -11,6 +11,16 @@ function json(data, status = 200) {
   });
 }
 
+function emptyNoindex(status = 204) {
+  return new Response(null, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": "noindex, nofollow"
+    }
+  });
+}
+
 function cleanSlug(value) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -20,13 +30,19 @@ function isValidSlug(slug) {
 }
 
 export async function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+
+  if (!url.searchParams.toString()) {
+    return emptyNoindex();
+  }
+
   if (!env.COMMENTS_DB) {
     return json({ error: "阅读计数数据库尚未配置" }, 503);
   }
 
   const slugs = [
     ...new Set(
-      new URL(request.url).searchParams
+      url.searchParams
         .getAll("slug")
         .map(cleanSlug)
         .filter(isValidSlug)
@@ -56,6 +72,10 @@ export async function onRequestGet({ request, env }) {
   } catch {
     return json({ error: "暂时无法读取阅读次数" }, 500);
   }
+}
+
+export function onRequestHead() {
+  return emptyNoindex();
 }
 
 export async function onRequestPost({ request, env }) {

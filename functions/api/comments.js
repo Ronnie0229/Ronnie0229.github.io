@@ -14,6 +14,16 @@ function json(data, status = 200) {
   });
 }
 
+function emptyNoindex(status = 204) {
+  return new Response(null, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": "noindex, nofollow"
+    }
+  });
+}
+
 function cleanText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -35,11 +45,16 @@ async function hashVisitor(request) {
 }
 
 export async function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+
+  if (!url.searchParams.toString()) {
+    return emptyNoindex();
+  }
+
   if (!env.COMMENTS_DB) {
     return json({ error: "留言数据库尚未配置" }, 503);
   }
 
-  const url = new URL(request.url);
   const postSlugs = url.searchParams
     .getAll("slug")
     .map(cleanText)
@@ -98,6 +113,10 @@ export async function onRequestGet({ request, env }) {
   } catch {
     return json({ error: "暂时无法读取留言" }, 500);
   }
+}
+
+export function onRequestHead() {
+  return emptyNoindex();
 }
 
 export async function onRequestPost({ request, env }) {

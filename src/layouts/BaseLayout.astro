@@ -13,6 +13,7 @@ interface Props {
   publishedTime?: Date;
   author?: string;
   keywords?: string[];
+  robots?: string;
 }
 
 const {
@@ -22,7 +23,8 @@ const {
   type = "website",
   publishedTime,
   author = "Ronnie",
-  keywords = []
+  keywords = [],
+  robots
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(image, Astro.site);
@@ -30,6 +32,8 @@ const siteUrl = new URL("/", Astro.site);
 const logoUrl = new URL("/images/ronniecross-logo-512.png", Astro.site);
 const searchUrl = `${new URL("/search/", Astro.site)}?q=%7Bsearch_term_string%7D`;
 const currentPath = Astro.url.pathname;
+const hasSearchQuery = currentPath === "/search/" && Astro.url.searchParams.has("q");
+const robotsContent = robots ?? (hasSearchQuery ? "noindex,follow" : "");
 const currentCategory = Astro.url.searchParams.get("category") || "";
 const navItems = [
   {
@@ -104,6 +108,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="theme-color" id="theme-color" content="#061625" />
+    {robotsContent && <meta name="robots" content={robotsContent} />}
     <meta name="apple-mobile-web-app-status-bar-style" id="apple-status-bar-style" content="black-translucent" />
     <script is:inline>
       (() => {
