@@ -1,24 +1,40 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Logo from "../../components/Logo.astro";
-import PostCard from "../../components/PostCard.astro";
-import { buildPostKnowledge } from "../../lib/knowledge";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Logo from "../../../components/Logo.astro";
+import PostCard from "../../../components/PostCard.astro";
+import { buildPostKnowledge } from "../../../lib/knowledge";
+import { CATEGORY_ROUTE_LIST, type CategorySlug } from "../../../lib/categories";
 
-const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+
+  return CATEGORY_ROUTE_LIST.map((route) => ({
+    params: { category: route.slug },
+    props: {
+      route,
+      posts: posts
+        .filter((post) => post.data.category === route.category)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    }
+  }));
+}
+
+const { route, posts } = Astro.props as {
+  route: (typeof CATEGORY_ROUTE_LIST)[number] & { slug: CategorySlug };
+  posts: Awaited<ReturnType<typeof getCollection<"posts">>>;
+};
 ---
 
-<BaseLayout title="全部文章 | Ronnie" description="Ronnie 的全部文章列表。">
+<BaseLayout title={route.title} description={route.description}>
   <section class="page-heading posts-heading">
     <Logo size="md" showText={false} class="page-brand-mark" />
-    <p class="eyebrow">全部文章</p>
-    <h1>文章总览</h1>
-    <p>汇集所有已发布的文章，按发布时间从新到旧排列。</p>
+    <p class="eyebrow">{route.eyebrow}</p>
+    <h1>{route.heading}</h1>
+    <p>{route.description}</p>
   </section>
 
-  <section class="post-list" aria-label="全部文章列表">
+  <section class="post-list" aria-label={`${route.label}文章列表`}>
     {
       posts.map((post) => (
         <PostCard
@@ -34,6 +50,7 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
     }
   </section>
   <nav class="pagination" aria-label="文章分页"></nav>
+
   <script>
     const pageSize = 20;
     const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-post-slug]"));

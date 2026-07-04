@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Comments from "../../components/Comments.astro";
 import { buildPostKnowledge, getRelatedPosts } from "../../lib/knowledge";
+import { getCategoryRouteByCategory } from "../../lib/categories";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
@@ -39,7 +40,8 @@ const formattedScripture = post.data.scripture
   .replace(/\s*:\s*/g, ":")
   .replace(/\s*-\s*/g, "-")
   .replace(/\s+/g, " ");
-const fallbackReturnUrl = `/posts/?category=${encodeURIComponent(post.data.category)}&focus=${encodeURIComponent(post.slug)}#post-${post.slug}`;
+const categoryRoute = getCategoryRouteByCategory(post.data.category);
+const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}`;
 ---
 
 <BaseLayout

@@ -4,6 +4,7 @@ import ThemeToggle from "../components/ThemeToggle.astro";
 import "../styles/tokens.css";
 import "../styles/global.css";
 import { createSiteGraph } from "../lib/knowledge/schema";
+import { CATEGORY_ROUTES } from "../lib/categories";
 
 interface Props {
   title?: string;
@@ -34,25 +35,21 @@ const searchUrl = `${new URL("/search/", Astro.site)}?q=%7Bsearch_term_string%7D
 const currentPath = Astro.url.pathname;
 const hasSearchQuery = currentPath === "/search/" && Astro.url.searchParams.has("q");
 const robotsContent = robots ?? (hasSearchQuery ? "noindex,follow" : "");
-const currentCategory = Astro.url.searchParams.get("category") || "";
 const navItems = [
   {
     label: "全部文章",
     href: "/posts/",
-    active:
-      currentPath.startsWith("/posts/") &&
-      currentCategory !== "教会讲道" &&
-      currentCategory !== "灵命成长"
+    active: currentPath.startsWith("/posts/") && !currentPath.startsWith("/posts/category/")
   },
   {
-    label: "教会讲道",
-    href: "/posts/?category=教会讲道",
-    active: currentPath.startsWith("/posts/") && currentCategory === "教会讲道"
+    label: CATEGORY_ROUTES.sermons.label,
+    href: CATEGORY_ROUTES.sermons.path,
+    active: currentPath.startsWith(CATEGORY_ROUTES.sermons.path)
   },
   {
-    label: "灵命成长",
-    href: "/posts/?category=灵命成长",
-    active: currentPath.startsWith("/posts/") && currentCategory === "灵命成长"
+    label: CATEGORY_ROUTES["spiritual-growth"].label,
+    href: CATEGORY_ROUTES["spiritual-growth"].path,
+    active: currentPath.startsWith(CATEGORY_ROUTES["spiritual-growth"].path)
   },
   {
     label: "圣经书卷",
@@ -272,16 +269,14 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
 
         const syncCurrentNav = () => {
           const links = document.querySelectorAll("[data-nav-link]");
-          const currentCategory = new URLSearchParams(window.location.search).get("category") || "";
           const currentPath = window.location.pathname;
 
           links.forEach((link) => {
             const linkUrl = new URL(link.getAttribute("href"), window.location.origin);
-            const linkCategory = linkUrl.searchParams.get("category") || "";
             let active = false;
 
             if (linkUrl.pathname === "/posts/") {
-              active = currentPath.startsWith("/posts/") && currentCategory === linkCategory;
+              active = currentPath.startsWith("/posts/") && !currentPath.startsWith("/posts/category/");
             } else {
               active = currentPath.startsWith(linkUrl.pathname);
             }

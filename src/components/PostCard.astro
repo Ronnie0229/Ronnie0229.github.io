@@ -60,7 +60,6 @@ const displayTags = Array.from(
     if (!postSlug) return;
 
     const returnUrl = new URL(window.location.href);
-    returnUrl.searchParams.set("focus", postSlug);
     returnUrl.hash = `post-${postSlug}`;
 
     try {

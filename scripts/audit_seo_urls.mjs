@@ -7,6 +7,11 @@ const REPORT_PATH = path.join(ROOT, "docs", "seo-url-audit.csv");
 const BASE_URL = process.env.SEO_AUDIT_BASE_URL ?? "https://ronniecross.com";
 const SITEMAP_URL = new URL("/sitemap.xml", BASE_URL);
 const EXTRA_URLS = [
+  "https://ronniecross.com/posts/?category=%E6%95%99%E4%BC%9A%E8%AE%B2%E9%81%93",
+  "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF",
+  "https://ronniecross.com/posts/category/sermons/",
+  "https://ronniecross.com/posts/category/spiritual-growth/",
+  "https://ronniecross.com/search/",
   "https://ronniecross.com/search/?q=%7Bsearch_term_string%7D",
   "https://ronniecross.com/search/?q=test",
   "https://ronniecross.com/api/comments",

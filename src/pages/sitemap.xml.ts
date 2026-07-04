@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import { buildPostKnowledge, type PostLike } from "../lib/knowledge";
+import { CATEGORY_ROUTE_LIST } from "../lib/categories";
 
 function latestDateForBook(book: string, posts: PostLike[]): string {
   const dates = posts
@@ -10,13 +11,26 @@ function latestDateForBook(book: string, posts: PostLike[]): string {
   return new Date(Math.max(...dates)).toISOString();
 }
 
+function latestDateForCategory(category: string, posts: PostLike[]): string {
+  const dates = posts
+    .filter((post) => post.data.category === category)
+    .map((post) => new Date(post.data.date ?? 0).valueOf());
+
+  if (!dates.length) return "";
+  return new Date(Math.max(...dates)).toISOString();
+}
+
 export async function GET({ site }: { site: URL }) {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
   const postKnowledge = posts.map((post) => buildPostKnowledge(post));
   const books = [...new Set(postKnowledge.flatMap((knowledge) => knowledge.bibleBooks))];
-  const staticPaths = ["/", "/posts/", "/bible/", "/search/", "/about/"];
+  const staticPaths = ["/", "/posts/", "/bible/", "/about/"];
   const urls = [
     ...staticPaths.map((path) => ({ path, date: "" })),
+    ...CATEGORY_ROUTE_LIST.map((route) => ({
+      path: route.path,
+      date: latestDateForCategory(route.category, posts)
+    })),
     ...books.map((book) => ({
       path: `/bible/${encodeURIComponent(book)}/`,
       date: latestDateForBook(book, posts)
