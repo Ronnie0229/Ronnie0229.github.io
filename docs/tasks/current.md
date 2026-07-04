@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-07-04）
 
-新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 尚未执行，必须等用户明确确认。
+新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 已在用户确认后执行成功。
 
 本轮完成内容：
 
@@ -54,12 +54,24 @@ Codex 复核结果：
 5. 已重新运行 npm.cmd run check:admin-save，通过：Errors: 0。
 6. 已重新运行 npm.cmd run check:knowledge，通过：Posts checked: 176，Errors: 0，Warnings: 0。
 7. 已提交并 push：8a352b7 feat: add email subscription confirmation flow。
+8. 已执行远程 D1 migration，Wrangler 返回 success: true，Total queries executed: 5，finalBookmark: 00000482-00000006-0000509e-184051cab069e7c1721ed1228cbf08cb。
 ```
 
-需要用户手动执行的 D1 migration：
+已执行的远程 D1 migration：
 
 ```powershell
 npx wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0004_create_email_subscribers.sql
+```
+
+执行结果：
+
+```text
+success: true
+Total queries executed: 5
+Rows read: 9
+Rows written: 9
+Database size (MB): 0.21
+finalBookmark: 00000482-00000006-0000509e-184051cab069e7c1721ed1228cbf08cb
 ```
 
 如需先在本地 D1 验证，可执行：
@@ -72,7 +84,7 @@ npx wrangler d1 execute ronniecross-comments --local --file scripts/migrations/0
 
 ```text
 1. 需要重新部署 Cloudflare Pages 后，新的 Functions API 与静态页面才会在线上生效。
-2. 不要在未确认 migration 已应用到远程 D1 前直接测试线上订阅，否则 /api/subscribe 会因缺少 email_subscribers 表返回服务器错误。
+2. 远程 D1 migration 已完成；等待 Cloudflare Pages 部署完成后，可以测试线上订阅。
 3. 本轮没有修改 COMMENTS_DB binding 名称，也没有新增 D1 binding。
 4. 本轮没有修改 RSS、文章 Markdown、导入脚本、现有评论功能、GitHub 登录/Admin 功能、SEO/sitemap 逻辑。
 ```
@@ -89,9 +101,8 @@ npx wrangler d1 execute ronniecross-comments --local --file scripts/migrations/0
 1. 复核完整 diff，确认没有误改非本任务范围。
 2. 如有必要，小范围修正实现细节。
 3. 重新运行 build 与两个检查脚本。
-1. 用户明确同意后，执行远程 D1 migration。
-2. 等待或确认 Cloudflare Pages 部署完成。
-3. 部署后进行线上订阅、确认、退订功能测试。
+1. 等待或确认 Cloudflare Pages 部署完成。
+2. 部署后进行线上订阅、确认、退订功能测试。
 ```
 
 上线后功能测试清单：

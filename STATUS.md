@@ -9,7 +9,7 @@
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第一阶段已提交并 push 到 origin/main；远程 D1 migration 尚未执行
+当前任务状态：邮件提醒 MVP 第一阶段已提交并 push 到 origin/main；远程 D1 migration 已执行成功
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -39,17 +39,28 @@ docs/tasks/current.md
 STATUS.md
 ```
 
-上线前必须先执行远程 D1 migration：
+远程 D1 migration 已执行：
 
 ```powershell
 npx wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0004_create_email_subscribers.sql
+```
+
+执行结果：
+
+```text
+success: true
+Total queries executed: 5
+Rows read: 9
+Rows written: 9
+Database size (MB): 0.21
+finalBookmark: 00000482-00000006-0000509e-184051cab069e7c1721ed1228cbf08cb
 ```
 
 部署说明：
 
 ```text
 1. Cloudflare Pages 需要重新部署后，新 Functions API 与新静态页面才会生效。
-2. 未执行远程 D1 migration 前，不要直接测试线上 /api/subscribe。
+2. 远程 D1 migration 已完成；等待 Cloudflare Pages 部署完成后，可以测试线上 /api/subscribe。
 3. 本轮未修改 COMMENTS_DB binding 名称，也未新增 D1 binding。
 4. 本轮未触碰 RSS、文章 Markdown、导入脚本、现有评论功能、GitHub 登录/Admin 功能、SEO/sitemap 逻辑。
 ```
@@ -62,7 +73,7 @@ Codex 收尾复核：
 3. 已重新运行 npm.cmd run build，结果通过：212 page(s) built，Build Complete。
 4. 已重新运行 npm.cmd run check:admin-save，结果通过：Errors: 0。
 5. 已重新运行 npm.cmd run check:knowledge，结果通过：Posts checked: 176，Errors: 0，Warnings: 0。
-6. 远程 D1 migration 尚未执行，需用户明确确认后再运行。
+6. 远程 D1 migration 已在用户确认后执行成功。
 7. 已提交并 push：8a352b7 feat: add email subscription confirmation flow。
 ```
 
