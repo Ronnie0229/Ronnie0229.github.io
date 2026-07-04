@@ -708,7 +708,8 @@ h2 {
 
 .search-input-row input,
 .comment-form input,
-.comment-form textarea {
+.comment-form textarea,
+.subscribe-form input {
   width: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -718,7 +719,8 @@ h2 {
 }
 
 .search-input-row button,
-.comment-form button {
+.comment-form button,
+.subscribe-form button {
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--color-primary);
@@ -727,7 +729,8 @@ h2 {
 }
 
 :root[data-theme="dark"] .search-input-row button,
-:root[data-theme="dark"] .comment-form button {
+:root[data-theme="dark"] .comment-form button,
+:root[data-theme="dark"] .subscribe-form button {
   background: var(--color-gold);
   color: #081420;
 }
@@ -1190,7 +1193,8 @@ b {
   }
 
   .search-input-row button,
-  .comment-form button {
+  .comment-form button,
+.subscribe-form button {
     min-height: 44px;
   }
 

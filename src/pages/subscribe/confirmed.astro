@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const isInvalid = Astro.url.searchParams.get("status") === "invalid";
+---
+
+<BaseLayout title="订阅确认 | Ronnie" description="RonnieCross 更新提醒订阅确认结果。" robots="noindex,follow">
+  <section class="subscribe-result page-heading">
+    <p class="eyebrow">邮件提醒</p>
+    {
+      isInvalid ? (
+        <>
+          <h1>确认链接无效或已经失效。</h1>
+          <p>你可以返回网站重新提交订阅。</p>
+          <a class="text-link" href="/about/">返回关于页面</a>
+        </>
+      ) : (
+        <>
+          <h1>订阅已确认</h1>
+          <p>以后本站有新文章发布时，你会收到一封简短提醒邮件。</p>
+          <p>感谢你的阅读。</p>
+        </>
+      )
+    }
+  </section>
+</BaseLayout>

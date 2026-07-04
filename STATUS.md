@@ -1,17 +1,68 @@
 # 项目状态
 
-最后更新：2026-07-01 +09:00
+最后更新：2026-07-04 +09:00
 
 ## 当前结论
 
-手机导航与文章元信息修复已完成并发布。iPhone/Safari 浅色模式顶部状态栏完全融合问题已暂停继续追修，后续如需处理必须单独开 safe-area 专项任务。
+新文章邮件提醒系统 MVP 第一阶段已完成本地实现与验证，尚未提交、推送或部署。当前功能范围仅包含订阅、确认、退订，不包含新文章提醒发送、后台手动发送、Cron、newsletter 模板、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-最新远端提交：4bd66fb fix iOS light status bar viewport
-当前任务状态：手机导航与文章元信息修复收尾完成；iOS 状态栏问题暂停追修
-构建状态：npm.cmd run build 通过，194 page(s) built，Build Complete
+当前任务状态：邮件提醒 MVP 第一阶段本地实现完成，Codex 已复核 diff 并重新跑完验证，等待提交/push；远程 D1 migration 尚未执行
+构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
+附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
+```
+
+## 邮件提醒 MVP 第一阶段状态
+
+本轮新增：
+
+```text
+docs/tasks/email-notification-mvp-phase1.md
+scripts/migrations/0004_create_email_subscribers.sql
+functions/_utils/email.js
+functions/api/subscribe.js
+functions/api/confirm.js
+functions/api/unsubscribe.js
+src/components/SubscribeForm.astro
+src/pages/subscribe/confirmed.astro
+src/pages/subscribe/unsubscribed.astro
+```
+
+本轮修改：
+
+```text
+src/pages/about.astro
+src/styles/global.css
+docs/tasks/current.md
+STATUS.md
+```
+
+上线前必须先执行远程 D1 migration：
+
+```powershell
+npx wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0004_create_email_subscribers.sql
+```
+
+部署说明：
+
+```text
+1. Cloudflare Pages 需要重新部署后，新 Functions API 与新静态页面才会生效。
+2. 未执行远程 D1 migration 前，不要直接测试线上 /api/subscribe。
+3. 本轮未修改 COMMENTS_DB binding 名称，也未新增 D1 binding。
+4. 本轮未触碰 RSS、文章 Markdown、导入脚本、现有评论功能、GitHub 登录/Admin 功能、SEO/sitemap 逻辑。
+```
+
+Codex 收尾复核：
+
+```text
+1. 已复核 git status 与任务范围，改动文件均属于邮件提醒 MVP 第一阶段。
+2. 已搜索第二阶段关键词；相关内容只出现在任务说明/禁止清单中，没有新增第二阶段实现。
+3. 已重新运行 npm.cmd run build，结果通过：212 page(s) built，Build Complete。
+4. 已重新运行 npm.cmd run check:admin-save，结果通过：Errors: 0。
+5. 已重新运行 npm.cmd run check:knowledge，结果通过：Posts checked: 176，Errors: 0，Warnings: 0。
+6. 远程 D1 migration 尚未执行，需用户明确确认后再运行。
 ```
 
 ## 本轮 source 路径审计结论
@@ -59,37 +110,11 @@ missing_share_docx: 58
 missing_sermon_raw_directory: 96
 ```
 
-## 本轮新增或更新的主要文件
-
-```text
-scripts/audit_live_vs_local.mjs
-scripts/audit_source_repair_plan.mjs
-scripts/create_source_raw_recovery_checklist.mjs
-docs/内容整理报告/live-vs-local-posts.csv
-docs/内容整理报告/source-path-check.csv
-docs/内容整理报告/source-path-repair-plan.csv
-docs/内容整理报告/source-path-phase-2-strategy.md
-docs/内容整理报告/source-path-phase-3-raw-recovery.md
-docs/内容整理报告/source-raw-recovery-checklist.csv
-docs/内容整理报告/source-path-phase-4-in-scope-closure.md
-CONTENT_WORKFLOW.md
-docs/tasks/current.md
-```
-
 ## 重要环境限制
 
 当前 CodexPro 不能穿透 `C:\Users\caoyi\Projects\NAS` 下指向 `\\RonnieNAS\...` 的符号链接。
 
-因此，本轮已明确移除以下范围：
-
-```text
-从 \\RonnieNAS\tmp\分享 恢复分享 raw 文件
-从 \\RonnieNAS\tmp\讲道 恢复讲道 raw 文件
-从 \\RonnieNAS\share\教会讲道 查找历史归档
-批量复制 NAS 文件进入 data/raw
-```
-
-后续如需处理 NAS，应另开独立任务，并先由用户手动复制目标文件到仓库内，或等待 CodexPro 环境支持 NAS allowed roots。
+因此，source 恢复任务中应避免直接依赖 CodexPro 访问 NAS。后续如需处理 NAS，应另开独立任务，并先由用户手动复制目标文件到仓库内，或等待 CodexPro 环境支持 NAS allowed roots。
 
 ## 后续独立任务
 
@@ -124,29 +149,10 @@ data/raw/分享/*.docx
 data/raw/教会讲道/<历史讲道目录>/
 ```
 
-## 验证结果
-
-本轮已运行：
-
-```text
-node scripts/audit_live_vs_local.mjs
-python scripts/check_source_paths.py
-node scripts/audit_source_repair_plan.mjs
-```
-
-`python scripts/check_source_paths.py` 仍会返回 missing，这是预期结果，因为历史 raw 文件尚未恢复。
-
-本轮未运行：
-
-```text
-npm.cmd run build
-```
-
-原因：最终收尾只涉及文档、审计脚本和 CSV 报告，没有修改 Astro 页面、组件、内容正文或配置。
-
 ## 接手提醒
 
 1. 新任务开始前仍按 `docs/task-handoff-protocol.md` 读取一级必读文件。
 2. 遇到 source missing 时，以 `CONTENT_WORKFLOW.md` 的新规则为准。
 3. 不要把历史 missing source 批量改成不可验证路径。
 4. 如果用户提供 raw 文件，先放入对应 `data/raw/...` 路径，再重新运行 `python scripts/check_source_paths.py`。
+5. 邮件提醒第二阶段另开任务处理，不要把发送新文章提醒、后台手动发送或统计追踪混入第一阶段收尾。

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
+import SubscribeForm from "../components/SubscribeForm.astro";
 ---
 
 <BaseLayout title="关于 | Ronnie" description="网站版权联系说明。">
@@ -18,5 +19,6 @@ import Logo from "../components/Logo.astro";
     <p class="visit-counter" data-visit-counter>
       本站累计访问量：<span data-site-visits>统计中…</span>
     </p>
+    <SubscribeForm />
   </section>
 </BaseLayout>
