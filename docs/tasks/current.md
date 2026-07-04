@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-07-04）
 
-新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核与构建检查，尚未提交、推送或部署。远程 D1 migration 尚未执行，必须等用户明确确认。
+新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 尚未执行，必须等用户明确确认。
 
 本轮完成内容：
 
@@ -53,6 +53,7 @@ Codex 复核结果：
 4. 已重新运行 npm.cmd run build，通过：212 page(s) built，Build Complete。
 5. 已重新运行 npm.cmd run check:admin-save，通过：Errors: 0。
 6. 已重新运行 npm.cmd run check:knowledge，通过：Posts checked: 176，Errors: 0，Warnings: 0。
+7. 已提交并 push：8a352b7 feat: add email subscription confirmation flow。
 ```
 
 需要用户手动执行的 D1 migration：
@@ -88,10 +89,9 @@ npx wrangler d1 execute ronniecross-comments --local --file scripts/migrations/0
 1. 复核完整 diff，确认没有误改非本任务范围。
 2. 如有必要，小范围修正实现细节。
 3. 重新运行 build 与两个检查脚本。
-4. 提交 commit 并 push 到 origin/main。
-5. 用户明确同意后，执行远程 D1 migration。
-6. 等待或触发 Cloudflare Pages 部署。
-7. 部署后进行线上订阅、确认、退订功能测试。
+1. 用户明确同意后，执行远程 D1 migration。
+2. 等待或确认 Cloudflare Pages 部署完成。
+3. 部署后进行线上订阅、确认、退订功能测试。
 ```
 
 上线后功能测试清单：

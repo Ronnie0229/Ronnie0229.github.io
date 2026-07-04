@@ -9,7 +9,7 @@
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第一阶段本地实现完成，Codex 已复核 diff 并重新跑完验证，等待提交/push；远程 D1 migration 尚未执行
+当前任务状态：邮件提醒 MVP 第一阶段已提交并 push 到 origin/main；远程 D1 migration 尚未执行
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -63,6 +63,7 @@ Codex 收尾复核：
 4. 已重新运行 npm.cmd run check:admin-save，结果通过：Errors: 0。
 5. 已重新运行 npm.cmd run check:knowledge，结果通过：Posts checked: 176，Errors: 0，Warnings: 0。
 6. 远程 D1 migration 尚未执行，需用户明确确认后再运行。
+7. 已提交并 push：8a352b7 feat: add email subscription confirmation flow。
 ```
 
 ## 本轮 source 路径审计结论
