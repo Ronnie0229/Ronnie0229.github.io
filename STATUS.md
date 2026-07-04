@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成本地实现与验证，尚未提交、推送或部署。当前功能范围仅包含订阅、确认、退订，不包含新文章提醒发送、后台手动发送、Cron、newsletter 模板、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。下一步进入 MVP 第二阶段规划：手动发送新文章提醒；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第一阶段已提交并 push 到 origin/main；远程 D1 migration 已执行成功
+当前任务状态：邮件提醒 MVP 第一阶段已验收完成；第二阶段任务文档已开始准备
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```

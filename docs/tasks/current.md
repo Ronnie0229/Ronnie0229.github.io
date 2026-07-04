@@ -2,6 +2,76 @@
 
 ## 当前任务状态（2026-07-04）
 
+新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
+
+当前进入第二阶段规划：手动发送新文章提醒 MVP。第二阶段任务文档已生成：
+
+```text
+docs/tasks/email-notification-mvp-phase2.md
+```
+
+第二阶段目标：
+
+```text
+1. 管理员手动选择或输入文章 slug。
+2. 后台 API 预览 confirmed 订阅者数量。
+3. 管理员确认后，向 confirmed 订阅者逐个发送新文章提醒。
+4. 同一文章默认只能发送一次。
+5. 记录每篇文章发送任务与每个收件人的发送结果。
+```
+
+第二阶段边界：
+
+```text
+1. 不做 Cron 自动发送。
+2. 不做自动检测新文章。
+3. 不做后台 UI，先实现 API 与 dryRun。
+4. 不做打开率/点击率统计。
+5. 不做 /go/post/<neutral_id> 追踪跳转。
+6. 不做分类订阅。
+7. 不导入外部邮箱。
+```
+
+第二阶段建议新增文件：
+
+```text
+scripts/migrations/0005_create_email_post_sends.sql
+scripts/migrations/0006_create_email_send_logs.sql
+functions/api/admin/email/send-post.js
+```
+
+第二阶段建议修改文件：
+
+```text
+functions/_utils/email.js
+STATUS.md
+docs/tasks/current.md
+```
+
+第二阶段开始前必须确认：
+
+```text
+1. 是否采用现有 Cloudflare Access 管理员鉴权 requireAdmin(request, env)。建议采用。
+2. 文章信息来源使用现有 search-index.json，还是新增 email-post-index.json。建议先复核现有 search-index.json 字段。
+3. 真实发送前必须先 dryRun。
+4. 远程 D1 migration 需要用户明确同意后再执行。
+5. 真实邮件发送需要用户明确同意后再触发。
+```
+
+第一阶段最终提交记录：
+
+```text
+8a352b7 feat: add email subscription confirmation flow
+91e4cae docs: record email subscription d1 migration
+de6644f style: tune email subscription card transparency
+```
+
+---
+
+## 上一轮任务记录
+
+## 当前任务状态（2026-07-04）
+
 新文章邮件提醒系统 MVP 第一阶段已完成本地实现、diff 复核、构建检查、提交并 push 到 `origin/main`。远程 D1 migration 已在用户确认后执行成功。线上订阅、确认、退订测试已通过，D1 已确认测试邮箱状态流转正常。当前追加调整：将 About 页邮件提醒卡片统一为 30% 透明玻璃效果。
 
 本轮完成内容：
