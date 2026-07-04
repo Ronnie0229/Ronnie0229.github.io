@@ -4,7 +4,7 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；尚未真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
@@ -134,13 +134,24 @@ recipientCount=2。
 D1 验证：email_post_sends count=0，email_send_logs count=0。
 ```
 
+第一次真实发送测试结果：
+
+```text
+POST /api/admin/email/send-post dryRun=false：成功，status=200，ok=true。
+测试文章：2026-07-04-马可福音-6-30-52好牧人的供应。
+API 返回：recipientCount=2，successCount=2，failedCount=0。
+email_post_sends：status=sent，recipient_count=2，success_count=2，failed_count=0，sent_at=2026-07-04T15:35:29.938Z，error_message=null。
+email_send_logs：2 条记录，status=sent，error_message=null，resend_id 均有值。
+测试邮箱：soueitetsu@gmail.com，6611987@qq.com。
+```
+
 仍未执行：
 
 ```text
 1. 远程 D1 migration 0005 / 0006 已执行成功。
 2. 线上 dryRun 已通过：ok=true，dryRun=true，文章信息正确，recipientCount=2。
 3. dryRun 后确认 email_post_sends=0，email_send_logs=0，未写发送记录。
-4. 未真实发送邮件。
+4. 第一次真实发送测试已成功：recipient_count=2，success_count=2，failed_count=0。
 4. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
 ```
 

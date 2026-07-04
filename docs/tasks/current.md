@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；尚未真实发送邮件。第二阶段任务文档：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -81,6 +81,17 @@ POST /api/admin/email/send-post dryRun=true：成功，status=200，ok=true，dr
 返回 URL：https://ronniecross.com/posts/2026-07-04-马可福音-6-30-52好牧人的供应/。
 recipientCount=2。
 D1 验证：email_post_sends count=0，email_send_logs count=0。
+```
+
+第二阶段第一次真实发送测试结果：
+
+```text
+POST /api/admin/email/send-post dryRun=false：成功，status=200，ok=true。
+测试文章：2026-07-04-马可福音-6-30-52好牧人的供应。
+API 返回：recipientCount=2，successCount=2，failedCount=0。
+email_post_sends：status=sent，recipient_count=2，success_count=2，failed_count=0，sent_at=2026-07-04T15:35:29.938Z，error_message=null。
+email_send_logs：2 条记录，status=sent，error_message=null，resend_id 均有值。
+测试邮箱：soueitetsu@gmail.com，6611987@qq.com。
 ```
 
 第二阶段远程 D1 migration 执行结果：
