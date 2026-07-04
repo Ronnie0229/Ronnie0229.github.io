@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现与验证；尚未执行远程 D1 migration，尚未真实发送邮件，尚未 commit/push。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；尚未进行线上 dryRun，尚未真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第二阶段已完成本地实现，等待用户确认是否提交、执行远程 D1 migration 与线上 dryRun
+当前任务状态：邮件提醒 MVP 第二阶段已完成提交与远程 D1 migration，下一步等待 Cloudflare Pages 部署后进行线上 dryRun
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -116,13 +116,20 @@ npm.cmd run check:admin-save：通过，Errors: 0
 npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
 
+第二阶段远程 D1 migration 执行结果：
+
+```text
+0005_create_email_post_sends.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 5，Database size: 0.23 MB，bookmark: 00000488-0000000e-0000509e-003dab5a0755fdb1ba7a31a98fc90af8。
+0006_create_email_send_logs.sql：成功，Total queries executed: 4，Rows read: 7，Rows written: 5，Database size: 0.25 MB，bookmark: 00000488-00000014-0000509e-3316600230764936f85e26d508ea8992。
+```
+
 仍未执行：
 
 ```text
-1. 未执行远程 D1 migration。
+1. 远程 D1 migration 0005 / 0006 已执行成功。
 2. 未调用 dryRun 线上 API。
 3. 未真实发送邮件。
-4. 未 commit / push 第二阶段实现。
+4. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
 ```
 
 ## 本轮 source 路径审计结论

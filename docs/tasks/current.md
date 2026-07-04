@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；尚未执行远程 D1 migration，尚未真实发送邮件。第二阶段任务文档：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；尚未进行线上 dryRun，尚未真实发送邮件。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -57,7 +57,7 @@ docs/tasks/current.md
 4. dryRun=true 时只验证文章 slug、读取 confirmed 订阅者数量、返回预览，不写库、不发信。
 5. dryRun=false 代码路径已实现，但本轮没有调用，不会真实发送。
 6. 新文章提醒邮件正文已调整为中文温和版，包含文章标题、阅读链接与退订链接，不含完整正文和追踪链接。
-7. 远程 D1 migration 需要用户明确同意后再执行。
+7. 远程 D1 migration 0005 / 0006 已由用户执行成功。
 8. 真实邮件发送需要用户明确同意后再触发。
 ```
 
@@ -70,6 +70,13 @@ git diff --check：通过。
 npm.cmd run build：通过，212 page(s) built，Build Complete。
 npm.cmd run check:admin-save：通过，Errors: 0。
 npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings: 0。
+```
+
+第二阶段远程 D1 migration 执行结果：
+
+```text
+0005_create_email_post_sends.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 5，Database size: 0.23 MB，bookmark: 00000488-0000000e-0000509e-003dab5a0755fdb1ba7a31a98fc90af8。
+0006_create_email_send_logs.sql：成功，Total queries executed: 4，Rows read: 7，Rows written: 5，Database size: 0.25 MB，bookmark: 00000488-00000014-0000509e-3316600230764936f85e26d508ea8992。
 ```
 
 第一阶段最终提交记录：
