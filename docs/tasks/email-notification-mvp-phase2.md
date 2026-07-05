@@ -54,7 +54,7 @@
 3. 不要实现后台 UI 页面，先用 API 或命令测试。
 4. 不要实现邮件打开率统计。
 5. 不要实现点击率统计。
-6. 不要实现 /go/post/<neutral_id> 跳转追踪。
+6. 不要实现点击统计意义上的 /go/post/<neutral_id> 追踪；但为降低邮件内容暴露，已追加实现中性跳转链接，不记录点击行为。
 7. 不要实现分类订阅。
 8. 不要批量导入外部邮箱。
 9. 不要把未确认、已退订邮箱加入发送。
@@ -131,7 +131,7 @@ ON email_send_logs(status);
 1. email_post_sends 记录“一篇文章的一次发送任务”。
 2. email_send_logs 记录“每个订阅者的发送结果”。
 3. post_slug 使用站内真实 slug，但只保存在后台 D1，不在公开邮件里暴露额外追踪参数。
-4. 本阶段不做点击追踪，所以不需要 neutral_id。
+4. 本阶段不做点击追踪；但中性链接补丁已新增 email_post_links，用 neutral_id 映射真实 post_slug，仅用于隐藏邮件中的真实文章 slug，不统计点击。
 ```
 
 ## 六、后台 API 设计
@@ -174,7 +174,7 @@ API 行为：
 3. 解析 slug，trim，禁止空值。
 4. 读取站内文章清单，确认 slug 对应文章存在。
 5. 查询 confirmed 订阅者数量。
-6. dryRun = true 时，只返回预览信息，不写 email_post_sends，不发邮件。
+6. dryRun = true 时，返回 neutralUrl 与 confirmed 订阅者数量；可以创建或复用 email_post_links 映射，但不写 email_post_sends / email_send_logs，不发邮件。
 7. dryRun = false 时：
    - 检查 email_post_sends 中该 post_slug 是否已存在 sent/sending/success 状态。
    - 如已发送过，返回 409，提示该文章已经发送过提醒。
@@ -192,11 +192,7 @@ API 行为：
 {
   "ok": true,
   "dryRun": true,
-  "post": {
-    "slug": "...",
-    "title": "...",
-    "url": "https://ronniecross.com/posts/.../"
-  },
+  "neutralUrl": "https://ronniecross.com/go/post/<neutral_id>",
   "recipientCount": 12
 }
 ```
@@ -207,7 +203,7 @@ API 行为：
 {
   "ok": true,
   "dryRun": false,
-  "postSlug": "...",
+  "neutralUrl": "https://ronniecross.com/go/post/<neutral_id>",
   "recipientCount": 12,
   "successCount": 12,
   "failedCount": 0
@@ -255,47 +251,51 @@ functions/_lib/admin-auth.js
 
 ## 九、邮件内容要求
 
-邮件必须克制，不要像营销 newsletter。
+邮件必须克制，不要像营销 newsletter。为降低邮件正文暴露的信息，当前实现采用“中性提醒 + 中性跳转链接”。
 
-标题建议：
+标题固定为：
 
 ```text
-RonnieCross 有一篇新文章更新
+RonnieCross 新文章提醒
 ```
 
-正文建议：
+正文固定为：
 
 ```text
 你好，
 
-RonnieCross 刚刚有一篇新文章更新。
+RonnieCross 有一篇新文章已经发布。
 
-你可以点击下面链接前往阅读：
+你可以点击下面的链接前往网站阅读：
 
-{postUrl}
+{neutralUrl}
 
-如果你不想继续收到提醒，可以点击下面链接退订：
+如果你不想继续收到提醒，可以点击这里退订：
 
 {unsubscribeUrl}
+
+感谢你的阅读。
 ```
 
 HTML 版本可包含：
 
 ```text
 1. 简短问候。
-2. 文章标题。
-3. 阅读按钮。
-4. 退订链接。
+2. 中性阅读按钮。
+3. 退订链接。
 ```
 
 注意：
 
 ```text
-1. 邮件里可以包含文章标题和正常文章 URL。
-2. 不放完整文章正文。
-3. 不放过多摘要。
-4. 不添加追踪跳转链接。
-5. 必须包含退订链接。
+1. 邮件里不出现文章标题。
+2. 邮件里不出现经文。
+3. 邮件里不出现摘要。
+4. 邮件里不出现真实文章 slug。
+5. 阅读链接使用 /go/post/<neutral_id>。
+6. /go/post/<neutral_id> 仅用于中性跳转，不记录点击统计。
+7. 不放完整文章正文。
+8. 必须包含退订链接。
 ```
 
 ## 十、发送策略
@@ -329,6 +329,7 @@ npm.cmd run check:knowledge
 ```powershell
 npx.cmd wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0005_create_email_post_sends.sql
 npx.cmd wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0006_create_email_send_logs.sql
+npx.cmd wrangler d1 execute ronniecross-comments --remote --file scripts/migrations/0007_create_email_post_links.sql
 ```
 
 API 线上验证建议先 dryRun：
@@ -342,23 +343,29 @@ API 线上验证建议先 dryRun：
 ```text
 1. confirmed 订阅者数量正确。
 2. 测试邮箱仍是自己可控邮箱。
-3. dryRun 返回的文章标题和 URL 正确。
+3. dryRun 返回 neutralUrl，且邮件/API 响应中不暴露文章标题、真实 URL 或摘要。
 4. 退订链接在邮件中存在。
 5. 不会发送给 unsubscribed 邮箱。
 ```
 
 ## 发布提醒任务备注：2026-07-05 新文章
 
-2026-07-05 已新增一篇讲道文章：
+2026-07-05 已新增并用于验收一篇讲道文章：
 
 - 标题：罗马书 16:17-27｜被福音坚固
 - 页面 slug：2026-07-05-罗马书-16-17-27被福音坚固
+- neutral_id：0bb64e58f60340b7810a28eeb4d3eccb
 
-用途建议：
+验收结果：
 
-1. 可作为邮件提醒第二阶段 dryRun 的真实新文章样本。
-2. 仅在管理员明确确认后，才可用 dryRun false 触发真实发送。
-3. 文章发布本身不会自动发邮件；不要把发布 commit 误认为发送动作。
+1. dryRun 成功，返回 neutralUrl 与 recipientCount=2。
+2. neutralUrl 跳转成功。
+3. dryRun 未写入 email_post_sends / email_send_logs。
+4. 用户确认两个测试邮箱均可控后，dryRun=false 真实发送成功。
+5. email_post_sends 记录 sent，success_count=2，failed_count=0。
+6. email_send_logs 新增两条 sent 记录，resend_id 均有值。
+7. 邮件内容已确认不包含文章标题、经文、摘要或真实 slug。
+8. 文章发布本身不会自动发邮件；不要把发布 commit 误认为发送动作。
 
 ## 十二、提交要求
 

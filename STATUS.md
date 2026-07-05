@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；中性链接 dryRun 与真实发送测试均已通过。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；中性链接 dryRun 与真实发送测试均已通过。第二阶段已完成并验收，下一步进入项目冻结与 Windows 到 Mac 移行任务。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第二阶段已完成真实发送测试；中性链接补丁已提交并执行远程 D1 migration 0007，中性链接 dryRun 与真实发送测试均已通过
+当前任务状态：邮件提醒 MVP 第二阶段已完成并验收；下一步进入项目冻结与 Windows 到 Mac 移行任务
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
