@@ -156,6 +156,21 @@ email_send_logs：2 条记录，status=sent，error_message=null，resend_id 均
 4. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
 ```
 
+
+
+中性链接 dryRun 验证结果：
+
+```text
+POST /api/admin/email/send-post dryRun=true：成功，status=200，ok=true，dryRun=true。
+测试文章：2026-07-05-罗马书-16-17-27被福音坚固。
+返回 neutralUrl：https://ronniecross.com/go/post/0bb64e58f60340b7810a28eeb4d3eccb。
+recipientCount=2。
+neutralUrl 跳转成功，最终跳转到真实文章页。
+email_post_links：已生成映射，neutral_id=0bb64e58f60340b7810a28eeb4d3eccb，post_slug=2026-07-05-罗马书-16-17-27被福音坚固，created_at=2026-07-05T11:58:28.632Z。
+email_post_sends：未出现 2026-07-05 文章记录；仅保留此前 2026-07-04 测试文章 sent 记录。
+email_send_logs：未新增本次 dryRun 发送日志；仅保留此前 2026-07-04 两条测试发送日志。
+```
+
 ## 本轮 source 路径审计结论
 
 Phase 0 已确认线上 `ronniecross.com` 与本地 `src/content/posts` 的文章数量一致，没有发现线上有而本地没有的文章，也没有发现正文内容需要从线上反向同步。
