@@ -19,6 +19,14 @@ Before doing any content task, read these files in this repository:
 - `docs/content-style.md`
 - `docs/content-publishing-error-prevention.md`
 
+## Sermon Translation Rules
+
+- Translate sermon source material faithfully and completely; do not summarize in place of translation.
+- 原文已经写明引用经文出处时，中文翻译必须自然保留并译出对应经文章节，不得省略；例如原文写 Galatians 2:14，中文应保留为“加拉太书 2:14”。
+- 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文；如需解释英文词语、原文词义或其他译本差异，可在和合本经文之外另加说明，但不得用其他中文译本替代正文经文。
+- When sermon workflow rules change, update both the sermon workflow project and this website project, or explicitly report the unsynced side.
+- 涉及讲道整理项目的规则变更时，必须同步检查个人网页项目对应文档；如果未同步，最终汇报必须明确说明。
+
 ## Source Of Truth
 
 - Formal local development repository: `C:\Users\caoyi\Projects\个人网页项目`
