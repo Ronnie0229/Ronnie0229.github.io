@@ -1,4 +1,4 @@
-# AGENTS.md
+﻿# AGENTS.md
 
 ## 项目总入口
 
@@ -36,6 +36,8 @@
 - 部署 / 后台：`DEPLOY.md`、`docs/网站后台使用与配置.md`、`wrangler.jsonc`、`functions/`
 - Git / worktree / 多账号协作：`docs/branch-workflow.md`、`docs/account-switching.md`
 - 历史交接记忆：`docs/codex-handoff-memory.md`
+- 继承文档 / Mac 迁移接手：`docs/workflows/website-maintenance-workflow.md`、`docs/decisions/website-decisions.md`
+- 样式结构重构：`docs/tasks/style-structure-refactor-plan.md`
 
 ## 全账号通用工作原则
 
@@ -209,3 +211,5 @@ Admin 页面可以加载 `/styles/tokens.css` 共享变量，但不要把 Admin 
 - 不要在 Admin CSS 里修改前台文章卡片、导航、搜索页、书卷页等样式。
 - 不要在 `src/styles/global.css` 里加入 Admin 编辑器、表格、图片库、评论管理、数据概览等后台样式。
 - 不要同时维护两份前台 `global.css`。
+
+

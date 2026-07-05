@@ -1,4 +1,4 @@
-# 项目状态
+﻿# 项目状态
 
 最后更新：2026-07-04 +09:00
 
@@ -13,6 +13,10 @@
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
+
+## 继承文档入口
+
+未来 Codex / CodexPro / 本地模型接手时，先读 `AGENTS.md` 和本文件；网站维护读 `docs/workflows/website-maintenance-workflow.md`，设计与架构决策读 `docs/decisions/website-decisions.md`，样式结构重构读 `docs/tasks/style-structure-refactor-plan.md`。
 
 ## 邮件提醒 MVP 第一阶段状态
 
@@ -324,3 +328,18 @@ npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings
 ```
 
 本轮未执行远程 D1 migration，未真实发送邮件。
+
+## 继承文档整理补充（2026-07-06）
+
+资料来源：`C:\Users\caoyi\Desktop\codex++` 导出的 Codex Markdown 会话备份。本次只整理长期继承文档，没有修改业务代码、样式代码、脚本代码或文章内容。
+
+新增继承文档：
+
+```text
+docs/workflows/website-maintenance-workflow.md
+docs/decisions/website-decisions.md
+docs/tasks/style-structure-refactor-plan.md
+```
+
+后续 Codex / CodexPro / Mac mini 接手网站维护、样式重构、内容发布或 Windows→Mac 迁移时，应把这些文档与 `AGENTS.md`、`docs/tasks/current.md` 一起阅读。
+
