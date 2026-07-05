@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段任务文档：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；下一步仅做 dryRun 验证 neutralUrl 跳转，不真实发送邮件。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -27,7 +27,7 @@ docs/tasks/email-notification-mvp-phase2.md
 2. 不做自动检测新文章。
 3. 不做后台 UI，先实现 API 与 dryRun。
 4. 不做打开率/点击率统计。
-5. 不做 /go/post/<neutral_id> 追踪跳转。
+5. 不做打开率/点击率统计；但为降低邮件内容暴露，已追加实现 /go/post/<neutral_id> 中性跳转，不记录点击统计。
 6. 不做分类订阅。
 7. 不导入外部邮箱。
 ```
@@ -56,7 +56,7 @@ docs/tasks/current.md
 3. 已新增 POST /api/admin/email/send-post，默认 dryRun=true。
 4. dryRun=true 时只验证文章 slug、读取 confirmed 订阅者数量、返回预览，不写库、不发信。
 5. dryRun=false 代码路径已实现，但本轮没有调用，不会真实发送。
-6. 新文章提醒邮件正文已调整为中文温和版，包含文章标题、阅读链接与退订链接，不含完整正文和追踪链接。
+6. 新文章提醒邮件已追加中性链接补丁：邮件标题固定为 RonnieCross 新文章提醒，正文不包含文章标题、经文、摘要或真实 slug，阅读链接使用 /go/post/<neutral_id>。
 7. 远程 D1 migration 0005 / 0006 已由用户执行成功。
 8. 真实邮件发送需要用户明确同意后再触发。
 ```
@@ -99,6 +99,7 @@ email_send_logs：2 条记录，status=sent，error_message=null，resend_id 均
 ```text
 0005_create_email_post_sends.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 5，Database size: 0.23 MB，bookmark: 00000488-0000000e-0000509e-003dab5a0755fdb1ba7a31a98fc90af8。
 0006_create_email_send_logs.sql：成功，Total queries executed: 4，Rows read: 7，Rows written: 5，Database size: 0.25 MB，bookmark: 00000488-00000014-0000509e-3316600230764936f85e26d508ea8992。
+0007_create_email_post_links.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 6，Database size: 0.27 MB，finalBookmark: 0000048e-00000006-0000509f-af9224370fde22433a5260cb1c54309a。
 ```
 
 第一阶段最终提交记录：

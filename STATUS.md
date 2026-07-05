@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；下一步仅做 dryRun 验证 neutralUrl，不真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第二阶段已完成提交与远程 D1 migration，下一步等待 Cloudflare Pages 部署后进行线上 dryRun
+当前任务状态：邮件提醒 MVP 第二阶段已完成真实发送测试；中性链接补丁已提交并执行远程 D1 migration 0007，下一步进行线上 dryRun 验证 neutralUrl 跳转
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -102,7 +102,7 @@ docs/tasks/current.md
 6. 只发送给 status='confirmed' 的订阅者。
 7. 同一文章默认防重复发送。
 8. 发送任务写入 email_post_sends，每个订阅者结果写入 email_send_logs。
-9. 邮件正文为中文温和版，包含文章标题、阅读链接和退订链接，不包含完整正文和追踪跳转。
+9. 中性链接补丁已将文章提醒邮件改为固定标题与中性正文，不包含文章标题、经文、摘要或真实 slug；阅读链接改为 /go/post/<neutral_id>。
 ```
 
 本地验证：
@@ -121,6 +121,7 @@ npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings
 ```text
 0005_create_email_post_sends.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 5，Database size: 0.23 MB，bookmark: 00000488-0000000e-0000509e-003dab5a0755fdb1ba7a31a98fc90af8。
 0006_create_email_send_logs.sql：成功，Total queries executed: 4，Rows read: 7，Rows written: 5，Database size: 0.25 MB，bookmark: 00000488-00000014-0000509e-3316600230764936f85e26d508ea8992。
+0007_create_email_post_links.sql：成功，Total queries executed: 3，Rows read: 5，Rows written: 6，Database size: 0.27 MB，finalBookmark: 0000048e-00000006-0000509f-af9224370fde22433a5260cb1c54309a。
 ```
 
 线上 dryRun 验证结果：
