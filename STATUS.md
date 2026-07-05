@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；下一步仅做 dryRun 验证 neutralUrl，不真实发送邮件。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；中性链接 dryRun 与真实发送测试均已通过。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第二阶段已完成真实发送测试；中性链接补丁已提交并执行远程 D1 migration 0007，下一步进行线上 dryRun 验证 neutralUrl 跳转
+当前任务状态：邮件提醒 MVP 第二阶段已完成真实发送测试；中性链接补丁已提交并执行远程 D1 migration 0007，中性链接 dryRun 与真实发送测试均已通过
 构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
 附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
 ```
@@ -169,6 +169,22 @@ neutralUrl 跳转成功，最终跳转到真实文章页。
 email_post_links：已生成映射，neutral_id=0bb64e58f60340b7810a28eeb4d3eccb，post_slug=2026-07-05-罗马书-16-17-27被福音坚固，created_at=2026-07-05T11:58:28.632Z。
 email_post_sends：未出现 2026-07-05 文章记录；仅保留此前 2026-07-04 测试文章 sent 记录。
 email_send_logs：未新增本次 dryRun 发送日志；仅保留此前 2026-07-04 两条测试发送日志。
+```
+
+
+
+中性链接版真实发送结果：
+
+```text
+POST /api/admin/email/send-post dryRun=false：成功，status=200，ok=true，dryRun=false。
+测试文章：2026-07-05-罗马书-16-17-27被福音坚固。
+返回 neutralUrl：https://ronniecross.com/go/post/0bb64e58f60340b7810a28eeb4d3eccb。
+API 返回：recipientCount=2，successCount=2，failedCount=0。
+email_post_sends：status=sent，recipient_count=2，success_count=2，failed_count=0，sent_at=2026-07-05T12:25:23.249Z，error_message=null。
+email_send_logs：2 条新记录，status=sent，error_message=null，resend_id 均有值。
+测试邮箱：soueitetsu@gmail.com，6611987@qq.com。
+邮件内容已确认：标题为 RonnieCross 新文章提醒；正文不包含文章标题、经文、摘要、真实 slug；包含中性阅读链接与退订链接；无乱码。
+阅读链接跳转成功，最终页面：https://ronniecross.com/posts/2026-07-05-罗马书-16-17-27被福音坚固/。
 ```
 
 ## 本轮 source 路径审计结论

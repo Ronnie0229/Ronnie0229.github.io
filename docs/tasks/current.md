@@ -4,7 +4,7 @@
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。
 
-当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；下一步仅做 dryRun 验证 neutralUrl 跳转，不真实发送邮件。第二阶段任务文档：
+当前进入第二阶段实现：手动发送新文章提醒 MVP。本地代码已完成，已按边界停在提交前；远程 D1 migration 0005 / 0006 已执行成功；线上 dryRun 已通过并确认未写发送记录；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；中性链接 dryRun 与真实发送测试均已通过。第二阶段任务文档：
 
 ```text
 docs/tasks/email-notification-mvp-phase2.md
@@ -115,6 +115,22 @@ neutralUrl 跳转成功，最终跳转到真实文章页。
 email_post_links：已生成映射，neutral_id=0bb64e58f60340b7810a28eeb4d3eccb，post_slug=2026-07-05-罗马书-16-17-27被福音坚固，created_at=2026-07-05T11:58:28.632Z。
 email_post_sends：未出现 2026-07-05 文章记录；仅保留此前 2026-07-04 测试文章 sent 记录。
 email_send_logs：未新增本次 dryRun 发送日志；仅保留此前 2026-07-04 两条测试发送日志。
+```
+
+
+
+第二阶段中性链接版真实发送结果：
+
+```text
+POST /api/admin/email/send-post dryRun=false：成功，status=200，ok=true，dryRun=false。
+测试文章：2026-07-05-罗马书-16-17-27被福音坚固。
+返回 neutralUrl：https://ronniecross.com/go/post/0bb64e58f60340b7810a28eeb4d3eccb。
+API 返回：recipientCount=2，successCount=2，failedCount=0。
+email_post_sends：status=sent，recipient_count=2，success_count=2，failed_count=0，sent_at=2026-07-05T12:25:23.249Z，error_message=null。
+email_send_logs：2 条新记录，status=sent，error_message=null，resend_id 均有值。
+测试邮箱：soueitetsu@gmail.com，6611987@qq.com。
+邮件内容已确认：标题为 RonnieCross 新文章提醒；正文不包含文章标题、经文、摘要、真实 slug；包含中性阅读链接与退订链接；无乱码。
+阅读链接跳转成功，最终页面：https://ronniecross.com/posts/2026-07-05-罗马书-16-17-27被福音坚固/。
 ```
 
 第一阶段最终提交记录：
