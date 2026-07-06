@@ -1,5 +1,57 @@
 # 当前任务
 
+
+## 当前任务状态（2026-07-07）
+
+Mac 移行后第一次 CodexPro 小修复已完成本地验证：About 页“本站累计访问量”在当前浏览器 session 已计数后会显示“暂时无法读取”的问题已修复。
+
+原因：
+
+```text
+1. src/layouts/BaseLayout.astro 使用 sessionStorage 避免同一浏览器 session 内重复累计访问量。
+2. 当 sessionStorage 已标记 ronniecross-visit-counted=1 时，旧代码会请求无参数 /api/visits 读取计数。
+3. functions/api/visits.js 为避免 Search Console / API 空访问被当作内容页，已将无参数 GET 设计为 204 noindex。
+4. 前端收到 204 后仍执行 response.json()，触发异常，于是 About 页显示“暂时无法读取”。
+5. 邮件订阅系统没有直接修改 visits.js 或 BaseLayout 的访问量代码；问题是已有前后端接口约定不一致在后续访问中暴露出来。
+```
+
+本轮修复：
+
+```text
+1. src/layouts/BaseLayout.astro：已计数 session 改为请求 /api/visits?read=1，只读取计数，不触发自增。
+2. functions/api/visits.js：新增 read=1 显式读取分支；increment=1 仍自增；无参数 GET / HEAD 仍返回 204 noindex，保留 SEO 保护。
+```
+
+本轮修改文件：
+
+```text
+functions/api/visits.js
+src/layouts/BaseLayout.astro
+STATUS.md
+docs/tasks/current.md
+```
+
+验证结果：
+
+```text
+线上现状确认：curl https://ronniecross.com/api/visits?increment=1 返回 200 JSON，说明外部 counter 服务和线上 API 当前可用。
+node --check functions/api/visits.js：通过。
+npm run build：通过，217 page(s) built，Build Complete。
+npm run check:admin-save：通过，Errors: 0。
+npm run check:knowledge：通过，Posts checked: 181，Errors: 0，Warnings: 0。
+git diff --check：通过。
+```
+
+未完成 / 需要用户或 Codex 后续执行：
+
+```text
+1. 本轮未 commit、未 push、未部署。
+2. 需要由用户明确授权后执行 git commit / git push，等待 Cloudflare Pages 自动部署。
+3. 部署后请在同一浏览器 session 下刷新 /about/，确认“本站累计访问量”不再显示“暂时无法读取”。
+```
+
+---
+
 ## 当前任务状态（2026-07-05）
 
 新文章邮件提醒系统 MVP 第一阶段已验收完成：线上订阅、确认、退订测试通过，D1 状态流转正常，About 页邮件提醒卡片深浅模式 30% 透明玻璃效果已确认可用。

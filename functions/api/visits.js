@@ -14,8 +14,9 @@ function emptyNoindex(status = 204) {
 export async function onRequestGet({ request }) {
   const url = new URL(request.url);
   const increment = url.searchParams.get("increment") === "1";
+  const read = url.searchParams.get("read") === "1";
 
-  if (!increment && !url.searchParams.toString()) {
+  if (!increment && !read) {
     return emptyNoindex();
   }
 

@@ -310,7 +310,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
 
         if (counted && !counter) return;
 
-        const requestUrl = counted ? counterUrl : `${counterUrl}?increment=1`;
+        const requestUrl = counted ? `${counterUrl}?read=1` : `${counterUrl}?increment=1`;
 
         fetch(requestUrl, { cache: "no-store" })
           .then((response) => {

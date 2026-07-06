@@ -1,17 +1,17 @@
 ﻿# 项目状态
 
-最后更新：2026-07-04 +09:00
+最后更新：2026-07-07 +09:00
 
 ## 当前结论
 
-新文章邮件提醒系统 MVP 第一阶段已完成实现、远程 D1 migration、部署后线上订阅/确认/退订测试，并已提交推送。About 页邮件提醒卡片深浅模式透明效果已验收。MVP 第二阶段“手动发送新文章提醒”已完成本地实现、验证、commit/push，并已执行远程 D1 migration 0005 / 0006；线上 dryRun 已通过，确认不会写入 email_post_sends / email_send_logs；第一次真实发送测试已成功，2 个测试邮箱全部发送成功。第二阶段中性链接补丁已提交并推送，远程 D1 migration 0007 已执行成功；中性链接 dryRun 与真实发送测试均已通过。第二阶段已完成并验收，下一步进入项目冻结与 Windows 到 Mac 移行任务。暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过 `node --check functions/api/visits.js`、`npm run build`、`npm run check:admin-save`、`npm run check:knowledge`、`git diff --check`。本轮未提交、未 push、未部署。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：邮件提醒 MVP 第二阶段已完成并验收；下一步进入项目冻结与 Windows 到 Mac 移行任务
-构建状态：npm.cmd run build 通过，212 page(s) built，Build Complete
-附加检查：npm.cmd run check:admin-save 通过，Errors: 0；npm.cmd run check:knowledge 通过，Posts checked: 176，Errors: 0，Warnings: 0
+当前任务状态：About 页累计访问量读取 bug 已本地修复并验证；待 commit / push / 部署
+构建状态：npm run build 通过，217 page(s) built，Build Complete
+附加检查：node --check functions/api/visits.js 通过；npm run check:admin-save 通过，Errors: 0；npm run check:knowledge 通过，Posts checked: 181，Errors: 0，Warnings: 0；git diff --check 通过
 ```
 
 ## 继承文档入口
