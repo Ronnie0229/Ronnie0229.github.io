@@ -3,7 +3,7 @@
 
 ## 当前任务状态（2026-07-07）
 
-Mac 移行后第一次 CodexPro 小修复已完成：About 页“本站累计访问量”在当前浏览器 session 已计数后会显示“暂时无法读取”的问题已修复、验证、提交并 push，等待 Cloudflare Pages 部署后线上确认。
+Mac 移行后第一次 CodexPro 小修复已完成并通过线上验证：About 页“本站累计访问量”在当前浏览器 session 已计数后会显示“暂时无法读取”的问题已修复、验证、提交、push 并由 Cloudflare Pages 成功部署。
 
 原因：
 
@@ -52,17 +52,20 @@ push 结果：成功，origin/main 已从 061d981 更新到 9ac0b8a。
 未完成事项：
 
 ```text
-1. 本轮未手动部署；push 后由 Cloudflare Pages 自动部署。
-2. 部署完成后仍需用户进行线上浏览器验证。
+无。
 ```
 
-需要用户部署后验证：
+Cloudflare Pages 部署与线上验证（2026-07-07）：
 
 ```text
-1. 在同一浏览器 session 下刷新 /about/，确认“本站累计访问量”显示数字，不再显示“暂时无法读取”。
-2. 可确认 /api/visits?read=1 返回 200 JSON 且不会自增。
-3. 可确认 /api/visits?increment=1 仍返回 200 JSON 并自增。
-4. 可确认无参数 GET /api/visits 与 HEAD /api/visits 仍返回 204，并带 X-Robots-Tag: noindex, nofollow。
+1. /deployment.json 返回 commit=4f6f4a56a744692786806dfa360e290046de4ec1，builtAt=2026-07-06T15:12:45.830Z，确认最新部署已成功使用交接提交 4f6f4a5；该提交包含修复提交 9ac0b8a。
+2. 最新部署已成功完成，因此无需重新触发 Cloudflare Pages 部署。
+3. https://ronniecross.com/about/ 返回的 HTML 已包含：const requestUrl = counted ? `${counterUrl}?read=1` : `${counterUrl}?increment=1`;
+4. GET /api/visits?read=1 返回 200 JSON，验证时 count=769。
+5. GET /api/visits?increment=1 返回 200 JSON，count 从 769 增加到 770。
+6. 无参数 GET /api/visits 返回 204，响应体为空，并带 X-Robots-Tag: noindex, nofollow。
+7. HEAD /api/visits 返回 204，并带 X-Robots-Tag: noindex, nofollow。
+8. About 页旧 HTML 属于部署传播或缓存期间的暂时状态；当前线上 HTML 与 API 均为新行为。
 ```
 
 ---
