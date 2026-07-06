@@ -111,6 +111,30 @@ def ingest_sermon(inbox: Path, date: str, title: str, speaker: str) -> None:
     print("下一步：校订并翻译 extracted.txt，保存为中文 TXT；不要直接发布机器提取稿。")
 
 
+def allowed_sermon_archive_file(path: Path) -> bool:
+    """Return True only for files allowed in the protected sermon archive.
+
+    The archive is a long-term preservation area. Keep only the three
+    non-regenerable source categories: original files, official source-language
+    text, and final Chinese text. Do not archive metadata.json, generated posts,
+    processed copies, audit reports, extracted text, logs, or other helper files.
+    """
+    if not path.is_file():
+        return False
+    name_lower = path.name.lower()
+    if name_lower.endswith(".extracted.txt"):
+        return False
+    if path.name == "metadata.json":
+        return False
+    if name_lower.endswith((".log", ".csv", ".md", ".json")):
+        return False
+    if ".english-source" in name_lower:
+        return True
+    if "中文" in path.name and path.suffix.lower() == ".txt":
+        return True
+    return path.suffix.lower() in {".pdf", ".docx", ".txt", ".md"} and "中文" not in path.name
+
+
 def archive_sermon(folder_value: str, archive_value: str | None) -> None:
     folder = Path(folder_value).expanduser()
     archive_root = configured_path(archive_value, "RONNIE_SERMON_ARCHIVE")
@@ -119,16 +143,13 @@ def archive_sermon(folder_value: str, archive_value: str | None) -> None:
     destination = archive_root / folder.name
     if destination.exists():
         raise SystemExit(f"归档目录已存在，停止以避免覆盖: {destination}")
-    shutil.copytree(
-        folder,
-        destination,
-        ignore=shutil.ignore_patterns("*.extracted.txt"),
-    )
-    source_files = sorted(
-        path
-        for path in folder.rglob("*")
-        if path.is_file() and not path.name.lower().endswith(".extracted.txt")
-    )
+    source_files = sorted(path for path in folder.rglob("*") if allowed_sermon_archive_file(path))
+    if not source_files:
+        raise SystemExit("没有找到可归档的讲道源文件。")
+    for source in source_files:
+        target = destination / source.relative_to(folder)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
     destination_files = sorted(path for path in destination.rglob("*") if path.is_file())
     if len(source_files) != len(destination_files):
         raise SystemExit("归档文件数量不一致。")
