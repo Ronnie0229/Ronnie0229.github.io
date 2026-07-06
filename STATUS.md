@@ -4,12 +4,12 @@
 
 ## 当前结论
 
-Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过 `node --check functions/api/visits.js`、`npm run build`、`npm run check:admin-save`、`npm run check:knowledge`、`git diff --check`。本轮未提交、未 push、未部署。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过 `node --check functions/api/visits.js`、`npm run build`、`npm run check:admin-save`、`npm run check:knowledge`、`git diff --check`。修复提交 `9ac0b8a` 已 push 到 `origin/main`，等待 Cloudflare Pages 部署后线上验证。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：About 页累计访问量读取 bug 已本地修复并验证；待 commit / push / 部署
+当前任务状态：About 页累计访问量读取 bug 已修复、验证、commit 并 push；待 Cloudflare Pages 部署后验证
 构建状态：npm run build 通过，217 page(s) built，Build Complete
 附加检查：node --check functions/api/visits.js 通过；npm run check:admin-save 通过，Errors: 0；npm run check:knowledge 通过，Posts checked: 181，Errors: 0，Warnings: 0；git diff --check 通过
 ```
@@ -342,4 +342,3 @@ docs/tasks/style-structure-refactor-plan.md
 ```
 
 后续 Codex / CodexPro / Mac mini 接手网站维护、样式重构、内容发布或 Windows→Mac 迁移时，应把这些文档与 `AGENTS.md`、`docs/tasks/current.md` 一起阅读。
-
