@@ -56,6 +56,21 @@ http://127.0.0.1:4321
 - 是否影响后台页面。
 - 是否影响静态站构建。
 
+### API 空访问与前端读取路径
+
+`/api/comments`、`/api/views`、`/api/visits` 等接口的无参数 GET / HEAD 可用于 Search Console / crawler / 误访问处理，默认应返回 `204`，并带 `X-Robots-Tag: noindex, nofollow` 与 `Cache-Control: no-store`。不要让前端把这些无参数 API 空访问当作 JSON 读取路径。
+
+有读取和写入两种语义的接口必须显式区分路径或参数。例如站点累计访问量使用：
+
+```text
+GET /api/visits?read=1       只读取累计访问量，返回 200 JSON，不自增。
+GET /api/visits?increment=1  自增累计访问量，返回 200 JSON。
+GET /api/visits              空访问，返回 204 noindex。
+HEAD /api/visits             空访问，返回 204 noindex。
+```
+
+相关复盘见：`docs/tasks/visit-counter-read-path-postmortem.md`。
+
 ## 后台相关
 
 后台入口见 README 和 `docs/网站后台使用与配置.md`。
@@ -83,6 +98,7 @@ http://127.0.0.1:4321
 - [ ] 如果修改内容，文章页面能正常生成。
 - [ ] 如果修改 SEO，sitemap / RSS / search-index 能正常生成。
 - [ ] 如果修改 Functions，确认后台和 API 影响范围。
+- [ ] 如果修改前端读取 API 的脚本，确认首次访问和 sessionStorage/localStorage 已存在两种状态。
 - [ ] 已更新 `docs/tasks/current.md`。
 
 ## 部署后检查
@@ -97,6 +113,8 @@ http://127.0.0.1:4321
 - Sitemap 是否正常。
 - 后台入口是否仍可访问。
 - 浏览器控制台是否有明显错误。
+- 如果修改了 Functions 或前端 API 调用，确认 API 成功路径、API 空访问/noindex 路径、对应页面 HTML/JS 最新构建和浏览器实际显示结果都正确。
+- 如果修改了 About 页累计访问量，确认 `/about/` HTML 包含 `?read=1`，且 read、increment、无参数 GET、HEAD 四条路径行为符合本文件约定。
 
 ## 回滚原则
 

@@ -4,19 +4,42 @@
 
 ## 当前结论
 
-Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过本地验证，修复提交 `9ac0b8a` 与交接提交 `4f6f4a5` 已 push 到 `origin/main`。Cloudflare Pages 已成功部署 `4f6f4a5` 对应构建产物，线上 About HTML 已包含 `?read=1`，read、increment、无参数 GET 与 HEAD 路径均验证通过。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过本地验证，修复提交 `9ac0b8a` 与交接提交 `4f6f4a5` 已 push 到 `origin/main`。Cloudflare Pages 已成功部署 `4f6f4a5` 对应构建产物，线上 About HTML 已包含 `?read=1`，read、increment、无参数 GET 与 HEAD 路径均验证通过。已新增复盘文档 `docs/tasks/visit-counter-read-path-postmortem.md`，并在 `DEPLOY.md` 补充 API 空访问、前端读取路径、sessionStorage/localStorage 状态与部署后验证规则。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：About 页累计访问量读取 bug 已修复、验证、commit、push、部署并完成线上验证
-构建状态：npm run build 通过，217 page(s) built，Build Complete
-附加检查：node --check functions/api/visits.js 通过；npm run check:admin-save 通过，Errors: 0；npm run check:knowledge 通过，Posts checked: 181，Errors: 0，Warnings: 0；git diff --check 通过
+当前任务状态：About 页累计访问量读取 bug 已修复、验证、commit、push、部署、线上验证并完成复盘文档沉淀
+构建状态：本次仅文档复盘，未改源码，未重新运行 build；上次源码修复 npm run build 通过，217 page(s) built，Build Complete
+附加检查：本次文档修改已执行 git diff --check；上次源码修复 node --check functions/api/visits.js 通过；npm run check:admin-save 通过，Errors: 0；npm run check:knowledge 通过，Posts checked: 181，Errors: 0，Warnings: 0
 ```
 
 ## 继承文档入口
 
 未来 Codex / CodexPro / 本地模型接手时，先读 `AGENTS.md` 和本文件；网站维护读 `docs/workflows/website-maintenance-workflow.md`，设计与架构决策读 `docs/decisions/website-decisions.md`，样式结构重构读 `docs/tasks/style-structure-refactor-plan.md`。
+
+## 本轮访问量修复复盘
+
+新增长期复盘文档：
+
+```text
+docs/tasks/visit-counter-read-path-postmortem.md
+```
+
+已同步部署规则：
+
+```text
+DEPLOY.md：新增 API 空访问与前端读取路径规则，部署前后检查追加 sessionStorage/localStorage 与 API 成功/空访问/noindex 路径验证。
+```
+
+核心长期规则：
+
+```text
+1. 前端读取 JSON 不得复用无参数 GET，因为 API 空访问可能被 SEO 规则定义为 204 noindex。
+2. 有读取和写入/自增两种语义的接口必须显式区分参数或路径。
+3. 修改 Cloudflare Functions 后，部署后必须同时检查 API 行为与静态页面 HTML/JS 是否为最新构建。
+4. 涉及 sessionStorage/localStorage 的前端逻辑，必须验证首次访问和已有本地标记两种状态。
+```
 
 ## 邮件提醒 MVP 第一阶段状态
 
@@ -219,21 +242,51 @@ OK: 10
 分类结果：
 
 ```text
-ok: 10
-no_source: 1
-missing_share_docx: 114
-missing_share_raw: 6
-missing_sermon_raw_directory: 192
+2024 年旧讲道 archive：49 个
+2026-06-14 新增讲道批次：145 个
+2026-06-29/30 新增讲道/分享批次：24 个
+2026-07-01 新增讲道批次：16 个
+2026-07-02 新增讲道批次：35 个
+2026-07-03 新增讲道批次：8 个
+2026-07-04 新增讲道批次：4 个
+2026-07-05 新增讲道批次：1 个
+manual-added 旧资料导入：30 个
+已存在 raw：10 个
+无 source：1 个
 ```
 
-去重后的 raw 找回目标：
+已生成审计清单：
 
 ```text
-Recovery targets: 158
-missing_share_raw: 3
-no_source: 1
-missing_share_docx: 58
-missing_sermon_raw_directory: 96
+docs/source-raw-recovery-checklist.md
+```
+
+## 路径审计任务修改文件
+
+```text
+docs/source-raw-recovery-checklist.md
+docs/tasks/current.md
+STATUS.md
+scripts/audit_source_repair_plan.mjs
+scripts/check_source_paths.py
+scripts/create_source_raw_recovery_checklist.mjs
+```
+
+## 路径审计验证
+
+```text
+npm run build：通过，215 page(s) built，Build Complete
+python scripts/check_source_paths.py：Checked: 323，No source: 1，Missing: 312，OK: 10
+node scripts/audit_source_repair_plan.mjs：生成四阶段审计与 candidates
+node scripts/create_source_raw_recovery_checklist.mjs：生成恢复清单
+```
+
+## 后续建议
+
+```text
+1. 优先从旧仓库、NAS 归档或 Windows 电脑恢复真实 raw 文件。
+2. 恢复 raw 文件后再运行 python scripts/check_source_paths.py。
+3. 如果找不到 raw，宁可保留 missing 状态，也不要伪造 source。
 ```
 
 ## 重要环境限制

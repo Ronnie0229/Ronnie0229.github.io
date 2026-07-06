@@ -68,6 +68,32 @@ Cloudflare Pages 部署与线上验证（2026-07-07）：
 8. About 页旧 HTML 属于部署传播或缓存期间的暂时状态；当前线上 HTML 与 API 均为新行为。
 ```
 
+问题复盘与长期规则沉淀（2026-07-07）：
+
+```text
+1. 已新增复盘文档：docs/tasks/visit-counter-read-path-postmortem.md。
+2. 已更新 DEPLOY.md，补充 API 空访问与前端读取路径约定。
+3. 已明确 /api/visits?read=1、/api/visits?increment=1、无参数 GET、HEAD 四条路径的部署后验证要求。
+4. 已补充 sessionStorage/localStorage 相关前端逻辑必须验证“首次访问”和“已有本地标记后重复访问”两种状态。
+5. 已记录 Mac 侧 CodexPro 当前可完成读写、验证、文档更新和线上只读验证，但 ChatGPT 侧尚未暴露 git_commit / git_push 工具；Git 提交推送仍交给本地 Codex 或专用 Git 工具。
+```
+
+本轮复盘文档任务修改文件：
+
+```text
+DEPLOY.md
+STATUS.md
+docs/tasks/current.md
+docs/tasks/visit-counter-read-path-postmortem.md
+```
+
+本轮复盘文档任务验证：
+
+```text
+本次仅修改文档，没有修改源码，未重新运行 npm run build。
+git diff --check 通过。
+```
+
 ---
 
 ## 当前任务状态（2026-07-05）
