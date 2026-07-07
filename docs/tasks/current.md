@@ -1,6 +1,48 @@
 # 当前任务
 
 
+## 当前任务状态（2026-07-07，canonical 域名 redirects）
+
+Google Search Console 中 `http://www.ronniecross.com/` 与 `http://ronniecross.com/` 显示“网页会自动重定向”后，本轮按用户决定继续只保留不带 www 的正式网址，不把 www 版本做成可索引页面。
+
+本轮修复：
+
+```text
+1. 新增 assets/_redirects，让 Cloudflare Pages 构建后输出根目录 _redirects。
+2. 明确三条 301 规范化规则：
+   - http://www.ronniecross.com/* -> https://ronniecross.com/:splat
+   - https://www.ronniecross.com/* -> https://ronniecross.com/:splat
+   - http://ronniecross.com/* -> https://ronniecross.com/:splat
+3. 保持 sitemap.xml、robots.txt、canonical、og:url 的正式域名均为 https://ronniecross.com。
+4. 不新增 www canonical，不把 www 或 http URL 放入 sitemap。
+```
+
+本轮修改文件：
+
+```text
+assets/_redirects
+STATUS.md
+docs/tasks/current.md
+```
+
+验证结果：
+
+```text
+npm run sync：首次因本地 Google Search redirects 改动存在而按保护规则停止；临时 stash 这 3 个改动后重新执行，通过，Already up to date，并已恢复 stash。
+npm run build：通过，221 page(s) built，Build Complete。
+已确认 dist/_redirects 存在，并包含三条 canonical 301 规则。
+已确认 dist/sitemap.xml、dist/robots.txt、dist/index.html 中仍只出现 https://ronniecross.com，不出现 www.ronniecross.com。
+```
+
+未完成事项：
+
+```text
+1. 需要提交、push 并等待 Cloudflare Pages 部署。
+2. 部署后可在 Google Search Console 对 https://ronniecross.com/ 重新请求抓取；对 http/www 旧 URL，显示“网页会自动重定向”是规范化到正式网址后的正常结果，不应继续把它们作为需要索引的目标 URL 验证。
+```
+
+---
+
 ## 当前任务状态（2026-07-07）
 
 Google 搜索结果网站图标可读性修复已收窄为只影响搜索结果 favicon：此前误覆盖的既存透明/应用图标 PNG 已全部从 Git HEAD 恢复，保留原用途；本轮只新增一个 Google 搜索结果专用深色背景图标，并让页面 head 的 `rel="icon"` 指向它。

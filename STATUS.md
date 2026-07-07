@@ -1,17 +1,17 @@
-﻿# 项目状态
+# 项目状态
 
 最后更新：2026-07-07 +09:00
 
 ## 当前结论
 
-Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮 Google 搜索结果网站图标修复已收窄范围：此前误覆盖的既存 favicon、apple-touch-icon、manifest icon PNG 文件已从 Git HEAD 恢复，保留它们原有用途；现在只新增 `assets/images/google-search-icon-48.png`，该文件由用户确认的 `assets/images/ronniecross-logo-theme-dark.jpg` 等比例缩放生成，并且仅由首页 head 的 `rel="icon"` 引用，用于引导 Google 搜索结果抓取深色背景图标。`apple-touch-icon` 与 `site.webmanifest` 不再被本轮改动牵连。此前 About 页“本站累计访问量：暂时无法读取”问题已修复、验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增 Google Search Console 域名规范化修复：`assets/_redirects` 明确将 `http://www.ronniecross.com/*`、`https://www.ronniecross.com/*`、`http://ronniecross.com/*` 统一 301 到 `https://ronniecross.com/:splat`，继续只保留不带 www 的正式网址。网站 sitemap、canonical 与 robots 仍指向 `https://ronniecross.com`。此前 Google 搜索结果网站图标修复已完成并提交：只使用专用深色背景 favicon，不牵连 apple-touch-icon 与 manifest icon。About 页访问量修复已验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：Google 搜索结果专用深色 favicon 已完成本地修改；待提交、push、Cloudflare Pages 部署与 Google Search Console 请求重新编入索引
-构建状态：npm run build 通过，217 page(s) built，Build Complete
-附加检查：已恢复 7 个既存图片文件；当前变更只剩 google-search-icon-48.png、BaseLayout、STATUS.md、docs/tasks/current.md
+当前任务状态：已新增 canonical 域名 redirects，本地构建通过；待提交、push、Cloudflare Pages 部署后在 Google Search Console 重新检查
+构建状态：npm run build 通过，221 page(s) built，Build Complete
+附加检查：sitemap、canonical、robots 均保持 https://ronniecross.com；新增 dist/_redirects 构建产物包含三条 canonical 301 规则
 ```
 
 ## 继承文档入口
