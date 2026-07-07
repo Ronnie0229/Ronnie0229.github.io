@@ -4,14 +4,14 @@
 
 ## 当前结论
 
-Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮已修复 About 页“本站累计访问量：暂时无法读取”问题：原因是前端在当前 session 已计数后请求无参数 `/api/visits` 读取计数，但后端为 SEO 将无参数 GET 设计为 204，导致前端 JSON 解析失败；现改为前端使用 `/api/visits?read=1` 显式读取，后端只对 `read=1` 或 `increment=1` 返回 JSON，仍保留无参数 GET/HEAD 的 noindex 204 行为。已通过本地验证，修复提交 `9ac0b8a` 与交接提交 `4f6f4a5` 已 push 到 `origin/main`。Cloudflare Pages 已成功部署 `4f6f4a5` 对应构建产物，线上 About HTML 已包含 `?read=1`，read、increment、无参数 GET 与 HEAD 路径均验证通过。已新增复盘文档 `docs/tasks/visit-counter-read-path-postmortem.md`，并在 `DEPLOY.md` 补充 API 空访问、前端读取路径、sessionStorage/localStorage 状态与部署后验证规则。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮 Google 搜索结果网站图标修复已收窄范围：此前误覆盖的既存 favicon、apple-touch-icon、manifest icon PNG 文件已从 Git HEAD 恢复，保留它们原有用途；现在只新增 `assets/images/google-search-icon-48.png`，该文件由用户确认的 `assets/images/ronniecross-logo-theme-dark.jpg` 等比例缩放生成，并且仅由首页 head 的 `rel="icon"` 引用，用于引导 Google 搜索结果抓取深色背景图标。`apple-touch-icon` 与 `site.webmanifest` 不再被本轮改动牵连。此前 About 页“本站累计访问量：暂时无法读取”问题已修复、验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
 当前主分支：main
-当前任务状态：About 页累计访问量读取 bug 已修复、验证、commit、push、部署、线上验证并完成复盘文档沉淀
-构建状态：本次仅文档复盘，未改源码，未重新运行 build；上次源码修复 npm run build 通过，217 page(s) built，Build Complete
-附加检查：本次文档修改已执行 git diff --check；上次源码修复 node --check functions/api/visits.js 通过；npm run check:admin-save 通过，Errors: 0；npm run check:knowledge 通过，Posts checked: 181，Errors: 0，Warnings: 0
+当前任务状态：Google 搜索结果专用深色 favicon 已完成本地修改；待提交、push、Cloudflare Pages 部署与 Google Search Console 请求重新编入索引
+构建状态：npm run build 通过，217 page(s) built，Build Complete
+附加检查：已恢复 7 个既存图片文件；当前变更只剩 google-search-icon-48.png、BaseLayout、STATUS.md、docs/tasks/current.md
 ```
 
 ## 继承文档入口

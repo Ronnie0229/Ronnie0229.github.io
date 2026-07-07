@@ -3,6 +3,52 @@
 
 ## 当前任务状态（2026-07-07）
 
+Google 搜索结果网站图标可读性修复已收窄为只影响搜索结果 favicon：此前误覆盖的既存透明/应用图标 PNG 已全部从 Git HEAD 恢复，保留原用途；本轮只新增一个 Google 搜索结果专用深色背景图标，并让页面 head 的 `rel="icon"` 指向它。
+
+本轮修复：
+
+```text
+1. 已恢复以下 7 个既存图片文件，避免影响它们在深浅模式、manifest、apple-touch-icon 或其他位置的原有用途：
+   - assets/images/apple-touch-icon.png
+   - assets/images/favicon-48.png
+   - assets/images/favicon-large-16.png
+   - assets/images/favicon-large-32.png
+   - assets/images/favicon-large-48.png
+   - assets/images/ronniecross-logo-192.png
+   - assets/images/ronniecross-logo-512.png
+2. 新增 assets/images/google-search-icon-48.png，仅从正式深色背景 Logo assets/images/ronniecross-logo-theme-dark.jpg 等比例缩放生成，不改变设计。
+3. src/layouts/BaseLayout.astro：只将 rel="icon" 的 48x48 favicon 指向 /images/google-search-icon-48.png。
+4. apple-touch-icon 已恢复为原来的 /images/ronniecross-logo-theme-dark.jpg；site.webmanifest 没有修改，仍继续使用原有 manifest 图标。
+```
+
+本轮修改文件：
+
+```text
+assets/images/google-search-icon-48.png
+src/layouts/BaseLayout.astro
+STATUS.md
+docs/tasks/current.md
+```
+
+验证结果：
+
+```text
+npm run sync：通过，Already up to date。
+已确认被误覆盖的 7 个既存图片文件不再处于 modified 状态。
+npm run build：通过。
+```
+
+未完成事项：
+
+```text
+1. 需要提交、push 并等待 Cloudflare Pages 部署。
+2. 部署后建议在 Google Search Console 对首页请求重新编入索引；Google 搜索结果图标更新仍取决于 Google 重新抓取与处理，可能需要数天到数周。
+```
+
+---
+
+## 上一轮任务状态（2026-07-07）
+
 Mac 移行后第一次 CodexPro 小修复已完成并通过线上验证：About 页“本站累计访问量”在当前浏览器 session 已计数后会显示“暂时无法读取”的问题已修复、验证、提交、push 并由 Cloudflare Pages 成功部署。
 
 原因：
