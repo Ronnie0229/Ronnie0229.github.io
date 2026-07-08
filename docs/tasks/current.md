@@ -1,5 +1,62 @@
 # 当前任务
 
+## 当前任务状态（2026-07-08，诗篇系列 7 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理后续 7 篇诗篇系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Psalm 51 Meeting God in our Repentance.docx
+2. [TF] Psalm 88 Meeting God in our Despair.docx
+3. [TF] Psalm 103 Meeting God in our Forgetting.docx
+4. [TF] Psalm 119 Meeting God in His Word.docx
+5. [TF] Psalm 138 Thanksgiving.docx
+6. [TF] Psalm 139 Meeting God in our Loneliness.docx
+7. [TF] Psalm 150 Meeting God in our Praise.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-08-诗篇-51-1-19｜在悔改中遇见神.md
+2. src/content/posts/2026-07-08-诗篇-88-1-18｜在绝望中遇见神.md
+3. src/content/posts/2026-07-08-诗篇-103-1-22｜在遗忘中遇见神.md
+4. src/content/posts/2026-07-08-诗篇-119-9-16｜在神的话语中遇见神.md
+5. src/content/posts/2026-07-08-诗篇-138-1-8｜感恩.md
+6. src/content/posts/2026-07-08-诗篇-139-1-24｜在孤独中遇见神.md
+7. src/content/posts/2026-07-08-诗篇-150-1-6｜在赞美中遇见神.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：7 篇通过。
+content_workflow.py publish sermon：7 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 7 篇补充 articleId。
+npm run build：通过，252 page(s) built。
+npm run check:knowledge：通过，Posts checked: 215，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 7 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-08，诗篇系列 6 篇讲道发布）
 
 本轮按讲道整理项目文档重新确认了正确收件入口：`NAS/讲道收件 -> /Volumes/tmp/讲道`。该目录中的 6 篇诗篇系列 docx 已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
