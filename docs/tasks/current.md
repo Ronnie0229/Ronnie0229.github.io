@@ -1,5 +1,70 @@
 # 当前任务
 
+## 当前任务状态（2026-07-08，诗篇系列 6 篇讲道发布）
+
+本轮按讲道整理项目文档重新确认了正确收件入口：`NAS/讲道收件 -> /Volumes/tmp/讲道`。该目录中的 6 篇诗篇系列 docx 已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Psalm 1 The Living Word.docx
+2. [TF] Psalm 7 Anger.docx
+3. [TF] Psalm 23 The Lord is my Shepherd.docx
+4. [TF] Psalm 27 Security in God.docx
+5. [TF] Psalm 32 The Joy of Forgiveness.docx
+6. [TF] Psalm 37 Meeting God in our Envy.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-08-诗篇-1-1-6｜生命之道.md
+2. src/content/posts/2026-07-08-诗篇-7-1-17｜怒气.md
+3. src/content/posts/2026-07-08-诗篇-23-1-6｜耶和华是我的牧者.md
+4. src/content/posts/2026-07-08-诗篇-27-1-14｜在神里面的安全感.md
+5. src/content/posts/2026-07-08-诗篇-32-1-11｜赦免的喜乐.md
+6. src/content/posts/2026-07-08-诗篇-37-1-11｜在嫉妒中遇见神.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：6 篇通过。
+content_workflow.py publish sermon：6 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 6 篇补充 articleId。
+npm run build：通过，245 page(s) built。
+npm run check:knowledge：通过，Posts checked: 208，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+已同步回写：
+
+```text
+1. 个人网页项目 data/raw/教会讲道/*/metadata.json 已记录 archive_status=archived。
+2. 讲道整理 发布记录/prepublish-registry.json 已记录 published / archive 信息。
+3. 讲道整理 发布记录/codexpro-handoff.md 已追加交接。
+4. 讲道整理 发布记录/publish-batches.md 已追加本批次状态更新。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 6 个 URL。
+```
+
+---
+
+
 
 ## 当前任务状态（2026-07-07，canonical 域名 redirects）
 
