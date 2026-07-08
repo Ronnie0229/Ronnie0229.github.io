@@ -55,12 +55,14 @@ NAS 归档：
 4. 讲道整理 发布记录/publish-batches.md 已追加本批次状态更新。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
 1. 已提交并 push 到 GitHub：7012656 publish six psalms sermons。
-2. 部署检查时 `deployment.json` 仍为上一提交 7e9b60c；6 个新 URL 虽返回 200，但 HTML 仍是旧首页壳，尚未确认新文章内容上线。
-3. Cloudflare Pages 切到 7012656 后，需要重新线上验证 6 个 URL。
+2. Cloudflare Pages 已部署到 commit=7012656e6225cbafea661d5b4d384c04d28ce4e5，builtAt=2026-07-08T14:36:35.709Z。
+3. 6 个新文章 URL 均返回 200。
+4. 6 个页面均已确认不是旧首页壳，页面 <title> 与正文标题均包含对应讲道标题。
+5. 线上验证完成，无剩余事项。
 ```
 
 ---
