@@ -51,8 +51,9 @@ NAS 归档：
 未完成事项：
 
 ```text
-1. 需要提交并 push 到 GitHub。
-2. Cloudflare Pages 部署完成后，需要线上验证 7 个 URL。
+1. 已提交并 push 到 GitHub：e329028 publish seven more psalms sermons。
+2. 当前线上 deployment.json 仍为上一提交 c19b6a9，Cloudflare Pages 尚未切到包含这 7 篇文章的新提交。
+3. 7 个新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文标题。
 ```
 
 ---
