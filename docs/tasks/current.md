@@ -1,5 +1,64 @@
 # 当前任务
 
+## 当前任务状态（2026-07-09，马太福音系列 8 篇讲道发布：登山宝训第 6-7 章）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 8 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Matthew 6_1-4 Giving.docx
+2. [TF] Matthew 6_5-13 Prayer.docx
+3. [TF] Matthew 6_14-18 Fasting.docx
+4. [TF] Matthew 6_19-24 Treasures.docx
+5. [TF] Matthew 7_1-6 Judging Others.docx
+6. [TF] Matthew 7_12-14 The Golden rule.docx
+7. [TF] Matthew 7_15-23 True Discipleship.docx
+8. [WF] Matthew 7_24-29 The Wise and Foolish Builder.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-09-马太福音-6-1-4｜施舍.md
+2. src/content/posts/2026-07-09-马太福音-6-5-13｜祷告.md
+3. src/content/posts/2026-07-09-马太福音-6-14-18｜禁食.md
+4. src/content/posts/2026-07-09-马太福音-6-19-24｜财宝.md
+5. src/content/posts/2026-07-09-马太福音-7-1-6｜论断人.md
+6. src/content/posts/2026-07-09-马太福音-7-12-14｜金律与窄门.md
+7. src/content/posts/2026-07-09-马太福音-7-15-23｜真正的门徒.md
+8. src/content/posts/2026-07-09-马太福音-7-24-29｜聪明人与愚拙人的根基.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：8 篇通过。
+content_workflow.py publish sermon：8 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 8 篇补充 articleId。
+npm run build：通过，272 page(s) built。
+npm run check:knowledge：通过，Posts checked: 235，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 8 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-09，马太福音系列 6 篇讲道发布：律法与登山宝训应用）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 6 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
