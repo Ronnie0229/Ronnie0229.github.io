@@ -1,5 +1,60 @@
 # 当前任务
 
+## 当前任务状态（2026-07-09，马太福音系列 6 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 6 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Matthew 1_1 Series Intro.docx
+2. [TF] Matthew 5_1-3 Blessed are the Poor in Spirit.docx
+3. [TF] Matthew 5_3-6 The Beattitudes.docx
+4. [TF] Matthew 5_7-9.docx
+5. [TF] Matt 5_10-12 Blessed are the Persecuted.docx
+6. [TF] Matthew 5_13-16 Salt and Light.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-09-马太福音-1-1｜教师君王系列导论.md
+2. src/content/posts/2026-07-09-马太福音-5-1-3｜灵里贫穷的人有福了.md
+3. src/content/posts/2026-07-09-马太福音-5-3-6｜八福中的哀恸温柔与饥渴慕义.md
+4. src/content/posts/2026-07-09-马太福音-5-7-9｜八福中的怜恤清心与使人和睦.md
+5. src/content/posts/2026-07-09-马太福音-5-10-12｜为义受逼迫的人有福了.md
+6. src/content/posts/2026-07-09-马太福音-5-13-16｜盐和光.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：6 篇通过。
+content_workflow.py publish sermon：6 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 6 篇补充 articleId。
+npm run build：通过，258 page(s) built。
+npm run check:knowledge：通过，Posts checked: 221，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 6 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-08，诗篇系列 7 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理后续 7 篇诗篇系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
