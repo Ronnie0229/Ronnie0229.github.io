@@ -1,5 +1,60 @@
 # 当前任务
 
+## 当前任务状态（2026-07-09，马太福音系列 6 篇讲道发布：律法与登山宝训应用）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 6 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Matthew 5_17-20 Jesus fulfills the Law.docx
+2. [TF] Matthew 5_21-16 Anger.docx
+3. [TF] Matthew 5_27-30 Lust.docx
+4. [TF] Matthew 5_31-37 Keeping Commitments.docx
+5. [TF] Matthew 5_38-42  Retaliation.docx
+6. [TF] Matthew 5_43-48 Love your Enemies.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-09-马太福音-5-17-20｜耶稣成全律法.md
+2. src/content/posts/2026-07-09-马太福音-5-21-26｜怒气与和好.md
+3. src/content/posts/2026-07-09-马太福音-5-27-30｜情欲.md
+4. src/content/posts/2026-07-09-马太福音-5-31-37｜持守承诺.md
+5. src/content/posts/2026-07-09-马太福音-5-38-42｜不报复.md
+6. src/content/posts/2026-07-09-马太福音-5-43-48｜爱你的仇敌.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：6 篇通过。
+content_workflow.py publish sermon：6 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 6 篇补充 articleId。
+npm run build：通过，264 page(s) built。
+npm run check:knowledge：通过，Posts checked: 227，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 6 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-09，马太福音系列 6 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 6 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
