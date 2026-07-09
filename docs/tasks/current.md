@@ -46,12 +46,14 @@ NAS 归档：
 未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 已提交并 push 到 GitHub：e62f7b6 publish six more matthew sermons。
-2. 当前线上 deployment.json 仍为上一提交 557161f，Cloudflare Pages 尚未切到包含这 6 篇文章的新提交。
-3. 6 个新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文标题。
+1. 已提交并 push 到 GitHub：e62f7b6 publish six more matthew sermons；状态记录提交：61cb738 docs: record second matthew deployment pending。
+2. Cloudflare Pages 已部署到 commit=e62f7b6b2959ebb3a248ccb46dbbabb5fb7767a6，builtAt=2026-07-09T14:48:21.465Z。
+3. 6 个新文章 URL 均返回 200。
+4. 6 个页面均已确认不是旧首页壳，页面 <title> 与正文标题均包含对应讲道标题。
+5. 线上验证完成，无剩余事项。
 ```
 
 ---
