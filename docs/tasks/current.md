@@ -41,9 +41,9 @@ NAS 归档：
 未完成事项：
 
 ```text
-1. 需要提交并 push 到 GitHub。
-2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
-3. 线上验证时需确认页面包含讲员 Scott Beall。
+1. 已提交并 push 到 GitHub：930625e publish Scott Beall discipleship sermon。
+2. 当前线上 deployment.json 仍为上一提交 a247de0，Cloudflare Pages 尚未切到包含这 1 篇文章的新提交。
+3. 新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题、正文标题和讲员 Scott Beall。
 ```
 
 ---
