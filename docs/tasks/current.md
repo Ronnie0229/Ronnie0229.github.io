@@ -1,5 +1,52 @@
 # 当前任务
 
+## 当前任务状态（2026-07-10，William Shaw 传福音主题 1 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 1 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
+
+讲员说明：用户明确指定本篇讲员为 `William Shaw`，源稿开头也自述 `My name is William Shaw`。本轮已覆盖自动默认值，网站与记录均使用 `William Shaw`。
+
+本轮处理范围：
+
+```text
+1. 3-5-23 EVANGELISM CAPTIONS.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-10-马太福音-9-35-38｜传福音的心.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync 等价同步脚本 node scripts/sync_from_github.mjs：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：通过，目标 slug 为 2026-07-10。
+content_workflow.py publish sermon：已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已补充 articleId。
+npm run build：通过，308 page(s) built。
+npm run check:knowledge：通过，Posts checked: 269，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/20260710_马太福音9:35-38_传福音的心_WilliamShaw。
+只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，门训洗礼与福音主题 7 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 7 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
