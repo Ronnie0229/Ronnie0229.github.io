@@ -38,12 +38,15 @@ NAS 归档：
 未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 已提交并 push 到 GitHub：6e0d449 publish William Shaw evangelism sermon。
-2. 当前线上 deployment.json 仍为上一提交 ab1831d，Cloudflare Pages 尚未切到包含这 1 篇文章的新提交。
-3. 新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题、正文标题和讲员 William Shaw。
+1. 已提交并 push 到 GitHub：6e0d449 publish William Shaw evangelism sermon；状态记录提交：4f9fba5 docs: record William Shaw deployment pending。
+2. Cloudflare Pages 已部署到 commit=6e0d44942411faa4784367ef6f2b1d5d70f9c57e，builtAt=2026-07-10T12:32:54.923Z。
+3. 新文章 URL 返回 200。
+4. 页面已确认不是旧首页壳，页面 <title> 与正文标题均包含对应讲道标题。
+5. 页面已确认包含讲员 William Shaw。
+6. 线上验证完成，无剩余事项。
 ```
 
 ---
