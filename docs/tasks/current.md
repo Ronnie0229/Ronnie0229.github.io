@@ -1,5 +1,62 @@
 # 当前任务
 
+## 当前任务状态（2026-07-10，混合主题 7 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 7 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
+
+本轮处理范围：
+
+```text
+1. [TF] 11-13-22 The Grace of Giving.docx
+2. [TF] 4-17-2022 The Ressurection Jn 20_11-8_.docx
+3. [TF] 8-14-22 Mission of God .docx
+4. [TF] Communion - Remember Jesus Past, Present, Future.docx
+5. [TF] Ephesians 6_1-4 Children and Parents.docx
+6. [TF] Galatians 4_6-7 Adoption.docx
+7. [TF] Proverbs - Friendship.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-10-哥林多后书-8-7-9｜奉献的恩典.md
+2. src/content/posts/2026-07-10-约翰福音-20-11-18｜复活的盼望.md
+3. src/content/posts/2026-07-10-哥林多后书-5-17-21｜神的使命.md
+4. src/content/posts/2026-07-10-路加福音-22-14-20｜记念耶稣.md
+5. src/content/posts/2026-07-10-以弗所书-6-1-4｜儿女与父母.md
+6. src/content/posts/2026-07-10-加拉太书-4-4-7｜福音中的收纳.md
+7. src/content/posts/2026-07-10-箴言-13-20｜友谊.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync 等价同步脚本 node scripts/sync_from_github.mjs：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：7 篇通过，目标 slug 均为 2026-07-10。
+content_workflow.py publish sermon：7 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 7 篇补充 articleId。
+npm run build：通过，298 page(s) built。
+npm run check:knowledge：通过，Posts checked: 261，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 7 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，新年异象系列 2 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 2 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
