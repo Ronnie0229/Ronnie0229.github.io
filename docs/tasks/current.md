@@ -40,12 +40,14 @@ NAS 归档：
 未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 已提交并 push 到 GitHub：cd3a9d1 publish three easter sermons。
-2. 当前线上 deployment.json 仍为上一提交 3b8d81c，Cloudflare Pages 尚未切到包含这 3 篇文章的新提交。
-3. 3 个新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文标题。
+1. 已提交并 push 到 GitHub：cd3a9d1 publish three easter sermons；状态记录提交：3118a07 docs: record easter deployment pending。
+2. Cloudflare Pages 已部署到 commit=cd3a9d148c33e29013c4cc0b035c21b664c4ccfa，builtAt=2026-07-10T10:45:44.278Z。
+3. 3 个新文章 URL 均返回 200。
+4. 3 个页面均已确认不是旧首页壳，页面 <title> 与正文标题均包含对应讲道标题。
+5. 线上验证完成，无剩余事项。
 ```
 
 ---
