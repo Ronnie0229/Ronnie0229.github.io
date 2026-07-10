@@ -1,5 +1,56 @@
 # 当前任务
 
+## 当前任务状态（2026-07-09，圣诞系列 4 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 4 篇圣诞系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
+
+本轮处理范围：
+
+```text
+1. [TF] Matthew 1_18-25 God with Us.docx
+2. Matthew 2_1-6 Worship the True King.docx
+3. [TF] Luke 2_1-7 The Unwelcome King.docx
+4. [TF] Luke 2_8-20 The Kings Announcement.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-09-马太福音-1-18-25｜神与我们同在.md
+2. src/content/posts/2026-07-09-马太福音-2-1-12｜敬拜真正的君王.md
+3. src/content/posts/2026-07-09-路加福音-2-1-7｜不受欢迎的君王.md
+4. src/content/posts/2026-07-09-路加福音-2-8-20｜君王的宣告.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：4 篇通过。
+content_workflow.py publish sermon：4 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 4 篇补充 articleId。
+npm run build：通过，276 page(s) built。
+npm run check:knowledge：通过，Posts checked: 239，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 4 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-09，马太福音系列 8 篇讲道发布：登山宝训第 6-7 章）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 8 篇马太福音系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。
