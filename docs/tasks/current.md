@@ -48,12 +48,14 @@ NAS 归档：
 未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 已提交并 push 到 GitHub：93d102e publish seven discipleship baptism sermons。
-2. 当前线上 deployment.json 仍为上一提交 c84747e，Cloudflare Pages 尚未切到包含这 7 篇文章的新提交。
-3. 7 个新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文标题。
+1. 已提交并 push 到 GitHub：93d102e publish seven discipleship baptism sermons；状态记录提交：3ffdb72 docs: record discipleship baptism deployment pending。
+2. Cloudflare Pages 已部署到 commit=93d102e1188aaccb4fff97bc89539ec96bed6fb1，builtAt=2026-07-10T11:58:04.936Z。
+3. 7 个新文章 URL 均返回 200。
+4. 7 个页面均已确认不是旧首页壳，页面 <title> 与正文标题均包含对应讲道标题。
+5. 线上验证完成，无剩余事项。
 ```
 
 ---
