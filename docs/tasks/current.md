@@ -1,5 +1,60 @@
 # 当前任务
 
+## 当前任务状态（2026-07-10，十字架、复活与升天系列 6 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 6 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
+
+本轮处理范围：
+
+```text
+1. [TF] Mark 15_21-26 To the cross.docx
+2. [TF] Luke 23_39-43 On the Cross.docx
+3. [TF] John 19_30-42 Down the Cross.docx
+4. [TF] John 20_24-31 Believing the Resurrection.docx
+5. [TF] John 21_1-19 Run to Jesus.docx
+6. [TF] Luke 24_49-53 The Ascension.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-10-马可福音-15-21-26｜走向十字架.md
+2. src/content/posts/2026-07-10-路加福音-23-39-43｜在十字架上.md
+3. src/content/posts/2026-07-10-约翰福音-19-30-42｜从十字架下来.md
+4. src/content/posts/2026-07-10-约翰福音-20-24-31｜相信复活.md
+5. src/content/posts/2026-07-10-约翰福音-21-1-19｜奔向耶稣.md
+6. src/content/posts/2026-07-10-路加福音-24-49-53｜耶稣升天.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：6 篇通过，目标 slug 均为 2026-07-10。
+content_workflow.py publish sermon：6 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 6 篇补充 articleId。
+npm run build：通过，286 page(s) built。
+npm run check:knowledge：通过，Posts checked: 249，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 6 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，圣诞系列 4 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 4 篇圣诞系列 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮明确使用实际整理发布日期 `2026-07-10`，未沿用上一批日期。
