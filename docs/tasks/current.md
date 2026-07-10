@@ -1,5 +1,53 @@
 # 当前任务
 
+## 当前任务状态（2026-07-10，Scott Beall 大使命门徒训练主题 1 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理。用户要求发布 1 篇文章；收件移动时实际带出 2 个文件，其中 `~$16-23 Translation File.docx` 是 Word 临时锁文件，已移到 `讲道整理/中间文件/异常收件/`，不作为文章处理。本轮使用实际整理发布日期 `2026-07-10`。
+
+讲员识别说明：源稿第二段明确自我介绍 `My name is Scott Beall, this is my wife Courtney and my son Noah.` 因此本篇讲员识别为 `Scott Beall`，不是默认 Patrick。
+
+本轮处理范围：
+
+```text
+1. 7-16-23 Translation File.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-10-马太福音-28-18-20｜使人成为门徒.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync 等价同步脚本 node scripts/sync_from_github.mjs：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：通过，目标 slug 为 2026-07-10。
+content_workflow.py publish sermon：已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已补充 articleId。
+npm run build：通过，309 page(s) built。
+npm run check:knowledge：通过，Posts checked: 270，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/20260710_马太福音28:18-20_使人成为门徒_ScottBeall。
+只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
+3. 线上验证时需确认页面包含讲员 Scott Beall。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，William Shaw 传福音主题 1 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 1 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
