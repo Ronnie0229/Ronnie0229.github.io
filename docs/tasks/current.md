@@ -1,5 +1,62 @@
 # 当前任务
 
+## 当前任务状态（2026-07-10，门训洗礼与福音主题 7 篇讲道发布）
+
+本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 7 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
+
+本轮处理范围：
+
+```text
+1. 4-10-22 God is Satisfying 神は満たす方.docx
+2. Joel 2_1-17 The Day of the Lord.docx
+3. [TF] 1 Timothy 1_6-10 When Money meets the Gospel.docx（正文实际经文为提摩太前书 6:3-10）
+4. [TF] 2 Timothy 2_1-7 Disciples Make Disciples.docx
+5. [TF] 3-12-23 The Inifinite worth of Christ.docx
+6. [TF] Acts 2_38-41 Why Baptism.docx
+7. [TF] Matthew 16_24-28 Take up Your Cross.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-10-约翰福音-4-7-15｜神使人满足.md
+2. src/content/posts/2026-07-10-约珥书-2-1-17｜耶和华的日子.md
+3. src/content/posts/2026-07-10-提摩太前书-6-3-10｜金钱遇见福音.md
+4. src/content/posts/2026-07-10-提摩太后书-2-1-7｜门徒造就门徒.md
+5. src/content/posts/2026-07-10-启示录-7-9-12｜基督无限的价值.md
+6. src/content/posts/2026-07-10-使徒行传-2-38-41｜为什么受洗.md
+7. src/content/posts/2026-07-10-马太福音-16-24-28｜背起你的十字架.md
+```
+
+同步、构建与检查：
+
+```text
+npm run sync 等价同步脚本 node scripts/sync_from_github.mjs：通过，Already up to date。
+content_workflow.py publish sermon --dry-run：7 篇通过，目标 slug 均为 2026-07-10。
+content_workflow.py publish sermon：7 篇已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已为 7 篇补充 articleId。
+npm run build：通过，307 page(s) built。
+npm run check:knowledge：通过，Posts checked: 268，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+NAS 归档：
+
+```text
+已归档到 /Volumes/share/教会讲道/。
+每篇只归档 3 个白名单文件：原始 docx、英文原稿、最终中文原稿。
+未归档 metadata.json、processed、posts、审计报告或其他可再生成文件。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 7 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，混合主题 7 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理 7 篇 docx。已完成整理、翻译、发布、构建检查与 NAS 受保护归档。本轮使用实际整理发布日期 `2026-07-10`。
