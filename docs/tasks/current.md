@@ -41,8 +41,9 @@ NAS 归档：
 未完成事项：
 
 ```text
-1. 需要提交并 push 到 GitHub。
-2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
+1. 已提交并 push 到 GitHub：6e0d449 publish William Shaw evangelism sermon。
+2. 当前线上 deployment.json 仍为上一提交 ab1831d，Cloudflare Pages 尚未切到包含这 1 篇文章的新提交。
+3. 新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题、正文标题和讲员 William Shaw。
 ```
 
 ---
