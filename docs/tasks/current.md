@@ -1,5 +1,47 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，中文文章自动邮件识别发布前修复）
+
+本轮按 `.ai-bridge/current-plan.md` 执行邮件自动触发紧急修复，目标是在今日讲道稿发布前上线。未发布新文章，未修改任何文章文件，未运行 `workflow_dispatch`，未补发任何旧文章。
+
+问题根因：
+
+```text
+首次中文文章提交 ccbacfa 的 GitHub Actions 显示 success，但日志为 No changed published posts were found in this push。
+原因是 Git 默认把中文文件名输出为带引号的八进制转义路径，原脚本按普通 UTF-8 路径正则匹配，导致中文文章路径无法识别。
+```
+
+本轮修复：
+
+```text
+1. scripts/notify-deployed-posts.mjs 的 Git 文件列表读取改为 -z NUL 分隔，避免中文、空格和特殊字符被 quotePath 影响。
+2. 文件列表增加 --diff-filter=A，只识别新增文章；修改既有文章不发送新文章提醒。
+3. docs/tasks/email-notification-mvp-phase3.md 已记录首次真实发送根因、NUL 分隔规则、新增文件过滤规则和正常发布不得手工补发规则。
+4. 复核 .github/workflows/email-published-posts.yml：push 路径过滤仍限 src/content/posts/**.md；本轮没有触发 workflow_dispatch。
+```
+
+本地模拟：
+
+```text
+1. 历史中文新增文章 ccbacfa：识别 1 个 slug，2026-07-12-列王纪上-17-1-24-以利亚与撒勒法寡妇-信靠神的供应。
+2. 仅修改既有文章 07b7a1a：识别 0 个 slug。
+3. 一次 push 新增多篇中文文章 93d102e：识别 7 个 slug，且去重后数量为 7。
+```
+
+待完成：
+
+```text
+1. node --check scripts/notify-deployed-posts.mjs：通过。
+2. npm run check:admin-save：通过，Errors: 0。
+3. npm run check:knowledge：通过，Posts checked: 272，Errors: 0，Warnings: 0。
+4. npm run build：通过，312 page(s) built，Build Complete。
+5. git diff --check：通过。
+6. 待提交并 push。
+7. 待等待 Cloudflare /deployment.json 确认修复提交已部署。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，邮件提醒漏发排查修复与受控补发）
 
 本轮按用户要求排查《以利亚与撒勒法寡妇：信靠神的供应》邮件提醒漏发问题。未发布新文章，未在本地读取或输出密钥，受控补发目标仅限这一篇：

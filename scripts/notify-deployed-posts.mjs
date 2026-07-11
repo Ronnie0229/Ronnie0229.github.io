@@ -37,13 +37,13 @@ function changedPostSlugs() {
 
   const emptyBefore = /^0+$/.test(before);
   const args = emptyBefore
-    ? ["show", "--pretty=format:", "--name-only", after]
-    : ["diff", "--name-only", `${before}..${after}`];
+    ? ["show", "--pretty=format:", "--name-only", "--diff-filter=A", "-z", after]
+    : ["diff", "--name-only", "--diff-filter=A", "-z", `${before}..${after}`];
   const output = execFileSync("git", args, { encoding: "utf8" });
   return Array.from(
     new Set(
       output
-        .split(/\r?\n/)
+        .split("\0")
         .map((line) => line.trim())
         .filter((line) => /^src\/content\/posts\/.+\.md$/i.test(line))
         .map((line) => line.replace(/^src\/content\/posts\//, "").replace(/\.md$/i, ""))

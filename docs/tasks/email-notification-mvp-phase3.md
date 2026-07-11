@@ -88,17 +88,17 @@ scripts/notify-deployed-posts.mjs
 
 ```text
 1. main 分支 push 中只要包含 src/content/posts/*.md 的新增或修改，就启动工作流。
-2. 工作流读取本次 push 中所有变动的文章 slug。
+2. 工作流只读取本次 push 中新增的文章 slug；修改既有文章不会发送“新文章提醒”。
 3. 等待线上 /deployment.json 的 commit 等于本次文章 push，或属于包含该文章 push 的后续 main 提交。
 4. 这样即使 Codex 在文章提交后继续提交状态文档，也不会因为线上已经部署到更新 commit 而错过邮件。
-5. 部署确认后，一次调用 /api/admin/email/auto-send。
-5. 同一次 push 中多篇文章合并为一封邮件。
-6. 已发送过提醒的文章由 D1 记录自动跳过。
-7. API 使用 EMAIL_AUTOMATION_SECRET 机器鉴权；该值必须同时配置为 Cloudflare Pages secret 和 GitHub Actions repository secret。
-8. 如果某次文章 push 已经被后续 main 提交包含并部署，工作流仍视为部署完成，避免错过发送窗口。
-9. 支持 `workflow_dispatch` 受控补发，输入明确 slug 后只补发指定文章；密钥仍仅从 GitHub Actions secret 注入，不在本地输出。
-10. GitHub Actions 默认调用 `/api/email/auto-send`，避免 Cloudflare Access 对 `/api/admin/...` 后台路径的登录拦截；Admin 浏览器仍可继续使用 `/api/admin/email/auto-send`。
-11. 如果某篇文章已有 `partial_failed` 发送记录，再次触发同一 slug 时只重试上一批失败且当前仍 confirmed 的订阅者，并复用原 `email_post_sends` 记录，避免 `post_slug` 唯一约束冲突和给已成功邮箱重复发送。
+5. 部署确认后，一次调用 /api/email/auto-send。
+6. 同一次 push 中多篇文章合并为一封邮件。
+7. 已发送过提醒的文章由 D1 记录自动跳过。
+8. API 使用 EMAIL_AUTOMATION_SECRET 机器鉴权；该值必须同时配置为 Cloudflare Pages secret 和 GitHub Actions repository secret。
+9. 如果某次文章 push 已经被后续 main 提交包含并部署，工作流仍视为部署完成，避免错过发送窗口。
+10. 支持 `workflow_dispatch` 受控补发，输入明确 slug 后只补发指定文章；密钥仍仅从 GitHub Actions secret 注入，不在本地输出。
+11. GitHub Actions 默认调用 `/api/email/auto-send`，避免 Cloudflare Access 对 `/api/admin/...` 后台路径的登录拦截；Admin 浏览器仍可继续使用 `/api/admin/email/auto-send`。
+12. 如果某篇文章已有 `partial_failed` 发送记录，再次触发同一 slug 时只重试上一批失败且当前仍 confirmed 的订阅者，并复用原 `email_post_sends` 记录，避免 `post_slug` 唯一约束冲突和给已成功邮箱重复发送。
 ```
 
 因此，Codex 整理文章并完成 commit / push 后，不需要再手工调用邮件 API。
@@ -121,6 +121,19 @@ node --check functions/api/admin/email/auto-send.js：通过
 node --check assets/admin/auto-email.js：通过
 node --check assets/admin/subscribers.js：通过
 npm run build：通过，310 page(s) built，Build Complete
+```
+
+## 首次真实发送复盘与发布前修正
+
+首次中文文章 push 的工作流虽然显示 success，但日志为 `No changed published posts were found in this push.`。根因是 Git 默认把中文文件名输出为带引号的八进制转义路径，原脚本按普通 UTF-8 路径正则匹配，因此漏掉中文文章。
+
+修正规则：
+
+```text
+1. Git 文件列表改用 -z（NUL 分隔），避免空格、中文和特殊字符被 quotePath 转义。
+2. 只读取 --diff-filter=A 的新增文章；修改既有文章、删除文章和普通文档提交不发送“新文章提醒”。
+3. 历史提交 ccbacfa 的本地模拟已正确识别 slug：2026-07-12-列王纪上-17-1-24-以利亚与撒勒法寡妇-信靠神的供应。
+4. 手工补发仍只作为故障恢复入口，正常发布不得重复运行。
 ```
 
 ## 上线后验证
