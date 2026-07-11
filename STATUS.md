@@ -8,6 +8,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 追加排查：已定位《以利亚与撒勒法寡妇：信靠神的供应》邮件提醒可能漏发的原因为 GitHub Actions 等待部署时要求 `deployment.commit` 必须严格等于文章 push commit；若后续文档 commit 已包含该文章并先部署，旧逻辑会错过发送窗口。本轮已修复为“部署 commit 等于目标 commit 或包含目标 commit 均可”，并新增 `workflow_dispatch` 受控补发入口。补发范围仅限该文章 slug，不发布新文章，不在本地泄露密钥。
 
+2026-07-12 追加修复：第一次受控补发 run 29160598088 失败，GitHub 日志中 secret 已遮蔽，返回形态显示 `/api/admin/email/auto-send` 可能被 Cloudflare Access 后台保护拦截。已新增机器触发专用路径 `/api/email/auto-send`，复用同一发送实现和 `EMAIL_AUTOMATION_SECRET` 校验；GitHub Actions 改为默认调用该路径。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

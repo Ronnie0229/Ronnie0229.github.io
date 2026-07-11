@@ -5,6 +5,7 @@ const siteUrl = String(process.env.SITE_URL || "https://ronniecross.com").replac
 const secret = String(process.env.EMAIL_AUTOMATION_SECRET || "");
 const eventPath = process.env.GITHUB_EVENT_PATH;
 const manualPostSlugs = String(process.env.MANUAL_POST_SLUGS || "");
+const automationPath = String(process.env.EMAIL_AUTOMATION_PATH || "/api/email/auto-send");
 
 if (!secret) {
   throw new Error("EMAIL_AUTOMATION_SECRET is required.");
@@ -94,7 +95,7 @@ if (!slugs.length) {
 console.log(`Waiting for deployment ${after} before sending ${slugs.length} post notification(s).`);
 await waitForDeployment(after);
 
-const response = await fetch(`${siteUrl}/api/admin/email/auto-send`, {
+const response = await fetch(`${siteUrl}${automationPath}`, {
   method: "POST",
   headers: {
     Accept: "application/json",

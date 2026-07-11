@@ -97,6 +97,7 @@ scripts/notify-deployed-posts.mjs
 7. API 使用 EMAIL_AUTOMATION_SECRET 机器鉴权；该值必须同时配置为 Cloudflare Pages secret 和 GitHub Actions repository secret。
 8. 如果某次文章 push 已经被后续 main 提交包含并部署，工作流仍视为部署完成，避免错过发送窗口。
 9. 支持 `workflow_dispatch` 受控补发，输入明确 slug 后只补发指定文章；密钥仍仅从 GitHub Actions secret 注入，不在本地输出。
+10. GitHub Actions 默认调用 `/api/email/auto-send`，避免 Cloudflare Access 对 `/api/admin/...` 后台路径的登录拦截；Admin 浏览器仍可继续使用 `/api/admin/email/auto-send`。
 ```
 
 因此，Codex 整理文章并完成 commit / push 后，不需要再手工调用邮件 API。

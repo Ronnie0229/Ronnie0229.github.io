@@ -22,7 +22,9 @@
 1. scripts/notify-deployed-posts.mjs 新增 commitIsDeployed：deployment.commit 等于目标 commit，或目标 commit 是 deployment.commit 的祖先时，均视为对应文章已部署。
 2. .github/workflows/email-published-posts.yml 新增 workflow_dispatch 输入 slugs，用于受控补发指定文章。
 3. scripts/notify-deployed-posts.mjs 支持 MANUAL_POST_SLUGS，手动触发时只读取显式传入的 slug，不从本次 push 自动推断。
-4. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
+4. 第一次受控补发 run 29160598088 失败：GitHub secret 已被正常遮蔽，但 /api/admin/email/auto-send 返回 200 非 JSON ok 响应，判断为 Cloudflare Access 拦截后台路径。
+5. 新增 functions/api/email/auto-send.js 作为机器触发专用路径，复用同一发送实现与 EMAIL_AUTOMATION_SECRET 校验；scripts/notify-deployed-posts.mjs 改为默认调用 /api/email/auto-send。
+6. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
 ```
 
 本地验证：
