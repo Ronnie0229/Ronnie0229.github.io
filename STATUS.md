@@ -21,7 +21,7 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 10. 已补充 GitHub Actions 统一自动触发：Codex、本地 Git、GitHub 网页或 Admin 只要把正式文章 push 到 main，工作流都会等待对应 Cloudflare 部署完成后自动发送。
 11. 统一触发依赖 EMAIL_AUTOMATION_SECRET；必须把同一个随机值同时配置到 Cloudflare Pages 环境变量和 GitHub Actions repository secret。
 12. 2026-07-12 收尾验证：git fetch origin main 后确认本地 main 与 origin/main 同步；node --check 覆盖 auto-send、subscribers API、Admin 自动邮件脚本、订阅页脚本和 GitHub Actions 通知脚本；npm run build 通过，310 page(s) built，Build Complete。
-13. 本轮提交：f1603a9 feat: add automatic email notification flow。
+13. 本轮提交：8dda26b feat: add automatic email notification flow。
 ```
 
 ```text

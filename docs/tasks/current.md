@@ -57,7 +57,7 @@ src/pages/admin/index.astro
 2. 本轮不主动调用线上邮件发送 API，也不主动发送真实邮件。
 3. 第三阶段自动发送依赖 EMAIL_AUTOMATION_SECRET；该值需要同时配置到 Cloudflare Pages 环境变量和 GitHub Actions repository secret。
 4. GitHub Actions 工作流只在 src/content/posts/*.md 发生 push 变更时触发；本轮仅提交后台与邮件系统代码，不会触发新文章提醒邮件。
-5. 本轮提交：f1603a9 feat: add automatic email notification flow。
+5. 本轮提交：8dda26b feat: add automatic email notification flow。
 ```
 
 ---
