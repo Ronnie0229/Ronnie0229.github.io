@@ -1,0 +1,34 @@
+name: Email published posts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/content/posts/**.md"
+
+concurrency:
+  group: email-published-posts
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Wait for deployment and send email
+        env:
+          SITE_URL: https://ronniecross.com
+          EMAIL_AUTOMATION_SECRET: ${{ secrets.EMAIL_AUTOMATION_SECRET }}
+        run: node scripts/notify-deployed-posts.mjs

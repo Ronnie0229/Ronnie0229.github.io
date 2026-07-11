@@ -24,14 +24,31 @@ export function buildNeutralPostUrl(env, neutralId) {
   return new URL(`/go/post/${neutralId}`, siteUrl).toString();
 }
 
-export async function sendConfirmEmail(env, { email, confirmToken }) {
+async function sendResendEmail(env, payload) {
   if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
     throw new Error("Email service is not configured.");
   }
 
+  const response = await fetch(RESEND_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ from: env.EMAIL_FROM, ...payload })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Resend request failed: ${response.status}`);
+  }
+
+  const data = await response.json().catch(() => ({}));
+  return { id: typeof data.id === "string" ? data.id : "" };
+}
+
+export async function sendConfirmEmail(env, { email, confirmToken }) {
   const confirmUrl = buildConfirmUrl(env, confirmToken);
-  const payload = {
-    from: env.EMAIL_FROM,
+  await sendResendEmail(env, {
     to: [email],
     subject: "确认订阅 RonnieCross 更新提醒",
     text: [
@@ -52,41 +69,42 @@ export async function sendConfirmEmail(env, { email, confirmToken }) {
       `<p><a href="${escapeHtml(confirmUrl)}">确认订阅</a></p>`,
       "<p>如果这不是你本人操作，可以忽略这封邮件。</p>"
     ].join("\n")
-  };
-
-  const response = await fetch(RESEND_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
   });
-
-  if (!response.ok) {
-    throw new Error(`Resend request failed: ${response.status}`);
-  }
 }
 
-export async function sendPostNotificationEmail(env, { email, neutralUrl, unsubscribeToken }) {
-  if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
-    throw new Error("Email service is not configured.");
-  }
+export async function sendPostNotificationEmail(env, { email, neutralUrls, neutralUrl, unsubscribeToken }) {
+  const urls = Array.from(
+    new Set(
+      (Array.isArray(neutralUrls) ? neutralUrls : [neutralUrl])
+        .map((value) => String(value || "").trim())
+        .filter(Boolean)
+    )
+  );
+  if (!urls.length) throw new Error("No post URL was provided.");
 
   const unsubscribeUrl = buildUnsubscribeUrl(env, unsubscribeToken);
-  const payload = {
-    from: env.EMAIL_FROM,
+  const multiple = urls.length > 1;
+  const textLinks = urls.flatMap((url, index) => [
+    multiple ? `${index + 1}. ${url}` : url,
+    ""
+  ]);
+  const htmlLinks = multiple
+    ? `<ol>${urls.map((url) => `<li><a href="${escapeHtml(url)}">前往网站阅读</a></li>`).join("")}</ol>`
+    : `<p><a href="${escapeHtml(urls[0])}">前往网站阅读</a></p>`;
+
+  return sendResendEmail(env, {
     to: [email],
-    subject: "RonnieCross 新文章提醒",
+    subject: multiple ? `RonnieCross 新文章提醒（${urls.length}篇）` : "RonnieCross 新文章提醒",
     text: [
       "你好，",
       "",
-      "RonnieCross 有一篇新文章已经发布。",
+      multiple
+        ? `RonnieCross 有 ${urls.length} 篇新文章已经发布。`
+        : "RonnieCross 有一篇新文章已经发布。",
       "",
       "你可以点击下面的链接前往网站阅读：",
       "",
-      neutralUrl,
-      "",
+      ...textLinks,
       "如果你不想继续收到提醒，可以点击这里退订：",
       "",
       unsubscribeUrl,
@@ -95,30 +113,14 @@ export async function sendPostNotificationEmail(env, { email, neutralUrl, unsubs
     ].join("\n"),
     html: [
       "<p>你好，</p>",
-      "<p>RonnieCross 有一篇新文章已经发布。</p>",
+      `<p>${multiple ? `RonnieCross 有 ${urls.length} 篇新文章已经发布。` : "RonnieCross 有一篇新文章已经发布。"}</p>`,
       "<p>你可以点击下面的链接前往网站阅读：</p>",
-      `<p><a href="${escapeHtml(neutralUrl)}">前往网站阅读</a></p>`,
+      htmlLinks,
       "<p>如果你不想继续收到提醒，可以点击这里退订：</p>",
       `<p><a href="${escapeHtml(unsubscribeUrl)}">退订</a></p>`,
       "<p>感谢你的阅读。</p>"
     ].join("\n")
-  };
-
-  const response = await fetch(RESEND_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
   });
-
-  if (!response.ok) {
-    throw new Error(`Resend request failed: ${response.status}`);
-  }
-
-  const data = await response.json().catch(() => ({}));
-  return { id: typeof data.id === "string" ? data.id : "" };
 }
 
 function escapeHtml(value) {

@@ -4,7 +4,25 @@
 
 ## 当前结论
 
-Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增 Google Search Console 域名规范化修复：`assets/_redirects` 明确将 `http://www.ronniecross.com/*`、`https://www.ronniecross.com/*`、`http://ronniecross.com/*` 统一 301 到 `https://ronniecross.com/:splat`，继续只保留不带 www 的正式网址。网站 sitemap、canonical 与 robots 仍指向 `https://ronniecross.com`。此前 Google 搜索结果网站图标修复已完成并提交：只使用专用深色背景 favicon，不牵连 apple-touch-icon 与 manifest icon。About 页访问量修复已验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；暂不实现 Cron、自动检测、打开率/点击率统计或分类订阅。
+Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增 Google Search Console 域名规范化修复：`assets/_redirects` 明确将 `http://www.ronniecross.com/*`、`https://www.ronniecross.com/*`、`http://ronniecross.com/*` 统一 301 到 `https://ronniecross.com/:splat`，继续只保留不带 www 的正式网址。网站 sitemap、canonical 与 robots 仍指向 `https://ronniecross.com`。此前 Google 搜索结果网站图标修复已完成并提交：只使用专用深色背景 favicon，不牵连 apple-touch-icon 与 manifest icon。About 页访问量修复已验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；第三阶段已完成本地实现：Admin 发布成功后自动发送提醒，短时间连续发布多篇时合并为一封邮件，并新增只读订阅邮箱一览。当前仍不实现 Cron、打开率/点击率统计或分类订阅。
+
+## 邮件提醒 MVP 第三阶段状态
+
+```text
+1. 新增 functions/api/admin/email/auto-send.js：接收一组已发布文章 slug，跳过已发送文章，只向 confirmed 订阅者逐个发送一封合并邮件。
+2. 新增 assets/admin/auto-email.js：捕获 Admin 正式文章发布，等待 Cloudflare 部署 commit 确认成功，再以 12 秒窗口合并连续发布文章并自动调用发送 API。
+3. 草稿不会加入自动邮件队列；发送失败时队列保留在 localStorage，下次打开文章管理页会重试。
+4. 多篇文章邮件只列出多个中性 URL，不暴露标题、经文、摘要或真实 slug。
+5. 新增 /admin/subscribers.html 与受保护 API，只读显示订阅邮箱、状态、订阅/确认/退订时间和最近发送时间。
+6. 无需新增 D1 migration，继续复用 email_subscribers、email_post_sends、email_send_logs、email_post_links。
+7. 第三阶段任务文档：docs/tasks/email-notification-mvp-phase3.md。
+8. 本地语法检查通过；npm run build 通过，310 page(s) built。
+9. 本轮不发布测试文章、不主动发送真实邮件；只提交、push 并确认 Cloudflare Pages 部署。
+10. 已补充 GitHub Actions 统一自动触发：Codex、本地 Git、GitHub 网页或 Admin 只要把正式文章 push 到 main，工作流都会等待对应 Cloudflare 部署完成后自动发送。
+11. 统一触发依赖 EMAIL_AUTOMATION_SECRET；必须把同一个随机值同时配置到 Cloudflare Pages 环境变量和 GitHub Actions repository secret。
+12. 2026-07-12 收尾验证：git fetch origin main 后确认本地 main 与 origin/main 同步；node --check 覆盖 auto-send、subscribers API、Admin 自动邮件脚本、订阅页脚本和 GitHub Actions 通知脚本；npm run build 通过，310 page(s) built，Build Complete。
+13. 本轮提交：f1603a9 feat: add automatic email notification flow。
+```
 
 ```text
 正式开发目录：C:\Users\caoyi\Projects\个人网页项目
@@ -121,10 +139,10 @@ docs/tasks/current.md
 当前实现：
 
 ```text
-1. POST /api/admin/email/send-post 已新增。
+1. POST /api/admin/email/send-post 已完成并通过线上 dryRun 与真实发送测试。
 2. API 使用 requireAdmin(request, env) 复用现有 Cloudflare Access 管理员鉴权。
-3. 默认 dryRun=true，只预览文章信息和 confirmed 订阅者数量，不写库、不发信。
-4. dryRun=false 代码路径已实现，但尚未调用，不会真实发送。
+3. dryRun=true 可预览 confirmed 订阅者数量，不写库、不发信。
+4. dryRun=false 已完成真实发送验收，测试结果 success_count=2、failed_count=0。
 5. 文章信息来源复用 /search-index.json。
 6. 只发送给 status='confirmed' 的订阅者。
 7. 同一文章默认防重复发送。
@@ -173,14 +191,14 @@ email_send_logs：2 条记录，status=sent，error_message=null，resend_id 均
 测试邮箱：soueitetsu@gmail.com，6611987@qq.com。
 ```
 
-仍未执行：
+第二阶段最终状态：
 
 ```text
-1. 远程 D1 migration 0005 / 0006 已执行成功。
-2. 线上 dryRun 已通过：ok=true，dryRun=true，文章信息正确，recipientCount=2。
-3. dryRun 后确认 email_post_sends=0，email_send_logs=0，未写发送记录。
-4. 第一次真实发送测试已成功：recipient_count=2，success_count=2，failed_count=0。
-4. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
+1. 远程 D1 migration 0005 / 0006 / 0007 均已执行成功。
+2. 线上 dryRun 已通过：ok=true，文章信息正确，recipientCount=2，且未写发送记录。
+3. 第一次真实发送测试已成功：recipient_count=2，success_count=2，failed_count=0。
+4. 中性链接版真实发送也已通过，邮件内容与跳转均已验收。
+5. 第二阶段实现已 commit / push：17c28cb feat: add manual email post notification flow。
 ```
 
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-theme-mode="system">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="theme-color" id="theme-color" content="#061625">
+    <script>
+      (() => {
+        const key = "ronniecross-theme";
+        let saved = null;
+        try {
+          const value = localStorage.getItem(key);
+          saved = value === "dark" || value === "light" ? value : null;
+        } catch {}
+        const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themeMode = saved ? "manual" : "system";
+        document.querySelector("#theme-color")?.setAttribute("content", theme === "dark" ? "#061625" : "#f7f9fc");
+      })();
+    </script>
+    <title>邮件订阅 | Ronnie</title>
+    <link rel="stylesheet" href="/styles/tokens.css">
+    <link rel="stylesheet" href="/admin/admin.css?v=email-subscribers-1">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header compact">
+        <div>
+          <p class="admin-eyebrow">邮件订阅</p>
+          <h1>订阅邮箱一览</h1>
+          <p>只读查看订阅状态、确认时间和最近发送时间。</p>
+        </div>
+        <nav class="admin-nav">
+          <a href="/admin/">管理首页</a>
+          <a href="/admin/editor.html">文章管理</a>
+          <a href="/admin/comments.html">留言管理</a>
+          <a href="/admin/stats.html">数据概览</a>
+          <a href="/">返回网站</a>
+        </nav>
+      </header>
+
+      <section class="admin-grid" aria-label="订阅统计" data-summary></section>
+      <div class="admin-status" data-status aria-live="polite">正在读取订阅邮箱...</div>
+      <section class="subscriber-table-wrap" data-table-wrap hidden>
+        <table class="subscriber-table">
+          <thead>
+            <tr>
+              <th>邮箱</th>
+              <th>状态</th>
+              <th>订阅时间</th>
+              <th>确认 / 退订时间</th>
+              <th>最近发送</th>
+            </tr>
+          </thead>
+          <tbody data-subscriber-list></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="/admin/theme.js?v=phase8-2"></script>
+    <script src="/admin/subscribers.js?v=1"></script>
+  </body>
+</html>

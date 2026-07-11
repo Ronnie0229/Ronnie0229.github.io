@@ -130,3 +130,29 @@ export async function requireAdmin(request, env) {
     };
   }
 }
+
+function timingSafeEqual(left, right) {
+  const a = new TextEncoder().encode(String(left || ""));
+  const b = new TextEncoder().encode(String(right || ""));
+  if (a.length !== b.length) return false;
+  let difference = 0;
+  for (let index = 0; index < a.length; index += 1) {
+    difference |= a[index] ^ b[index];
+  }
+  return difference === 0;
+}
+
+export async function requireAdminOrEmailAutomation(request, env) {
+  const suppliedSecret = request.headers.get("X-Email-Automation-Secret") || "";
+  const configuredSecret = String(env.EMAIL_AUTOMATION_SECRET || "");
+
+  if (
+    configuredSecret &&
+    suppliedSecret &&
+    timingSafeEqual(suppliedSecret, configuredSecret)
+  ) {
+    return { ok: true, identity: { email: "email-automation" } };
+  }
+
+  return requireAdmin(request, env);
+}

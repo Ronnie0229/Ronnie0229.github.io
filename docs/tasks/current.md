@@ -1,5 +1,67 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，邮件提醒 MVP 第三阶段收尾上线）
+
+本轮按用户要求读取 `.ai-bridge/current-plan.md` 并复核其中 favicon 修正事项。该计划对应的 Google 搜索结果 favicon 过宽修改修正已在当前 `HEAD` 中完成：`src/layouts/BaseLayout.astro` 的 48x48 `rel="icon"` 已指向 `/images/google-search-icon-48.png`，apple-touch-icon 与 manifest 入口保持独立，7 个既存 icon/png 品牌资产当前不显示为 modified。
+
+本轮实际待提交变更为邮件提醒 MVP 第三阶段收尾：不发布测试文章，不主动发送真实邮件，只完成本地验证、提交、push、等待 Cloudflare Pages 部署并做上线可访问性确认。
+
+本轮完成内容：
+
+```text
+1. Admin 文章编辑页加载 assets/admin/auto-email.js，在发布成功并确认部署 commit 后自动触发邮件队列。
+2. 新增 POST /api/admin/email/auto-send，支持多篇文章合并为一封提醒邮件，并跳过已发送文章。
+3. 新增 GitHub Actions 统一触发器：main 分支 push 中包含 src/content/posts/*.md 变更时，等待线上部署 commit 后调用 auto-send API。
+4. 新增只读订阅邮箱一览页 /admin/subscribers.html 与受保护 API。
+5. 更新邮件工具函数，支持多篇文章中性链接合并发送。
+6. 更新 STATUS.md 与本任务文档，记录第三阶段范围、验证结果和上线边界。
+```
+
+验证结果：
+
+```text
+git fetch origin main：通过，本地 main 与 origin/main 同步，ahead 0 / behind 0。
+node --check functions/api/admin/email/auto-send.js：通过。
+node --check functions/api/admin/email/subscribers.js：通过。
+node --check assets/admin/auto-email.js：通过。
+node --check assets/admin/subscribers.js：通过。
+node --check scripts/notify-deployed-posts.mjs：通过。
+npm run build：通过，310 page(s) built，Build Complete。
+```
+
+修改文件：
+
+```text
+.github/workflows/email-published-posts.yml
+STATUS.md
+assets/admin/admin.css
+assets/admin/auto-email.js
+assets/admin/editor.html
+assets/admin/index.html
+assets/admin/subscribers.html
+assets/admin/subscribers.js
+docs/tasks/current.md
+docs/tasks/email-notification-mvp-phase3.md
+functions/_lib/admin-auth.js
+functions/_utils/email.js
+functions/api/admin/email/auto-send.js
+functions/api/admin/email/subscribers.js
+scripts/notify-deployed-posts.mjs
+src/pages/admin/index.astro
+```
+
+上线边界：
+
+```text
+1. 本轮不发布测试文章。
+2. 本轮不主动调用线上邮件发送 API，也不主动发送真实邮件。
+3. 第三阶段自动发送依赖 EMAIL_AUTOMATION_SECRET；该值需要同时配置到 Cloudflare Pages 环境变量和 GitHub Actions repository secret。
+4. GitHub Actions 工作流只在 src/content/posts/*.md 发生 push 变更时触发；本轮仅提交后台与邮件系统代码，不会触发新文章提醒邮件。
+5. 本轮提交：f1603a9 feat: add automatic email notification flow。
+```
+
+---
+
 ## 当前任务状态（2026-07-11，分享文章《没穿礼服被惩罚》发布）
 
 本轮按分享收件入口 `NAS/分享收件` 处理 1 篇 docx。源文件已从分享收件移入网站项目 `data/raw/分享/`，并按分享文章流程发布。本轮实际整理发布日期为 `2026-07-11`。
