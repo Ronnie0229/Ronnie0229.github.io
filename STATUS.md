@@ -16,6 +16,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 重试修复续：第四次受控补发 run 29161369421 返回明确 JSON 错误 `UNIQUE constraint failed: email_post_sends.post_slug`。已确认 `email_post_sends.post_slug` 唯一，partial_failed 重试不能插入新发送任务；已改为复用原发送记录，只追加失败收件人的发送日志。
 
+2026-07-12 最终补发完成：Cloudflare Pages 已部署到 753951dc540924811972eb5276cce768daa46b29。最终受控补发 run 29161564188 成功，输出 postCount=1、recipientCount=1、successCount=1、failedCount=0、skippedSlugs=[]。本轮没有发布新文章，没有在本地读取或输出密钥；GitHub Actions 日志中的 secret 均为遮蔽显示。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

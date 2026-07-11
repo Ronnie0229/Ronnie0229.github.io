@@ -44,10 +44,11 @@ npm run build：通过，312 page(s) built，Build Complete。
 待完成：
 
 ```text
-1. 提交并 push 本轮修复。
-2. 等待 Cloudflare Pages 部署到修复提交。
-3. 通过 GitHub Actions workflow_dispatch 只补发目标 slug。
-4. 检查 workflow 输出，只记录 postCount、recipientCount、successCount、failedCount、skippedSlugs，不输出任何密钥。
+1. 已提交并 push 修复：b23532e、1444531、a1659ff、5896091、b373f3a、753951d。
+2. Cloudflare Pages 已部署到 753951dc540924811972eb5276cce768daa46b29，builtAt=2026-07-11T17:21:11.968Z。
+3. 最终受控补发 run 29161564188 成功，只补发目标 slug。
+4. 最终 workflow 输出：postCount=1、recipientCount=1、successCount=1、failedCount=0、skippedSlugs=[]。
+5. 全流程未发布新文章，未在本地读取或输出 EMAIL_AUTOMATION_SECRET；GitHub Actions 日志中 secret 为 *** 遮蔽。
 ```
 
 ---
