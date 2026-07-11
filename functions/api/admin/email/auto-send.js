@@ -106,7 +106,7 @@ async function finishSends(env, ids, successCount, failedCount) {
   }
 }
 
-export async function onRequestPost({ request, env }) {
+async function handlePost({ request, env }) {
   const admin = await requireAdminOrEmailAutomation(request, env);
   if (!admin.ok) return admin.response;
   if (!env.COMMENTS_DB) return json({ ok: false, error: "COMMENTS_DB is not configured." }, 503);
@@ -219,6 +219,20 @@ export async function onRequestPost({ request, env }) {
     skippedSlugs,
     neutralUrls: urls
   });
+}
+
+export async function onRequestPost(context) {
+  try {
+    return await handlePost(context);
+  } catch (error) {
+    return json(
+      {
+        ok: false,
+        error: error instanceof Error ? error.message : "Unknown email automation error."
+      },
+      500
+    );
+  }
 }
 
 export function onRequestGet() {
