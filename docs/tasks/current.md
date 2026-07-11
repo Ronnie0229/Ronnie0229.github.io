@@ -1,5 +1,49 @@
 # 当前任务
 
+## 当前任务状态（2026-07-11，分享文章《没穿礼服被惩罚》发布）
+
+本轮按分享收件入口 `NAS/分享收件` 处理 1 篇 docx。源文件已从分享收件移入网站项目 `data/raw/分享/`，并按分享文章流程发布。本轮实际整理发布日期为 `2026-07-11`。
+
+本轮处理范围：
+
+```text
+1. 没穿礼服被惩罚.docx
+```
+
+本轮新增网站文章：
+
+```text
+1. src/content/posts/2026-07-11-马太福音-22-没穿礼服被惩罚.md
+```
+
+同步、构建与检查：
+
+```text
+node scripts/sync_from_github.mjs：通过，Already up to date。
+content_workflow.py publish share --dry-run：通过，目标 slug 为 2026-07-11-马太福音-22-没穿礼服被惩罚。
+content_workflow.py publish share：已导入 raw / processed / posts。
+node scripts/add_article_ids.mjs：已补充 articleId。
+npm run build：通过，310 page(s) built。
+npm run check:knowledge：通过，Posts checked: 271，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+源文件处理：
+
+```text
+源文件已保留在 data/raw/分享/没穿礼服被惩罚.docx。
+分享文章没有执行讲道白名单归档；该归档流程只用于讲道 raw folder。
+```
+
+未完成事项：
+
+```text
+1. 需要提交并 push 到 GitHub。
+2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
+```
+
+---
+
 ## 当前任务状态（2026-07-10，Scott Beall 大使命门徒训练主题 1 篇讲道发布）
 
 本轮继续按正确收件入口 `NAS/讲道收件 -> /Volumes/tmp/讲道` 处理。用户要求发布 1 篇文章；收件移动时实际带出 2 个文件，其中 `~$16-23 Translation File.docx` 是 Word 临时锁文件，已移到 `讲道整理/中间文件/异常收件/`，不作为文章处理。本轮使用实际整理发布日期 `2026-07-10`。
