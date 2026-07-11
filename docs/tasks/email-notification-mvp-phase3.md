@@ -98,6 +98,7 @@ scripts/notify-deployed-posts.mjs
 8. 如果某次文章 push 已经被后续 main 提交包含并部署，工作流仍视为部署完成，避免错过发送窗口。
 9. 支持 `workflow_dispatch` 受控补发，输入明确 slug 后只补发指定文章；密钥仍仅从 GitHub Actions secret 注入，不在本地输出。
 10. GitHub Actions 默认调用 `/api/email/auto-send`，避免 Cloudflare Access 对 `/api/admin/...` 后台路径的登录拦截；Admin 浏览器仍可继续使用 `/api/admin/email/auto-send`。
+11. 如果某篇文章已有 `partial_failed` 发送记录，再次触发同一 slug 时只重试上一批失败且当前仍 confirmed 的订阅者，避免给已成功邮箱重复发送。
 ```
 
 因此，Codex 整理文章并完成 commit / push 后，不需要再手工调用邮件 API。

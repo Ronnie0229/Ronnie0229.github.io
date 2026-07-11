@@ -10,6 +10,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 追加修复：第一次受控补发 run 29160598088 失败，GitHub 日志中 secret 已遮蔽，返回形态显示 `/api/admin/email/auto-send` 可能被 Cloudflare Access 后台保护拦截。已新增机器触发专用路径 `/api/email/auto-send`，复用同一发送实现和 `EMAIL_AUTOMATION_SECRET` 校验；GitHub Actions 改为默认调用该路径。
 
+2026-07-12 补发进展：第二次受控补发 run 29160786217 已对目标文章实际发送，结果为 postCount=1、recipientCount=3、successCount=2、failedCount=1。为避免重复邮件，已追加 `partial_failed` 重试逻辑：再次触发同一 slug 时仅重试上一批失败且当前仍 confirmed 的订阅者。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

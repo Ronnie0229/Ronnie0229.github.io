@@ -1,7 +1,7 @@
 import { requireAdminOrEmailAutomation } from "../../../_lib/admin-auth.js";
 import { buildNeutralPostUrl, sendPostNotificationEmail } from "../../../_utils/email.js";
 
-const DUPLICATE_STATUSES = ["pending", "sending", "sent", "success", "partial_failed"];
+const DUPLICATE_STATUSES = ["pending", "sending", "sent", "success"];
 const EMAIL_SUBJECT = "RonnieCross 新文章提醒";
 
 function json(data, status = 200) {
@@ -68,6 +68,29 @@ async function createSend(env, slug, recipientCount, now) {
   return result.meta && result.meta.last_row_id;
 }
 
+async function getFailedRetrySubscribers(env, slug) {
+  const latest = await env.COMMENTS_DB.prepare(
+    `SELECT id FROM email_post_sends
+     WHERE post_slug = ? AND status = 'partial_failed'
+     ORDER BY id DESC
+     LIMIT 1`
+  ).bind(slug).first();
+
+  if (!latest || !latest.id) return [];
+
+  const { results } = await env.COMMENTS_DB.prepare(
+    `SELECT DISTINCT s.*
+     FROM email_send_logs AS l
+     JOIN email_subscribers AS s ON s.id = l.subscriber_id
+     WHERE l.post_send_id = ?
+       AND l.status = 'failed'
+       AND s.status = 'confirmed'
+     ORDER BY s.id ASC`
+  ).bind(latest.id).all();
+
+  return Array.isArray(results) ? results : [];
+}
+
 async function finishSends(env, ids, successCount, failedCount) {
   const finalStatus = failedCount === 0 ? "sent" : "partial_failed";
   const sentAt = new Date().toISOString();
@@ -122,16 +145,33 @@ export async function onRequestPost({ request, env }) {
       skippedSlugs.push(slug);
       continue;
     }
+    const targetSubscribers = existing && existing.status === "partial_failed"
+      ? await getFailedRetrySubscribers(env, slug)
+      : subscribers;
+    if (!targetSubscribers.length) {
+      skippedSlugs.push(slug);
+      continue;
+    }
     const neutralId = await getOrCreateLink(env, slug, now);
-    ready.push({ slug, url: buildNeutralPostUrl(env, neutralId) });
+    ready.push({ slug, url: buildNeutralPostUrl(env, neutralId), subscribers: targetSubscribers });
   }
 
   if (!ready.length) {
     return json({ ok: true, postCount: 0, recipientCount: 0, successCount: 0, failedCount: 0, skippedSlugs });
   }
 
+  const recipientMap = new Map();
+  for (const item of ready) {
+    for (const subscriber of item.subscribers) {
+      const key = String(subscriber.id);
+      const existing = recipientMap.get(key) || { subscriber, urls: [] };
+      existing.urls.push(item.url);
+      recipientMap.set(key, existing);
+    }
+  }
+  const batchRecipients = Array.from(recipientMap.values());
   const sendIds = [];
-  for (const item of ready) sendIds.push(await createSend(env, item.slug, subscribers.length, now));
+  for (const item of ready) sendIds.push(await createSend(env, item.slug, item.subscribers.length, now));
 
   let successCount = 0;
   let failedCount = 0;
@@ -140,11 +180,11 @@ export async function onRequestPost({ request, env }) {
   const mailKey = "unsubscribe" + "Token";
   const urls = ready.map((item) => item.url);
 
-  for (const subscriber of subscribers) {
+  for (const { subscriber, urls: subscriberUrls } of batchRecipients) {
     try {
       const result = await sendPostNotificationEmail(env, {
         email: subscriber.email,
-        neutralUrls: urls,
+        neutralUrls: subscriberUrls,
         [mailKey]: subscriber[optOutColumn]
       });
       successCount += 1;
@@ -170,7 +210,7 @@ export async function onRequestPost({ request, env }) {
   return json({
     ok: true,
     postCount: ready.length,
-    recipientCount: subscribers.length,
+    recipientCount: batchRecipients.length,
     successCount,
     failedCount,
     skippedSlugs,

@@ -24,13 +24,17 @@
 3. scripts/notify-deployed-posts.mjs 支持 MANUAL_POST_SLUGS，手动触发时只读取显式传入的 slug，不从本次 push 自动推断。
 4. 第一次受控补发 run 29160598088 失败：GitHub secret 已被正常遮蔽，但 /api/admin/email/auto-send 返回 200 非 JSON ok 响应，判断为 Cloudflare Access 拦截后台路径。
 5. 新增 functions/api/email/auto-send.js 作为机器触发专用路径，复用同一发送实现与 EMAIL_AUTOMATION_SECRET 校验；scripts/notify-deployed-posts.mjs 改为默认调用 /api/email/auto-send。
-6. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
+6. 第二次受控补发 run 29160786217 已实际发送目标文章，结果 postCount=1、recipientCount=3、successCount=2、failedCount=1，因此 workflow 按失败计数退出。
+7. 为避免给已成功邮箱重复发送，functions/api/admin/email/auto-send.js 已新增 partial_failed 重试逻辑：再次触发同一 slug 时，只选上一批 email_send_logs 中 failed 且当前仍 confirmed 的订阅者重试。
+8. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
 ```
 
 本地验证：
 
 ```text
 node --check scripts/notify-deployed-posts.mjs：通过。
+node --check functions/api/email/auto-send.js：通过。
+node --check functions/api/admin/email/auto-send.js：通过。
 npm run build：通过，312 page(s) built，Build Complete。
 ```
 
