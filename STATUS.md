@@ -12,6 +12,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 补发进展：第二次受控补发 run 29160786217 已对目标文章实际发送，结果为 postCount=1、recipientCount=3、successCount=2、failedCount=1。为避免重复邮件，已追加 `partial_failed` 重试逻辑：再次触发同一 slug 时仅重试上一批失败且当前仍 confirmed 的订阅者。
 
+2026-07-12 重试修复：第三次受控补发 run 29161015280 在 failed 收件人重试分支返回 500，判断为 D1/SQLite 对 `SELECT DISTINCT s.* ... ORDER BY s.id` 的兼容问题；已改为显式列选择。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

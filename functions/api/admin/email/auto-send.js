@@ -79,7 +79,10 @@ async function getFailedRetrySubscribers(env, slug) {
   if (!latest || !latest.id) return [];
 
   const { results } = await env.COMMENTS_DB.prepare(
-    `SELECT DISTINCT s.*
+    `SELECT s.id,
+            s.email,
+            s.status,
+            s.unsubscribe_token
      FROM email_send_logs AS l
      JOIN email_subscribers AS s ON s.id = l.subscriber_id
      WHERE l.post_send_id = ?
