@@ -27,7 +27,9 @@
 6. 第二次受控补发 run 29160786217 已实际发送目标文章，结果 postCount=1、recipientCount=3、successCount=2、failedCount=1，因此 workflow 按失败计数退出。
 7. 为避免给已成功邮箱重复发送，functions/api/admin/email/auto-send.js 已新增 partial_failed 重试逻辑：再次触发同一 slug 时，只选上一批 email_send_logs 中 failed 且当前仍 confirmed 的订阅者重试。
 8. 第三次受控补发 run 29161015280 返回 500，判断为 failed 订阅者查询中的 `SELECT DISTINCT s.* ... ORDER BY s.id` 触发 D1/SQLite 兼容问题；已改为显式列选择。
-9. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
+9. 第四次受控补发 run 29161369421 返回明确 JSON 错误：`UNIQUE constraint failed: email_post_sends.post_slug`。原因是 `email_post_sends.post_slug` 唯一，partial_failed 重试不能插入新发送任务。
+10. 已修复为 partial_failed 重试复用原发送记录，只追加失败收件人的发送日志，并更新原记录状态。
+11. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
 ```
 
 本地验证：

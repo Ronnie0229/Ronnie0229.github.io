@@ -14,6 +14,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 重试修复：第三次受控补发 run 29161015280 在 failed 收件人重试分支返回 500，判断为 D1/SQLite 对 `SELECT DISTINCT s.* ... ORDER BY s.id` 的兼容问题；已改为显式列选择。
 
+2026-07-12 重试修复续：第四次受控补发 run 29161369421 返回明确 JSON 错误 `UNIQUE constraint failed: email_post_sends.post_slug`。已确认 `email_post_sends.post_slug` 唯一，partial_failed 重试不能插入新发送任务；已改为复用原发送记录，只追加失败收件人的发送日志。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

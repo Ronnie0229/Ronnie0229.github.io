@@ -68,7 +68,7 @@ async function createSend(env, slug, recipientCount, now) {
   return result.meta && result.meta.last_row_id;
 }
 
-async function getFailedRetrySubscribers(env, slug) {
+async function getFailedRetry(env, slug) {
   const latest = await env.COMMENTS_DB.prepare(
     `SELECT id FROM email_post_sends
      WHERE post_slug = ? AND status = 'partial_failed'
@@ -76,7 +76,7 @@ async function getFailedRetrySubscribers(env, slug) {
      LIMIT 1`
   ).bind(slug).first();
 
-  if (!latest || !latest.id) return [];
+  if (!latest || !latest.id) return { sendId: null, subscribers: [] };
 
   const { results } = await env.COMMENTS_DB.prepare(
     `SELECT s.id,
@@ -91,7 +91,20 @@ async function getFailedRetrySubscribers(env, slug) {
      ORDER BY s.id ASC`
   ).bind(latest.id).all();
 
-  return Array.isArray(results) ? results : [];
+  return { sendId: latest.id, subscribers: Array.isArray(results) ? results : [] };
+}
+
+async function markSendRetrying(env, id, recipientCount) {
+  await env.COMMENTS_DB.prepare(
+    `UPDATE email_post_sends
+     SET status = 'sending',
+         recipient_count = ?,
+         success_count = 0,
+         failed_count = 0,
+         sent_at = NULL,
+         error_message = NULL
+     WHERE id = ?`
+  ).bind(recipientCount, id).run();
 }
 
 async function finishSends(env, ids, successCount, failedCount) {
@@ -148,15 +161,19 @@ async function handlePost({ request, env }) {
       skippedSlugs.push(slug);
       continue;
     }
-    const targetSubscribers = existing && existing.status === "partial_failed"
-      ? await getFailedRetrySubscribers(env, slug)
-      : subscribers;
+    let existingSendId = null;
+    let targetSubscribers = subscribers;
+    if (existing && existing.status === "partial_failed") {
+      const retry = await getFailedRetry(env, slug);
+      existingSendId = retry.sendId;
+      targetSubscribers = retry.subscribers;
+    }
     if (!targetSubscribers.length) {
       skippedSlugs.push(slug);
       continue;
     }
     const neutralId = await getOrCreateLink(env, slug, now);
-    ready.push({ slug, url: buildNeutralPostUrl(env, neutralId), subscribers: targetSubscribers });
+    ready.push({ slug, url: buildNeutralPostUrl(env, neutralId), subscribers: targetSubscribers, existingSendId });
   }
 
   if (!ready.length) {
@@ -174,7 +191,14 @@ async function handlePost({ request, env }) {
   }
   const batchRecipients = Array.from(recipientMap.values());
   const sendIds = [];
-  for (const item of ready) sendIds.push(await createSend(env, item.slug, item.subscribers.length, now));
+  for (const item of ready) {
+    if (item.existingSendId) {
+      await markSendRetrying(env, item.existingSendId, item.subscribers.length);
+      sendIds.push(item.existingSendId);
+    } else {
+      sendIds.push(await createSend(env, item.slug, item.subscribers.length, now));
+    }
+  }
 
   let successCount = 0;
   let failedCount = 0;
