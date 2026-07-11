@@ -1,5 +1,43 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，分享文章《以利亚与撒勒法寡妇：信靠神的供应》发布）
+
+本轮按分享收件入口 `NAS/分享收件` 处理 1 篇英文 txt。原始文件为 `Bible Story of Elijah and the Widow- Trusting God's Provision .txt`，已移入 `data/raw/分享/`。为符合网站中文分享文章格式，已整理成中文稿，并以实际整理发布日期 `2026-07-12` 发布。
+
+本轮新增网站文章：
+
+```text
+src/content/posts/2026-07-12-列王纪上-17-1-24-以利亚与撒勒法寡妇-信靠神的供应.md
+```
+
+处理说明：
+
+```text
+1. 中文标题：列王纪上 17:1-24｜以利亚与撒勒法寡妇：信靠神的供应。
+2. 分类：灵命成长。
+3. 已补人工摘要，不使用占位摘要或正文截取。
+4. 原导入脚本无法识别“列王纪上”，已增加本篇明确 override，确保经文和标题正确。
+5. dry-run：Imported shares 1，Copyright review 0，Missing scripture 0。
+```
+
+构建与检查：
+
+```text
+node scripts/add_article_ids.mjs：已为 1 篇补充 articleId。
+npm run build：通过，312 page(s) built。
+npm run check:knowledge：通过，Posts checked: 272，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+未完成事项：
+
+```text
+1. 提交并 push 到 GitHub。
+2. 等待 Cloudflare Pages 部署并验证新文章 URL、页面标题与正文内容。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，邮件提醒 MVP 第三阶段收尾上线）
 
 本轮按用户要求读取 `.ai-bridge/current-plan.md` 并复核其中 favicon 修正事项。该计划对应的 Google 搜索结果 favicon 过宽修改修正已在当前 `HEAD` 中完成：`src/layouts/BaseLayout.astro` 的 48x48 `rel="icon"` 已指向 `/images/google-search-icon-48.png`，apple-touch-icon 与 manifest 入口保持独立，7 个既存 icon/png 品牌资产当前不显示为 modified。
