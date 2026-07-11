@@ -32,8 +32,9 @@ npm run check:admin-save：通过，Errors: 0。
 未完成事项：
 
 ```text
-1. 提交并 push 到 GitHub。
-2. 等待 Cloudflare Pages 部署并验证新文章 URL、页面标题与正文内容。
+1. 已提交并 push 到 GitHub：ccbacfa publish Elijah widow provision reflection。
+2. 当前线上 deployment.json 仍为上一提交 e0ba54c，Cloudflare Pages 尚未切到包含这篇文章的新提交。
+3. 新 URL 当前返回 200，但仍是旧首页壳，待部署完成后需重新验证页面标题和正文内容。
 ```
 
 ---
