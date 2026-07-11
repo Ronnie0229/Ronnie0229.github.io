@@ -6,6 +6,12 @@ on:
       - main
     paths:
       - "src/content/posts/**.md"
+  workflow_dispatch:
+    inputs:
+      slugs:
+        description: "Comma-separated post slug(s) to notify"
+        required: true
+        type: string
 
 concurrency:
   group: email-published-posts
@@ -31,4 +37,5 @@ jobs:
         env:
           SITE_URL: https://ronniecross.com
           EMAIL_AUTOMATION_SECRET: ${{ secrets.EMAIL_AUTOMATION_SECRET }}
+          MANUAL_POST_SLUGS: ${{ inputs.slugs }}
         run: node scripts/notify-deployed-posts.mjs

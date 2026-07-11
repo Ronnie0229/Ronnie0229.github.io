@@ -89,11 +89,14 @@ scripts/notify-deployed-posts.mjs
 ```text
 1. main 分支 push 中只要包含 src/content/posts/*.md 的新增或修改，就启动工作流。
 2. 工作流读取本次 push 中所有变动的文章 slug。
-3. 等待线上 /deployment.json 的 commit 与本次 push commit 完全一致。
-4. 部署确认后，一次调用 /api/admin/email/auto-send。
+3. 等待线上 /deployment.json 的 commit 等于本次文章 push，或属于包含该文章 push 的后续 main 提交。
+4. 这样即使 Codex 在文章提交后继续提交状态文档，也不会因为线上已经部署到更新 commit 而错过邮件。
+5. 部署确认后，一次调用 /api/admin/email/auto-send。
 5. 同一次 push 中多篇文章合并为一封邮件。
 6. 已发送过提醒的文章由 D1 记录自动跳过。
 7. API 使用 EMAIL_AUTOMATION_SECRET 机器鉴权；该值必须同时配置为 Cloudflare Pages secret 和 GitHub Actions repository secret。
+8. 如果某次文章 push 已经被后续 main 提交包含并部署，工作流仍视为部署完成，避免错过发送窗口。
+9. 支持 `workflow_dispatch` 受控补发，输入明确 slug 后只补发指定文章；密钥仍仅从 GitHub Actions secret 注入，不在本地输出。
 ```
 
 因此，Codex 整理文章并完成 commit / push 后，不需要再手工调用邮件 API。

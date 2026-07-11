@@ -6,6 +6,8 @@
 
 Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增 Google Search Console 域名规范化修复：`assets/_redirects` 明确将 `http://www.ronniecross.com/*`、`https://www.ronniecross.com/*`、`http://ronniecross.com/*` 统一 301 到 `https://ronniecross.com/:splat`，继续只保留不带 www 的正式网址。网站 sitemap、canonical 与 robots 仍指向 `https://ronniecross.com`。此前 Google 搜索结果网站图标修复已完成并提交：只使用专用深色背景 favicon，不牵连 apple-touch-icon 与 manifest icon。About 页访问量修复已验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；第三阶段已完成本地实现：Admin 发布成功后自动发送提醒，短时间连续发布多篇时合并为一封邮件，并新增只读订阅邮箱一览。当前仍不实现 Cron、打开率/点击率统计或分类订阅。
 
+2026-07-12 追加排查：已定位《以利亚与撒勒法寡妇：信靠神的供应》邮件提醒可能漏发的原因为 GitHub Actions 等待部署时要求 `deployment.commit` 必须严格等于文章 push commit；若后续文档 commit 已包含该文章并先部署，旧逻辑会错过发送窗口。本轮已修复为“部署 commit 等于目标 commit 或包含目标 commit 均可”，并新增 `workflow_dispatch` 受控补发入口。补发范围仅限该文章 slug，不发布新文章，不在本地泄露密钥。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

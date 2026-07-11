@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 const siteUrl = String(process.env.SITE_URL || "https://ronniecross.com").replace(/\/$/, "");
 const secret = String(process.env.EMAIL_AUTOMATION_SECRET || "");
 const eventPath = process.env.GITHUB_EVENT_PATH;
+const manualPostSlugs = String(process.env.MANUAL_POST_SLUGS || "");
 
 if (!secret) {
   throw new Error("EMAIL_AUTOMATION_SECRET is required.");
@@ -22,6 +23,17 @@ if (!after) {
 }
 
 function changedPostSlugs() {
+  if (manualPostSlugs.trim()) {
+    return Array.from(
+      new Set(
+        manualPostSlugs
+          .split(",")
+          .map((slug) => slug.trim())
+          .filter(Boolean)
+      )
+    );
+  }
+
   const emptyBefore = /^0+$/.test(before);
   const args = emptyBefore
     ? ["show", "--pretty=format:", "--name-only", after]
@@ -38,6 +50,21 @@ function changedPostSlugs() {
   );
 }
 
+function commitIsDeployed(targetCommit, deployedCommit) {
+  if (!deployedCommit) return false;
+  if (deployedCommit === targetCommit) return true;
+
+  try {
+    execFileSync("git", ["fetch", "origin", "main", "--quiet"], { stdio: "ignore" });
+    execFileSync("git", ["merge-base", "--is-ancestor", targetCommit, deployedCommit], {
+      stdio: "ignore"
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function waitForDeployment(commit) {
   const deadline = Date.now() + 15 * 60 * 1000;
   while (Date.now() < deadline) {
@@ -48,14 +75,14 @@ async function waitForDeployment(commit) {
       });
       if (response.ok) {
         const deployment = await response.json();
-        if (deployment.commit === commit) return;
+        if (commitIsDeployed(commit, String(deployment.commit || ""))) return;
       }
     } catch {
       // Cloudflare Pages may be unavailable briefly while the deployment is switching.
     }
     await new Promise((resolve) => setTimeout(resolve, 15000));
   }
-  throw new Error(`Deployment ${commit} was not observed within 15 minutes.`);
+  throw new Error(`A deployment containing ${commit} was not observed within 15 minutes.`);
 }
 
 const slugs = changedPostSlugs();

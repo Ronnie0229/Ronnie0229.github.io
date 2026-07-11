@@ -1,5 +1,48 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，邮件提醒漏发排查修复与受控补发）
+
+本轮按用户要求排查《以利亚与撒勒法寡妇：信靠神的供应》邮件提醒漏发问题。未发布新文章，未在本地读取或输出密钥，受控补发目标仅限这一篇：
+
+```text
+2026-07-12-列王纪上-17-1-24-以利亚与撒勒法寡妇-信靠神的供应
+```
+
+排查结论：
+
+```text
+1. 文章提交为 ccbacfa publish Elijah widow provision reflection。
+2. 后续又有状态文档提交，线上 /deployment.json 最终可能前进到包含文章提交的后续 main commit。
+3. 原 GitHub Actions 通知脚本只接受 deployment.commit === 文章 push commit，遇到后续文档 commit 已部署时会继续等待旧 commit，最终错过自动邮件发送。
+```
+
+本轮修复：
+
+```text
+1. scripts/notify-deployed-posts.mjs 新增 commitIsDeployed：deployment.commit 等于目标 commit，或目标 commit 是 deployment.commit 的祖先时，均视为对应文章已部署。
+2. .github/workflows/email-published-posts.yml 新增 workflow_dispatch 输入 slugs，用于受控补发指定文章。
+3. scripts/notify-deployed-posts.mjs 支持 MANUAL_POST_SLUGS，手动触发时只读取显式传入的 slug，不从本次 push 自动推断。
+4. docs/tasks/email-notification-mvp-phase3.md 已记录上述修复和受控补发边界。
+```
+
+本地验证：
+
+```text
+node --check scripts/notify-deployed-posts.mjs：通过。
+npm run build：通过，312 page(s) built，Build Complete。
+```
+
+待完成：
+
+```text
+1. 提交并 push 本轮修复。
+2. 等待 Cloudflare Pages 部署到修复提交。
+3. 通过 GitHub Actions workflow_dispatch 只补发目标 slug。
+4. 检查 workflow 输出，只记录 postCount、recipientCount、successCount、failedCount、skippedSlugs，不输出任何密钥。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，分享文章《以利亚与撒勒法寡妇：信靠神的供应》发布）
 
 本轮按分享收件入口 `NAS/分享收件` 处理 1 篇英文 txt。原始文件为 `Bible Story of Elijah and the Widow- Trusting God's Provision .txt`，已移入 `data/raw/分享/`。为符合网站中文分享文章格式，已整理成中文稿，并以实际整理发布日期 `2026-07-12` 发布。
