@@ -35,12 +35,15 @@ npm run check:admin-save：通过，Errors: 0。
 分享文章没有执行讲道白名单归档；该归档流程只用于讲道 raw folder。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 已提交并 push 到 GitHub：1e73b52 publish wedding garment reflection；报告更新提交：15ff76a docs: update share import reports。
-2. 当前线上 deployment.json 仍为上一提交 3c084e8，Cloudflare Pages 尚未切到包含这 1 篇文章的新提交。
-3. 新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文内容。
+1. 已提交并 push 到 GitHub：1e73b52 publish wedding garment reflection；报告更新提交：15ff76a docs: update share import reports；状态记录提交：e0f0fdb docs: record wedding garment deployment pending。
+2. Cloudflare Pages 已部署到 commit=1e73b52748b117f746defd4a8c59520c4e21b16e，builtAt=2026-07-11T03:59:31.053Z。
+3. 新文章 URL 返回 200。
+4. 页面已确认不是旧首页壳，页面 <title> 与正文标题均包含对应文章标题。
+5. 页面正文已确认包含“基督的义”等关键内容。
+6. 线上验证完成，无剩余事项。
 ```
 
 ---
