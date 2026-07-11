@@ -27,6 +27,9 @@ node --check assets/admin/auto-email.js：通过。
 node --check assets/admin/subscribers.js：通过。
 node --check scripts/notify-deployed-posts.mjs：通过。
 npm run build：通过，310 page(s) built，Build Complete。
+git push origin main：通过，远端 main 已更新到 9a00fb50352f9f63ff4f7fe3d3a93ee1ce653539。
+Cloudflare Pages 部署确认：/deployment.json 已返回 commit=9a00fb50352f9f63ff4f7fe3d3a93ee1ce653539，builtAt=2026-07-11T16:16:33.316Z。
+线上后台资源确认：/admin/subscribers.html、/admin/auto-email.js?v=1、/admin/subscribers.js?v=1 均被 Cloudflare Access 保护并返回 302 登录跳转，说明新后台路径已上线且未公开暴露。
 ```
 
 修改文件：
@@ -57,7 +60,8 @@ src/pages/admin/index.astro
 2. 本轮不主动调用线上邮件发送 API，也不主动发送真实邮件。
 3. 第三阶段自动发送依赖 EMAIL_AUTOMATION_SECRET；该值需要同时配置到 Cloudflare Pages 环境变量和 GitHub Actions repository secret。
 4. GitHub Actions 工作流只在 src/content/posts/*.md 发生 push 变更时触发；本轮仅提交后台与邮件系统代码，不会触发新文章提醒邮件。
-5. 本轮提交：8dda26b feat: add automatic email notification flow。
+5. 本轮提交并 push：8dda26b feat: add automatic email notification flow；9a00fb5 docs: record email automation commit。
+6. 本轮线上部署已确认到 9a00fb50352f9f63ff4f7fe3d3a93ee1ce653539。
 ```
 
 ---
