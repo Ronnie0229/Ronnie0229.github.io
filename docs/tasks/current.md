@@ -28,7 +28,7 @@
 3. 一次 push 新增多篇中文文章 93d102e：识别 7 个 slug，且去重后数量为 7。
 ```
 
-待完成：
+完成结果：
 
 ```text
 1. node --check scripts/notify-deployed-posts.mjs：通过。
@@ -36,8 +36,8 @@
 3. npm run check:knowledge：通过，Posts checked: 272，Errors: 0，Warnings: 0。
 4. npm run build：通过，312 page(s) built，Build Complete。
 5. git diff --check：通过。
-6. 待提交并 push。
-7. 待等待 Cloudflare /deployment.json 确认修复提交已部署。
+6. 已提交并 push：803f8d2b509a2112a5963b83c630922e4bea179f，fix: detect Chinese published post paths。
+7. Cloudflare /deployment.json 已确认修复提交部署：commit=803f8d2b509a2112a5963b83c630922e4bea179f，builtAt=2026-07-11T23:43:26.800Z。
 ```
 
 ---
