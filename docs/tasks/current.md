@@ -38,8 +38,9 @@ npm run check:admin-save：通过，Errors: 0。
 未完成事项：
 
 ```text
-1. 需要提交并 push 到 GitHub。
-2. Cloudflare Pages 部署完成后，需要线上验证 1 个 URL。
+1. 已提交并 push 到 GitHub：1e73b52 publish wedding garment reflection；报告更新提交：15ff76a docs: update share import reports。
+2. 当前线上 deployment.json 仍为上一提交 3c084e8，Cloudflare Pages 尚未切到包含这 1 篇文章的新提交。
+3. 新 URL 当前返回 200，但仍是旧首页壳，待 Cloudflare Pages 部署完成后需重新验证页面标题和正文内容。
 ```
 
 ---
