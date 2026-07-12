@@ -1,5 +1,17 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，《像亚伯一样的信心》逐句重译与审查流程补强）
+
+已根据正式英文原稿重新逐段翻译《希伯来书 11:1-4｜像亚伯一样的信心》，恢复原稿中先前被压缩或遗漏的经文、引用、例证对话、现场互动、结束语、小组讨论、荣耀颂和犹大书 24-25。网站 processed/posts 已通过 update-existing 更新。
+
+同时新增强制的翻译后自我审查与修正质量门：按英文原稿顺序逐段核对，检查完整经文、引用归属、例证细节、现场互动、讲章结尾内容，并在修正后进行第二次反向核对；只有审计结论为“无遗漏、无摘要化、无未确认缺口”时才能发布。
+
+已同步更新 CONTENT_WORKFLOW.md、统一内容整理与发布流程、content-publishing-error-prevention.md 和 article-workflow.md。
+
+验证：dry-run 通过；正式 update-existing 通过；npm run build 完成 313 页；npm run check:knowledge 为 273 篇、0 errors、0 warnings；npm run check:admin-save 为 0 errors。构建时 Astro 曾提示该文章 normalized id 重复，但仓库搜索只发现一个正式 post，knowledge 检查无重复警告，后续需继续观察内容缓存。
+
+---
+
 ## 当前任务状态（2026-07-12，完整讲章模式规则同步）
 
 本轮按用户要求更新讲道翻译长期规则，并同步讲道整理项目与个人网页项目文档。
