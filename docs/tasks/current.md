@@ -41,14 +41,16 @@ npm run build：通过，313 page(s) built，Build Complete。
 git diff --check：通过。
 ```
 
-待完成：
+完成结果：
 
 ```text
-1. commit 并 push。
-2. 等待 Cloudflare /deployment.json 确认修复提交部署。
-3. 使用 workflow_dispatch check_only=true 预检 D1：确认线上真实 slug 没有 sent/success 成功发送记录。
-4. 预检通过后使用 workflow_dispatch check_only=false 只补发文件名 slug：2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心。
-5. 补发后记录预检 run ID、补发 run ID、recipientCount、successCount、failedCount。
+1. 已提交并 push slug 映射修复：1beac09ccfc7bdff0fb7298216e263927e379e15，fix: resolve published post slugs before email send。
+2. 已提交并 push D1 预检补强：0a1f2d4af7fdee92e3cbb679a3ce2b65f6d092b7，fix: add email resend D1 precheck。
+3. Cloudflare /deployment.json 已确认最终修复部署：commit=0a1f2d4af7fdee92e3cbb679a3ce2b65f6d092b7，builtAt=2026-07-12T04:40:35.832Z。
+4. 补发前 D1 预检 run 29180129320：requested slug 解析为线上真实 slug 2026-07-12-希伯来书-11-1-4像亚伯一样的信心，existingSends=[]，hasSentOrSuccess=false。
+5. 第一次正式补发 run 29180143542：postCount=1，recipientCount=3，successCount=2，failedCount=1，skippedSlugs=[]；状态为 partial_failed。
+6. 重试前 D1 预检 run 29180160742：同一线上真实 slug 已有 partial_failed 记录 id=4，recipientCount=3，successCount=2，failedCount=1，hasSentOrSuccess=false。
+7. 失败收件人重试 run 29180180069：postCount=1，recipientCount=1，successCount=1，failedCount=0，skippedSlugs=[]；只补发《像亚伯一样的信心》这一篇。
 ```
 
 ---
