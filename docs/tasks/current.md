@@ -1,5 +1,99 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，修正分页与 Admin 导航遗漏）
+
+本轮按 `.ai-bridge/current-plan.md` 执行“修正分页与Admin导航遗漏”，只修正上一轮 UI 验收失败问题。未处理任何邮件发送逻辑，未修改文章内容，未触发真实邮件。
+
+三个问题根因：
+
+```text
+1. Admin 手机汉堡菜单来自 assets/admin/theme.js 的 navItems 动态生成，不是各 HTML 文件中的静态 .admin-nav；上一轮只补了静态导航，漏改动态菜单数据，所以线上手机菜单仍没有“邮件订阅”。
+2. Admin 文章管理页虽然改了分页 JS，但 nav 没有使用主网站分页的 `.pagination` 类名，且资源版本号仍指向旧 admin.css/theme.js/editor.js，容易继续看到旧样式或旧脚本；本轮改为 `pagination article-pagination ...` 并统一提升 Admin 资源版本。
+3. 前台分类页和 Bible 书卷页各自有独立分页脚本，上一轮只改了 `/posts/`，没有同步 `src/pages/posts/category/[category].astro` 与 `src/pages/bible/[book].astro`，所以教会讲道、灵命成长和书卷页顶部没有分页。
+```
+
+完成修正：
+
+```text
+1. assets/admin/theme.js 的动态 Admin 菜单加入“邮件订阅”。
+2. assets/admin/editor.html 的上下分页 nav 直接使用 `.pagination` 主网站分页类名，并保留 `.article-pagination` 作为 Admin 作用域类；Admin CSS 为 `.pagination` 补齐同款圆形页码、当前页高亮和省略号样式。
+3. Admin 主要 HTML / Astro 入口的 admin.css、theme.js、editor.js 查询版本统一提升到 `ui-pagination-fix-1`，避免线上继续加载旧资源。
+4. assets/admin/subscribers.html 的静态导航也补上“邮件订阅”自链接。
+5. 教会讲道、灵命成长分类页新增顶部分页，顶部/底部共用同一页码、省略号和当前页状态。
+6. Bible 书卷文章列表新增顶部分页，顶部/底部共用同一页码、省略号和当前页状态。
+```
+
+修改文件：
+
+```text
+assets/admin/admin.css
+assets/admin/comments.html
+assets/admin/editor.html
+assets/admin/index.html
+assets/admin/stats.html
+assets/admin/subscribers.html
+assets/admin/theme.js
+src/pages/admin/index.astro
+src/pages/bible/[book].astro
+src/pages/posts/category/[category].astro
+```
+
+本地浏览器实际验收：
+
+```text
+Admin 文章管理桌面：http://127.0.0.1:4321/admin/editor.html
+- 桌面动态顶栏包含“邮件订阅”。
+- 静态导航包含“邮件订阅”。
+- 顶部分页存在，显示：上一页 1 2 3 4 5 ... 14 下一页。
+- 底部分页存在，显示：上一页 1 2 3 4 5 ... 14 下一页。
+- 顶部/底部状态一致，273 篇文章，第 1 / 14 页。
+- 点击底部第 2 页后，顶部/底部当前页同步为 2。
+- 搜索“罗马书”后回到第 1 页，重算为 39 篇、第 1 / 2 页，上下分页同步。
+
+Admin 文章管理手机：http://127.0.0.1:4321/admin/editor.html，390px 视口
+- 汉堡菜单可打开。
+- 手机菜单包含“邮件订阅”。
+- 顶部分页存在，显示：上一页 1 2 3 4 5 ... 14 下一页。
+- 底部分页存在，显示：上一页 1 2 3 4 5 ... 14 下一页。
+- 顶部/底部分页一致，390px 下无横向溢出。
+
+Admin 主要页面导航：
+- /admin/：动态顶栏和静态导航都包含“邮件订阅”。
+- /admin/editor.html：动态顶栏和静态导航都包含“邮件订阅”。
+- /admin/comments.html：动态顶栏和静态导航都包含“邮件订阅”。
+- /admin/stats.html：动态顶栏和静态导航都包含“邮件订阅”。
+- /admin/subscribers.html：动态顶栏和静态导航都包含“邮件订阅”。
+
+前台分页：
+- /posts/：顶部和底部分页都存在且一致，显示：上一页 1 2 3 4 5 ... 14 下一页。
+- /posts/category/sermons/：顶部和底部分页都存在且一致，显示：上一页 1 2 3 4 5 ... 11 下一页。
+- /posts/category/spiritual-growth/：顶部和底部分页都存在且一致，显示：上一页 1 2 3 4 下一页。
+- /bible/罗马书/：顶部和底部分页都存在且一致，显示：上一页 1 2 下一页。
+```
+
+验证结果：
+
+```text
+git pull --rebase origin main：通过，Already up to date。
+node --check assets/admin/editor.js：通过。
+node --check assets/admin/theme.js：通过。
+node --check assets/admin/comments.js：通过。
+node --check assets/admin/stats.js：通过。
+npm run check:admin-save：通过，Errors: 0。
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+npm run build：通过，313 page(s) built，Build Complete。
+git diff --check：通过。
+```
+
+待完成收尾：
+
+```text
+1. commit 并 push 到 origin main。
+2. 等待 Cloudflare Pages 部署完成，并确认 `/deployment.json` commit 等于本次提交。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，执行分页与相对发布时间任务）
 
 本轮按 `.ai-bridge/current-plan.md` 执行“执行分页与相对发布时间任务”。任务范围只包括 Admin 导航、Admin 文章管理分页、正式“全部文章”分页和文章相对发布时间；未继续任何邮件相关任务，未修改邮件发送逻辑，未发布或修改正式文章，未触发真实邮件。

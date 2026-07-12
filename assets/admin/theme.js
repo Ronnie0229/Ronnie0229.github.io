@@ -5,6 +5,7 @@
     ["文章管理", "/admin/editor.html"],
     ["留言管理", "/admin/comments.html"],
     ["数据概览", "/admin/stats.html"],
+    ["邮件订阅", "/admin/subscribers.html"],
     ["返回网站", "/"]
   ];
 

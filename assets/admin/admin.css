@@ -871,6 +871,7 @@ summary {
   font-weight: 600;
 }
 
+.pagination,
 .article-pagination {
   display: flex;
   align-items: center;
@@ -886,12 +887,15 @@ summary {
   margin-bottom: 20px;
 }
 
+.pagination button,
+.pagination .pagination-ellipsis,
 .article-pagination button,
 .article-pagination .pagination-ellipsis {
   min-width: 42px;
   min-height: 40px;
 }
 
+.pagination button,
 .article-pagination button {
   min-height: 42px;
   border: 1px solid #3a424e;
@@ -902,17 +906,20 @@ summary {
   cursor: pointer;
 }
 
+.pagination button.active,
 .article-pagination button.active {
   border-color: var(--admin-gold);
   background: var(--admin-gold);
   color: #081420;
 }
 
+.pagination button:disabled,
 .article-pagination button:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
+.pagination .pagination-ellipsis,
 .article-pagination .pagination-ellipsis {
   display: inline-flex;
   align-items: center;
