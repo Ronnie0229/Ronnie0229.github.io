@@ -21,7 +21,9 @@ Before doing any content task, read these files in this repository:
 
 ## Sermon Translation Rules
 
-- Translate sermon source material faithfully and completely; do not summarize in place of translation.
+- Translate sermon source material faithfully and completely; do not summarize in place of translation. Sermons use Full Sermon Mode by default.
+- 完整讲章模式必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂（Doxology）及结束经文；不得因网站发布而删减。
+- 仅可删除与讲章内容无关的内部制作标记和噪音，例如 `[SLIDE]`、`JP`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题。
 - 原文已经写明引用经文出处时，中文翻译必须自然保留并译出对应经文章节，不得省略；例如原文写 Galatians 2:14，中文应保留为“加拉太书 2:14”。
 - 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文；如需解释英文词语、原文词义或其他译本差异，可在和合本经文之外另加说明，但不得用其他中文译本替代正文经文。
 - When sermon workflow rules change, update both the sermon workflow project and this website project, or explicitly report the unsynced side.

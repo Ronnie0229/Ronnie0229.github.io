@@ -47,7 +47,7 @@
 
 本项目侧至少检查：AGENTS.md、CONTENT_WORKFLOW.md、docs/统一内容整理与发布流程.md、docs/content-publishing-error-prevention.md、skills/article-workflow.md。若只更新了其中一个项目，最终汇报必须明确说明另一个项目未同步及原因。
 
-讲道翻译还必须遵守：原文已有经文出处时，中文翻译要保留经文章节；中文直接引用经文时，默认使用《和合本》。
+讲道翻译还必须遵守“完整讲章模式（Full Sermon Mode）”：原文已有经文出处时，中文翻译要保留经文章节；中文直接引用经文时，默认使用《和合本》；必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂（Doxology）及结束经文。仅可删除 `[SLIDE]`、`JP`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题等与讲章内容无关的内部制作标记，不得因网站发布而删减完整讲章。
 
 1. 不要依赖账号自身的聊天记忆；先读取仓库文档。
 2. 修改前先确认 `STATUS.md` 和 `docs/tasks/current.md`。
