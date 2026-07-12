@@ -30,12 +30,21 @@ NAS 白名单归档尚未完成，因为当前 /Volumes/share 和 /Volumes/home 
 待 NAS 恢复挂载后重试归档到 /Volumes/share/教会讲道/20260712_希伯来书11:1-4_像亚伯一样的信心_Patrick。
 ```
 
-未完成事项：
+线上部署确认：
 
 ```text
-1. 提交并 push 到 GitHub。
-2. 等待 Cloudflare Pages 部署并验证新文章 URL、页面标题与正文内容。
-3. NAS 重新挂载后补做白名单归档。
+1. 已提交并 push 到 GitHub：7fe8429 publish faith like Abel sermon。
+2. Cloudflare Pages 已部署到 commit=7fe842907edf9bb85adc1648e7ff48d8e227ab7a，builtAt=2026-07-12T01:30:46.133Z。
+3. 新文章 URL 返回 200。
+4. 页面已确认不是旧首页壳，页面 <title> 与正文标题均匹配讲道标题。
+5. 页面正文包含“交易式的信心”“亚伯虽然死了”等关键内容，并显示讲员 Patrick。
+6. 网站发布与线上验证完成。
+```
+
+剩余事项：
+
+```text
+NAS 当前未挂载，白名单归档仍待 /Volumes/share 恢复后补做。
 ```
 
 ---
