@@ -26,6 +26,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 晚间复核：重新读取 `.ai-bridge/current-plan.md` 后复核同 run 邮件失败重试实现。开始前已执行 `git pull --rebase origin main`，本地 fast-forward 到远端文章更新提交 779a5a7；该文章更新来自远端同步，不是本轮修改。本轮复跑 `node --check scripts/notify-deployed-posts.mjs`、`node --check scripts/test-notify-email-retries.mjs`、`node scripts/test-notify-email-retries.mjs`、`npm run check:admin-save`、`npm run check:knowledge`、`npm run build`、`git diff --check` 均通过；build 仍有既有 Astro duplicate id 警告，输出 313 page(s) built。本轮未发布测试文章，未运行 workflow_dispatch，未触发真实邮件。
 
+2026-07-12 晚间 UI 任务完成：已按 `.ai-bridge/current-plan.md` 的“执行分页与相对发布时间任务”完成四项 UI 需求。Admin 主要页面顶部导航统一包含“邮件订阅”；Admin 文章管理改为上下两组数字分页并支持省略号、当前页同步、搜索/筛选重置和移动端换行；正式 `/posts/` 全部文章页新增顶部分页并与底部分页同步；文章发布日期与阅读时间之间新增基于浏览器当前时间动态计算的相对发布时间，覆盖 PostCard、文章详情、Bible 书卷页和搜索结果。本轮未继续邮件任务，未修改邮件发送逻辑，未发布或修改正式文章，未触发真实邮件。本地验证：`node --check assets/admin/editor.js`、`node --check assets/admin/comments.js`、`node --check assets/admin/stats.js`、`npm run check:admin-save`、`npm run check:knowledge`、`npm run build`、`git diff --check` 均通过；构建输出 313 page(s) built。浏览器检查确认 `/posts/` 上下分页同步、390px 移动宽度无横向溢出、文章详情相对时间显示正常，并抽查近期/数月前/较早文章分别显示小时、月、年级别相对时间。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

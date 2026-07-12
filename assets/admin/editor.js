@@ -21,7 +21,7 @@ const imageDialog = document.querySelector("[data-image-dialog]");
 const imageGrid = document.querySelector("[data-image-grid]");
 const imageStatus = document.querySelector("[data-image-status]");
 const revisionMeta = document.querySelector("[data-revision-meta]");
-const pagination = document.querySelector("[data-pagination]");
+const paginations = Array.from(document.querySelectorAll("[data-pagination]"));
 const tagPresets = document.querySelector("[data-tag-presets]");
 const BACKUP_PREFIX = "ronniecross-editor-backup-";
 const COMMON_TAGS = ["分享", "灵命成长", "教会讲道", "查经", "生命反思"];
@@ -423,7 +423,7 @@ function renderPosts() {
   const pagePosts = filtered.slice((currentPage - 1) * 20, currentPage * 20);
 
   list.replaceChildren();
-  pagination.replaceChildren();
+  paginations.forEach((pagination) => pagination.replaceChildren());
   listStatus.textContent = filtered.length
     ? `共 ${filtered.length} 篇文章 · 第 ${currentPage} / ${pageCount} 页`
     : "共 0 篇文章";
@@ -479,32 +479,77 @@ function renderPosts() {
     list.append(article);
   });
 
-  if (pageCount > 1) {
+  renderPagination(pageCount);
+}
+
+function getPaginationItems(current, total) {
+  const items = new Set([1, total, current - 1, current, current + 1]);
+
+  if (current <= 4) {
+    [2, 3, 4, 5].forEach((page) => items.add(page));
+  }
+  if (current >= total - 3) {
+    [total - 4, total - 3, total - 2, total - 1].forEach((page) => items.add(page));
+  }
+
+  const pages = [...items]
+    .filter((page) => page >= 1 && page <= total)
+    .sort((a, b) => a - b);
+  const result = [];
+
+  pages.forEach((page, index) => {
+    const previous = pages[index - 1];
+    if (previous && page - previous > 1) result.push("ellipsis");
+    result.push(page);
+  });
+
+  return result;
+}
+
+function renderPagination(pageCount) {
+  if (pageCount <= 1) return;
+
+  const goToPage = (page) => {
+    currentPage = Math.min(Math.max(page, 1), pageCount);
+    renderPosts();
+    manager.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  paginations.forEach((pagination) => {
     const previous = document.createElement("button");
     previous.type = "button";
     previous.textContent = "上一页";
     previous.disabled = currentPage === 1;
-    previous.addEventListener("click", () => {
-      currentPage -= 1;
-      renderPosts();
-      manager.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    previous.addEventListener("click", () => goToPage(currentPage - 1));
+    pagination.append(previous);
 
-    const pageLabel = document.createElement("span");
-    pageLabel.textContent = `${currentPage} / ${pageCount}`;
+    getPaginationItems(currentPage, pageCount).forEach((item) => {
+      if (item === "ellipsis") {
+        const ellipsis = document.createElement("span");
+        ellipsis.className = "pagination-ellipsis";
+        ellipsis.textContent = "...";
+        ellipsis.setAttribute("aria-hidden", "true");
+        pagination.append(ellipsis);
+        return;
+      }
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = String(item);
+      button.classList.toggle("active", item === currentPage);
+      button.setAttribute("aria-label", `第 ${item} 页`);
+      if (item === currentPage) button.setAttribute("aria-current", "page");
+      button.addEventListener("click", () => goToPage(item));
+      pagination.append(button);
+    });
 
     const next = document.createElement("button");
     next.type = "button";
     next.textContent = "下一页";
     next.disabled = currentPage === pageCount;
-    next.addEventListener("click", () => {
-      currentPage += 1;
-      renderPosts();
-      manager.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-
-    pagination.append(previous, pageLabel, next);
-  }
+    next.addEventListener("click", () => goToPage(currentPage + 1));
+    pagination.append(next);
+  });
 }
 
 async function loadPosts() {

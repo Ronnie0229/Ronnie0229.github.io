@@ -294,6 +294,45 @@ const structuredDataJson = JSON.stringify(structuredData).replace(/</g, "\\u003c
     </script>
     <script is:inline>
       (() => {
+        const relativeTimeElements = Array.from(document.querySelectorAll("[data-relative-time]"));
+        if (!relativeTimeElements.length) return;
+
+        const units = [
+          { label: "年", seconds: 365 * 24 * 60 * 60 },
+          { label: "月", seconds: 30 * 24 * 60 * 60 },
+          { label: "周", seconds: 7 * 24 * 60 * 60 },
+          { label: "天", seconds: 24 * 60 * 60 },
+          { label: "小时", seconds: 60 * 60 },
+          { label: "分钟", seconds: 60 }
+        ];
+
+        const formatRelativeTime = (date) => {
+          const value = date.valueOf();
+          if (!Number.isFinite(value)) return "";
+
+          const diffSeconds = Math.floor((Date.now() - value) / 1000);
+          if (diffSeconds < 0) return "1分钟前";
+
+          const unit = units.find((item) => diffSeconds >= item.seconds) || units.at(-1);
+          const amount = Math.max(1, Math.floor(diffSeconds / unit.seconds));
+          return `${amount}${unit.label}前`;
+        };
+
+        const updateRelativeTimes = () => {
+          relativeTimeElements.forEach((element) => {
+            const value = element.getAttribute("datetime") || element.getAttribute("data-datetime");
+            const text = formatRelativeTime(new Date(value || ""));
+            element.textContent = text;
+            element.hidden = !text;
+          });
+        };
+
+        updateRelativeTimes();
+        window.setInterval(updateRelativeTimes, 60 * 1000);
+      })();
+    </script>
+    <script is:inline>
+      (() => {
         const storageKey = "ronniecross-visit-counted";
         const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
         const counterUrl = localPreview

@@ -670,15 +670,27 @@ h2 {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
+  max-width: 100%;
+}
+
+.pagination button,
+.pagination-ellipsis {
+  min-width: 42px;
+  min-height: 40px;
 }
 
 .pagination button {
-  min-width: 42px;
-  min-height: 40px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: var(--color-card);
   color: var(--color-text);
+}
+
+.pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-3);
 }
 
 .pagination button.active {
@@ -1206,4 +1218,3 @@ b {
     margin-left: calc(var(--comment-depth, 0) * 12px);
   }
 }
-

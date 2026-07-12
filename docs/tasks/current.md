@@ -1,5 +1,60 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，执行分页与相对发布时间任务）
+
+本轮按 `.ai-bridge/current-plan.md` 执行“执行分页与相对发布时间任务”。任务范围只包括 Admin 导航、Admin 文章管理分页、正式“全部文章”分页和文章相对发布时间；未继续任何邮件相关任务，未修改邮件发送逻辑，未发布或修改正式文章，未触发真实邮件。
+
+完成内容：
+
+```text
+1. Admin 主要页面顶部导航已统一包含“邮件订阅”链接 `/admin/subscribers.html`。已检查管理首页、文章管理、留言管理、数据概览、邮件订阅页；其中留言管理和数据概览补齐了缺失链接。
+2. Admin 文章管理页已改为上下两组数字分页，包含上一页、下一页、当前页、页码和省略号；顶部和底部由同一渲染函数同步状态。搜索输入和分类筛选继续重置到第 1 页，过滤后页码会夹到有效范围。移动端分页使用换行布局避免横向溢出。
+3. 正式网页 `/posts/` “全部文章”列表已在列表上方增加同款分页，保留底部分页；上下两组按钮、当前页状态和省略逻辑同步。
+4. 文章元信息已在发布日期和阅读时间之间加入动态相对发布时间，覆盖首页/列表共享 PostCard、全部文章列表、分类列表、Bible 书卷文章卡片、搜索结果和文章详情页。前台使用轻量浏览器脚本基于 `datetime` 计算 `x分钟前`、`x小时前`、`x天前`、`x周前`、`x月前`、`x年前`；未来日期最小显示 `1分钟前`，无效日期隐藏。
+```
+
+修改文件：
+
+```text
+assets/admin/admin.css
+assets/admin/comments.html
+assets/admin/editor.html
+assets/admin/editor.js
+assets/admin/stats.html
+src/components/PostCard.astro
+src/layouts/BaseLayout.astro
+src/pages/bible/[book].astro
+src/pages/posts/[slug].astro
+src/pages/posts/index.astro
+src/pages/search/index.astro
+src/styles/global.css
+```
+
+验证结果：
+
+```text
+node --check assets/admin/editor.js：通过。
+node --check assets/admin/comments.js：通过。
+node --check assets/admin/stats.js：通过。
+npm run check:admin-save：通过，Errors: 0。
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+npm run build：通过，313 page(s) built，Build Complete。
+git diff --check：通过。
+本地浏览器检查 `/posts/`：顶部/底部分页内容一致，点击底部第 2 页后顶部/底部当前页同步为 2，每页显示 20 张卡片。
+本地浏览器移动宽度检查 `/posts/`：390px 视口下分页不横向溢出，顶部和底部分页均自然换行。
+本地浏览器检查文章详情页：发布日期与阅读时间之间显示相对发布时间。
+本地浏览器检查相对时间样本：近期文章显示 `12小时前`，数月前文章显示 `1月前`，较早文章显示 `1年前`。
+```
+
+待完成收尾：
+
+```text
+1. commit 并 push 到 origin main。
+2. 等待 Cloudflare Pages 部署完成，并确认 `/deployment.json` commit 等于本次提交。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，Email published posts 同 run 自动失败重试）
 
 本轮按 `.ai-bridge/current-plan.md` 改进 GitHub Actions 邮件自动发送失败处理。目标是单个收件人临时发送失败时，在同一次 workflow run 内自动重试；只有自动重试耗尽后仍有失败收件人，才让 run 失败并触发 GitHub failure 通知。本轮未补发任何文章，未运行 `workflow_dispatch`，未修改文章正文。

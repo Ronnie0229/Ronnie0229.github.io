@@ -95,6 +95,28 @@ import Logo from "../../components/Logo.astro";
       return `${prefix}${source.slice(start, end).trim()}${suffix}`;
     };
 
+    const formatRelativeTime = (value: string) => {
+      const date = new Date(value);
+      const timestamp = date.valueOf();
+      if (!Number.isFinite(timestamp)) return "";
+
+      const diffSeconds = Math.floor((Date.now() - timestamp) / 1000);
+      if (diffSeconds < 0) return "1分钟前";
+
+      const units = [
+        { label: "年", seconds: 365 * 24 * 60 * 60 },
+        { label: "月", seconds: 30 * 24 * 60 * 60 },
+        { label: "周", seconds: 7 * 24 * 60 * 60 },
+        { label: "天", seconds: 24 * 60 * 60 },
+        { label: "小时", seconds: 60 * 60 },
+        { label: "分钟", seconds: 60 }
+      ];
+      const unit = units.find((item) => diffSeconds >= item.seconds) || units.at(-1);
+      const amount = Math.max(1, Math.floor(diffSeconds / unit.seconds));
+
+      return `${amount}${unit.label}前`;
+    };
+
     const searchPosts = (posts: SearchPost[], terms: string[]) =>
       posts
         .map((post) => {
@@ -256,7 +278,12 @@ import Logo from "../../components/Logo.astro";
         }).format(new Date(post.date));
         const category = document.createElement("span");
         category.textContent = post.category;
-        meta.append(date, category);
+        const relativeTime = document.createElement("span");
+        relativeTime.className = "meta-text";
+        relativeTime.textContent = formatRelativeTime(post.date);
+        meta.append(date);
+        if (relativeTime.textContent) meta.append(relativeTime);
+        meta.append(category);
         if (post.readingTimeMinutes) {
           const readingTime = document.createElement("span");
           readingTime.className = "meta-text";
