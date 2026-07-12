@@ -1,5 +1,45 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，讲道《像亚伯一样的信心》发布）
+
+本轮按正确讲道收件入口处理 1 篇 PDF：`[TF] Hebrews 11_1-4 Faith like Abel - Google Docs.pdf`。已整理为中文讲道并按实际整理发布日期 `2026-07-12` 发布。
+
+讲员识别：源稿中没有讲员自我介绍或其他可确认姓名，因此按项目规则使用默认讲员 `Patrick`，并记录为 `user_default_when_no_speaker_evidence`。
+
+本轮新增网站文章：
+
+```text
+src/content/posts/2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心.md
+```
+
+检查结果：
+
+```text
+content_workflow.py publish sermon --dry-run：通过。
+node scripts/add_article_ids.mjs：已补 articleId。
+npm run build：通过，313 page(s) built。
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+npm run check:admin-save：通过，Errors: 0。
+```
+
+归档状态：
+
+```text
+NAS 白名单归档尚未完成，因为当前 /Volumes/share 和 /Volumes/home 均未挂载。
+/Volumes/tmp 正常，文章发布不受影响。
+待 NAS 恢复挂载后重试归档到 /Volumes/share/教会讲道/20260712_希伯来书11:1-4_像亚伯一样的信心_Patrick。
+```
+
+未完成事项：
+
+```text
+1. 提交并 push 到 GitHub。
+2. 等待 Cloudflare Pages 部署并验证新文章 URL、页面标题与正文内容。
+3. NAS 重新挂载后补做白名单归档。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，中文文章自动邮件识别发布前修复）
 
 本轮按 `.ai-bridge/current-plan.md` 执行邮件自动触发紧急修复，目标是在今日讲道稿发布前上线。未发布新文章，未修改任何文章文件，未运行 `workflow_dispatch`，未补发任何旧文章。
