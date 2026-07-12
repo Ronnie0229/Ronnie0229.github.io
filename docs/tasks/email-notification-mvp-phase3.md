@@ -156,6 +156,7 @@ npm run build：通过，310 page(s) built，Build Complete
 3. 只有唯一匹配时才解析为线上真实 slug，并用该真实 slug 继续执行 D1 防重复、中性链接和发送记录。
 4. 0 个匹配继续返回 missing；多个匹配返回 ambiguous，禁止擅自选择，避免误发。
 5. 补发前必须先查询 D1，确认线上真实 slug 没有 sent/success 成功发送记录。
+6. 远程环境没有 Cloudflare D1 查询令牌时，使用受 `EMAIL_AUTOMATION_SECRET` 保护的 workflow_dispatch `check_only=true` 预检；该模式只解析 slug 并查询 `email_post_sends`，不创建发送任务、不写发送日志、不调用邮件发送。
 ```
 
 ## 上线后验证

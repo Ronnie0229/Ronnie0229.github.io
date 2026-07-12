@@ -2,6 +2,7 @@ import { requireAdminOrEmailAutomation } from "../../../_lib/admin-auth.js";
 import { buildNeutralPostUrl, sendPostNotificationEmail } from "../../../_utils/email.js";
 
 const DUPLICATE_STATUSES = ["pending", "sending", "sent", "success"];
+const SUCCESS_STATUSES = ["sent", "success"];
 const EMAIL_SUBJECT = "RonnieCross 新文章提醒";
 
 function json(data, status = 200) {
@@ -167,6 +168,21 @@ async function finishSends(env, ids, successCount, failedCount) {
   }
 }
 
+async function loadExistingSends(env, slugs) {
+  const sends = [];
+  for (const slug of slugs) {
+    const { results } = await env.COMMENTS_DB.prepare(
+      `SELECT id, post_slug AS postSlug, status, recipient_count AS recipientCount,
+              success_count AS successCount, failed_count AS failedCount, sent_at AS sentAt
+       FROM email_post_sends
+       WHERE post_slug = ?
+       ORDER BY id DESC`
+    ).bind(slug).all();
+    sends.push(...(Array.isArray(results) ? results : []));
+  }
+  return sends;
+}
+
 async function handlePost({ request, env }) {
   const admin = await requireAdminOrEmailAutomation(request, env);
   if (!admin.ok) return admin.response;
@@ -211,6 +227,18 @@ async function handlePost({ request, env }) {
     );
   }
   slugs = resolution.resolved;
+
+  if (body.checkOnly === true) {
+    const existingSends = await loadExistingSends(env, slugs);
+    return json({
+      ok: true,
+      checkOnly: true,
+      requestedSlugs: Array.from(new Set((Array.isArray(body.slugs) ? body.slugs : []).map(cleanSlug).filter(Boolean))),
+      resolvedSlugs: slugs,
+      existingSends,
+      hasSentOrSuccess: existingSends.some((send) => SUCCESS_STATUSES.includes(send.status))
+    });
+  }
 
   const { results } = await env.COMMENTS_DB.prepare(
     `SELECT * FROM email_subscribers WHERE status = 'confirmed' ORDER BY id ASC`

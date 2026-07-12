@@ -6,6 +6,7 @@ const secret = String(process.env.EMAIL_AUTOMATION_SECRET || "");
 const eventPath = process.env.GITHUB_EVENT_PATH;
 const manualPostSlugs = String(process.env.MANUAL_POST_SLUGS || "");
 const automationPath = String(process.env.EMAIL_AUTOMATION_PATH || "/api/email/auto-send");
+const checkOnly = String(process.env.EMAIL_CHECK_ONLY || "").toLowerCase() === "true";
 
 if (!secret) {
   throw new Error("EMAIL_AUTOMATION_SECRET is required.");
@@ -92,7 +93,7 @@ if (!slugs.length) {
   process.exit(0);
 }
 
-console.log(`Waiting for deployment ${after} before sending ${slugs.length} post notification(s).`);
+console.log(`Waiting for deployment ${after} before ${checkOnly ? "checking" : "sending"} ${slugs.length} post notification(s).`);
 await waitForDeployment(after);
 
 const response = await fetch(`${siteUrl}${automationPath}`, {
@@ -102,7 +103,7 @@ const response = await fetch(`${siteUrl}${automationPath}`, {
     "Content-Type": "application/json",
     "X-Email-Automation-Secret": secret
   },
-  body: JSON.stringify({ slugs })
+  body: JSON.stringify({ slugs, checkOnly })
 });
 const data = await response.json().catch(() => ({}));
 
@@ -112,17 +113,29 @@ if (!response.ok || !data.ok) {
 
 console.log(
   JSON.stringify(
-    {
-      postCount: data.postCount,
-      recipientCount: data.recipientCount,
-      successCount: data.successCount,
-      failedCount: data.failedCount,
-      skippedSlugs: data.skippedSlugs || []
-    },
+    checkOnly
+      ? {
+          checkOnly: data.checkOnly,
+          requestedSlugs: data.requestedSlugs || [],
+          resolvedSlugs: data.resolvedSlugs || [],
+          existingSends: data.existingSends || [],
+          hasSentOrSuccess: data.hasSentOrSuccess === true
+        }
+      : {
+          postCount: data.postCount,
+          recipientCount: data.recipientCount,
+          successCount: data.successCount,
+          failedCount: data.failedCount,
+          skippedSlugs: data.skippedSlugs || []
+        },
     null,
     2
   )
 );
+
+if (checkOnly && data.hasSentOrSuccess === true) {
+  throw new Error("D1 already contains a sent/success record for the target slug.");
+}
 
 if (data.failedCount > 0) {
   process.exitCode = 1;
