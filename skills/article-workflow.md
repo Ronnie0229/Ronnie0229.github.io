@@ -23,10 +23,12 @@ Before doing any content task, read these files in this repository:
 
 - Translate sermon source material faithfully and completely; do not summarize in place of translation. Sermons use Full Sermon Mode by default.
 - 完整讲章模式必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂（Doxology）及结束经文；不得因网站发布而删减。
-- 仅可删除与讲章内容无关的内部制作标记和噪音，例如 `[SLIDE]`、`JP`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题。
+- “逐句完整”约束的是信息不能遗漏，不要求照搬英文句法、标点、OCR 换行或生硬表达。标题、小标题、编号列表、经文、引文、对话和讨论问题必须按中文阅读习惯分行分段。
+- 仅可删除与讲章内容无关的内部制作标记和噪音，例如 `[SLIDE]`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题。`JP`、`EN`、`CN` 等缩写必须先做现场语境判断。
 - 原文已经写明引用经文出处时，中文翻译必须自然保留并译出对应经文章节，不得省略；例如原文写 Galatians 2:14，中文应保留为“加拉太书 2:14”。
 - 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文；如需解释英文词语、原文词义或其他译本差异，可在和合本经文之外另加说明，但不得用其他中文译本替代正文经文。
-- 翻译完成后必须按英文原稿顺序逐段自我审查，检查经文、引用、例子、现场互动、结束语、小组讨论、祝祷、荣耀颂和结束经文是否全部覆盖；发现摘要化或跳段必须修正并再次反向核对。
+- 翻译完成后必须按英文原稿顺序逐段自我审查，并强制通过中文可读性检查和现场语境检查。检查经文、引用、例子、现场互动、结束语、小组讨论、祝祷、荣耀颂和结束经文是否全部覆盖；检查 `JP`、`EN`、`CN`、`MC`、`Translator` 等的真实含义；发现摘要化、跳段、生硬直译或语境误判必须修正并再次反向核对。
+- 例如 `Genesis 4:1-8 (JP for sake of time)` 在双语聚会语境中应译为“因为时间关系，这段经文只用日语来读”，不能译成“请 JP 来读”；无法确定时标记 `needs_confirmation`。
 - 只有翻译审计结论为“无遗漏、无摘要化、无未确认缺口”时，才允许进入 processed/posts 和正式发布。
 - When sermon workflow rules change, update both the sermon workflow project and this website project, or explicitly report the unsynced side.
 - 涉及讲道整理项目的规则变更时，必须同步检查个人网页项目对应文档；如果未同步，最终汇报必须明确说明。
