@@ -1,5 +1,50 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，Email published posts 同 run 自动失败重试）
+
+本轮按 `.ai-bridge/current-plan.md` 改进 GitHub Actions 邮件自动发送失败处理。目标是单个收件人临时发送失败时，在同一次 workflow run 内自动重试；只有自动重试耗尽后仍有失败收件人，才让 run 失败并触发 GitHub failure 通知。本轮未补发任何文章，未运行 `workflow_dispatch`，未修改文章正文。
+
+问题背景：
+
+```text
+正式补发 run 29180143542 首次返回 recipientCount=3、successCount=2、failedCount=1，因此旧脚本立即 exit 1，触发 GitHub failure 邮件。
+后续独立重试 run 29180180069 只重试 1 个失败收件人并成功，说明最终发送可恢复，但旧逻辑过早把中间 partial_failed 上报为 workflow failure。
+```
+
+本轮修复：
+
+```text
+1. scripts/notify-deployed-posts.mjs 保留 API 现有 partial_failed / failed-recipient-only 重试机制。
+2. 发送流程封装为 notifyWithRetries：首次发送后若 failedCount > 0，在同一 run 内按 10 秒、30 秒退避最多自动重试 2 次。
+3. 每次发送调用都打印 attempt、postCount、recipientCount、successCount、failedCount、skippedSlugs。
+4. 任一次 failedCount=0 即成功结束，不设置 exitCode=1。
+5. 只有最多 3 次调用后仍 failedCount>0，才抛错让 GitHub Actions 失败。
+6. checkOnly 模式只做 D1 预检，不进入发送重试。
+7. 新增 scripts/test-notify-email-retries.mjs，用 mock request 验证重试流程，不触发网络或真实邮件。
+```
+
+验证结果：
+
+```text
+node --check scripts/notify-deployed-posts.mjs：通过。
+node --check scripts/test-notify-email-retries.mjs：通过。
+node scripts/test-notify-email-retries.mjs：通过，覆盖首次 2 成功 1 失败后重试成功、连续三次仍失败、首次全成功、checkOnly 不重试。
+npm run check:admin-save：通过，Errors: 0。
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+npm run build：通过，313 page(s) built，Build Complete。
+```
+
+待完成：
+
+```text
+1. git diff --check。
+2. 保存 implementation-diff。
+3. commit 并 push。
+4. 等待 Cloudflare /deployment.json 确认部署。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，《像亚伯一样的信心》邮件 slug 映射修复与受控补发）
 
 本轮按 `.ai-bridge/current-plan.md` 执行邮件自动发送第二个根因修复。目标仅限今天讲道稿《像亚伯一样的信心》；不修改文章正文，不发布测试文章，不泄露 secret。受控补发前必须先检查 D1，确认线上真实 slug 没有 sent/success 成功发送记录。
