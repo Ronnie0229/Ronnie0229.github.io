@@ -136,6 +136,28 @@ npm run build：通过，310 page(s) built，Build Complete
 4. 手工补发仍只作为故障恢复入口，正常发布不得重复运行。
 ```
 
+## 第二次真实发送复盘：文件名 slug 与 Astro slug 映射
+
+《像亚伯一样的信心》自动邮件工作流已正确识别新增文章并等待部署，但 auto-send API 返回 `Published post not found yet.`。根因不是部署、密钥或 Resend，而是新增文件名 stem 与 Astro 实际 slug 不完全一致：
+
+```text
+文件名 stem：
+2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心
+
+线上 search-index slug：
+2026-07-12-希伯来书-11-1-4像亚伯一样的信心
+```
+
+修正规则：
+
+```text
+1. auto-send API 接收请求 slug 后，先按 search-index 中的真实 slug 做精确匹配。
+2. 精确匹配失败时，对请求 slug 和 search-index slug 做 NFKC、转小写、移除 Unicode 标点/符号/空白后比较。
+3. 只有唯一匹配时才解析为线上真实 slug，并用该真实 slug 继续执行 D1 防重复、中性链接和发送记录。
+4. 0 个匹配继续返回 missing；多个匹配返回 ambiguous，禁止擅自选择，避免误发。
+5. 补发前必须先查询 D1，确认线上真实 slug 没有 sent/success 成功发送记录。
+```
+
 ## 上线后验证
 
 ```text

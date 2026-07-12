@@ -18,6 +18,54 @@ function cleanSlug(value) {
   return String(value || "").trim().replace(/^\/+/, "").replace(/^posts\//, "").replace(/\/index\/?$/, "").replace(/\/+$/, "");
 }
 
+export function canonicalSlugKey(value) {
+  return cleanSlug(value)
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[\p{P}\p{S}\s]+/gu, "");
+}
+
+export function resolvePublishedSlugs(requestedSlugs, index) {
+  const publishedSlugs = Array.from(
+    new Set(index.filter(Boolean).map((post) => cleanSlug(post.slug)).filter(Boolean))
+  );
+  const exact = new Set(publishedSlugs);
+  const canonical = new Map();
+
+  for (const slug of publishedSlugs) {
+    const key = canonicalSlugKey(slug);
+    const matches = canonical.get(key) || [];
+    matches.push(slug);
+    canonical.set(key, matches);
+  }
+
+  const resolved = [];
+  const missing = [];
+  const ambiguous = [];
+
+  for (const requested of requestedSlugs) {
+    if (exact.has(requested)) {
+      resolved.push(requested);
+      continue;
+    }
+
+    const matches = canonical.get(canonicalSlugKey(requested)) || [];
+    if (matches.length === 1) {
+      resolved.push(matches[0]);
+    } else if (matches.length > 1) {
+      ambiguous.push({ requested, matches });
+    } else {
+      missing.push(requested);
+    }
+  }
+
+  return {
+    resolved: Array.from(new Set(resolved)),
+    missing,
+    ambiguous
+  };
+}
+
 function createNeutralId() {
   if (typeof crypto.randomUUID === "function") return crypto.randomUUID().replace(/-/g, "");
   const bytes = new Uint8Array(16);
@@ -131,7 +179,7 @@ async function handlePost({ request, env }) {
     return json({ ok: false, error: "Invalid JSON body." }, 400);
   }
 
-  const slugs = Array.from(new Set((Array.isArray(body.slugs) ? body.slugs : []).map(cleanSlug).filter(Boolean))).slice(0, 50);
+  let slugs = Array.from(new Set((Array.isArray(body.slugs) ? body.slugs : []).map(cleanSlug).filter(Boolean))).slice(0, 50);
   if (!slugs.length) return json({ ok: false, error: "slugs is required." }, 400);
 
   let index;
@@ -141,9 +189,28 @@ async function handlePost({ request, env }) {
     return json({ ok: false, error: error instanceof Error ? error.message : "Unable to load post index." }, 502);
   }
 
-  const existingSlugs = new Set(index.filter(Boolean).map((post) => post.slug));
-  const missingSlugs = slugs.filter((slug) => !existingSlugs.has(slug));
-  if (missingSlugs.length) return json({ ok: false, error: "Published post not found yet.", missingSlugs }, 409);
+  const resolution = resolvePublishedSlugs(slugs, index);
+  if (resolution.ambiguous.length) {
+    return json(
+      {
+        ok: false,
+        error: "Published post slug is ambiguous.",
+        ambiguousSlugs: resolution.ambiguous
+      },
+      409
+    );
+  }
+  if (resolution.missing.length) {
+    return json(
+      {
+        ok: false,
+        error: "Published post not found yet.",
+        missingSlugs: resolution.missing
+      },
+      409
+    );
+  }
+  slugs = resolution.resolved;
 
   const { results } = await env.COMMENTS_DB.prepare(
     `SELECT * FROM email_subscribers WHERE status = 'confirmed' ORDER BY id ASC`

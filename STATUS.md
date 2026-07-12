@@ -20,6 +20,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 发布前紧急修复：为避免今日讲道稿发布时再次漏发中文文章提醒，`scripts/notify-deployed-posts.mjs` 已将 Git 文件列表读取改为 `-z` NUL 分隔，并使用 `--diff-filter=A` 只识别新增文章。已完成三类本地模拟：ccbacfa 中文新增文章识别 1 个正确 slug；07b7a1a 仅修改既有文章识别 0 个 slug；93d102e 一次新增 7 篇中文文章识别 7 个且去重。本轮未运行 workflow_dispatch，未补发旧文章，未修改文章文件。修复提交 803f8d2b509a2112a5963b83c630922e4bea179f 已 push 到 main，Cloudflare /deployment.json 已确认部署，builtAt=2026-07-11T23:43:26.800Z。
 
+2026-07-12 追加修复：已定位今天《像亚伯一样的信心》自动邮件失败的第二个根因为文件名 stem 与 Astro 实际 slug 不完全一致：文件名含全角竖线 `｜`，线上 search-index slug 会去掉该符号，导致 auto-send API 精确匹配失败并返回 `Published post not found yet.`。本轮已在 `functions/api/admin/email/auto-send.js` 新增 slug 解析：优先精确匹配；精确失败时使用 NFKC、小写、移除 Unicode 标点/符号/空白后的 canonical key 做唯一匹配；0 个匹配返回 missing，多个匹配返回 ambiguous。已新增 `scripts/test-email-slug-resolution.mjs` 覆盖 `｜` 映射、精确匹配、missing 和 ambiguous 四类场景；本地 node check、admin-save、knowledge、build、diff check 均通过。待提交、部署确认、补发前 D1 检查和只补发该篇。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

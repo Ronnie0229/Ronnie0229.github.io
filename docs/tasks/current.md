@@ -1,5 +1,56 @@
 # 当前任务
 
+## 当前任务状态（2026-07-12，《像亚伯一样的信心》邮件 slug 映射修复与受控补发）
+
+本轮按 `.ai-bridge/current-plan.md` 执行邮件自动发送第二个根因修复。目标仅限今天讲道稿《像亚伯一样的信心》；不修改文章正文，不发布测试文章，不泄露 secret。受控补发前必须先检查 D1，确认线上真实 slug 没有 sent/success 成功发送记录。
+
+问题根因：
+
+```text
+GitHub Actions run 29175325655 已正确识别新增文件名 stem：
+2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心
+
+但线上 Astro search-index 的实际 slug 为：
+2026-07-12-希伯来书-11-1-4像亚伯一样的信心
+
+Astro 生成路由时去掉了全角竖线 ｜，auto-send API 原先只做精确 slug 匹配，因此返回 Published post not found yet.。
+```
+
+本轮修复：
+
+```text
+1. functions/api/admin/email/auto-send.js 新增 canonicalSlugKey 与 resolvePublishedSlugs。
+2. slug 解析优先精确匹配；精确失败时对请求 slug 和 search-index slug 做 NFKC、转小写、移除 Unicode 标点/符号/空白后比较。
+3. 只有唯一匹配时才采用线上真实 slug；0 个匹配返回 missing；多个匹配返回 ambiguous，避免误发。
+4. 后续 D1 防重复、email_post_sends、email_post_links 和中性链接全部使用解析后的真实线上 slug。
+5. 新增 scripts/test-email-slug-resolution.mjs，固定覆盖 slug 映射边界。
+```
+
+验证结果：
+
+```text
+node --check functions/api/admin/email/auto-send.js：通过。
+node --check functions/api/email/auto-send.js：通过。
+node --check scripts/test-email-slug-resolution.mjs：通过。
+node scripts/test-email-slug-resolution.mjs：通过，覆盖 ｜ 映射、精确匹配、missing、ambiguous 四类场景。
+npm run check:admin-save：通过，Errors: 0。
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+npm run build：通过，313 page(s) built，Build Complete。
+git diff --check：通过。
+```
+
+待完成：
+
+```text
+1. commit 并 push。
+2. 等待 Cloudflare /deployment.json 确认修复提交部署。
+3. 补发前查询 D1：确认线上真实 slug 没有 sent/success 成功发送记录。
+4. 使用 workflow_dispatch 只补发文件名 slug：2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心。
+5. 补发后记录 run ID、recipientCount、successCount、failedCount。
+```
+
+---
+
 ## 当前任务状态（2026-07-12，《像亚伯一样的信心》逐句重译与审查流程补强）
 
 已根据正式英文原稿重新逐段翻译《希伯来书 11:1-4｜像亚伯一样的信心》，恢复原稿中先前被压缩或遗漏的经文、引用、例证对话、现场互动、结束语、小组讨论、荣耀颂和犹大书 24-25。网站 processed/posts 已通过 update-existing 更新。
