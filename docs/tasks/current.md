@@ -85,11 +85,12 @@ npm run build：通过，313 page(s) built，Build Complete。
 git diff --check：通过。
 ```
 
-待完成收尾：
+提交与部署：
 
 ```text
-1. commit 并 push 到 origin main。
-2. 等待 Cloudflare Pages 部署完成，并确认 `/deployment.json` commit 等于本次提交。
+1. UI 修复提交已 push：5ac602b862f4b5b032fc4622439f5ea10d03496b fix: complete admin and list pagination。
+2. Cloudflare Pages `/deployment.json` 已确认部署到该提交：commit=5ac602b862f4b5b032fc4622439f5ea10d03496b，builtAt=2026-07-12T12:50:58.325Z。
+3. 本记录更新后会再提交一次文档收尾提交，并等待最终部署确认。
 ```
 
 ---
