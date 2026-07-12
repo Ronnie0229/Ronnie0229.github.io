@@ -46,11 +46,12 @@ git diff --check：通过。
 本地浏览器检查相对时间样本：近期文章显示 `12小时前`，数月前文章显示 `1月前`，较早文章显示 `1年前`。
 ```
 
-待完成收尾：
+收尾结果：
 
 ```text
-1. commit 并 push 到 origin main。
-2. 等待 Cloudflare Pages 部署完成，并确认 `/deployment.json` commit 等于本次提交。
+1. UI 实现提交并 push 到 origin main：c8885edef9a32b3ae0fe00c74ff85273d606f48f，feat: add pagination and relative publish time。
+2. Cloudflare Pages `/deployment.json` 已确认部署到该 UI 提交：commit=c8885edef9a32b3ae0fe00c74ff85273d606f48f，builtAt=2026-07-12T12:05:41.693Z。
+3. 本记录更新后会再提交一次文档收尾提交，并等待最终部署确认。
 ```
 
 ---
