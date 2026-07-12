@@ -1065,11 +1065,11 @@ b {
     min-height: 64px;
     margin: 0 -14px 10px;
     padding: 10px 14px;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-border), transparent 18%);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    background: color-mix(in srgb, var(--color-card-solid), transparent 14%);
-    box-shadow: 0 12px 30px color-mix(in srgb, var(--color-shadow), transparent 70%);
-    backdrop-filter: blur(22px) saturate(150%);
+    border-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: blur(18px);
   }
 
   .header-actions {
