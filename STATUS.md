@@ -24,6 +24,8 @@ Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增
 
 2026-07-12 追加修复完成：已改进 Email published posts 工作流的失败处理。`scripts/notify-deployed-posts.mjs` 现在会在同一次 GitHub Actions run 内对 failedCount>0 的发送结果自动重试，退避为 10 秒、30 秒，总计最多 3 次调用；API 仍依赖现有 partial_failed / failed-recipient-only 机制，只重试上一批失败且当前 confirmed 的收件人，避免重复发送给已成功收件人。任一次重试后 failedCount=0 即视为 run 成功；只有重试耗尽后仍失败才触发 GitHub failure 邮件。checkOnly 模式不进入重试。本轮新增 `scripts/test-notify-email-retries.mjs` 覆盖首次部分失败后成功、连续三次失败、首次全成功、checkOnly 不重试；本地 node check、admin-save、knowledge、build、diff check 均通过。修复提交 a04f87c55f139ac1cd94221707b8669cf0b0a4af 已 push，Cloudflare /deployment.json 已确认部署，builtAt=2026-07-12T05:07:57.520Z。本轮未补发任何文章，未运行 workflow_dispatch，未修改文章正文。
 
+2026-07-12 晚间复核：重新读取 `.ai-bridge/current-plan.md` 后复核同 run 邮件失败重试实现。开始前已执行 `git pull --rebase origin main`，本地 fast-forward 到远端文章更新提交 779a5a7；该文章更新来自远端同步，不是本轮修改。本轮复跑 `node --check scripts/notify-deployed-posts.mjs`、`node --check scripts/test-notify-email-retries.mjs`、`node scripts/test-notify-email-retries.mjs`、`npm run check:admin-save`、`npm run check:knowledge`、`npm run build`、`git diff --check` 均通过；build 仍有既有 Astro duplicate id 警告，输出 313 page(s) built。本轮未发布测试文章，未运行 workflow_dispatch，未触发真实邮件。
+
 ## 邮件提醒 MVP 第三阶段状态
 
 ```text

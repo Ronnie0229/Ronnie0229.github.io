@@ -43,6 +43,21 @@ npm run build：通过，313 page(s) built，Build Complete。
 4. Cloudflare /deployment.json 已确认部署：commit=a04f87c55f139ac1cd94221707b8669cf0b0a4af，builtAt=2026-07-12T05:07:57.520Z。
 ```
 
+晚间复核（2026-07-12 20:45 +09）：
+
+```text
+1. 已重新读取 .ai-bridge/current-plan.md，并按要求复核同 run 自动失败重试实现。
+2. 开始前执行 git pull --rebase origin main，本地 fast-forward 到远端文章更新提交 779a5a7；该文章更新来自远端同步，不是本轮修改。
+3. 重新运行 node --check scripts/notify-deployed-posts.mjs：通过。
+4. 重新运行 node --check scripts/test-notify-email-retries.mjs：通过。
+5. 重新运行 node scripts/test-notify-email-retries.mjs：通过。
+6. 重新运行 npm run check:admin-save：通过，Errors: 0。
+7. 重新运行 npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0。
+8. 重新运行 npm run build：通过，313 page(s) built，Build Complete；仍出现既有 Astro duplicate id 警告。
+9. 重新运行 git diff --check：通过。
+10. 本轮未发布测试文章，未运行 workflow_dispatch，未触发真实邮件。
+```
+
 ---
 
 ## 当前任务状态（2026-07-12，《像亚伯一样的信心》邮件 slug 映射修复与受控补发）
