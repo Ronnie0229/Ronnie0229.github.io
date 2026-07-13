@@ -36,7 +36,15 @@ STATUS.md
 docs/tasks/current.md
 ```
 
-待完成：提交并 push 本轮文档收尾提交，等待 Cloudflare Pages 部署完成后确认 `/deployment.json` commit 与本轮提交一致。
+提交与部署：
+
+```text
+文档收尾提交：00080cf2245ea299f5f906476df6501a73a13e07 docs: record admin pagination verification
+push 结果：已推送到 origin/main
+Cloudflare Pages 部署验证：/deployment.json 已返回 commit=00080cf2245ea299f5f906476df6501a73a13e07，builtAt=2026-07-13T08:31:16.790Z
+```
+
+未完成事项：无。下一个账号接手时只需注意工作区仍有与本任务无关的未跟踪文件 `functions/_middleware.js`，不要误删或误提交。
 
 ---
 
