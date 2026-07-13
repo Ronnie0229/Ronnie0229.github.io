@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Comments from "../../components/Comments.astro";
+import SubscribePrompt from "../../components/SubscribePrompt.astro";
 import { buildPostKnowledge, getRelatedPosts } from "../../lib/knowledge";
 import { getCategoryRouteByCategory } from "../../lib/categories";
 
@@ -140,6 +141,7 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
     >
       返回文章列表
     </a>
+    <SubscribePrompt />
     <Comments postSlug={post.slug} />
   </article>
 
