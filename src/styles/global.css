@@ -1079,18 +1079,6 @@ b {
   color: var(--color-text-3);
 }
 
-.site-footer-subscribe {
-  color: var(--color-gold);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.site-footer-subscribe:hover {
-  color: var(--color-text-1);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
