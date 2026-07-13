@@ -1,5 +1,45 @@
 # 当前任务
 
+## 当前任务状态（2026-07-13，复核并完成分页与 Admin 导航遗漏交接）
+
+已按 `.ai-bridge/current-plan.md` 重新执行“修正分页与Admin导航遗漏”的收尾要求。本轮开始前执行 `git pull --rebase origin main`，结果为 Already up to date；工作区中存在一个与本任务无关的未跟踪文件 `functions/_middleware.js`，本轮未暂存、未提交该文件。
+
+复核结果：当前 `main` 已包含上一轮 UI 修复实现，三项线上截图问题均已通过本地浏览器重新验证：
+
+```text
+1. Admin 文章管理分页：/admin/editor.html 桌面与 390px 手机宽度均显示顶部/底部同款数字分页，状态为 273 篇文章，第 1 / 14 页，页码为“上一页 1 2 3 4 5 ... 14 下一页”。
+2. Admin 导航：/admin/、/admin/editor.html、/admin/comments.html、/admin/stats.html、/admin/subscribers.html 的桌面导航均包含“邮件订阅”；/admin/editor.html 手机菜单点击后也包含“邮件订阅”。
+3. 前台分页：/posts/、/posts/category/sermons/、/posts/category/spiritual-growth/、/bible/罗马书/ 均有顶部和底部分页，且内容一致。
+```
+
+验证结果：
+
+```text
+node --check assets/admin/editor.js：通过
+node --check assets/admin/theme.js：通过
+node --check assets/admin/comments.js：通过
+node --check assets/admin/stats.js：通过
+npm run check:admin-save：通过，Errors: 0
+npm run check:knowledge：通过，Posts checked: 273，Errors: 0，Warnings: 0
+npm run build：通过，313 page(s) built，Build Complete
+git diff --check：通过
+本地浏览器验收：通过，使用 http://127.0.0.1:4321/
+```
+
+本轮修改文件：
+
+```text
+.ai-bridge/agent-status.md
+.ai-bridge/execution-log.jsonl
+.ai-bridge/implementation-diff.patch
+STATUS.md
+docs/tasks/current.md
+```
+
+待完成：提交并 push 本轮文档收尾提交，等待 Cloudflare Pages 部署完成后确认 `/deployment.json` commit 与本轮提交一致。
+
+---
+
 ## 当前任务状态（2026-07-13，统一文章页订阅横幅并精简页脚）
 
 已移除页脚中 Ronnie 与“活出耶稣的样式”之间的“邮件订阅提醒”链接。

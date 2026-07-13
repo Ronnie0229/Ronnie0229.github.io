@@ -1,8 +1,10 @@
 # 项目状态
 
-最后更新：2026-07-07 +09:00
+最后更新：2026-07-13 +09:00
 
 ## 当前结论
+
+2026-07-13 收尾复核：已按 `.ai-bridge/current-plan.md` 重新执行“修正分页与Admin导航遗漏”的验证与交接。当前 `main` 已包含 UI 修复实现；本轮同步远端后确认 Already up to date，并重新通过 `node --check assets/admin/editor.js`、`node --check assets/admin/theme.js`、`node --check assets/admin/comments.js`、`node --check assets/admin/stats.js`、`npm run check:admin-save`、`npm run check:knowledge`、`npm run build`、`git diff --check`。构建输出 313 page(s) built，Build Complete。本地浏览器复核确认：Admin 文章管理桌面与 390px 手机宽度均有上下同款数字分页；Admin 桌面导航和手机菜单均出现“邮件订阅”；`/posts/`、`/posts/category/sermons/`、`/posts/category/spiritual-growth/`、`/bible/罗马书/` 均有上下同步分页。本轮未继续邮件发送逻辑，未修改文章内容，未触发真实邮件。工作区存在与本任务无关的未跟踪文件 `functions/_middleware.js`，本轮未纳入提交。
 
 Mac 移行后的本地项目可正常执行 CodexPro 维护任务。本轮新增 Google Search Console 域名规范化修复：`assets/_redirects` 明确将 `http://www.ronniecross.com/*`、`https://www.ronniecross.com/*`、`http://ronniecross.com/*` 统一 301 到 `https://ronniecross.com/:splat`，继续只保留不带 www 的正式网址。网站 sitemap、canonical 与 robots 仍指向 `https://ronniecross.com`。此前 Google 搜索结果网站图标修复已完成并提交：只使用专用深色背景 favicon，不牵连 apple-touch-icon 与 manifest icon。About 页访问量修复已验证、push、部署并完成复盘文档沉淀。邮件提醒 MVP 第二阶段此前已完成并验收；第三阶段已完成本地实现：Admin 发布成功后自动发送提醒，短时间连续发布多篇时合并为一封邮件，并新增只读订阅邮箱一览。当前仍不实现 Cron、打开率/点击率统计或分类订阅。
 
