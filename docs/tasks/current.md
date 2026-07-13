@@ -28,14 +28,47 @@ docs/tasks/current.md
 .ai-bridge/implementation-diff.patch
 ```
 
-当前待完成：
+验证结果：
 
 ```text
-1. 完整运行 middleware 测试、node --check、npm run build、git diff --check。
-2. 提交并 push 到 main。
-3. 等待 Cloudflare Pages 部署到新 commit。
-4. 部署后用线上 curl 验证 www、about、分类 query、category+focus 旧中文 URL 以及最终 canonical。
-5. 回写最终 commit、部署 commit 和线上 curl 结果。
+node scripts/test-search-console-middleware.mjs：通过，Search Console middleware tests passed
+node --check functions/_middleware.js：通过
+npm run build：通过，313 page(s) built，Build Complete
+git diff --check：通过
+dist/_redirects：已确认包含 root 精确 301 与 wildcard 301 规则
+```
+
+提交与部署：
+
+```text
+middleware 修复提交：2f97364f8e44b3162adaf45dc67e47a6ca7723cd fix: add search console canonical middleware
+root redirect 补丁提交：73714facbd0683dd24c841c736ed09ff69e303b5 fix: add root canonical redirects
+push 结果：已推送到 origin/main
+Cloudflare Pages 部署验证：/deployment.json 已返回 commit=73714facbd0683dd24c841c736ed09ff69e303b5，builtAt=2026-07-13T10:02:52.273Z
+```
+
+线上 curl 验证：
+
+```text
+https://www.ronniecross.com/
+HTTP/2 301
+location: https://ronniecross.com/
+
+https://www.ronniecross.com/about/
+HTTP/2 301
+location: https://ronniecross.com/about/
+
+https://ronniecross.com/posts/?category=教会讲道
+HTTP/2 301
+location: https://ronniecross.com/posts/category/sermons/
+
+https://ronniecross.com/posts/?category=教会讲道&focus=2026-07-12-希伯来书-11-1-4像亚伯一样的信心#post-...
+HTTP/2 301
+location: https://ronniecross.com/posts/2026-07-12-%E5%B8%8C%E4%BC%AF%E6%9D%A5%E4%B9%A6-11-1-4%E5%83%8F%E4%BA%9A%E4%BC%AF%E4%B8%80%E6%A0%B7%E7%9A%84%E4%BF%A1%E5%BF%83/
+
+最终文章页：
+HTTP 200
+canonical: https://ronniecross.com/posts/2026-07-12-%E5%B8%8C%E4%BC%AF%E6%9D%A5%E4%B9%A6-11-1-4%E5%83%8F%E4%BA%9A%E4%BC%AF%E4%B8%80%E6%A0%B7%E7%9A%84%E4%BF%A1%E5%BF%83/
 ```
 
 ---
