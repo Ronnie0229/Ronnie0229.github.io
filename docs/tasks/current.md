@@ -11,11 +11,13 @@
 2. 文件位置 functions/_middleware.js 是 Cloudflare Pages Functions 的根 middleware 位置；导出 export async function onRequest(context) 符合 Pages Functions middleware 运行规则。
 3. 已调整执行顺序：先处理 /posts/ legacy query，再处理 host canonical redirect。这样带 category + focus 的旧中文 URL 会直接 301 到文章详情页，而不是先只做 host 规范化。
 4. 已新增 scripts/test-search-console-middleware.mjs，覆盖 www、about、分类 query、focus query、正常 URL 和未知参数。
+5. 首次部署后线上验证发现 `https://www.ronniecross.com/` 根路径仍返回 200；已确认现有 `assets/_redirects` wildcard 不覆盖根路径，因此补充 http/www/http-apex 三条 root 精确 301 规则。
 ```
 
 本轮修改文件：
 
 ```text
+assets/_redirects
 functions/_middleware.js
 scripts/test-search-console-middleware.mjs
 SEO.md

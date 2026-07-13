@@ -1,5 +1,8 @@
 # Canonical domain redirects for Google Search Console and crawlers.
 # Keep ronniecross.com as the only indexable host; www and http variants redirect here.
+http://www.ronniecross.com/ https://ronniecross.com/ 301
+https://www.ronniecross.com/ https://ronniecross.com/ 301
+http://ronniecross.com/ https://ronniecross.com/ 301
 http://www.ronniecross.com/* https://ronniecross.com/:splat 301
 https://www.ronniecross.com/* https://ronniecross.com/:splat 301
 http://ronniecross.com/* https://ronniecross.com/:splat 301
