@@ -1053,7 +1053,11 @@ b {
 }
 
 .copyright-notice a {
-  color: inherit;
+  color: var(--color-gold);
+}
+
+:root[data-theme="light"] .copyright-notice a {
+  color: #0b376d;
 }
 
 .visit-counter {
