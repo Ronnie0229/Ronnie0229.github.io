@@ -182,8 +182,15 @@ YYYY-MM-DD-short-topic.md
 
 - `https://ronniecross.com/` 是正式首页，`http://` 和 `www` 版本自动重定向属于正常现象，不需要单独收录。
 - 正文文章应使用 `/posts/<slug>/` 这类稳定地址进入 sitemap，并让 Google 索引这个地址。
-- `/posts/?category=...`、`/posts/?focus=...` 只是列表页筛选和返回定位，canonical 指向 `/posts/`，属于备用页，不作为独立索引页。
+- `/posts/?category=...`、`/posts/?focus=...` 是旧列表筛选和返回定位地址，不作为独立索引页；Cloudflare Pages Functions 根 middleware 会把已知分类 query 301 到稳定分类页，把 `focus` query 301 到对应 `/posts/<slug>/` 文章详情页。
 - `/search/?q=...` 只是站内搜索结果页，不作为独立索引页。
 - `/api/`、`/admin/`、`/deployment.json`、`/search-index.json` 这类接口或后台数据不作为网页索引对象。
 - robots.txt 应持续屏蔽 `/admin/`、`/api/`、`/posts/?*`、`/search/?*`，避免 Google 把接口和参数页当成网页抓取。
 - 站内链接、sitemap、RSS 只放正式可索引 URL，不放筛选参数、focus 参数、API 地址。
+
+## Cloudflare middleware 规范化规则
+
+- 根 middleware 文件为 `functions/_middleware.js`，使用 Cloudflare Pages Functions 支持的 `export async function onRequest(context)` 格式。
+- middleware 先处理旧 `/posts/` query：`focus` 优先跳转到文章详情页，已知 `category` 跳转到稳定分类页；未知 query 继续交给静态页面处理。
+- 旧 query 处理后，再把 `http`、`www` 或其他非正式 host 统一 301 到 `https://ronniecross.com`，并保留原路径、查询和 hash。
+- 修改 middleware 时必须运行 `node scripts/test-search-console-middleware.mjs`、`node --check functions/_middleware.js`、`npm run build` 和 `git diff --check`。

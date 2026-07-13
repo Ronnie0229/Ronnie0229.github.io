@@ -1,5 +1,43 @@
 # 当前任务
 
+## 当前任务状态（2026-07-13，Search Console 301 middleware 修复继续）
+
+用户指出 `functions/_middleware.js` 是本次 Search Console 301 修复核心文件，上一轮误判为任务外未跟踪文件，导致未进入提交和部署。本轮继续执行该修复，不再把该文件视为任务外文件。
+
+已确认：
+
+```text
+1. functions/_middleware.js 属于 Search Console canonical / legacy query 301 修复：统一非正式 host 到 https://ronniecross.com，并清理旧 /posts/?category=... 与 /posts/?focus=... URL。
+2. 文件位置 functions/_middleware.js 是 Cloudflare Pages Functions 的根 middleware 位置；导出 export async function onRequest(context) 符合 Pages Functions middleware 运行规则。
+3. 已调整执行顺序：先处理 /posts/ legacy query，再处理 host canonical redirect。这样带 category + focus 的旧中文 URL 会直接 301 到文章详情页，而不是先只做 host 规范化。
+4. 已新增 scripts/test-search-console-middleware.mjs，覆盖 www、about、分类 query、focus query、正常 URL 和未知参数。
+```
+
+本轮修改文件：
+
+```text
+functions/_middleware.js
+scripts/test-search-console-middleware.mjs
+SEO.md
+STATUS.md
+docs/tasks/current.md
+.ai-bridge/agent-status.md
+.ai-bridge/execution-log.jsonl
+.ai-bridge/implementation-diff.patch
+```
+
+当前待完成：
+
+```text
+1. 完整运行 middleware 测试、node --check、npm run build、git diff --check。
+2. 提交并 push 到 main。
+3. 等待 Cloudflare Pages 部署到新 commit。
+4. 部署后用线上 curl 验证 www、about、分类 query、category+focus 旧中文 URL 以及最终 canonical。
+5. 回写最终 commit、部署 commit 和线上 curl 结果。
+```
+
+---
+
 ## 当前任务状态（2026-07-13，复核并完成分页与 Admin 导航遗漏交接）
 
 已按 `.ai-bridge/current-plan.md` 重新执行“修正分页与Admin导航遗漏”的收尾要求。本轮开始前执行 `git pull --rebase origin main`，结果为 Already up to date；工作区中存在一个与本任务无关的未跟踪文件 `functions/_middleware.js`，本轮未暂存、未提交该文件。
