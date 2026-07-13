@@ -1,5 +1,21 @@
 # 当前任务
 
+## 当前任务状态（2026-07-13，圣经书卷页排序）
+
+已完成圣经书卷详情页排序改进。默认按章节和节数升序排列，可切换为按发布时间从新到旧排列；切换后回到第一页，并同步上下分页。
+
+修改文件：
+
+src/pages/bible/[book].astro
+src/styles/global.css
+docs/tasks/current.md
+
+验证：npm run build 通过，共生成 313 个页面。
+
+提交：e359213 feat: add bible book sorting controls，已推送到 origin/main。
+
+---
+
 ## 当前任务状态（2026-07-12，修正分页与 Admin 导航遗漏）
 
 本轮按 `.ai-bridge/current-plan.md` 执行“修正分页与Admin导航遗漏”，只修正上一轮 UI 验收失败问题。未处理任何邮件发送逻辑，未修改文章内容，未触发真实邮件。
