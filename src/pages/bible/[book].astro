@@ -11,14 +11,56 @@ interface Props {
   posts: CollectionEntry<"posts">[];
 }
 
+function getBookReferenceSortKey(post: CollectionEntry<"posts">, book: string) {
+  const references = buildPostKnowledge(post).scriptureKnowledge.references
+    .filter((reference) => reference.book === book)
+    .sort(
+      (a, b) =>
+        (a.chapterStart ?? Number.POSITIVE_INFINITY) - (b.chapterStart ?? Number.POSITIVE_INFINITY) ||
+        (a.verseStart ?? Number.POSITIVE_INFINITY) - (b.verseStart ?? Number.POSITIVE_INFINITY)
+    );
+  const reference = references[0];
+
+  return {
+    chapter: reference?.chapterStart ?? Number.POSITIVE_INFINITY,
+    verse: reference?.verseStart ?? Number.POSITIVE_INFINITY
+  };
+}
+
 export async function getStaticPaths() {
   const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
   );
+  const getReferenceKey = (post: CollectionEntry<"posts">, book: string) => {
+    const references = buildPostKnowledge(post).scriptureKnowledge.references
+      .filter((reference) => reference.book === book)
+      .sort(
+        (a, b) =>
+          (a.chapterStart ?? Number.POSITIVE_INFINITY) - (b.chapterStart ?? Number.POSITIVE_INFINITY) ||
+          (a.verseStart ?? Number.POSITIVE_INFINITY) - (b.verseStart ?? Number.POSITIVE_INFINITY)
+      );
+    const reference = references[0];
+
+    return {
+      chapter: reference?.chapterStart ?? Number.POSITIVE_INFINITY,
+      verse: reference?.verseStart ?? Number.POSITIVE_INFINITY
+    };
+  };
 
   return BIBLE_BOOKS.map((book) => ({
     book,
-    posts: posts.filter((post) => buildPostKnowledge(post).bibleBooks.includes(book))
+    posts: posts
+      .filter((post) => buildPostKnowledge(post).bibleBooks.includes(book))
+      .sort((a, b) => {
+        const aKey = getReferenceKey(a, book);
+        const bKey = getReferenceKey(b, book);
+
+        return (
+          aKey.chapter - bKey.chapter ||
+          aKey.verse - bKey.verse ||
+          b.data.date.valueOf() - a.data.date.valueOf()
+        );
+      })
   }))
     .filter(({ posts }) => posts.length > 0)
     .map(({ book, posts }) => ({
@@ -55,7 +97,7 @@ const totalReadingMinutes = postItems.reduce(
     <Logo size="md" showText={false} class="page-brand-mark page-brand-mark-small" />
     <p class="eyebrow"><a href="/bible/">圣经书卷</a></p>
     <h1>{book}</h1>
-    <p>共 {posts.length} 篇相关文章。这里按发布时间列出文章，并显示阅读时间和主题线索，方便继续阅读。</p>
+    <p>共 {posts.length} 篇相关文章。默认按圣经章节顺序排列，也可以切换为按发布时间排列。</p>
     <div class="bible-overview-stats" aria-label={`${book}文章统计`}>
       <span>{posts.length} 篇文章</span>
       <span>阅读约 {totalReadingMinutes} 分钟</span>
@@ -80,6 +122,13 @@ const totalReadingMinutes = postItems.reduce(
     )
   }
 
+  <div class="bible-sort-controls" aria-label={`${book}文章排序方式`}>
+    <span>排序：</span>
+    <div class="bible-sort-buttons" role="group" aria-label="选择排序方式">
+      <button type="button" class="active" data-sort-mode="chapter" aria-pressed="true">章节顺</button>
+      <button type="button" data-sort-mode="published" aria-pressed="false">发布顺</button>
+    </div>
+  </div>
   <nav class="pagination bible-pagination bible-pagination-top" aria-label={`${book}文章顶部分页`}></nav>
   <section class="post-list bible-post-list" aria-label={`${book}文章列表`}>
     {
@@ -91,9 +140,17 @@ const totalReadingMinutes = postItems.reduce(
           day: "2-digit"
         }).format(post.data.date);
         const badges = [...knowledge.topics.slice(0, 3), ...post.data.tags.slice(0, 2)];
+        const referenceKey = getBookReferenceSortKey(post, book);
 
         return (
-          <article id={`post-${postSlug}`} class="post-card bible-post-card" data-post-slug={postSlug}>
+          <article
+            id={`post-${postSlug}`}
+            class="post-card bible-post-card"
+            data-post-slug={postSlug}
+            data-chapter={Number.isFinite(referenceKey.chapter) ? referenceKey.chapter : ""}
+            data-verse={Number.isFinite(referenceKey.verse) ? referenceKey.verse : ""}
+            data-published={post.data.date.valueOf()}
+          >
             <a href={`/posts/${postSlug}/`} class="post-card-link bible-post-card-link" data-post-link>
               <div class="post-card-meta bible-post-meta">
                 <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
@@ -117,10 +174,40 @@ const totalReadingMinutes = postItems.reduce(
 
   <script>
     const pageSize = 20;
-    const cards = Array.from(
+    const postList = document.querySelector<HTMLElement>(".bible-post-list");
+    let cards = Array.from(
       document.querySelectorAll<HTMLElement>(".bible-post-list > .bible-post-card")
     );
     const paginations = Array.from(document.querySelectorAll<HTMLElement>(".bible-pagination"));
+    const sortButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-sort-mode]")
+    );
+
+    const readSortNumber = (card: HTMLElement, key: "chapter" | "verse" | "published") => {
+      const value = Number(card.dataset[key]);
+      return Number.isFinite(value) && card.dataset[key] !== "" ? value : Number.POSITIVE_INFINITY;
+    };
+
+    const sortCards = (mode: "chapter" | "published") => {
+      cards.sort((a, b) => {
+        if (mode === "published") {
+          return readSortNumber(b, "published") - readSortNumber(a, "published");
+        }
+
+        return (
+          readSortNumber(a, "chapter") - readSortNumber(b, "chapter") ||
+          readSortNumber(a, "verse") - readSortNumber(b, "verse") ||
+          readSortNumber(b, "published") - readSortNumber(a, "published")
+        );
+      });
+
+      if (postList) cards.forEach((card) => postList.append(card));
+      sortButtons.forEach((button) => {
+        const active = button.dataset.sortMode === mode;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+    };
 
     const getPaginationItems = (current: number, total: number) => {
       const items = new Set([1, total, current - 1, current, current + 1]);
@@ -191,8 +278,17 @@ const totalReadingMinutes = postItems.reduce(
 
     const updatePage = (page: number) => {
       showPage(page);
-      document.querySelector(".bible-book-heading")?.scrollIntoView({ behavior: "smooth" });
+      document.querySelector(".bible-sort-controls")?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
+
+    sortButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.sortMode === "published" ? "published" : "chapter";
+        sortCards(mode);
+        showPage(1);
+        document.querySelector(".bible-sort-controls")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
 
     document.addEventListener("click", (event) => {
       const link = (event.target as Element | null)?.closest<HTMLAnchorElement>("[data-post-link]");
