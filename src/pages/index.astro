@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
 import PostCard from "../components/PostCard.astro";
+import HomeSubscribeBanner from "../components/HomeSubscribeBanner.astro";
 import { buildPostKnowledge } from "../lib/knowledge";
 
 const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
@@ -59,5 +60,7 @@ const latestPostKnowledge = latestPost ? buildPostKnowledge(latestPost) : null;
       ))
     }
   </section>
+
+  <HomeSubscribeBanner />
 
 </BaseLayout>

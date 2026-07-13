@@ -1,0 +1,90 @@
+<aside class="home-subscribe-banner" aria-labelledby="home-subscribe-title">
+  <div>
+    <p class="eyebrow">邮件提醒</p>
+    <h2 id="home-subscribe-title">不想错过新文章？</h2>
+    <p>留下邮箱，本站发布新文章时会发送一封简短提醒。</p>
+  </div>
+  <a href="/about/#email-subscribe">邮件订阅提醒</a>
+</aside>
+
+<style>
+  .home-subscribe-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(20px, 4vw, 42px);
+    margin: clamp(34px, 6vw, 58px) 0 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-card);
+    box-shadow: var(--shadow-card);
+    padding: clamp(22px, 4vw, 34px);
+    backdrop-filter: blur(24px) saturate(150%);
+  }
+
+  :global(:root[data-theme="dark"]) .home-subscribe-banner {
+    border-color: color-mix(in srgb, var(--color-gold) 28%, var(--color-border));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 7%, var(--color-card-solid)), var(--color-card));
+  }
+
+  .home-subscribe-banner div {
+    display: grid;
+    gap: 8px;
+  }
+
+  .home-subscribe-banner h2,
+  .home-subscribe-banner p {
+    margin: 0;
+  }
+
+  .home-subscribe-banner h2 {
+    font-size: clamp(24px, 3vw, 34px);
+  }
+
+  .home-subscribe-banner > div > p:last-child {
+    color: var(--color-text-2);
+  }
+
+  .home-subscribe-banner > a {
+    flex: 0 0 auto;
+    border: 1px solid color-mix(in srgb, var(--color-primary), #ffffff 16%);
+    border-radius: 999px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary), #ffffff 12%), var(--color-primary));
+    box-shadow: 0 9px 18px rgba(8, 31, 68, 0.18);
+    padding: 12px 20px;
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .home-subscribe-banner > a:hover {
+    border-color: var(--color-gold);
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-gold);
+  }
+
+  :global(:root[data-theme="dark"]) .home-subscribe-banner > a {
+    border-color: var(--color-gold);
+    background: var(--color-gold);
+    box-shadow: 0 9px 20px rgba(0, 0, 0, 0.2);
+    color: var(--color-bg);
+  }
+
+  :global(:root[data-theme="dark"]) .home-subscribe-banner > a:hover {
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-gold);
+  }
+
+  @media (max-width: 680px) {
+    .home-subscribe-banner {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .home-subscribe-banner > a {
+      align-self: flex-start;
+    }
+  }
+</style>

@@ -13,11 +13,18 @@
     justify-content: center;
     gap: 10px;
     margin: 28px 0 18px;
-    border: 1px solid color-mix(in srgb, var(--color-gold) 48%, var(--color-border));
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--color-gold) 8%, var(--color-card-solid));
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft);
     padding: 14px 18px;
     text-align: center;
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  :global(:root[data-theme="dark"]) .subscribe-prompt {
+    border-color: color-mix(in srgb, var(--color-gold) 24%, var(--color-border));
+    background: color-mix(in srgb, var(--color-gold) 5%, var(--color-card-solid));
   }
 
   .subscribe-prompt span {
@@ -40,7 +47,7 @@
   }
 
   .subscribe-prompt a:hover {
-    color: var(--color-text-1);
+    color: var(--color-text);
   }
 
   @media (max-width: 520px) {
