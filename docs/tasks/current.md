@@ -1,5 +1,24 @@
 # 当前任务
 
+## 当前任务状态（2026-07-15，第十二批翻译可信度重建）
+
+已暂停第十三批，完成第十二批 5 篇重新完整重译、独立只读审计、网站三处重新同步与验证：不受欢迎的君王、不报复、为义受逼迫的人有福了、八福中的哀恸温柔与饥渴慕义、八福中的怜恤清心与使人和睦。
+
+本轮保持 slug、标题、日期、articleId、作者、分类、经文与 source 不变，仅更新正文和精准 tags；未触发邮件、订阅通知、补发或 workflow_dispatch。
+
+验证结果：
+
+```text
+npm run sync：任务开始前通过；重译后因本轮本地待提交改动存在，保护性拒绝覆盖
+npm run build：通过，314 page(s) built
+npm run check:knowledge：通过，Posts checked: 274，Errors: 0，Warnings: 0
+npm run check:admin-save：通过，Errors: 0
+独立只读审计：5 篇均 missing/compressed/mistranslated/needs_confirmation = 0
+```
+
+---
+
+
 ## 当前任务状态（2026-07-15，第十二批讲道重译复核发布）
 
 已完成第十二批 5 篇已发布讲道的正文重译/逐篇复核与网站同步：不受欢迎的君王、不报复、为义受逼迫的人有福了、八福中的哀恸温柔与饥渴慕义、八福中的怜恤清心与使人和睦。
