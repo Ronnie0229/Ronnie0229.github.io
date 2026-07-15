@@ -1,5 +1,22 @@
 # 当前任务
 
+## 当前任务状态（2026-07-15，第十批讲道重译复核发布）
+
+已完成第十批 5 篇已发布讲道的正文重译/逐篇复核与网站同步：祝福与咒诅、福音就是道路、福音的自由、耶和华是我的牧者、耶稣与巴拉巴。
+
+本轮严格锁定 slug、标题、日期、articleId、作者、分类、经文与 source，仅同步最终中文正文并补正精准 tags；未触发邮件、订阅通知、补发或 workflow_dispatch。
+
+验证结果：
+
+```text
+npm run build：通过，314 page(s) built
+npm run check:knowledge：通过，Posts checked: 274，Errors: 0，Warnings: 0
+npm run check:admin-save：通过，Errors: 0
+```
+
+---
+
+
 ## 当前任务状态（2026-07-13，Search Console 301 middleware 修复继续）
 
 用户指出 `functions/_middleware.js` 是本次 Search Console 301 修复核心文件，上一轮误判为任务外未跟踪文件，导致未进入提交和部署。本轮继续执行该修复，不再把该文件视为任务外文件。
