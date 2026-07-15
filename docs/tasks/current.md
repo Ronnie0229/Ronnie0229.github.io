@@ -2144,3 +2144,13 @@ npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings
 2. 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文。
 
 后续凡涉及讲道整理项目的流程规则变更，必须同步检查个人网页项目对应文档；如果只更新了其中一个项目，不得把规则同步任务视为完成。
+
+## 2026-07-15 第八批已发布讲道完整复核
+
+- 完成第八批 5 篇正文修正模式复核：在赞美中遇见神、在遗忘中遇见神、复活、完全的产业、怒气。
+- 锁定既有 slug/title/date/articleId/author/category/scripture/source；仅同步正文与补正 tags。
+- 已同步 src/content/posts 与 data/processed；data/raw 中文稿由讲道整理侧同源中文稿覆盖。
+- 验证：npm run sync 通过；npm run build 通过（保留既有 duplicate id 警告）；npm run check:knowledge 通过；npm run check:admin-save 通过。
+- 禁止项：未触发邮件、订阅通知、workflow_dispatch 或读者提醒。
+- 下一步：提交并推送网站 main，随后线上验证 ronniecross.com。
+
