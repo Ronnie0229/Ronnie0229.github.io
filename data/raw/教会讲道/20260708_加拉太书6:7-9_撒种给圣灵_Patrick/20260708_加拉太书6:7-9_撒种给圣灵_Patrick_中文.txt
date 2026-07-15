@@ -1,17 +1,3 @@
----
-articleId: "post-768ffe3db84d2a88"
-title: "加拉太书 6:7-9｜撒种给圣灵"
-description: "Patrick 牧师从加拉太书 6:7-9 分享撒种与收成的属灵原则，说明顺着肉体撒种会收败坏，顺着圣灵撒种会收永生；信徒不可因看不见结果就灰心，而要定睛耶稣，继续行善和撒种。"
-date: 2026-07-08
-tags: ["加拉太书", "圣灵", "撒种与收成", "永生"]
-category: "教会讲道"
-scripture: "加拉太书 6:7-9"
-scriptureConfidence: "high"
-author: "Patrick"
-reviewed: false
-source: "data/raw/教会讲道/20260708_加拉太书6:7-9_撒种给圣灵_Patrick/20260708_加拉太书6:7-9_撒种给圣灵_Patrick_中文.txt"
----
-
 加拉太书 6:7-9 撒种给圣灵
 
 引言：今天我们要谈农业！这里有人是在农场长大的吗？

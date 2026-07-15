@@ -2154,3 +2154,12 @@ npm.cmd run check:knowledge：通过，Posts checked: 176，Errors: 0，Warnings
 - 禁止项：未触发邮件、订阅通知、workflow_dispatch 或读者提醒。
 - 下一步：提交并推送网站 main，随后线上验证 ronniecross.com。
 
+## 2026-07-15 第九批已发布讲道完整复核
+
+- 完成第九批 5 篇正文修正模式复核：恩典的福音、感恩、撒种给圣灵、没有别的福音、生命之道。
+- 锁定既有 slug/title/date/articleId/author/category/scripture/source；仅同步正文与补正 tags。
+- 已同步 data/raw、data/processed 与 src/content/posts。
+- 验证：npm run sync 通过；npm run build 通过（保留既有 duplicate id 警告）；npm run check:knowledge 通过；npm run check:admin-save 通过。
+- 禁止项：未触发邮件、订阅通知、workflow_dispatch 或读者提醒。
+- 下一步：提交并推送网站 main，随后线上验证 ronniecross.com。
+
