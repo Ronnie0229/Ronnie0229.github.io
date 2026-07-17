@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-07-17，剩余46篇第二批D阶段）
 
-第二批5篇修复后独立全文复审全部通过，均为independently_verified、E1。已完成网站processed与post正文同步、NAS最终中文稿覆盖及SHA一致性验证；正文提交77ce587已push。构建314页通过，knowledge检查274篇0错误0警告，Admin保存流程0错误，diff检查通过。Email published posts工作流明确输出No changed published posts were found in this push，未发送提醒。Cloudflare部署与线上指纹验证待完成。
+第二批5篇修复后独立全文复审全部通过，均为independently_verified、E1。已完成网站processed与post正文同步、NAS最终中文稿覆盖及SHA一致性验证；正文提交77ce587已push。构建314页通过，knowledge检查274篇0错误0警告，Admin保存流程0错误，diff检查通过。Email published posts工作流明确输出No changed published posts were found in this push，未发送提醒。Cloudflare Pages已部署到正文提交77ce587（builtAt=2026-07-17T06:44:01.578Z）；5个公开URL均返回200并命中新稿专属指纹，第二批D阶段已闭环。
 
 ---
 
