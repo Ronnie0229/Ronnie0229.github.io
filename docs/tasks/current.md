@@ -6,7 +6,7 @@
 
 前55篇反查结果：14篇independently_verified修复稿全部包含在本次提交中，未发现其他修改正文后仍遗漏网站同步的文章。
 
-验证结果：build通过（314页）；knowledge检查274篇、0错误、0警告；Admin保存流程0错误；diff检查通过。正文提交和push均成功。邮件工作流确认没有新增文章，因此未发送提醒。Cloudflare Pages截至记录时仍显示上一部署，线上部署待完成。
+验证结果：build通过（314页）；knowledge检查274篇、0错误、0警告；Admin保存流程0错误；diff检查通过。正文提交和push均成功。邮件工作流确认没有新增文章，因此未发送提醒。Cloudflare Pages已部署正文提交；19个公开URL均返回200，且逐篇命中新正文文章专属指纹。
 
 D阶段规则已补正：NAS覆盖、本地同步、Git提交、push、Cloudflare部署和公开URL指纹验证必须全部完成，方可标记batch_closed。
 
