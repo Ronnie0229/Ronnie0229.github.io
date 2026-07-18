@@ -7,6 +7,7 @@ import shutil
 import unicodedata
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from docx import Document
 
@@ -412,6 +413,7 @@ def main() -> None:
             scripture = find_scripture(summary, body)
         category = "灵命成长"
         date = source_date(source)
+        published_at = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds")
         title = f"{scripture}｜{summary}" if scripture else summary
         reviewed = False
         description = args.description or DESCRIPTION_OVERRIDES.get(
@@ -426,6 +428,7 @@ def main() -> None:
             f'title: "{yaml_escape(title)}"\n'
             f'description: "{yaml_escape(description)}"\n'
             f"date: {date}\n"
+            f"publishedAt: {published_at}\n"
             f'tags: ["分享", "{yaml_escape(category)}"]\n'
             f'category: "{yaml_escape(category)}"\n'
             f'scripture: "{yaml_escape(scripture)}"\n'

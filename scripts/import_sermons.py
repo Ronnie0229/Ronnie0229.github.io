@@ -9,6 +9,7 @@ import textwrap
 import csv
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from docx import Document
 
@@ -388,7 +389,8 @@ def choose_source_file(folder: Path) -> Path | None:
 def markdown_for(folder: Path, source_file: Path, description_override: str | None = None) -> tuple[str, str]:
     _source_date, raw_title, speaker = folder_meta(folder)
     # Website display date must be the publication date, not the source folder date.
-    date = datetime.now().strftime("%Y-%m-%d")
+    published_at = datetime.now(ZoneInfo("Asia/Tokyo"))
+    date = published_at.strftime("%Y-%m-%d")
     _folder_scripture, summary = title_parts(raw_title)
     category = category_for(raw_title)
     if source_file.suffix.lower() == ".docx":
@@ -416,6 +418,7 @@ def markdown_for(folder: Path, source_file: Path, description_override: str | No
         title: "{yaml_escape(title)}"
         description: "{yaml_escape(description)}"
         date: {date}
+        publishedAt: {published_at.isoformat(timespec="seconds")}
         tags: [{", ".join(f'"{yaml_escape(tag)}"' for tag in tags)}]
         category: "{yaml_escape(category)}"
         scripture: "{yaml_escape(scripture)}"

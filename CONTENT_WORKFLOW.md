@@ -143,11 +143,14 @@
 title: "文章标题"
 description: "文章摘要"
 date: 2026-06-20
+publishedAt: 2026-06-20T14:35:00+09:00
 category: "分类"
 tags:
   - 标签
 draft: false
 ```
+
+`date` 只用于日历日期、排序和归档；`publishedAt` 用于“xx前”，必须在文章首次公开发布时写入完整时间和时区。通过导入脚本或 Admin 发布时由系统自动生成；后续编辑既有文章时必须保留原值，不得改成修改时间。
 
 如果项目当前使用 `articleId`，必须运行：
 

@@ -326,6 +326,7 @@ function serializeMarkdown(data, body) {
     "title",
     "description",
     "date",
+    "publishedAt",
     "tags",
     "category",
     "scripture",
@@ -705,8 +706,10 @@ function slugify(value) {
 
 function formData(draft) {
   const tags = currentTags();
+  const firstPublication = !draft && !currentFrontmatter.publishedAt && (!currentPath || currentFrontmatter.draft === true);
   return {
     ...currentFrontmatter,
+    ...(firstPublication ? { publishedAt: new Date().toISOString() } : {}),
     articleId:
       currentFrontmatter.articleId || `post-${crypto.randomUUID()}`,
     title: form.elements.title.value.trim(),
