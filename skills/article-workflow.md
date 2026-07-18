@@ -117,8 +117,8 @@ Use the import script through the unified entry point. Never run publish without
 For a share article:
 
 ```shell
-python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。"
-python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。"
+python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。" --tags "核心人物,核心地点,核心主题"
+python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。" --tags "核心人物,核心地点,核心主题"
 ```
 
 For a sermon:

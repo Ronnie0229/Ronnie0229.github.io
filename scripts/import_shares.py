@@ -200,6 +200,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-file", help="Single share source file to import.")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
     parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
+    parser.add_argument(
+        "--tags",
+        help="Comma-separated SEO topic tags. Use 2-6 precise tags; the scripture book is added automatically when available.",
+    )
     return parser.parse_args()
 
 
@@ -338,6 +342,26 @@ def validate_manual_description(description: str, body: str) -> None:
         raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
 
 
+def build_seo_tags(raw_tags: str | None, scripture: str) -> list[str]:
+    if not raw_tags:
+        raise SystemExit(
+            "Missing SEO tags. Add --tags with 2-6 precise topic tags; "
+            "include core people, places, doctrines, or applications rather than category labels."
+        )
+    supplied = [tag.strip() for tag in re.split(r"[,，]", raw_tags) if tag.strip()]
+    generic = {"分享", "灵命成长", "文章", "信仰", "基督教"}
+    if any(tag in generic for tag in supplied):
+        raise SystemExit("SEO tags must be topical; remove generic category/process labels such as 分享 or 灵命成长.")
+    book = scripture.split(" ", 1)[0].strip() if scripture else ""
+    tags: list[str] = []
+    for tag in ([book] if book else []) + supplied:
+        if tag and tag not in tags:
+            tags.append(tag)
+    if not 2 <= len(tags) <= 6:
+        raise SystemExit(f"SEO tags must total 2-6 after scripture-book normalization; got {len(tags)}: {tags}")
+    return tags
+
+
 def sentence_aware_description(body: str, fallback: str) -> str:
     blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
     sentences: list[str] = []
@@ -421,6 +445,7 @@ def main() -> None:
             "NEEDS_METADATA：请人工阅读文章后补充大意摘要。",
         )
         validate_manual_description(description, body)
+        tags = build_seo_tags(args.tags, scripture)
         slug = f"{date}-{slugify(title)}"
 
         markdown = (
@@ -429,7 +454,7 @@ def main() -> None:
             f'description: "{yaml_escape(description)}"\n'
             f"date: {date}\n"
             f"publishedAt: {published_at}\n"
-            f'tags: ["分享", "{yaml_escape(category)}"]\n'
+            "tags: [" + ", ".join(f'"{yaml_escape(tag)}"' for tag in tags) + "]\n"
             f'category: "{yaml_escape(category)}"\n'
             f'scripture: "{yaml_escape(scripture)}"\n'
             'author: "Ronnie"\n'

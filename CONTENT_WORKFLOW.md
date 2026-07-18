@@ -173,14 +173,14 @@ npm run sync
 0. 同步远端：`npm run sync`
 1. 只读检查：`python scripts/content_workflow.py inspect share`
 2. 入库：`python scripts/content_workflow.py ingest share`
-3. 预览发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。"`
-4. 正式发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。"`
+3. 预览发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --dry-run --description "人工概括型摘要。" --tags "核心人物,核心地点,核心主题"`
+4. 正式发布：`python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。" --tags "核心人物,核心地点,核心主题"`
 5. 检查文章、报告、Git 差异。
 6. 运行 `node scripts/add_article_ids.mjs`（如需要）。
 7. 运行 `npm run build`。
 8. 更新 `docs/tasks/current.md`。
 
-分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
+分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。`--tags` 为必填 SEO 主题标签，使用逗号分隔；脚本会在有明确经文时自动补入圣经书卷名，并强制最终总数为 2-6 个。不得使用 `分享`、`灵命成长` 等内容类型或分类词代替人物、地点、教义与应用主题。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
 
 ## 讲道流程摘要
 
