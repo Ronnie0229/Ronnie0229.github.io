@@ -6,6 +6,7 @@ const posts = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    publishedAt: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     category: z.string().default("教会讲道"),
     scripture: z.string().default(""),

@@ -65,7 +65,7 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
     <header class="article-header">
       <p class="eyebrow article-meta-line">
         <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
-        <span class="meta-text" data-relative-time datetime={post.data.date.toISOString()} hidden></span>
+        {post.data.publishedAt && <span class="meta-text" data-relative-time datetime={post.data.publishedAt.toISOString()} hidden></span>}
         <span class="meta-text">阅读 {knowledge.readingTimeMinutes} 分钟</span>
       </p>
       <h1>{post.data.title}</h1>

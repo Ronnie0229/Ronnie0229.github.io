@@ -15,6 +15,7 @@ export async function GET() {
         title: post.data.title,
         description: post.data.description,
         date: post.data.date.toISOString(),
+        publishedAt: post.data.publishedAt?.toISOString() ?? "",
         category: post.data.category,
         scripture: post.data.scripture,
         tags: post.data.tags,

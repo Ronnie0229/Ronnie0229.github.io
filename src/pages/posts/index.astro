@@ -26,6 +26,7 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
           title={post.data.title}
           description={post.data.description}
           date={post.data.date}
+          publishedAt={post.data.publishedAt}
           href={`/posts/${post.slug}/`}
           tags={post.data.tags}
           category={post.data.category}
