@@ -32,7 +32,7 @@ const displayTags = Array.from(
   <a href={href} class="post-card-link" data-post-link>
     <div class="post-card-meta">
       <time datetime={date.toISOString()}>{formattedDate}</time>
-      {publishedAt && <span class="meta-text" data-relative-time datetime={publishedAt.toISOString()} hidden></span>}
+      <span class="meta-text" data-relative-time datetime={(publishedAt ?? date).toISOString()} hidden></span>
       {readingTimeMinutes && <span class="meta-text">阅读 {readingTimeMinutes} 分钟</span>}
       {featured && <span>最新</span>}
     </div>

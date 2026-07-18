@@ -281,7 +281,7 @@ import Logo from "../../components/Logo.astro";
         category.textContent = post.category;
         const relativeTime = document.createElement("span");
         relativeTime.className = "meta-text";
-        relativeTime.textContent = post.publishedAt ? formatRelativeTime(post.publishedAt) : "";
+        relativeTime.textContent = formatRelativeTime(post.publishedAt || post.date);
         meta.append(date);
         if (relativeTime.textContent) meta.append(relativeTime);
         meta.append(category);
