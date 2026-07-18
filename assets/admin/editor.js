@@ -24,7 +24,8 @@ const revisionMeta = document.querySelector("[data-revision-meta]");
 const paginations = Array.from(document.querySelectorAll("[data-pagination]"));
 const tagPresets = document.querySelector("[data-tag-presets]");
 const BACKUP_PREFIX = "ronniecross-editor-backup-";
-const COMMON_TAGS = ["分享", "灵命成长", "教会讲道", "查经", "生命反思"];
+const COMMON_TAGS = ["耶稣基督", "福音", "恩典", "信心", "悔改"];
+const GENERIC_TAGS = new Set(["分享", "灵命成长", "教会讲道", "查经", "生命反思"]);
 
 let token = "";
 let posts = [];
@@ -384,6 +385,16 @@ function normalizeScripture(value) {
     .replace(/\s+/g, " ");
 }
 
+function scriptureBook(value) {
+  const match = normalizeScripture(value).match(/^([\u4e00-\u9fff]+?)\s*\d/);
+  return match?.[1] || "";
+}
+
+function normalizedSeoTags() {
+  const book = scriptureBook(form.elements.scripture.value);
+  return Array.from(new Set([book, ...currentTags()].filter(Boolean)));
+}
+
 function articleStatus(post) {
   if (pendingOperation?.articleId === post.articleId) {
     if (pendingOperation.type === "delete") {
@@ -705,7 +716,8 @@ function slugify(value) {
 }
 
 function formData(draft) {
-  const tags = currentTags();
+  const tags = normalizedSeoTags();
+  setTags(tags);
   const firstPublication = !draft && !currentFrontmatter.publishedAt && (!currentPath || currentFrontmatter.draft === true);
   return {
     ...currentFrontmatter,
@@ -733,8 +745,12 @@ function validatePost(data, draft) {
   if (!data.category) errors.push("请选择文章分类");
   if (!draft && !bodyInput.value.trim()) errors.push("请填写文章正文");
   if (!draft && !data.description) errors.push("请填写内容摘要");
-  if (!draft && !data.tags.length) {
-    warnings.push("标签为空时，前台会先显示文章分类标签；建议补充一个常用标签。");
+  if (!draft && (data.tags.length < 2 || data.tags.length > 6)) {
+    errors.push("发布文章需要 2–6 个精准标签；系统会自动补入经文书卷名。");
+  }
+  const genericTags = data.tags.filter((tag) => GENERIC_TAGS.has(tag));
+  if (!draft && genericTags.length) {
+    errors.push("请移除通用标签：" + genericTags.join("、") + "。改用核心人物、地点或主题标签。");
   }
   if (
     data.scripture &&
