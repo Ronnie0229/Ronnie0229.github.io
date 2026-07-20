@@ -19,11 +19,13 @@ for (const fileName of files) {
 
   if (existing) {
     const articleId = existing[1].trim();
-    if (seenIds.has(articleId)) {
-      throw new Error(`发现重复 articleId：${articleId}`);
+    if (articleId) {
+      if (seenIds.has(articleId)) {
+        throw new Error(`发现重复 articleId：${articleId}`);
+      }
+      seenIds.add(articleId);
+      continue;
     }
-    seenIds.add(articleId);
-    continue;
   }
 
   if (!content.startsWith("---\n") && !content.startsWith("---\r\n")) {
@@ -40,10 +42,12 @@ for (const fileName of files) {
 
   if (!checkOnly) {
     const lineEnding = content.startsWith("---\r\n") ? "\r\n" : "\n";
-    const updated = content.replace(
-      `---${lineEnding}`,
-      `---${lineEnding}articleId: "${articleId}"${lineEnding}`
-    );
+    const updated = existing
+      ? content.replace(/^articleId:\s*"?\s*"?\s*$/m, `articleId: "${articleId}"`)
+      : content.replace(
+          `---${lineEnding}`,
+          `---${lineEnding}articleId: "${articleId}"${lineEnding}`
+        );
     await writeFile(filePath, updated, "utf8");
   }
 }
