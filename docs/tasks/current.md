@@ -3,6 +3,34 @@
 > 历史任务记录已按月份归档，参见：
 > - [2026年7月任务归档](archive/2026-07.md)
 
+## 当前任务状态（2026-07-21，分享收件帖撒罗尼迦 PDF 拆分发布）
+
+已按讲道整理流程重新处理 `NAS/分享收件/What Is the Significance of Thessalonica in the Bible.pdf`。复核确认 PDF 抽取源稿实际包含三篇文章，已拆分发布为三篇 `灵命成长` 分享文章：
+
+```text
+使徒行传 17:1-9｜帖撒罗尼迦：在逼迫中持守福音的教会
+帖撒罗尼迦前书 5:17｜不住地祷告是什么意思
+帖撒罗尼迦前书 4:16｜在基督里死了的人必先复活是什么意思
+```
+
+本轮先提交既有网站发布契约治理改动 `4e98602 feat: add publication contract workflow`，再执行 `npm run sync`，随后只发布本次三篇分享文章。为保证干净 slug，`scripts/import_shares.py` 补充帖撒罗尼迦前后书经卷识别、三篇 metadata override，并清洗源稿中已有 Markdown 标题导致的重复 `##`。三篇均由 `content_workflow.py publish share --source-file ...` 生成 raw/processed/posts，`node scripts/add_article_ids.mjs` 已补 3 个 articleId。
+
+验证结果：
+
+```text
+npm run sync：通过，Current branch main is up to date
+三篇 dry-run：通过，标题/经文/slug 均正确
+正式 publish share：三篇均 Imported shares: 1
+node scripts/add_article_ids.mjs：处理 281 篇，补充 3 篇 articleId
+npm run check:knowledge：281 篇，0 错误，0 警告
+python3 -m unittest discover -s scripts/tests：12 tests OK
+npm run build -- --force：322 page(s) built，Build Complete，无 duplicate id warning
+```
+
+未完成事项：等待 Git 提交、push、Cloudflare 部署完成后补记线上验证结果；本轮未触发邮件发送。
+
+---
+
 ## 当前任务状态（2026-07-20，三接口 v1.1 治理闭环）
 
 RonnieCross 三个跨项目接口已经完成 v1.1 治理闭环：`translation-candidate-package/v1.1`、`website-publication-package/v1.1`、`website-publication-result/v1.1`。三个接口的 v1.1 状态均为 `stable`；v1.0 仍保留为 `legacy-compatible`，只用于读取既有记录，不再作为新产物默认版本。
