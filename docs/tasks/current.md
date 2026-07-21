@@ -25,9 +25,13 @@ node scripts/add_article_ids.mjs：处理 281 篇，补充 3 篇 articleId
 npm run check:knowledge：281 篇，0 错误，0 警告
 python3 -m unittest discover -s scripts/tests：12 tests OK
 npm run build -- --force：322 page(s) built，Build Complete，无 duplicate id warning
+git push origin main：通过，远端 main=c71740cd13ca769c5727bca6a1f56d9e7587960d
+Cloudflare Pages：/deployment.json 已部署到 c71740cd13ca769c5727bca6a1f56d9e7587960d，builtAt=2026-07-21T14:10:51.571Z
+线上验证：三篇 URL 均返回新标题、经文与正文关键词
+Email published posts：GitHub Actions run 29837804445 成功，postCount=3，recipientCount=3，successCount=3，failedCount=0
 ```
 
-未完成事项：等待 Git 提交、push、Cloudflare 部署完成后补记线上验证结果；本轮未触发邮件发送。
+未完成事项：无。注意本轮新增三篇文章后，网站自动邮件提醒流程已正常发送新文章提醒。
 
 ---
 
