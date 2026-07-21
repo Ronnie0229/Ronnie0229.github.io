@@ -177,7 +177,7 @@ Windows 控制台可能显示中文乱码。检查文件内容时，优先使用
 1. 运行 `git status --short`，确认改动范围符合任务要求。
 2. 如果是文档任务，确认没有修改 `src/`、`functions/`、`assets/`、`scripts/`、`data/raw/`、`data/processed/`、`wrangler.jsonc`。
 3. 至少运行 `npm run build`，并把结果写入 `STATUS.md` 和 `docs/tasks/current.md`。
-4. 不在未授权情况下执行 `git push`、`npm run deploy` 或 `wrangler deploy`。
+4. 不在未授权情况下执行 `git push origin main`或`npx wrangler pages deploy dist --project-name ronniecross --branch main`；本项目禁止把`wrangler deploy`当作Pages部署命令。
 5. 需要人工确认的事项要写清楚，不要藏在对话里。
 
 ## 后端与 Cloudflare 提醒

@@ -103,11 +103,23 @@ HEAD /api/visits             空访问，返回 204 noindex。
 
 ## 部署后检查
 
-部署完成后建议检查：
+部署完成后必须同时验证“HTTP可访问”和“目标正文真实存在”。Cloudflare Pages在未知路由上可能仍返回首页HTML和HTTP 200，因此仅检查状态码不能证明文章已经上线。
+
+文章发布后优先运行：
+
+```shell
+python3 scripts/verify_publication_release.py \
+  --url "https://ronniecross.com/posts/<slug>/" \
+  --expect "<文章标题>" \
+  --expect "<作者或核心正文>" \
+  --run-id <GitHub Actions运行编号>
+```
+
+然后检查：
 
 - 首页是否能打开。
 - 最新文章是否出现。
-- 文章详情页是否能打开。
+- 文章详情页是否能打开，而且页面包含标题、作者/经文和正文关键字。
 - 搜索、分类、标签等入口是否正常。
 - RSS 是否正常。
 - Sitemap 是否正常。
@@ -138,10 +150,11 @@ HEAD /api/visits             空访问，返回 204 noindex。
 
 以下命令只有在用户明确授权上线时才允许执行：
 
-```powershell
-git push
-npm run deploy
-wrangler deploy
+```shell
+git push origin main
+npx wrangler pages deploy dist --project-name ronniecross --branch main
 ```
+
+本项目是Cloudflare Pages项目，不要使用`wrangler deploy`；该命令用于Worker入口或Worker assets部署，会在本项目中产生错误提示，甚至在配置变化后造成错误部署目标。通常应优先依赖Git推送触发的Cloudflare Pages自动部署。只有自动部署异常、且当前环境具备`CLOUDFLARE_API_TOKEN`时，才使用上面的`wrangler pages deploy`手动部署。
 
 涉及 Cloudflare Pages、Functions、D1 或 `wrangler.jsonc` 的改动时，要先说明影响范围，再执行构建和线上验证。文档任务默认不得修改 `functions/`、`wrangler.jsonc` 或 Cloudflare 配置。
