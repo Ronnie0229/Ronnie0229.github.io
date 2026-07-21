@@ -29,7 +29,7 @@ docs/context-engineering.md
 | --- | --- |
 | `AGENTS.md` | 项目总入口、通用规则、禁区和基本命令。 |
 | `STATUS.md` | 当前项目状态、最近构建结果、已知警告和后续建议。 |
-| `docs/tasks/current.md` | 当前任务接力棒，记录上一轮做到哪里、哪些还没做。 |
+| `docs/tasks/current.md` | 当前任务接力棒，记录当前及近期任务做到哪里、哪些还没做；更早的已完成记录按月份存放在 `docs/tasks/archive/`。 |
 | `docs/account-switching.md` | 多账号切换规则、接手流程和常见风险。 |
 | `docs/task-handoff-protocol.md` | 本文件，规定每次任务的启动和结束流程。 |
 | `docs/context-engineering.md` | Codex 对话拆分、上下文压缩、会话预算和临时文件管理规则。 |
@@ -236,6 +236,8 @@ docs/tasks/current.md
 8. 下一个账号应该做什么。
 9. 需要人工确认的事项。
 10. 如果任务由 Codex 执行，还要记录 Codex 是否已完成任务、构建结果、提交哈希、push 结果，以及线上验证是否仍需用户手动确认。
+
+`docs/tasks/current.md` 默认只保留最近 5 条任务记录以及仍未完成的任务。更早的已完成任务应按月份迁移到 `docs/tasks/archive/`，并在 `current.md` 顶部保留归档链接；当 `current.md` 超过合理规模时，应继续归档。
 
 ## 构建验证要求
 

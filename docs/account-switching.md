@@ -6,13 +6,13 @@
 
 ## 正式工作目录
 
-当前 Windows 本机正式开发目录：
+当前活动开发目录以实际工作区挂载位置为准。本次Mac工作区为：
 
 ```text
-C:\Users\caoyi\Projects\个人网页项目
+/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目
 ```
 
-旧桌面目录 `C:\Users\caoyi\Desktop\Codex\这人网页项目` 只作为跳转目录保留。收到网站开发、分享整理、讲道发布、文档维护任务时，都应先切换到正式工作目录。
+旧Windows路径仅属于迁移历史，不得再作为活动配置、脚本默认值或当前工作目录。收到网站开发、分享整理、讲道发布、文档维护任务时，应先从工作区根目录和 `AGENTS.md` 确认实际路径。
 
 ## 新账号接手时先读什么
 
@@ -22,7 +22,7 @@ C:\Users\caoyi\Projects\个人网页项目
 | --- | --- | --- |
 | 1 | `AGENTS.md` | 项目入口规则，包含路径、禁区、常用命令和协作边界。 |
 | 2 | `STATUS.md` | 当前状态、最近验证结果、未完成事项。 |
-| 3 | `docs/tasks/current.md` | 当前这一轮任务的目标、范围、验收和构建结果。 |
+| 3 | `docs/tasks/current.md` | 当前及近期任务的目标、范围、验收和构建结果；更早记录见 `docs/tasks/archive/`。 |
 | 4 | `docs/task-handoff-protocol.md` | 每次任务开始前读什么、结束后更新什么。 |
 | 5 | `docs/context-engineering.md` | 新对话拆分、上下文压缩、会话预算和临时文件管理规则。 |
 | 6 | `PROJECT.md` | 项目定位、技术栈、目录职责和源码来源。 |
@@ -44,6 +44,7 @@ C:\Users\caoyi\Projects\个人网页项目
 
 1. 运行 `git status --short`，确认有哪些未提交文件。
 2. 按照 `docs/task-handoff-protocol.md` 的结束流程，把当前任务进度写入 `STATUS.md` 和 `docs/tasks/current.md`。
+   `docs/tasks/current.md` 默认只保留最近 5 条任务记录以及仍未完成的任务；更早的已完成记录按月份归档到 `docs/tasks/archive/`。
 3. 如果任务跨对话交接，把执行摘要写入 `.ai-bridge/agent-status.md`。
 4. 不要把临时输出、密钥、账号信息、构建缓存写进文档。
 5. 不要用旧桌面目录继续做正式开发。

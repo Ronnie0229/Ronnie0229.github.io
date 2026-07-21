@@ -24,6 +24,7 @@ IMPORTERS = {
     "sermon": ROOT / "scripts" / "import_sermons.py",
     "share": ROOT / "scripts" / "import_shares.py",
 }
+CONTRACT_CONSUMER = ROOT / "scripts" / "consume_publication_package.py"
 
 
 def sha256(path: Path) -> str:
@@ -216,6 +217,14 @@ def parse_args() -> argparse.Namespace:
     publish_parser.add_argument("--description", help="人工概括型摘要；不得使用正文截取或模板句。")
     publish_parser.add_argument("--tags", help="分享文章必填的 SEO 主题标签，使用逗号分隔；总数 2-6 个，圣经书卷会自动补入。")
     publish_parser.add_argument("--update-existing", action="store_true", help="只更新同一个已登记 source folder 对应的既有文章。")
+
+    contract_parser = subparsers.add_parser("publish-contract", help="先验证发布契约，再进入现有导入流程。")
+    contract_parser.add_argument("--contract", required=True)
+    contract_parser.add_argument("--schema", required=True)
+    contract_parser.add_argument("--content-root", required=True)
+    contract_parser.add_argument("--mode", choices=("plan", "dry-run", "publish"), default="plan")
+    contract_parser.add_argument("--allow-write", action="store_true")
+    contract_parser.add_argument("--plan-output")
     return parser.parse_args()
 
 
@@ -243,6 +252,22 @@ def main() -> None:
         archive_sermon(args.folder, args.archive)
     elif args.command == "publish":
         publish(args.kind, args.folder, args.source_file, args.dry_run, args.description, args.tags, args.update_existing)
+    elif args.command == "publish-contract":
+        command = [
+            sys.executable,
+            str(CONTRACT_CONSUMER),
+            "--contract", args.contract,
+            "--schema", args.schema,
+            "--content-root", args.content_root,
+            "--mode", args.mode,
+        ]
+        if args.allow_write:
+            command.append("--allow-write")
+        if args.plan_output:
+            command.extend(["--plan-output", args.plan_output])
+        result = subprocess.run(command, cwd=ROOT, check=False)
+        if result.returncode != 0:
+            raise SystemExit(result.returncode)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@
 
 ## 项目总入口
 
+本项目属于 RonnieCross 三项目工作区。若从 RonnieCross 根目录接手，必须先读取根目录 `../AGENTS.md`、`../workspace-control/TAKEOVER_GUIDE.md` 和 `../workspace-control/STATUS.md`；单独打开本项目时，再以本文件作为项目入口。
+
 任何 ChatGPT / Codex 账号接手本项目时，必须先阅读本文件。
 
 本项目不依赖任何单个账号的聊天记忆。项目事实、当前状态、设计规范、内容流程、部署流程和交接记录，都以仓库内文档为准。
@@ -10,7 +12,7 @@
 
 - 本仓库是 RonnieCross 个人文章网站的唯一正式代码仓库。
 - 网站开发、设计、内容整理、SEO、部署、后台配置和维护都在本仓库完成。
-- 正式本地仓库路径：`C:\Users\caoyi\Projects\个人网页项目`。
+- 当前活动仓库路径以工作区实际挂载位置为准；本次Mac工作区为 `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`。旧Windows路径只可保留在历史迁移记录中，不得作为活动配置。
 - 日常开发应使用本机 SSD 上的 Git 工作副本，不要直接在 NAS 目录运行 Git、Node、Astro、Codex 或文件监听。
 - GitHub 是代码和正式网站内容的长期事实来源。
 
@@ -58,7 +60,7 @@
 5. 不要删除、移动、覆盖未知文件。
 6. 不要覆盖 `data/raw/` 中的原始资料。
 7. 不要移动、删除、覆盖 `\\RonnieNAS\share` 中的受保护归档资料。唯一例外是：已发布讲道因漏译或概括性翻译而重译，且用户对当前重译任务明确授予临时覆盖权限时，可以只覆盖 `/Volumes/share/教会讲道/<对应目录>/` 中原有的最终中文 `.txt`；PDF、英文原稿及其他文件仍禁止修改。覆盖前后必须记录 SHA-256，未挂载时记录 `nas_overwrite_status=pending_mount`。
-8. 每次任务结束前，更新 `docs/tasks/current.md`，说明完成内容、修改文件、未完成事项和下一步。
+8. 每次任务结束前，更新 `docs/tasks/current.md`，说明完成内容、修改文件、未完成事项和下一步；`current.md` 默认只保留最近 5 条任务记录以及仍未完成的任务，更早的已完成记录按月份归档到 `docs/tasks/archive/`。
 9. 影响全局状态时，同时更新 `STATUS.md`。
 10. 新增流程或规则时，写入对应文档，而不是只留在聊天记录里。
 11. 遇到文档冲突时，以当前仓库状态、`AGENTS.md`、`STATUS.md`、`docs/tasks/current.md` 为优先。
@@ -189,7 +191,7 @@ npm run sync
 - 是否说明了修改过哪些文件。
 - 是否运行过必要验证；如果没有，写明原因。
 
-`docs/tasks/current.md` 是多个账号之间的接力棒。不要只把交接信息留在聊天里。
+`docs/tasks/current.md` 是多个账号之间的接力棒，只保存当前及近期任务。不要只把交接信息留在聊天里；当 `current.md` 超过合理规模时，应继续按月份迁移已完成记录到 `docs/tasks/archive/`。
 ## 样式入口规则
 
 前台公开页面的样式入口统一维护在：
@@ -213,5 +215,4 @@ Admin 页面可以加载 `/styles/tokens.css` 共享变量，但不要把 Admin 
 - 不要在 Admin CSS 里修改前台文章卡片、导航、搜索页、书卷页等样式。
 - 不要在 `src/styles/global.css` 里加入 Admin 编辑器、表格、图片库、评论管理、数据概览等后台样式。
 - 不要同时维护两份前台 `global.css`。
-
 
