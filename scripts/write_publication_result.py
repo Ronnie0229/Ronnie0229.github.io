@@ -45,6 +45,9 @@ def main() -> int:
     parser.add_argument("--deployment-status", choices=["not_run", "pending", "deployed", "failed"], default="not_run")
     parser.add_argument("--notification-status", choices=["not_run", "suppressed", "sent", "partial_failed", "failed"], default="not_run")
     parser.add_argument("--source-contract")
+    parser.add_argument("--acceptance-evidence-id")
+    parser.add_argument("--acceptance-evidence-path")
+    parser.add_argument("--acceptance-evidence-sha256")
     parser.add_argument("--error-stage")
     args = parser.parse_args()
 
@@ -93,6 +96,10 @@ def main() -> int:
                 "written_at": datetime.now(timezone.utc).isoformat(),
                 "atomic_write": True,
                 "source_contract": args.source_contract,
+                "acceptance_evidence_id": args.acceptance_evidence_id,
+                "acceptance_evidence_path": args.acceptance_evidence_path,
+                "acceptance_evidence_sha256": args.acceptance_evidence_sha256,
+                "final_status_authority": "workspace-control publication-acceptance-evidence/v1 bundle",
                 "error_stage": args.error_stage,
             },
         }

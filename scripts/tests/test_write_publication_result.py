@@ -39,6 +39,9 @@ class WritePublicationResultTest(unittest.TestCase):
                 "--processed-path", "data/processed/sample.md",
                 "--push-status", "not_run", "--deployment-status", "not_run",
                 "--notification-status", "suppressed", "--source-contract", "contract.json",
+                "--acceptance-evidence-id", "ev-1",
+                "--acceptance-evidence-path", "../workspace-control/acceptance-runs/batch-evidence.json",
+                "--acceptance-evidence-sha256", "a" * 64,
                 "--output", str(output),
             ], text=True, capture_output=True, check=False)
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -47,6 +50,9 @@ class WritePublicationResultTest(unittest.TestCase):
             self.assertEqual(payload["build"]["status"], "not_run")
             self.assertTrue(payload["evidence"]["atomic_write"])
             self.assertEqual(payload["evidence"]["source_contract"], "contract.json")
+            self.assertEqual(payload["evidence"]["acceptance_evidence_id"], "ev-1")
+            self.assertEqual(payload["evidence"]["acceptance_evidence_sha256"], "a" * 64)
+            self.assertIn("evidence", payload["evidence"]["final_status_authority"])
             self.assertFalse(any(path.suffix == ".tmp" for path in Path(tmp).iterdir()))
 
 
