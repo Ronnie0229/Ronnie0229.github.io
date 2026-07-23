@@ -3,7 +3,19 @@
 > 历史任务记录已按月份归档，参见：
 > - [2026年7月任务归档](archive/2026-07.md)
 
-当前无活动任务。以下仅保留最近 5 条已完成记录，新的任务开始时应在此处登记目标、范围、状态和下一步；正式状态值遵循 `../../../workspace-control/TASK_STATUS_POLICY.md`。
+以下仅保留最近 5 条已完成记录以及仍未完成的任务，新的任务开始时应在此处登记目标、范围、状态和下一步；正式状态值遵循 `../../../workspace-control/TASK_STATUS_POLICY.md`。
+
+## 当前任务状态（2026-07-23，我们真能遵行基督的命令吗 分享文章整理发布）
+
+状态：`done`
+
+已完成《我们真能遵行基督的命令吗？》本地整理、网站导入、构建、push、Cloudflare 部署、线上正文验证和邮件发送。文章 `articleId=post-445e95aa051161aa`，slug 为 `2026-07-23-obey-christ-commands`，网站提交 `78f569bce58e9d44efb7a6be47237c6a1f7287f8` 已推送到 `origin/main`。
+
+验证结果：`npm run sync` 通过；`website-publication-package/v1.1` 只读消费校验通过；`python3 scripts/content_workflow.py publish share ... --dry-run` 通过；`node scripts/add_article_ids.mjs --check` 为 284 篇、0 缺失；`python3 scripts/check_content_mirrors.py` 通过，568 项、0 errors；`node scripts/check-knowledge-layer.mjs` 为 284 篇、0 error、0 warning；`npm run build` 通过，325 pages。
+
+线上与通知：Cloudflare `/deployment.json` 已更新为 `78f569bce58e9d44efb7a6be47237c6a1f7287f8`，builtAt=`2026-07-23T06:49:10.179Z`；线上页面标题、canonical、经文、描述和正文指纹均通过。GitHub Actions `Email published posts` run `29986161978` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`、`skippedSlugs=[]`。
+
+备注：本轮还补齐了上一批《工作与安息的七个圣经真理》processed mirror 缺失的 `articleId=post-8a24724dfa8dc662`，使 mirror gate 恢复通过。
 
 ## 当前任务状态（2026-07-23，工作与安息分享文章整理发布）
 
