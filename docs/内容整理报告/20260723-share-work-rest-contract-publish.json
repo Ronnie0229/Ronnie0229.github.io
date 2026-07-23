@@ -1,0 +1,61 @@
+{
+  "interface": "website-publication-package-controlled-consumption",
+  "version": "1.0",
+  "contract_version": "1.1",
+  "mode": "publish",
+  "validation_passed": true,
+  "read_only": false,
+  "command": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/scripts/content_workflow.py",
+    "publish",
+    "share",
+    "--source-file",
+    "data/raw/分享/20260723_工作与安息的七个圣经真理_Ronnie_中文.txt",
+    "--description",
+    "本文透过七段经文思想工作与安息的关系，提醒我们尽心为主而做、以诚实劳动帮助他人，并在耶稣里领受真正的安息与平安。",
+    "--tags",
+    "工作,安息,职场信仰,劳动节,马太福音"
+  ],
+  "slug": "2026-07-23-biblical-truths-work-and-rest",
+  "notification_policy": "normal_first_publish",
+  "archive_status": "not_applicable",
+  "validator_report": {
+    "interface": "website-publication-package-consumer-validation",
+    "version": "1.0",
+    "contract": "../讲道整理/发布记录/contracts/20260723-share-work-rest.publication-package.json",
+    "consumer": "个人网页项目",
+    "read_only": true,
+    "pass": true,
+    "checks": {
+      "schema_shape_valid": true,
+      "interface_and_version_valid": true,
+      "metadata_minimum_present": true,
+      "metadata_content_type_matches": true,
+      "prepublish_path_present": true,
+      "prepublish_within_content_root": true,
+      "prepublish_exists": true,
+      "prepublish_sha_current": true,
+      "official_chinese_path_present": true,
+      "official_chinese_within_content_root": true,
+      "official_chinese_exists": true,
+      "official_chinese_sha_present": true,
+      "official_chinese_sha_current": true,
+      "english_source_path_present": true,
+      "english_source_within_content_root": true,
+      "english_source_exists": true,
+      "english_source_sha_present": true,
+      "english_source_sha_current": true,
+      "fidelity_status_accepted": true,
+      "notification_policy_accepted": true,
+      "archive_status_accepted": true
+    },
+    "errors": [],
+    "normalized": {
+      "slug": "2026-07-23-biblical-truths-work-and-rest",
+      "content_type": "share",
+      "notification_policy": "normal_first_publish",
+      "archive_status": "not_applicable"
+    }
+  }
+}
