@@ -5,6 +5,16 @@
 
 当前无活动任务。以下仅保留最近 5 条已完成记录，新的任务开始时应在此处登记目标、范围、状态和下一步；正式状态值遵循 `../../../workspace-control/TASK_STATUS_POLICY.md`。
 
+## 当前任务状态（2026-07-23，工作与安息分享文章整理发布）
+
+已按 RonnieCross V3 统合后的 manifest-only intake 和 `website-publication-package/v1.1` 受控消费流程，完成《马太福音 11:28-30｜工作与安息的七个圣经真理》整理发布。
+
+输入 PDF 已在 `讲道整理` 项目完成英文抽取、中文逐项整理和忠实度检查；网站新增 raw、processed、post 与本批契约消费记录。文章 `articleId=post-8a24724dfa8dc662`，内容提交 `aa6538a` 已普通 push 到 `origin/main`。
+
+验证结果：Knowledge Layer 283 篇、0 error、0 warning；Python 单测 12 项通过；Astro 强制构建 324 pages。正式页面 HTTP 200，标题以及“在耶稣里可以找到安息”“神的子民将来还有安息”正文指纹均通过。GitHub Actions `Email published posts` run `29980947391` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`。分享文章不适用教会讲道 NAS 归档，`archive_status=not_applicable`。
+
+---
+
 ## 当前任务状态（2026-07-22，Psalm 7 V2 生产验收发布）
 
 已完成《诗篇 7:1-17｜大卫为何称自己为义》的真实生产发布和 V2 完整验收。网站 `main` 已推送到 `e09641e79d885db971e5f569c3f2eacf43eea5d7`，Cloudflare deployment 与该 commit 一致；线上页面 HTTP 200、最终 URL 和正文指纹均通过。首次邮件 workflow `29927545169` 为 1 篇、3 名收件人、3 次成功、0 次失败；幂等 workflow `29928285307` 为 0 篇、0 收件人并安全跳过已发布 slug。知识检查为 282 篇 0 error/0 warning，12 项单测通过，构建 323 pages。
