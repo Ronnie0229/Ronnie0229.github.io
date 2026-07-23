@@ -167,7 +167,19 @@ def archive_sermon(folder_value: str, archive_value: str | None) -> None:
     print(f"Bytes: {source_bytes}")
 
 
-def publish(kind: str, folder: str | None = None, source_file: str | None = None, dry_run: bool = False, description: str | None = None, tags: str | None = None, update_existing: bool = False) -> None:
+def publish(
+    kind: str,
+    folder: str | None = None,
+    source_file: str | None = None,
+    dry_run: bool = False,
+    description: str | None = None,
+    tags: str | None = None,
+    update_existing: bool = False,
+    title: str | None = None,
+    scripture: str | None = None,
+    slug: str | None = None,
+    slug_topic: str | None = None,
+) -> None:
     command = [sys.executable, str(IMPORTERS[kind])]
     if kind == "sermon":
         if not folder:
@@ -183,6 +195,15 @@ def publish(kind: str, folder: str | None = None, source_file: str | None = None
         command.extend(["--description", description])
     if tags:
         command.extend(["--tags", tags])
+    if kind == "share":
+        if title:
+            command.extend(["--title", title])
+        if scripture:
+            command.extend(["--scripture", scripture])
+        if slug:
+            command.extend(["--slug", slug])
+        if slug_topic:
+            command.extend(["--slug-topic", slug_topic])
     if update_existing:
         command.append("--update-existing")
     result = subprocess.run(command, cwd=ROOT, check=False)
@@ -216,6 +237,10 @@ def parse_args() -> argparse.Namespace:
     publish_parser.add_argument("--dry-run", action="store_true", help="只预览导入结果，不写入文件。")
     publish_parser.add_argument("--description", help="人工概括型摘要；不得使用正文截取或模板句。")
     publish_parser.add_argument("--tags", help="分享文章必填的 SEO 主题标签，使用逗号分隔；总数 2-6 个，圣经书卷会自动补入。")
+    publish_parser.add_argument("--title", help="分享文章人工发布标题。")
+    publish_parser.add_argument("--scripture", help="分享文章人工经文。")
+    publish_parser.add_argument("--slug", help="分享文章完整 slug。")
+    publish_parser.add_argument("--slug-topic", help="分享文章英文主题 slug；最终 slug 为 <date>-<slug-topic>。")
     publish_parser.add_argument("--update-existing", action="store_true", help="只更新同一个已登记 source folder 对应的既有文章。")
 
     contract_parser = subparsers.add_parser("publish-contract", help="先验证发布契约，再进入现有导入流程。")
@@ -251,7 +276,19 @@ def main() -> None:
     elif args.command == "archive-sermon":
         archive_sermon(args.folder, args.archive)
     elif args.command == "publish":
-        publish(args.kind, args.folder, args.source_file, args.dry_run, args.description, args.tags, args.update_existing)
+        publish(
+            args.kind,
+            args.folder,
+            args.source_file,
+            args.dry_run,
+            args.description,
+            args.tags,
+            args.update_existing,
+            args.title,
+            args.scripture,
+            args.slug,
+            args.slug_topic,
+        )
     elif args.command == "publish-contract":
         command = [
             sys.executable,

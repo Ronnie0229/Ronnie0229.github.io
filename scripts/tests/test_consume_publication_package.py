@@ -110,6 +110,46 @@ class ConsumePublicationPackageTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("requires --allow-write", result.stderr)
 
+    def test_share_contract_passes_metadata_overrides(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract = self.fixture(root)
+            package = json.loads(contract.read_text())
+            package["content_type"] = "share"
+            package["metadata"] = {
+                "slug": "prepublish-slug",
+                "website_slug": "2026-07-23-obey-christ-commands",
+                "topic_slug": "obey-christ-commands",
+                "publish_date": "2026-07-23",
+                "batch_id": "batch",
+                "content_type": "share",
+                "website_source": "20260723_我们真能遵行基督的命令吗_Ronnie_中文.txt",
+                "title": "我们真能遵行基督的命令吗？",
+                "scripture": "马太福音 5:17-20",
+                "description": "本文说明信徒不是靠自己守全律法，而是在基督里蒙恩并学习真实顺服。",
+                "tags": ["顺服", "律法", "恩典"],
+            }
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            output = root / "args.json"
+            workflow = root / "workflow.py"
+            workflow.write_text(
+                "import json,sys\nfrom pathlib import Path\n"
+                f"Path({str(output)!r}).write_text(json.dumps(sys.argv[1:], ensure_ascii=False), encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            result = self.invoke(contract, root, "dry-run", workflow)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            args = json.loads(output.read_text(encoding="utf-8"))
+            self.assertIn("--source-file", args)
+            self.assertIn("--title", args)
+            self.assertIn("我们真能遵行基督的命令吗？", args)
+            self.assertIn("--scripture", args)
+            self.assertIn("马太福音 5:17-20", args)
+            self.assertIn("--slug", args)
+            self.assertIn("2026-07-23-obey-christ-commands", args)
+            self.assertIn("--tags", args)
+            self.assertIn("顺服,律法,恩典", args)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import re
 import shutil
 import unicodedata
@@ -226,6 +227,10 @@ def parse_args() -> argparse.Namespace:
         "--tags",
         help="Comma-separated SEO topic tags. Use 2-6 precise tags; the scripture book is added automatically when available.",
     )
+    parser.add_argument("--title", help="Manual publish title. When set, it is not prefixed with scripture.")
+    parser.add_argument("--scripture", help="Manual scripture frontmatter value.")
+    parser.add_argument("--slug", help="Full output slug, without .md.")
+    parser.add_argument("--slug-topic", help="English topic slug; final slug becomes <date>-<slug-topic>.")
     return parser.parse_args()
 
 
@@ -335,6 +340,10 @@ def slugify(value: str) -> str:
     value = value.lower()
     value = re.sub(r"[\s_：:;；,，.。()（）\[\]【】/\\|｜?？\"“”]+", "-", value)
     return re.sub(r"-+", "-", value).strip("-") or "share"
+
+
+def article_id_for_slug(slug: str) -> str:
+    return f"post-{hashlib.sha256(slug.encode('utf-8')).hexdigest()[:16]}"
 
 
 def yaml_escape(value: str) -> str:
@@ -454,14 +463,18 @@ def main() -> None:
         body = strip_leading_title(normalize_text(read_source(source)), source)
         summary = clean_summary_title(source)
         override = OVERRIDES.get(source.stem)
-        if override:
+        if args.scripture:
+            scripture = args.scripture.strip()
+        elif override:
             scripture, summary, _previous_category = override
         else:
             scripture = find_scripture(summary, body)
+        if args.title:
+            summary = args.title.strip()
         category = "灵命成长"
         date = source_date(source)
         published_at = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds")
-        title = f"{scripture}｜{summary}" if scripture else summary
+        title = summary if args.title else (f"{scripture}｜{summary}" if scripture else summary)
         reviewed = False
         description = args.description or DESCRIPTION_OVERRIDES.get(
             source.stem,
@@ -469,10 +482,17 @@ def main() -> None:
         )
         validate_manual_description(description, body)
         tags = build_seo_tags(args.tags, scripture)
-        slug = f"{date}-{slugify(title)}"
+        if args.slug:
+            slug = args.slug.strip().removesuffix(".md")
+        elif args.slug_topic:
+            slug = f"{date}-{slugify(args.slug_topic)}"
+        else:
+            slug = f"{date}-{slugify(title)}"
+        article_id = article_id_for_slug(slug)
 
         markdown = (
             "---\n"
+            f'articleId: "{article_id}"\n'
             f'title: "{yaml_escape(title)}"\n'
             f'description: "{yaml_escape(description)}"\n'
             f"date: {date}\n"
@@ -492,10 +512,14 @@ def main() -> None:
         existing_targets = [path for path in (output, post_output) if path.exists()]
         if existing_targets:
             details = "\n".join(f"- {path}" for path in existing_targets)
-            raise SystemExit(
-                "Target file already exists; stopping to avoid overwriting existing share posts.\n"
-                f"{details}"
-            )
+            if args.dry_run:
+                print("Target file already exists; dry-run will not overwrite:")
+                print(details)
+            else:
+                raise SystemExit(
+                    "Target file already exists; stopping to avoid overwriting existing share posts.\n"
+                    f"{details}"
+                )
         print(f"Source file: {source.name}")
         print(f"Title: {title}")
         print(f"Slug: {slug}")

@@ -76,6 +76,21 @@ def import_command(package: dict[str, Any], workflow: Path, mode: str, allow_wri
     if isinstance(tags, list) and all(isinstance(item, str) for item in tags):
         command.extend(["--tags", ",".join(tags)])
 
+    if content_type == "share":
+        title = metadata.get("chinese_title") or metadata.get("title")
+        if isinstance(title, str) and title.strip():
+            command.extend(["--title", title])
+        scripture = metadata.get("scripture")
+        if isinstance(scripture, str) and scripture.strip():
+            command.extend(["--scripture", scripture])
+        website_slug = metadata.get("website_slug")
+        if isinstance(website_slug, str) and website_slug.strip():
+            command.extend(["--slug", website_slug])
+        else:
+            topic_slug = metadata.get("topic_slug")
+            if isinstance(topic_slug, str) and topic_slug.strip():
+                command.extend(["--slug-topic", topic_slug])
+
     if mode == "dry-run":
         command.append("--dry-run")
     elif mode == "publish" and not allow_write:
