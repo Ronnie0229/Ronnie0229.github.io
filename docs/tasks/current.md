@@ -5,6 +5,14 @@
 
 当前无活动任务。以下仅保留最近 5 条已完成记录，新的任务开始时应在此处登记目标、范围、状态和下一步；正式状态值遵循 `../../../workspace-control/TASK_STATUS_POLICY.md`。
 
+## 当前任务状态（2026-07-22，Psalm 7 V2 生产验收发布）
+
+已完成《诗篇 7:1-17｜大卫为何称自己为义》的真实生产发布和 V2 完整验收。网站 `main` 已推送到 `e09641e79d885db971e5f569c3f2eacf43eea5d7`，Cloudflare deployment 与该 commit 一致；线上页面 HTTP 200、最终 URL 和正文指纹均通过。首次邮件 workflow `29927545169` 为 1 篇、3 名收件人、3 次成功、0 次失败；幂等 workflow `29928285307` 为 0 篇、0 收件人并安全跳过已发布 slug。知识检查为 282 篇 0 error/0 warning，12 项单测通过，构建 323 pages。
+
+输入 PDF 文件名指向 Thessalonica，但正文证据实际为 Psalm 7，元数据已按正文确定。验收结束后已补齐正常 intake move：源文件通过 manifest `--apply` 从 `NAS/分享收件` 移入本批 `讲道整理/原始资料/share/`，分享收件已清空，目标与 immutable snapshot SHA 一致。
+
+---
+
 ## 当前任务状态（2026-07-21，分享收件帖撒罗尼迦 PDF 拆分发布）
 
 已按讲道整理流程重新处理 `NAS/分享收件/What Is the Significance of Thessalonica in the Bible.pdf`。复核确认 PDF 抽取源稿实际包含三篇文章，已拆分发布为三篇 `灵命成长` 分享文章：
@@ -39,9 +47,9 @@ Email published posts：GitHub Actions run 29837804445 成功，postCount=3，re
 
 ## 当前任务状态（2026-07-20，三接口 v1.1 治理闭环）
 
-RonnieCross 三个跨项目接口已经完成 v1.1 治理闭环：`translation-candidate-package/v1.1`、`website-publication-package/v1.1`、`website-publication-result/v1.1`。三个接口的 v1.1 状态均为 `stable`；v1.0 仍保留为 `legacy-compatible`，只用于读取既有记录，不再作为新产物默认版本。
+RonnieCross 三个跨项目接口已经完成 v1.1 治理闭环：`translation-candidate-package/v1.1`、`website-publication-package/v1.1`、`website-publication-result/v1.1`。三个接口的 v1.1 状态均为 `contract_stable`；v1.0 仍保留为 `legacy_compatible`，只用于读取既有记录，不再作为新产物默认版本。
 
-三套不同真实文章已完成全接口 v1.1 连续独立验收，验收计数为 3/3：《记念耶稣》、《为什么受洗》、《耶和华是我的牧者》。个人网页项目已接入发布契约只读验证、受控消费入口和发布结果原子写回。网站正式写入仍必须显式授权；stable 不等于自动发布。
+三套不同真实文章已完成全接口 v1.1 连续独立验收，验收计数为 3/3：《记念耶稣》、《为什么受洗》、《耶和华是我的牧者》。个人网页项目已接入发布契约只读验证、受控消费入口和发布结果原子写回。网站正式写入仍必须显式授权；`contract_stable` 不等于自动发布。
 
 C7–C9 恢复演练通过：C7 确认结果写入失败不会留下正式结果文件；C8 确认无效契约会在调用导入器前终止；C9 确认模拟部分网站写入失败后可以恢复原文件。
 

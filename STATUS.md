@@ -31,19 +31,22 @@
 
 ## 最近已验证基线
 
-最近一次记录完整的网站发布批次为 2026-07-21 的三篇帖撒罗尼迦分享文章：
+最近一次完整生产验收为 2026-07-22 的 Psalm 7 分享文章：
 
-- `npm run check:knowledge`：281 篇，0 错误，0 警告；
+- `npm run check:knowledge`：282 篇，0 错误，0 警告；
 - Python 发布契约测试：12 tests OK；
-- `npm run build -- --force`：322 pages built；
-- 对应网站提交、Cloudflare 页面和邮件工作流结果记录在 `docs/tasks/current.md` 与月份归档中。
+- `npm run build -- --force`：323 pages built；
+- 网站 `main` 已推送到 `e09641e79d885db971e5f569c3f2eacf43eea5d7`；
+- Cloudflare deployment commit 与网站 HEAD 一致；
+- 首次邮件 workflow `29927545169` 为 1 篇、3 名收件人、3 次成功、0 次失败；
+- 幂等 workflow `29928285307` 为 0 篇、0 收件人，并安全 skip 已发布 slug。
 
-这些结果属于该次运行证据，不应自动外推为当前所有生产状态仍一致。
+该批次已通过 V2 production acceptance，正式证据位于 `workspace-control/acceptance-runs/20260722-v2-production-acceptance-thessalonica-01/`。
 
 ## 当前阻断与待办
 
-- V2 完整生产验收仍由 `workspace-control` 统一管理，当前不能标记 `production_acceptance_passed`。
-- 后续真实修改前应先同步 `origin/main`，确认 Admin 或其他入口没有产生远端新内容。
+- 当前无阻断项。
+- 后续真实修改前仍应先同步 `origin/main`，确认 Admin 或其他入口没有产生远端新内容。
 - 当前无项目内活动任务；新任务必须先登记到 `docs/tasks/current.md`。
 
 ## 历史说明
