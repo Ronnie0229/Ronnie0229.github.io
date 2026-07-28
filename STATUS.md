@@ -52,3 +52,9 @@
 ## 历史说明
 
 2026-07-13 以前及其后累积在旧 `STATUS.md` 中的阶段过程、邮件 MVP、访问量修复、source 路径审计和迁移记录，应完整归档为历史状态快照，不再保留在当前 STATUS 中。正式归档后，当前状态只由本文件替换后的 `STATUS.md` 表达。
+
+## RonnieAutomation治理接入边界（2026-07-28）
+
+RonnieAutomation已登记为外部编排参与者，不是网站Owner。网站正式文章、raw/processed/posts、Git、build、Cloudflare和邮件事实仍由本项目拥有。
+
+两个automation-business-operation/v1接口当前仅为`draft`，受控业务代理和网站自动化调用均未实现。未来写入仍必须通过网站正式发布契约、显式授权和本项目Gate；RonnieAutomation不得直接写网站仓库或自我声明发布成功。
