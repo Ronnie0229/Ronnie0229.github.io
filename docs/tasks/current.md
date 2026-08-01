@@ -22,6 +22,8 @@
 
 未完成：需由用户在 Google Search Console 重新提交 sitemap，对正式文章请求编入索引，并在“备用网页（有适当的规范标记）”报告中启动验证。
 
+文档闭环：长期判定规则与 Search Console 固定操作已写入 `SEO.md`，部署后 301/404/410/robots/sitemap 验收已写入 `DEPLOY.md`，问题背景、实现结论和生产证据已写入 `docs/tasks/search-console-canonical-indexing-phase2.md`。本轮只修改文档，没有改动网站源码或生产配置；复用本次功能提交已通过的 327 pages 构建和线上验收，不重复触发构建。
+
 ## 当前任务状态（2026-07-26，Nathan《没有道路时的信心》整理发布）
 
 已从 NAS 讲道收件读取 13 页双语 PDF《Heb. 11 Abraham 26-07-26 (side-by-side).pdf》，按完整讲章模式整理 Nathan 的《希伯来书 11:8-11、17-19｜没有道路时的信心》。已保留亚伯拉罕蒙召、等候以撒、献以撒三个主要事件，南加州迁往中西部的个人例证、立约仪式说明、现实需要应用、福音邀请、教会劝勉和完整结束祷告均已译出，没有摘要化。原始 PDF、英文提取稿、中文定稿与 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Nathan，日期为 2026-07-26。

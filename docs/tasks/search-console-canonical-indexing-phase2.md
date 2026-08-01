@@ -1,6 +1,31 @@
 # Search Console 第二阶段：canonical alternate 与未收录页面优化
 
-更新时间：2026-07-04
+更新时间：2026-08-01
+
+## 2026-08-01 生产闭环补记
+
+本阶段后续收到 Search Console 列出的 36 个“备用网页（有适当的规范标记）”样例：1 个 `www/about/`、34 个 `/posts/?category=...&focus=...` URL 和 1 个已删除文章详情 URL。
+
+最终结论：
+
+- `www/about/` 与 33 个有效 `focus` 目标属于预期重复/旧 URL，不应单独索引；
+- 既有 middleware 已将 `www` 域名和有效 `focus` URL 以 301 收敛到正式 URL；
+- 《马太福音 21:19｜为什么耶稣要咒诅无花果树？》已于 2026-06-14 永久删除，没有合理替代页；其详情 URL 与旧 `focus` URL 统一返回 410；
+- 新增 `src/pages/404.astro`，其他未知路径返回真正 404、`noindex,follow` 且不输出 canonical；
+- robots.txt 不再屏蔽 `/posts/?*`，使 Googlebot 能读取 301/410 响应；
+- sitemap、RSS 和站内链接仍只使用正式 URL。
+
+生产证据：
+
+- 实现提交：`15b3dc957f21fb8e7bc692fc0d747fefe6e53e46`；
+- Cloudflare Pages `builtAt=2026-08-01T13:30:57.574Z`；
+- 线上首页和 RSS 返回 200；
+- `www/about/` 和普通 `focus` 样例返回 301；
+- 已删除文章详情与 `focus` 样例返回 410；
+- 随机未知路径返回 404，HTML 带 `noindex,follow` 且无 canonical；
+- 强制构建通过，327 pages built。
+
+后续 Search Console 操作以项目根 `SEO.md` 的“部署后的 Search Console 固定操作”为唯一长期流程。本文保留本阶段的问题背景和生产证据，不重复维护操作步骤。
 
 ## 本阶段解决的问题
 
@@ -47,7 +72,5 @@ sitemap 不放：
 Bible 书卷页目前仍保留前端分页和返回定位状态逻辑，可能还会出现 `?page=` 或 `?focus=`。这部分先不在第二阶段改动，后续第三阶段再统一处理，避免一次性扩大范围影响书卷页阅读体验。
 ## Search Console 后续操作
 
-- 对旧 query 分类 URL，不需要新建页面；它们应逐步被新导航入口替代。
-- 对 `/search/`，如果 Search Console 显示未收录，这是预期结果，因为页面带 `noindex,follow` 且不在 sitemap。
-- 对 `/cdn-cgi/l/email-protection`，仍按 Cloudflare 功能路径处理，不在项目里创建页面。
-- 后续提交部署后，可在 Search Console 里重新验证受影响 URL，并观察 canonical alternate 与未收录页面数量是否下降。
+- 长期操作步骤已统一转移到项目根 `SEO.md`，本文不再单独维护重复清单。
+- 对旧 query、`www`、`http`、搜索结果页、Cloudflare 功能路径和已删除 URL，不应为追求“未索引计数归零”而新建重复页或请求编入索引。

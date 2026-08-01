@@ -158,6 +158,26 @@ YYYY-MM-DD-short-topic.md
 
 不要为了消除 Search Console 提示而把不该索引的后台、API、重复页暴露给搜索引擎。
 
+### “备用网页（有适当的规范标记）”判定
+
+Search Console 中的该状态不等于网站故障。对本站应按 URL 角色判定：
+
+| URL 类型 | 期望响应 | 是否应索引 | Search Console 处理 |
+| --- | --- | --- | --- |
+| `https://ronniecross.com/posts/<slug>/` 正式文章 | 200 + self-canonical | 是 | 可测试实际网址并请求编入索引 |
+| `www` / `http` 变体 | 301 到正式域名 | 否 | 不请求索引源 URL |
+| `/posts/?category=...&focus=...` | 301 到正式文章 | 否 | 不请求索引参数 URL |
+| 已永久删除的文章 | 404 或 410 | 否 | 不请求索引，等待 Google 移除 |
+| 其他未知路径 | 404 + `noindex,follow` | 否 | 不请求索引 |
+
+### 部署后的 Search Console 固定操作
+
+1. 在“编入索引 → 站点地图”重新提交 `https://ronniecross.com/sitemap.xml`；已存在时可直接重新提交，无需先删除。
+2. 用“网址检查”选择 1–3 个正式文章 URL，执行“测试实际网址 → 请求编入索引”。
+3. 对 `www`、`http`、`category`、`focus` 及已删除 URL 只做实际响应检查，不请求编入索引。
+4. 进入“编入索引 → 网页 → 备用网页（有适当的规范标记）”；如果界面提供“验证修复”，则启动验证，否则等待 Google 重新抓取。
+5. 报告可能把旧 URL 改列为“网页会自动重定向”或 404/4xx；这些来源 URL 继续不索引是预期结果，不以报告计数归零作为验收目标。
+
 ## 修改 SEO 后的验证
 
 - [ ] `npm run build` 通过。
@@ -199,3 +219,4 @@ YYYY-MM-DD-short-topic.md
 - middleware 先处理旧 `/posts/` query：`focus` 优先跳转到文章详情页，已知 `category` 跳转到稳定分类页；未知 query 继续交给静态页面处理。
 - 旧 query 处理后，再把 `http`、`www` 或其他非正式 host 统一 301 到 `https://ronniecross.com`，并保留原路径、查询和 hash。
 - 修改 middleware 时必须运行 `node scripts/test-search-console-middleware.mjs`、`node --check functions/_middleware.js`、`npm run build` 和 `git diff --check`。
+- 已删除文章登记位于 `PERMANENTLY_REMOVED_POST_SLUGS`；只能登记已确认永久删除且无合理替代页的 slug。

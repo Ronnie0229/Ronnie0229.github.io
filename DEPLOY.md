@@ -123,6 +123,13 @@ python3 scripts/verify_publication_release.py \
 - 搜索、分类、标签等入口是否正常。
 - RSS 是否正常。
 - Sitemap 是否正常。
+- 如果修改 canonical、重定向、robots 或 404/410，还必须检查：
+  - `/deployment.json` 的 `commit` 是否为本轮功能提交；
+  - `www` / `http` 变体是否 301 到 `https://ronniecross.com`；
+  - 普通 `/posts/?...&focus=...` 是否 301 到存在的正式文章；
+  - 已永久删除的 URL 是否返回 404/410，未知 URL 是否返回 404 而不是首页 200；
+  - `robots.txt` 是否允许 Googlebot 抓取需要处理 301/410 的旧 `/posts/?*` URL；
+  - sitemap 是否只包含正式 200 URL，不包含参数 URL、404 页或已删除文章。
 - 后台入口是否仍可访问。
 - 浏览器控制台是否有明显错误。
 - 如果修改了 Functions 或前端 API 调用，确认 API 成功路径、API 空访问/noindex 路径、对应页面 HTML/JS 最新构建和浏览器实际显示结果都正确。
@@ -158,3 +165,5 @@ npx wrangler pages deploy dist --project-name ronniecross --branch main
 本项目是Cloudflare Pages项目，不要使用`wrangler deploy`；该命令用于Worker入口或Worker assets部署，会在本项目中产生错误提示，甚至在配置变化后造成错误部署目标。通常应优先依赖Git推送触发的Cloudflare Pages自动部署。只有自动部署异常、且当前环境具备`CLOUDFLARE_API_TOKEN`时，才使用上面的`wrangler pages deploy`手动部署。
 
 涉及 Cloudflare Pages、Functions、D1 或 `wrangler.jsonc` 的改动时，要先说明影响范围，再执行构建和线上验证。文档任务默认不得修改 `functions/`、`wrangler.jsonc` 或 Cloudflare 配置。
+
+SEO 修复部署后的 Google Search Console 操作清单以 `SEO.md` 的“部署后的 Search Console 固定操作”为准。
