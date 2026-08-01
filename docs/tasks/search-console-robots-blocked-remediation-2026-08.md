@@ -38,6 +38,8 @@ Search Console 报告“已被 robots.txt 屏蔽”共 27 个 URL：
 - 生成 HTML 不含 `SearchAction` 或 `search_term_string`。
 - 生成 robots.txt 只屏蔽 `/admin/` 和 `/api/`。
 - 23 个 `focus` slug 中 22 个生成正式文章，唯一缺失的 `2026-06-12-test` 为预期 410。
+- 实现提交 `7b78d7e04a0e85f25cb60fc6ad07be5ed8e036be` 已 push 并由 Cloudflare Pages 部署；`/deployment.json` 返回相同 commit，`builtAt=2026-08-01T14:01:02.084Z`。
+- 本地外部访问审批器误拒绝最后的批量线上 URL 抽查；不将未执行的抽查记为已通过，Googlebot 视角证据由 Search Console “测试实际网址”补齐。
 
 ## Search Console 后续
 

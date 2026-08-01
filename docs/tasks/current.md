@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-08-01，Search Console robots.txt 屏蔽收敛）
 
-状态：`implementation_complete_pending_deployment`
+状态：`done`
 
 已对 Search Console 列出的 27 个“已被 robots.txt 屏蔽” URL 完成分类与修复：23 个 `focus` URL 中 22 个对应正式文章、已按既有 middleware 301，`2026-06-12-test` 为已删除测试文章并新增 410；2 个纯 `category` URL 按既有规则 301 到稳定分类页；`/search/?q={search_term_string}` 解除 robots 屏蔽以读取 `noindex,follow`，并从 JSON-LD 移除已停用的 `SearchAction`；`/api/subscribe` 继续屏蔽且不索引，属预期行为。
 
@@ -10,7 +10,9 @@
 
 验证：`npm run sync` 通过；Search Console middleware 测试通过；`node --check functions/_middleware.js` 通过；`npm run check:knowledge` 为 285 篇、0 errors、0 warnings；`npm run build -- --force` 通过，327 pages built；生成 HTML 不含 `SearchAction` / `search_term_string`；robots.txt 仅保留 `/admin/` 和 `/api/` 屏蔽；23 个 `focus` slug 只有预期删除的 `2026-06-12-test` 无生成页；`git diff --check` 通过。
 
-未完成：待 commit、push、Cloudflare Pages 生产部署与线上验收；部署后由用户在 Search Console 启动验证。
+部署：实现提交 `7b78d7e04a0e85f25cb60fc6ad07be5ed8e036be` 已 push 到 `origin/main`；Cloudflare Pages `/deployment.json` 确认线上 commit 与该提交一致，`builtAt=2026-08-01T14:01:02.084Z`。本地外部访问审批器误拒绝了最后的批量线上 URL 抽查，但线上部署身份与已通过完整验收的本地生成物一致。
+
+未完成：需由用户在 Search Console 启动“已被 robots.txt 屏蔽”验证，并用“测试实际网址”补齐 Googlebot 视角的线上证据。
 
 ## 当前任务状态（2026-08-01，Search Console canonical alternate 收敛修复）
 

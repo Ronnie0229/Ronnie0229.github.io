@@ -29,7 +29,8 @@
 - 移除 robots.txt 中 `/search/?*` 屏蔽，使 Googlebot 可读取页面既有 `noindex,follow`；同时从 `WebSite` JSON-LD 移除已停用的 `SearchAction` / `{search_term_string}`。
 - `/api/subscribe` 继续受 `/api/` robots 规则保护，这是预期行为；该接口已输出 `X-Robots-Tag: noindex, nofollow`，不属于可索引网页。
 - 本地验证：middleware 测试、语法检查、Knowledge Layer 285 篇 0 错误/0 警告、强制构建 327 pages 和 `git diff --check` 全部通过。
-- 当前待提交、push、Cloudflare Pages 部署与线上验收。
+- 实现提交 `7b78d7e04a0e85f25cb60fc6ad07be5ed8e036be` 已 push 到 `origin/main` 并由 Cloudflare Pages 自动部署；`/deployment.json` 确认 `builtAt=2026-08-01T14:01:02.084Z` 且线上 commit 与实现提交一致。
+- 直接逐 URL 线上抽查因本地外部访问审批器误拒绝而未完成；已部署的精确提交与本地完整构建/生成物验收一致，后续由 Search Console 实际网址测试和验证流程补齐 Googlebot 视角证据。
 
 ## 当前事实源
 
