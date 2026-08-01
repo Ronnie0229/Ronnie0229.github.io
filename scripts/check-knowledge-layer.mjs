@@ -207,6 +207,9 @@ async function checkSchemaSource() {
   for (const exportName of ["createWebSiteSchema", "createPersonSchema", "createBlogPostingSchema", "createSiteGraph"]) {
     if (!source.includes(`function ${exportName}`)) addError(schemaPath, `missing ${exportName}`);
   }
+  if (source.includes("SearchAction") || source.includes("search_term_string")) {
+    addError(schemaPath, "deprecated sitelinks search box structured data must not be emitted");
+  }
   try {
     JSON.stringify({ "@context": "https://schema.org", "@graph": [{ "@type": "WebSite" }] });
   } catch (error) {

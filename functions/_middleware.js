@@ -1,6 +1,7 @@
 export const CANONICAL_ORIGIN = "https://ronniecross.com";
 
 const PERMANENTLY_REMOVED_POST_SLUGS = new Set([
+  "2026-06-12-test",
   "2026-06-13-马太福音-2119为什么耶稣要咒诅无花果树",
 ]);
 

@@ -59,6 +59,11 @@ await assertGone(
 );
 
 await assertGone(
+  "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF&focus=2026-06-12-test",
+  "legacy focus URL for removed test post returns gone"
+);
+
+await assertGone(
   "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF&focus=2026-06-13-%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3-2119%E4%B8%BA%E4%BB%80%E4%B9%88%E8%80%B6%E7%A8%A3%E8%A6%81%E5%92%92%E8%AF%85%E6%97%A0%E8%8A%B1%E6%9E%9C%E6%A0%91",
   "legacy focus URL for removed post returns gone"
 );
@@ -96,6 +101,11 @@ assert.doesNotMatch(
   robotsTxt,
   /^Disallow:\s*\/posts\/\?\*/m,
   "legacy posts query URLs must remain crawlable so Google can process redirects"
+);
+assert.doesNotMatch(
+  robotsTxt,
+  /^Disallow:\s*\/search\/\?\*/m,
+  "search result URLs must remain crawlable so Google can process noindex"
 );
 
 console.log("Search Console middleware tests passed");

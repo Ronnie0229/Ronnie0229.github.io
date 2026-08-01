@@ -25,7 +25,6 @@ export interface BibleBookPageGraphInput extends CollectionPageSchemaInput {
 
 export interface SiteSchemaInput {
   siteUrl: string | URL;
-  searchUrl: string;
   logoUrl: string | URL;
   name: string;
   alternateName?: string;
@@ -86,15 +85,7 @@ export function createWebSiteSchema(input: SiteSchemaInput): JsonLdObject {
     alternateName: input.alternateName,
     description: input.description,
     inLanguage: input.language ?? "zh-CN",
-    publisher: { "@id": `${siteUrl}#person` },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: input.searchUrl
-      },
-      "query-input": "required name=search_term_string"
-    }
+    publisher: { "@id": `${siteUrl}#person` }
   });
 }
 

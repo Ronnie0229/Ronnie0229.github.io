@@ -167,6 +167,8 @@ Search Console 中的该状态不等于网站故障。对本站应按 URL 角色
 | `https://ronniecross.com/posts/<slug>/` 正式文章 | 200 + self-canonical | 是 | 可测试实际网址并请求编入索引 |
 | `www` / `http` 变体 | 301 到正式域名 | 否 | 不请求索引源 URL |
 | `/posts/?category=...&focus=...` | 301 到正式文章 | 否 | 不请求索引参数 URL |
+| `/search/?q=...` | 200 + `noindex,follow` | 否 | 允许抓取以读取 `noindex`，不请求索引 |
+| `/api/...` | API 按契约返回 2xx/4xx + `X-Robots-Tag` | 否 | 保持 robots 屏蔽，不按网页处理 |
 | 已永久删除的文章 | 404 或 410 | 否 | 不请求索引，等待 Google 移除 |
 | 其他未知路径 | 404 + `noindex,follow` | 否 | 不请求索引 |
 
@@ -208,7 +210,7 @@ Search Console 中的该状态不等于网站故障。对本站应按 URL 角色
 - `/posts/?category=...`、`/posts/?focus=...` 是旧列表筛选和返回定位地址，不作为独立索引页；Cloudflare Pages Functions 根 middleware 会把已知分类 query 301 到稳定分类页，把 `focus` query 301 到对应 `/posts/<slug>/` 文章详情页。
 - `/search/?q=...` 只是站内搜索结果页，不作为独立索引页。
 - `/api/`、`/admin/`、`/deployment.json`、`/search-index.json` 这类接口或后台数据不作为网页索引对象。
-- robots.txt 应持续屏蔽 `/admin/`、`/api/`和 `/search/?*`。不得屏蔽 `/posts/?*`，因为 Googlebot 需要抓取旧参数 URL 才能读取 301 和 canonical 信号。
+- robots.txt 应持续屏蔽 `/admin/`和 `/api/`。不得屏蔽 `/posts/?*`，因为 Googlebot 需要抓取旧参数 URL 才能读取 301/410；也不得屏蔽 `/search/?*`，否则 Googlebot 无法读取搜索结果页的 `noindex`。
 - 站内链接、sitemap、RSS 只放正式可索引 URL，不放筛选参数、focus 参数、API 地址。
 - 已永久删除且没有高度相关替代内容的文章必须返回 HTTP 404 或 410，不得以 HTTP 200 返回首页，也不得统一重定向到首页。
 - 不存在的普通路径由 `src/pages/404.astro` 返回自定义 404 页，页面必须带 `noindex,follow`且不输出 canonical。
@@ -220,3 +222,4 @@ Search Console 中的该状态不等于网站故障。对本站应按 URL 角色
 - 旧 query 处理后，再把 `http`、`www` 或其他非正式 host 统一 301 到 `https://ronniecross.com`，并保留原路径、查询和 hash。
 - 修改 middleware 时必须运行 `node scripts/test-search-console-middleware.mjs`、`node --check functions/_middleware.js`、`npm run build` 和 `git diff --check`。
 - 已删除文章登记位于 `PERMANENTLY_REMOVED_POST_SLUGS`；只能登记已确认永久删除且无合理替代页的 slug。
+- `WebSite` 结构化数据保留站点名称与发布者关系，不再输出已停用的 `SearchAction` / `{search_term_string}` 站内搜索框标记。

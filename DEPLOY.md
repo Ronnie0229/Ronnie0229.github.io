@@ -129,6 +129,8 @@ python3 scripts/verify_publication_release.py \
   - 普通 `/posts/?...&focus=...` 是否 301 到存在的正式文章；
   - 已永久删除的 URL 是否返回 404/410，未知 URL 是否返回 404 而不是首页 200；
   - `robots.txt` 是否允许 Googlebot 抓取需要处理 301/410 的旧 `/posts/?*` URL；
+  - `robots.txt` 是否允许抓取 `/search/?*`，且搜索结果 HTML 是否带 `noindex,follow`；
+  - 生成 HTML 是否不再包含 `SearchAction` 或 `{search_term_string}`；
   - sitemap 是否只包含正式 200 URL，不包含参数 URL、404 页或已删除文章。
 - 后台入口是否仍可访问。
 - 浏览器控制台是否有明显错误。

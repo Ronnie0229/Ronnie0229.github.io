@@ -1,5 +1,17 @@
 # 当前任务
 
+## 当前任务状态（2026-08-01，Search Console robots.txt 屏蔽收敛）
+
+状态：`implementation_complete_pending_deployment`
+
+已对 Search Console 列出的 27 个“已被 robots.txt 屏蔽” URL 完成分类与修复：23 个 `focus` URL 中 22 个对应正式文章、已按既有 middleware 301，`2026-06-12-test` 为已删除测试文章并新增 410；2 个纯 `category` URL 按既有规则 301 到稳定分类页；`/search/?q={search_term_string}` 解除 robots 屏蔽以读取 `noindex,follow`，并从 JSON-LD 移除已停用的 `SearchAction`；`/api/subscribe` 继续屏蔽且不索引，属预期行为。
+
+修改文件：`assets/robots.txt`、`functions/_middleware.js`、`src/lib/knowledge/schema.ts`、`src/layouts/BaseLayout.astro`、`scripts/test-search-console-middleware.mjs`、`scripts/check-knowledge-layer.mjs`、`scripts/audit_seo_urls.mjs`、`SEO.md`、`DEPLOY.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/tasks/search-console-robots-blocked-remediation-2026-08.md`。
+
+验证：`npm run sync` 通过；Search Console middleware 测试通过；`node --check functions/_middleware.js` 通过；`npm run check:knowledge` 为 285 篇、0 errors、0 warnings；`npm run build -- --force` 通过，327 pages built；生成 HTML 不含 `SearchAction` / `search_term_string`；robots.txt 仅保留 `/admin/` 和 `/api/` 屏蔽；23 个 `focus` slug 只有预期删除的 `2026-06-12-test` 无生成页；`git diff --check` 通过。
+
+未完成：待 commit、push、Cloudflare Pages 生产部署与线上验收；部署后由用户在 Search Console 启动验证。
+
 ## 当前任务状态（2026-08-01，Search Console canonical alternate 收敛修复）
 
 状态：`done`

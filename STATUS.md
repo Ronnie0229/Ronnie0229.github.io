@@ -21,6 +21,16 @@
 - 本轮未直接操作 Google Search Console；后续按任务交接中的步骤重新提交 sitemap 并验证修复。
 - 长期规则和 Search Console 操作清单已收敛到 `SEO.md`；部署后 HTTP 验收要求已同步到 `DEPLOY.md`；阶段背景与生产证据保留在 `docs/tasks/search-console-canonical-indexing-phase2.md`。
 
+## Search Console robots.txt 屏蔽修复（2026-08-01）
+
+- 对 Search Console 列出的 27 个 URL 完成分类：23 个 `focus` URL、2 个纯 `category` URL、1 个搜索模板 URL 和 1 个订阅 API URL。
+- 23 个 `focus` 中 22 个存在正式文章并按既有规则 301；`2026-06-12-test` 是已于 2026-06-13 删除的测试文章，现登记为 410。
+- 两个纯 `category` URL 已在上一轮解除 robots 屏蔽，分别 301 到稳定分类页。
+- 移除 robots.txt 中 `/search/?*` 屏蔽，使 Googlebot 可读取页面既有 `noindex,follow`；同时从 `WebSite` JSON-LD 移除已停用的 `SearchAction` / `{search_term_string}`。
+- `/api/subscribe` 继续受 `/api/` robots 规则保护，这是预期行为；该接口已输出 `X-Robots-Tag: noindex, nofollow`，不属于可索引网页。
+- 本地验证：middleware 测试、语法检查、Knowledge Layer 285 篇 0 错误/0 警告、强制构建 327 pages 和 `git diff --check` 全部通过。
+- 当前待提交、push、Cloudflare Pages 部署与线上验收。
+
 ## 当前事实源
 
 接手项目时按以下顺序读取：

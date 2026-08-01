@@ -16,6 +16,8 @@ const EXTRA_URLS = [
   "https://ronniecross.com/search/",
   "https://ronniecross.com/search/?q=%7Bsearch_term_string%7D",
   "https://ronniecross.com/search/?q=test",
+  "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF&focus=2026-06-12-test",
+  "https://ronniecross.com/api/subscribe",
   "https://ronniecross.com/api/comments",
   "https://ronniecross.com/api/views",
   "https://ronniecross.com/api/visits",
