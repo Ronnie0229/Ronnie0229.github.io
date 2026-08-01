@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-08-01，Search Console canonical alternate 收敛修复）
 
-状态：`implementation_complete_pending_deployment`
+状态：`done`
 
 已完成 Search Console 列出的 36 个 canonical alternate URL 的本地核查与修复。既有 `www` 与旧 `focus` URL 的 301 已确认正常；对已于 2026-06-14 删除的《马太福音 21:19｜为什么耶稣要咒诅无花果树？》，其详情 URL 和旧 `focus` URL 现返回 HTTP 410，不再以 HTTP 200 返回首页。新增自定义 404 页保证其他未知路径返回真正的 HTTP 404。robots.txt 已解除 `/posts/?*` 屏蔽，以便 Googlebot 重新抓取并读取 301/410 信号。
 
@@ -18,7 +18,9 @@
 
 验证结果：`npm run sync` 通过且远程已是最新；Search Console middleware 测试通过；middleware 语法检查通过；`npm run build -- --force` 通过，327 pages built；Astro 本地预览中未知路径确认返回 HTTP 404；生成 sitemap 不包含 404 或已删除文章；Search Console 列出的 34 个 `focus` slug 中 33 个均存在对应生成文章，唯一缺失项为预期返回 410 的已删除无花果树文章；`git diff --check` 通过。
 
-未完成：本轮未被授权执行 Git commit、push 或 Cloudflare Pages 生产部署。部署后需先验证线上 410、404、301、robots.txt 和 sitemap，再按本任务交接说明进行 Search Console 验证。
+部署结果：实现提交 `15b3dc957f21fb8e7bc692fc0d747fefe6e53e46` 已 push 到 `origin/main`，Cloudflare Pages 已自动部署到该提交。线上验收确认首页/RSS 200、`www/about/` 301、普通 `focus` URL 301、已删除文章详情与 `focus` URL 410、未知路径 404 + `noindex,follow` + 无 canonical，robots.txt 已允许抓取 `/posts/?*`，sitemap 仍只包含正式 URL。
+
+未完成：需由用户在 Google Search Console 重新提交 sitemap，对正式文章请求编入索引，并在“备用网页（有适当的规范标记）”报告中启动验证。
 
 ## 当前任务状态（2026-07-26，Nathan《没有道路时的信心》整理发布）
 

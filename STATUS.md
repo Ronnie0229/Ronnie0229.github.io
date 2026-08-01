@@ -7,7 +7,7 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：Search Console canonical alternate 收敛修复已完成本地实现与验证，待提交、push 和 Cloudflare Pages 部署。
+- 当前活动任务：无。
 
 ## Search Console canonical alternate 修复（2026-08-01）
 
@@ -16,7 +16,9 @@
 - 新增自定义 `404.astro`；Astro 本地预览已确认未知路径返回 HTTP 404，带 `noindex,follow`且无 canonical。
 - robots.txt 已取消 `/posts/?*` 抓取屏蔽，使 Googlebot 可读取旧参数 URL 的 301/410 响应；`/admin/`、`/api/`和 `/search/?*` 仍保持屏蔽。
 - 验证：`node scripts/test-search-console-middleware.mjs` 通过；`node --check functions/_middleware.js` 通过；`npm run build -- --force` 通过，327 pages built；Search Console 列出的 34 个 `focus` slug 中 33 个均存在对应生成文章，唯一缺失项为预期返回 410 的已删除无花果树文章；`git diff --check` 通过。
-- 未执行 Git commit、push、Cloudflare 部署或 Search Console 操作。
+- 实现提交 `15b3dc957f21fb8e7bc692fc0d747fefe6e53e46` 已 push 到 `origin/main` 并由 Cloudflare Pages 自动部署；`/deployment.json` 已确认线上版本与该提交一致。
+- 线上验收通过：首页与 RSS 返回 200；`www/about/` 返回 301 到正式域名；普通 `focus` URL 返回 301 到正式文章；已删除文章详情与 `focus` URL 返回 410；未知路径返回 404、`noindex,follow` 且无 canonical；robots.txt 和 sitemap 符合新规则。
+- 本轮未直接操作 Google Search Console；后续按任务交接中的步骤重新提交 sitemap 并验证修复。
 
 ## 当前事实源
 
