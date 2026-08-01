@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import { onRequest } from "../functions/_middleware.js";
 
@@ -34,10 +35,32 @@ async function assertNext(url, message) {
   assert.equal(result.location, null, `${message}: location`);
 }
 
+async function assertGone(url, message) {
+  const result = await runMiddleware(url);
+  assert.equal(result.nextCalled, false, `${message}: should not call next`);
+  assert.equal(result.status, 410, `${message}: status`);
+  assert.equal(result.location, null, `${message}: location`);
+  assert.match(
+    result.response.headers.get("x-robots-tag") || "",
+    /noindex/i,
+    `${message}: x-robots-tag`
+  );
+}
+
 await assertRedirect(
   "https://www.ronniecross.com/",
   "https://ronniecross.com/",
   "www root canonicalizes to apex HTTPS"
+);
+
+await assertGone(
+  "https://ronniecross.com/posts/2026-06-13-%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3-2119%E4%B8%BA%E4%BB%80%E4%B9%88%E8%80%B6%E7%A8%A3%E8%A6%81%E5%92%92%E8%AF%85%E6%97%A0%E8%8A%B1%E6%9E%9C%E6%A0%91/",
+  "permanently removed post returns gone"
+);
+
+await assertGone(
+  "https://ronniecross.com/posts/?category=%E7%81%B5%E5%91%BD%E6%88%90%E9%95%BF&focus=2026-06-13-%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3-2119%E4%B8%BA%E4%BB%80%E4%B9%88%E8%80%B6%E7%A8%A3%E8%A6%81%E5%92%92%E8%AF%85%E6%97%A0%E8%8A%B1%E6%9E%9C%E6%A0%91",
+  "legacy focus URL for removed post returns gone"
 );
 
 await assertRedirect(
@@ -66,6 +89,13 @@ await assertNext(
 await assertNext(
   "https://ronniecross.com/posts/?utm_source=search-console",
   "unknown posts query passes through"
+);
+
+const robotsTxt = readFileSync(new URL("../assets/robots.txt", import.meta.url), "utf8");
+assert.doesNotMatch(
+  robotsTxt,
+  /^Disallow:\s*\/posts\/\?\*/m,
+  "legacy posts query URLs must remain crawlable so Google can process redirects"
 );
 
 console.log("Search Console middleware tests passed");

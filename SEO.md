@@ -188,8 +188,10 @@ YYYY-MM-DD-short-topic.md
 - `/posts/?category=...`、`/posts/?focus=...` 是旧列表筛选和返回定位地址，不作为独立索引页；Cloudflare Pages Functions 根 middleware 会把已知分类 query 301 到稳定分类页，把 `focus` query 301 到对应 `/posts/<slug>/` 文章详情页。
 - `/search/?q=...` 只是站内搜索结果页，不作为独立索引页。
 - `/api/`、`/admin/`、`/deployment.json`、`/search-index.json` 这类接口或后台数据不作为网页索引对象。
-- robots.txt 应持续屏蔽 `/admin/`、`/api/`、`/posts/?*`、`/search/?*`，避免 Google 把接口和参数页当成网页抓取。
+- robots.txt 应持续屏蔽 `/admin/`、`/api/`和 `/search/?*`。不得屏蔽 `/posts/?*`，因为 Googlebot 需要抓取旧参数 URL 才能读取 301 和 canonical 信号。
 - 站内链接、sitemap、RSS 只放正式可索引 URL，不放筛选参数、focus 参数、API 地址。
+- 已永久删除且没有高度相关替代内容的文章必须返回 HTTP 404 或 410，不得以 HTTP 200 返回首页，也不得统一重定向到首页。
+- 不存在的普通路径由 `src/pages/404.astro` 返回自定义 404 页，页面必须带 `noindex,follow`且不输出 canonical。
 
 ## Cloudflare middleware 规范化规则
 

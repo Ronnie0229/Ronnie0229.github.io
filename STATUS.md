@@ -1,13 +1,22 @@
 # 个人网页项目状态
 
-最后更新：2026-07-23 +09:00
+最后更新：2026-08-01 +09:00
 
 ## 当前状态
 
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：无。
+- 当前活动任务：Search Console canonical alternate 收敛修复已完成本地实现与验证，待提交、push 和 Cloudflare Pages 部署。
+
+## Search Console canonical alternate 修复（2026-08-01）
+
+- `www` 域名与旧 `/posts/?category=...&focus=...` 的既有 301 逻辑保持不变。
+- 已删除的《马太福音 21:19｜为什么耶稣要咒诅无花果树？》详情 URL 及其旧 `focus` URL 改为 HTTP 410，并输出 `X-Robots-Tag: noindex, follow`。
+- 新增自定义 `404.astro`；Astro 本地预览已确认未知路径返回 HTTP 404，带 `noindex,follow`且无 canonical。
+- robots.txt 已取消 `/posts/?*` 抓取屏蔽，使 Googlebot 可读取旧参数 URL 的 301/410 响应；`/admin/`、`/api/`和 `/search/?*` 仍保持屏蔽。
+- 验证：`node scripts/test-search-console-middleware.mjs` 通过；`node --check functions/_middleware.js` 通过；`npm run build -- --force` 通过，327 pages built；Search Console 列出的 34 个 `focus` slug 中 33 个均存在对应生成文章，唯一缺失项为预期返回 410 的已删除无花果树文章；`git diff --check` 通过。
+- 未执行 Git commit、push、Cloudflare 部署或 Search Console 操作。
 
 ## 当前事实源
 

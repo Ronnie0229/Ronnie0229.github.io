@@ -1,0 +1,71 @@
+---
+import Logo from "../components/Logo.astro";
+import "../styles/tokens.css";
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-theme-mode="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="找不到请求的网页。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#061625" />
+    <title>找不到网页 | Ronnie</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="道路，真理，生命 首页">
+          <Logo size="sm" />
+        </a>
+      </header>
+      <main class="not-found-page">
+        <p class="eyebrow">404</p>
+        <h1>找不到这个网页</h1>
+        <p>这个地址可能已被删除、移动，或者输入有误。</p>
+        <div class="not-found-actions">
+          <a class="button" href="/posts/">浏览全部文章</a>
+          <a href="/">返回首页</a>
+        </div>
+      </main>
+      <footer class="site-footer">
+        <span>Ronnie</span>
+        <span>活出耶稣的样式</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  .not-found-page {
+    display: grid;
+    min-height: 62vh;
+    place-content: center;
+    gap: 1rem;
+    padding: 4rem 1.25rem;
+    text-align: center;
+  }
+
+  .not-found-page h1,
+  .not-found-page p {
+    margin: 0;
+  }
+
+  .eyebrow {
+    color: var(--color-accent, #d7b46a);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+</style>
