@@ -7,7 +7,7 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：统一 Tag Pipeline 最终独立复审已 `PASS`，已获准正式 Git 关闭。
+- 当前活动任务：统一 Tag Pipeline 最终独立复审已 `PASS`，Git 闭环已完成，任务正式关闭。
 
 ## 统一 Tag Pipeline 建设（2026-08-02）
 
@@ -35,7 +35,8 @@
 - 定向回归：Python 21 tests PASS，Browser fixtures 27/27 PASS。完整验证记录见任务 `verification.md`。
 - 第二次修复后独立复审报告正式裁决 `PASS`，P0/P1/P2 均无，独立确认 17/17 编号书卷矩阵与全部回归通过。
 - 剩余风险仅为未来可将 17 卷矩阵全部固化为持久 fixture；不影响本次 `PASS`。
-- 当前状态：`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`；用户已批准 commit 与 push，实际 Git 证据待回填。
+- 关闭前远程同步检查为 `0 0`；闭环主提交 `2fab73d fix: close tag pipeline alias remediation` 已成功推送到 `origin/main`。
+- 当前状态：`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`。
 
 ## Search Console canonical alternate 修复（2026-08-01）
 

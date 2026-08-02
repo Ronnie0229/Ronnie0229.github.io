@@ -87,3 +87,9 @@
 - `STATUS.md`、`docs/tasks/current.md`：将当前任务更新为独立复审通过并获准正式关闭。
 
 三份独立报告都将作为审计历史随闭环提交保留；历史 `FAIL` 裁决不会被覆盖或改写。
+
+## Final Git Evidence
+
+- 闭环主提交：`2fab73d fix: close tag pipeline alias remediation`。
+- 已成功推送至 `origin/main`，远程范围 `161567b..2fab73d`。
+- 随后的文档闭环提交只回填实际 Git 证据，不修改生产实现。

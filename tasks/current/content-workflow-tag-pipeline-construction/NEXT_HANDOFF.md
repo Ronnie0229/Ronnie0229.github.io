@@ -2,11 +2,11 @@
 
 ## Current Status
 
-`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
+`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
 
 ## Required Next Session
 
-最终独立复审已完成并裁决 `PASS`。用户已批准正式关闭、commit 和 push；当前交接只负责 Git 闭环与实际证据回填，不再进入修复或扩展实现。
+最终独立复审已完成并裁决 `PASS`，修复与审计闭环提交 `2fab73d` 已成功推送至 `origin/main`。本任务正式关闭，无必需后续会话。
 
 本会话不得继续承担独立复审、复审后修复、AI 标签、历史标签迁移或生产发布。
 
@@ -111,7 +111,7 @@ git status --short
 - Astro build：PASS。
 - 原 P1 探针：PASS，`1 John` 已规范化。
 - Protected diff search：无输出。
-- 定向修复尚未 commit、未 push。
+- 该阶段当时尚未 commit/push；最终 Git 闭环现已完成。
 
 ## Second Remediation Verification Baseline
 
@@ -120,15 +120,16 @@ git status --short
 - First/Second/Third John 和 First Peter 定向探针：PASS。
 - scripture + First John 去重和 scripture evidence 优先：PASS。
 - Admin、Knowledge Layer、Astro build、语法、diff 和受保护范围的最终结果见 `verification.md`。
-- 第二次定向修复尚未 commit、未 push。
+- 该阶段当时尚未 commit/push；最终 Git 闭环现已完成。
 
 ## Git And Side Effects
 
 - 分支：`main`，开始时与 `origin/main` 一致。
 - 用户在建设完成后明确批准 commit 和 push；实现提交 `d47bf6e feat: unify content tag pipeline` 已成功推送到 `origin/main`。
+- P1 修复、字典补齐、测试、三份独立报告与关闭文档提交 `2fab73d fix: close tag pipeline alias remediation` 已成功推送到 `origin/main`。
 - `tasks/` 在接管时已经是未跟踪目录，本会话保留并更新任务产物。
 - 没有生产发布、部署、通知、NAS、RonnieAutomation 或 n8n 副作用。
 
 ## Safe Stop
 
-最终独立复审已 `PASS`，用户已授权 Git 闭环。提交与推送成功并回填证据后停止；不进入 AI 标签、历史迁移、生产发布或其它后续阶段。
+本任务已通过最终独立复审并完成 Git 闭环。停止；不进入 AI 标签、历史迁移、生产发布或其它后续阶段。

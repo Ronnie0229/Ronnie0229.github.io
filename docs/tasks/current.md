@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-08-02，统一 Tag Pipeline 最终关闭）
 
-状态：`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
+状态：`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
 
 第一次 P1 修复后独立复审报告 `tasks/current/content-workflow-tag-pipeline-construction/INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md` 再次裁决 `FAIL`：alias map 已正确，但权威 Tag Dictionary 遗漏 `First John`。
 
@@ -12,7 +12,7 @@
 
 第二次修复后独立报告 `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md` 已正式裁决 `PASS`：P0/P1/P2 均无，无 P3 实现缺陷；Python 21 tests、Browser 27/27、Admin 0 errors、Knowledge 286 posts 0/0、Astro 328 pages 和 17/17 编号书卷矩阵均通过。
 
-本轮未修改历史文章、Knowledge Layer、publication contract、RonnieAutomation、n8n 或 NAS；未部署、未发布。用户已批准在完整 diff 和任务文档检查后执行 commit 与 push，Git 证据待成功后回填。唯一剩余建议是未来将全 17 卷矩阵固化为持久 fixture，不影响本次 `PASS`。
+本轮未修改历史文章、Knowledge Layer、publication contract、RonnieAutomation、n8n 或 NAS；未部署、未发布。关闭前 `git fetch origin` 后 `HEAD...origin/main` 为 `0 0`；闭环主提交 `2fab73d fix: close tag pipeline alias remediation` 已成功推送到 `origin/main`。唯一剩余建议是未来将全 17 卷矩阵固化为持久 fixture，不影响本次 `PASS`。
 
 ---
 

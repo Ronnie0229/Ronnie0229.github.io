@@ -2,7 +2,7 @@
 
 ## Status
 
-`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
+`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
 
 以下记录本建设会话实际执行的本地验证与后续用户授权的 Git 闭环。没有执行真实文章发布、GitHub Admin 写入、部署、通知或 NAS。
 
@@ -261,3 +261,17 @@ numbered-book hard-coded audit matrix: 17/17 PASS
 ## Git Closure Authorization
 
 用户已明确批准在检查完整 diff 和任务文档状态后进入正式关闭、commit 和 push。关闭前检查已覆盖 tracked/untracked 变更、三份独立报告、任务文档和受保护范围。实际 Git 证据将在成功后回填。
+
+## Final Git Closure
+
+```text
+pre_push_fetch=success
+pre_push_head_vs_origin=0 0
+remediation_commit=2fab73d
+commit_subject=fix: close tag pipeline alias remediation
+push_target=origin/main
+push_result=success
+remote_range=161567b..2fab73d
+```
+
+提交前 staged diff 包含 16 个预期文件，`git diff --cached --check` 通过；三份独立报告作为不可改写的审计历史一并提交。推送未包含历史文章、Knowledge Layer、publication contract、RonnieAutomation、n8n 或 NAS 变更。

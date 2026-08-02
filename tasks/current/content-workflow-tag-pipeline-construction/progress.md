@@ -2,7 +2,7 @@
 
 ## Current Status
 
-`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
+`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
 
 ## Completed
 
@@ -85,6 +85,9 @@
 - 剩余风险：未将 17 卷矩阵全部固化为持久 fixture；该项不影响 `PASS`，只登记为后续维护建议。
 - 用户已明确批准进入正式关闭、commit 与 push。
 
-## Git Closure Pending
+## Git Closure Complete
 
-当前先完成关闭前 diff/文档审计，随后执行远程同步检查、提交与推送；实际 commit 和 push 证据将在成功后回填。
+- 关闭前 `git fetch origin` 成功，`HEAD...origin/main` 为 `0 0`，无远程漂移。
+- 修复、测试、三份审计报告与关闭文档提交：`2fab73d fix: close tag pipeline alias remediation`。
+- 推送：`origin/main` 成功，远程范围 `161567b..2fab73d`。
+- 未执行生产文章发布、手工部署、通知、NAS、AI 标签或历史迁移。
