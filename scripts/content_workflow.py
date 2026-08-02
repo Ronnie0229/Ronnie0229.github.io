@@ -236,7 +236,7 @@ def parse_args() -> argparse.Namespace:
     publish_parser.add_argument("--source-file", help="分享发布时必须指定的单个 data/raw/分享 源文件。")
     publish_parser.add_argument("--dry-run", action="store_true", help="只预览导入结果，不写入文件。")
     publish_parser.add_argument("--description", help="人工概括型摘要；不得使用正文截取或模板句。")
-    publish_parser.add_argument("--tags", help="分享文章必填的 SEO 主题标签，使用逗号分隔；总数 2-6 个，圣经书卷会自动补入。")
+    publish_parser.add_argument("--tags", help="分享或讲道的人工精准标签，使用逗号分隔；将与确定性规则结果合并并统一校验。")
     publish_parser.add_argument("--title", help="分享文章人工发布标题。")
     publish_parser.add_argument("--scripture", help="分享文章人工经文。")
     publish_parser.add_argument("--slug", help="分享文章完整 slug。")

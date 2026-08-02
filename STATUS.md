@@ -7,7 +7,16 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：无。
+- 当前活动任务：统一 Tag Pipeline 建设已完成，等待新的独立复审。
+
+## 统一 Tag Pipeline 建设（2026-08-02）
+
+- 已建立 `assets/admin/tag-rules.json` 单一权威规则源、Python/浏览器双运行时，并接入分享、讲道、Custom Admin 和备用 Decap Admin 的新写入边界。
+- 讲道导入不再默认生成 `讲道`、`教会讲道` 或讲员姓名；规则不足时 fail closed 并要求人工 `--tags`。
+- `website-publication-package/v1.1` 未升级，兼容可选 `metadata.tags` 保持不变；历史 content schema 和历史文章未修改。
+- 验证：Python 21 tests PASS；浏览器 fixture 17/17；Admin Save Flow 0 errors；Knowledge Layer 286 篇、0 errors、0 warnings；整站 Astro build PASS；`git diff --check` PASS。
+- 未执行真实文章发布、GitHub Admin 保存、部署、通知、NAS、commit 或 push。
+- 权威任务包：`tasks/current/content-workflow-tag-pipeline-construction/`。当前状态为 `CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`；下一步只能是新独立复审。
 
 ## Search Console canonical alternate 修复（2026-08-01）
 

@@ -12,6 +12,11 @@ from zoneinfo import ZoneInfo
 
 from docx import Document
 
+try:
+    from tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+except ModuleNotFoundError:  # Imported as scripts.import_shares in unit tests.
+    from scripts.tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "data" / "raw" / "分享"
@@ -225,7 +230,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
     parser.add_argument(
         "--tags",
-        help="Comma-separated SEO topic tags. Use 2-6 precise tags; the scripture book is added automatically when available.",
+        help="Optional comma-separated precise tags. They are normalized and merged with deterministic scripture/title tags.",
     )
     parser.add_argument("--title", help="Manual publish title. When set, it is not prefixed with scripture.")
     parser.add_argument("--scripture", help="Manual scripture frontmatter value.")
@@ -373,24 +378,17 @@ def validate_manual_description(description: str, body: str) -> None:
         raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
 
 
-def build_seo_tags(raw_tags: str | None, scripture: str) -> list[str]:
-    if not raw_tags:
-        raise SystemExit(
-            "Missing SEO tags. Add --tags with 2-6 precise topic tags; "
-            "include core people, places, doctrines, or applications rather than category labels."
-        )
-    supplied = [tag.strip() for tag in re.split(r"[,，]", raw_tags) if tag.strip()]
-    generic = {"分享", "灵命成长", "文章", "信仰", "基督教"}
-    if any(tag in generic for tag in supplied):
-        raise SystemExit("SEO tags must be topical; remove generic category/process labels such as 分享 or 灵命成长.")
-    book = scripture.split(" ", 1)[0].strip() if scripture else ""
-    tags: list[str] = []
-    for tag in ([book] if book else []) + supplied:
-        if tag and tag not in tags:
-            tags.append(tag)
-    if not 2 <= len(tags) <= 6:
-        raise SystemExit(f"SEO tags must total 2-6 after scripture-book normalization; got {len(tags)}: {tags}")
-    return tags
+def build_share_tags(title: str, scripture: str, raw_tags: str | None) -> list[str]:
+    try:
+        return build_tags(
+            title=title,
+            scripture=scripture,
+            manual_tags=parse_manual_tags(raw_tags),
+            category="灵命成长",
+            author="Ronnie",
+        ).tags
+    except TagPipelineError as exc:
+        raise SystemExit(f"Tag Pipeline [{exc.code}]: {exc.message}") from exc
 
 
 def sentence_aware_description(body: str, fallback: str) -> str:
@@ -481,7 +479,7 @@ def main() -> None:
             "NEEDS_METADATA：请人工阅读文章后补充大意摘要。",
         )
         validate_manual_description(description, body)
-        tags = build_seo_tags(args.tags, scripture)
+        tags = build_share_tags(title, scripture, args.tags)
         if args.slug:
             slug = args.slug.strip().removesuffix(".md")
         elif args.slug_topic:
@@ -522,6 +520,7 @@ def main() -> None:
                 )
         print(f"Source file: {source.name}")
         print(f"Title: {title}")
+        print(f"Tags: {', '.join(tags)}")
         print(f"Slug: {slug}")
         print(f"Processed target: {output}")
         print(f"Post target: {post_output}")

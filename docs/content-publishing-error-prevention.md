@@ -183,6 +183,19 @@
 - 若因环境权限无法完成归档，必须记录 `archive_status=pending`，不得把任务写成完整完成。
 - 只有用户明确要求本次不归档时，才能记录 `archive_status=skipped_by_user`。
 
+## 14. 多入口标签规则不得漂移
+
+问题：分享、讲道、Custom Admin 和备用 Decap Admin 曾各自处理标签；讲道导入还会写入 `讲道`、`教会讲道` 和讲员姓名。
+
+整改：
+
+- 所有新生成、新保存和新发布必须调用统一 Tag Pipeline；规则唯一来源为 `assets/admin/tag-rules.json`。
+- Python 与浏览器运行时必须通过同一 fixture 的结果和错误码一致性测试。
+- scripture 自动补书卷；标题/副标题只按确定性规则推断；CLI/Admin 人工标签必须保留但不能绕过规范化与 Gate。
+- generic、歧义、非法字符、少于 2 个或多于 6 个全部 fail closed，不得静默删除、截断或 fallback。
+- 讲道不再默认生成内容类型、分类或讲员标签。dry-run 若报告标签不足，必须提供精准 `--tags` 后重跑。
+- 不通过收紧全局 content schema 迁移历史文章；完成检查必须确认没有批量修改 `src/content/posts/`。
+
 ## 发布前强制检查
 
 - [ ] PDF/源资料已移动或复制到正确 raw 目录，并记录 SHA-256。

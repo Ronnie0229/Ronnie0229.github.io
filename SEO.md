@@ -97,6 +97,17 @@ YYYY-MM-DD-short-topic.md
 - 同一概念尽量使用统一写法。
 - 发布前必须人工确认 title、description、scripture、tags 与正文主题一致；构建通过不能替代 SEO 元数据检查。
 
+### 统一 Tag Pipeline
+
+- 新生成或新保存文章的标签必须经过统一 Tag Pipeline；分享、讲道、Custom Admin 和备用 Decap Admin 不得自行拼装或绕过标签 Gate。
+- 单一权威规则源为 `assets/admin/tag-rules.json`。Python 使用 `scripts/tag_pipeline.py`，浏览器使用 `assets/admin/tag-pipeline.js`，跨运行时 fixture 必须保持一致。
+- 流水线按 scripture 书卷、标题/副标题确定性规则、人工标签的顺序合并；执行 NFKC/空白规范化、中英文别名映射、规范化后二次去重、generic/歧义/字符检查和最终 2–6 Gate。
+- generic 集合包括：`分享`、`灵命成长`、`讲道`、`教会讲道`、`文章`、`查经`、`生命反思`、`信仰`、`基督教`。命中后必须 fail closed，不得静默删除或回退到旧默认标签。
+- category、内容类型和 author/speaker 只作上下文，不自动成为标签；教会讲道不得默认生成 `讲道`、`教会讲道` 或讲员姓名。
+- 无法生成至少 2 个精准标签或规范化后超过 6 个时必须停止，要求人工补充或减少；不得静默截断。
+- 历史文章读取继续兼容，禁止通过全局 content schema 收紧迫使历史文章批量迁移；强制规则只位于新写入/新发布边界。
+- `website-publication-package/v1.1` 的 `metadata.tags` 继续是兼容可选字段。缺失时可由网站内部流水线推断，但网站写入前仍必须通过同一 Gate；本规则不构成跨项目接口升级。
+
 ## 网站级 SEO 文件
 
 相关页面和文件：

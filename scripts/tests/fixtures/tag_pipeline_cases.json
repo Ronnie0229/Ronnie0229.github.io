@@ -1,0 +1,87 @@
+[
+  {
+    "name": "sermon_jacob_rule_generation",
+    "input": {"title": "信仰的殿堂：雅各", "scripture": "希伯来书 11:21", "category": "教会讲道", "author": "Grayson", "manual_tags": []},
+    "expected": {"tags": ["希伯来书", "雅各", "信心"]}
+  },
+  {
+    "name": "sermon_abraham_rule_generation",
+    "input": {"title": "没有道路时的信心", "subtitle": "亚伯拉罕献以撒", "scripture": "希伯来书 11:8-11、17-19", "category": "教会讲道", "author": "Nathan", "manual_tags": []},
+    "expected": {"tags": ["希伯来书", "亚伯拉罕", "献以撒", "信心"]}
+  },
+  {
+    "name": "sermon_noah_rule_generation",
+    "input": {"title": "挪亚与洪水中的信心", "scripture": "希伯来书 11:1-7", "category": "教会讲道", "author": "Akira", "manual_tags": []},
+    "expected": {"tags": ["希伯来书", "挪亚", "洪水", "信心"]}
+  },
+  {
+    "name": "share_people_place_theme_manual",
+    "input": {"title": "该隐与挪得之地：流离与救赎的盼望", "scripture": "创世记 4:1-24", "category": "灵命成长", "author": "Ronnie", "manual_tags": ["Salvation"]},
+    "expected": {"tags": ["创世记", "该隐", "挪得之地", "盼望", "救恩"]}
+  },
+  {
+    "name": "alias_and_post_normalization_duplicate",
+    "input": {"title": "该隐", "scripture": "Genesis 4:1-24", "manual_tags": ["Cain", "该隐", "Grace"]},
+    "expected": {"tags": ["创世记", "该隐", "恩典"]}
+  },
+  {
+    "name": "multiple_scripture_books",
+    "input": {"title": "学习祷告", "scripture": "路加福音 11:1-4；马太福音 6:9-13", "manual_tags": []},
+    "expected": {"tags": ["路加福音", "马太福音", "祷告"]}
+  },
+  {
+    "name": "english_book_disambiguation",
+    "input": {"title": "爱与顺服", "scripture": "1 John 3:16；John 14:15", "manual_tags": []},
+    "expected": {"tags": ["约翰一书", "约翰福音", "顺服", "爱"]}
+  },
+  {
+    "name": "generic_rejected",
+    "input": {"title": "普通标题", "scripture": "罗马书 8:1", "manual_tags": ["信仰"]},
+    "expected_error": "TAG_GENERIC"
+  },
+  {
+    "name": "context_only_rejected",
+    "input": {"title": "普通标题", "scripture": "罗马书 8:1", "category": "教会讲道", "author": "Patrick", "manual_tags": ["Patrick"]},
+    "expected_error": "TAG_CONTEXT_ONLY"
+  },
+  {
+    "name": "ambiguous_israel_rejected",
+    "input": {"title": "普通标题", "scripture": "创世记 32:28", "manual_tags": ["以色列"]},
+    "expected_error": "TAG_AMBIGUOUS"
+  },
+  {
+    "name": "english_ambiguous_israel_rejected",
+    "input": {"title": "普通标题", "scripture": "创世记 32:28", "manual_tags": ["Israel"]},
+    "expected_error": "TAG_AMBIGUOUS"
+  },
+  {
+    "name": "aliased_author_only_rejected",
+    "input": {"title": "普通标题", "scripture": "使徒行传 9:1", "author": "Paul", "manual_tags": ["Paul"]},
+    "expected_error": "TAG_CONTEXT_ONLY"
+  },
+  {
+    "name": "too_few_precise_tags_fail_closed",
+    "input": {"title": "普通标题", "scripture": "", "manual_tags": ["Grace"]},
+    "expected_error": "TAG_COUNT_TOO_LOW"
+  },
+  {
+    "name": "too_many_tags_fail_closed",
+    "input": {"title": "普通标题", "scripture": "创世记 1:1", "manual_tags": ["恩典", "盼望", "复活", "顺服", "安息", "救恩"]},
+    "expected_error": "TAG_COUNT_TOO_HIGH"
+  },
+  {
+    "name": "empty_manual_tag_rejected",
+    "input": {"title": "祷告", "scripture": "诗篇 5:1", "manual_tags": [" "]},
+    "expected_error": "TAG_EMPTY"
+  },
+  {
+    "name": "invalid_character_rejected",
+    "input": {"title": "祷告", "scripture": "诗篇 5:1", "manual_tags": ["恩典/真理"]},
+    "expected_error": "TAG_INVALID_CHARACTER"
+  },
+  {
+    "name": "overlong_tag_rejected",
+    "input": {"title": "祷告", "scripture": "诗篇 5:1", "manual_tags": ["这是一个超过三十个字符并且不适合作为检索标签的非常非常非常长的人工标签"]},
+    "expected_error": "TAG_TOO_LONG"
+  }
+]

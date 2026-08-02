@@ -24,8 +24,16 @@ const revisionMeta = document.querySelector("[data-revision-meta]");
 const paginations = Array.from(document.querySelectorAll("[data-pagination]"));
 const tagPresets = document.querySelector("[data-tag-presets]");
 const BACKUP_PREFIX = "ronniecross-editor-backup-";
-const COMMON_TAGS = ["耶稣基督", "福音", "恩典", "信心", "悔改"];
-const GENERIC_TAGS = new Set(["分享", "灵命成长", "教会讲道", "查经", "生命反思"]);
+const tagRulesPromise = fetch("/admin/tag-rules.json", { cache: "no-store" })
+  .then((response) => {
+    if (!response.ok) throw new Error(`标签规则加载失败（HTTP ${response.status}）`);
+    return response.json();
+  })
+  .then((rules) => {
+    if (!globalThis.RonnieTagPipeline) throw new Error("Tag Pipeline 模块未加载");
+    globalThis.RonnieTagPipeline.validateRules(rules);
+    return rules;
+  });
 
 let token = "";
 let posts = [];
@@ -117,10 +125,11 @@ function addTag(tag) {
   setTags([...currentTags(), tag]);
 }
 
-function renderTagPresets() {
+async function renderTagPresets() {
   if (!tagPresets) return;
+  const rules = await tagRulesPromise;
   tagPresets.replaceChildren();
-  COMMON_TAGS.forEach((tag) => {
+  rules.admin_presets.forEach((tag) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = tag;
@@ -383,16 +392,6 @@ function normalizeScripture(value) {
     .replace(/\s*:\s*/g, ":")
     .replace(/\s*-\s*/g, "-")
     .replace(/\s+/g, " ");
-}
-
-function scriptureBook(value) {
-  const match = normalizeScripture(value).match(/^([\u4e00-\u9fff]+?)\s*\d/);
-  return match?.[1] || "";
-}
-
-function normalizedSeoTags() {
-  const book = scriptureBook(form.elements.scripture.value);
-  return Array.from(new Set([book, ...currentTags()].filter(Boolean)));
 }
 
 function articleStatus(post) {
@@ -715,22 +714,36 @@ function slugify(value) {
   return slug || `article-${crypto.randomUUID().slice(0, 8)}`;
 }
 
-function formData(draft) {
-  const tags = normalizedSeoTags();
-  setTags(tags);
+async function formData(draft) {
+  const title = form.elements.title.value.trim();
+  const scripture = normalizeScripture(form.elements.scripture.value);
+  const category = form.elements.category.value;
+  const author = form.elements.author.value.trim() || "Ronnie";
+  const rules = await tagRulesPromise;
+  const tagResult = globalThis.RonnieTagPipeline.buildTags(
+    {
+      title,
+      scripture,
+      category,
+      author,
+      manual_tags: currentTags()
+    },
+    rules
+  );
+  setTags(tagResult.tags);
   const firstPublication = !draft && !currentFrontmatter.publishedAt && (!currentPath || currentFrontmatter.draft === true);
   return {
     ...currentFrontmatter,
     ...(firstPublication ? { publishedAt: new Date().toISOString() } : {}),
     articleId:
       currentFrontmatter.articleId || `post-${crypto.randomUUID()}`,
-    title: form.elements.title.value.trim(),
+    title,
     description: form.elements.description.value.trim(),
     date: form.elements.date.value,
-    tags,
-    category: form.elements.category.value,
-    scripture: normalizeScripture(form.elements.scripture.value),
-    author: form.elements.author.value.trim() || "Ronnie",
+    tags: tagResult.tags,
+    category,
+    scripture,
+    author,
     reviewed: form.elements.reviewed.checked,
     draft,
     source: form.elements.source.value.trim()
@@ -745,13 +758,6 @@ function validatePost(data, draft) {
   if (!data.category) errors.push("请选择文章分类");
   if (!draft && !bodyInput.value.trim()) errors.push("请填写文章正文");
   if (!draft && !data.description) errors.push("请填写内容摘要");
-  if (!draft && (data.tags.length < 2 || data.tags.length > 6)) {
-    errors.push("发布文章需要 2–6 个精准标签；系统会自动补入经文书卷名。");
-  }
-  const genericTags = data.tags.filter((tag) => GENERIC_TAGS.has(tag));
-  if (!draft && genericTags.length) {
-    errors.push("请移除通用标签：" + genericTags.join("、") + "。改用核心人物、地点或主题标签。");
-  }
   if (
     data.scripture &&
     !/[\u4e00-\u9fff]+\s*\d+(?::\d+)?(?:-\d+)?/.test(data.scripture)
@@ -777,7 +783,15 @@ async function savePost(draft) {
   ) {
     return;
   }
-  const data = formData(draft);
+  let data;
+  try {
+    data = await formData(draft);
+  } catch (error) {
+    const code = error?.code ? ` [${error.code}]` : "";
+    setEditorMessage(`Tag Pipeline${code}：${error.message || "标签规则加载或校验失败"}`, "error");
+    revealEditorMessage();
+    return;
+  }
   form.elements.scripture.value = data.scripture;
   const validation = validatePost(data, draft);
   if (validation.errors.length) {
@@ -1191,7 +1205,9 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 token = getToken();
-renderTagPresets();
+renderTagPresets().catch((error) => {
+  setEditorMessage(`Tag Pipeline：${error.message || "标签规则加载失败"}`, "error");
+});
 if (token) {
   authPanel.hidden = true;
   manager.hidden = false;

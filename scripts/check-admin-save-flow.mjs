@@ -6,6 +6,11 @@ import { fileURLToPath } from "node:url";
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const editorPath = path.join(rootDir, "assets", "admin", "editor.js");
 const decapPath = path.join(rootDir, "assets", "admin", "decap.js");
+const editorHtmlPath = path.join(rootDir, "assets", "admin", "editor.html");
+const decapHtmlPath = path.join(rootDir, "assets", "admin", "decap.html");
+const tagPipelinePath = path.join(rootDir, "assets", "admin", "tag-pipeline.js");
+const tagRulesPath = path.join(rootDir, "assets", "admin", "tag-rules.json");
+const tagFixturesPath = path.join(rootDir, "scripts", "tests", "fixtures", "tag_pipeline_cases.json");
 const tmpDir = path.join(rootDir, "tmp", "admin-save-flow");
 const fixturePath = path.join(tmpDir, "2026-06-27-phase-7-admin-save-test.md");
 
@@ -88,9 +93,11 @@ function validatePost(data, body, draft) {
 }
 
 async function checkSourceGuards() {
-  const [editorSource, decapSource] = await Promise.all([
+  const [editorSource, decapSource, editorHtml, decapHtml] = await Promise.all([
     readFile(editorPath, "utf8"),
-    readFile(decapPath, "utf8")
+    readFile(decapPath, "utf8"),
+    readFile(editorHtmlPath, "utf8"),
+    readFile(decapHtmlPath, "utf8")
   ]);
 
   const requiredEditorSnippets = [
@@ -105,7 +112,9 @@ async function checkSourceGuards() {
     "findGithubFile(path)",
     "existingArticle.data.articleId === data.articleId",
     "payload.sha = targetSha",
-    "method: \"PUT\""
+    "method: \"PUT\"",
+    "await tagRulesPromise",
+    "RonnieTagPipeline.buildTags"
   ];
 
   for (const snippet of requiredEditorSnippets) {
@@ -116,6 +125,36 @@ async function checkSourceGuards() {
   if (listenerCount !== 1) addError(`decap.js expected one preSave listener, found ${listenerCount}`);
   for (const snippet of ["name: \"preSave\"", "articleId", "createArticleId", "description", "generateFallbackDescription"]) {
     if (!decapSource.includes(snippet)) addError(`decap.js missing preSave snippet: ${snippet}`);
+  }
+  for (const snippet of ["await tagRulesPromise", "RonnieTagPipeline.buildTags", "nextData.set(\"tags\""]) {
+    if (!decapSource.includes(snippet)) addError(`decap.js missing Tag Pipeline snippet: ${snippet}`);
+  }
+  if (!editorHtml.includes("/admin/tag-pipeline.js")) addError("editor.html does not load Tag Pipeline before saving");
+  if (!decapHtml.includes("/admin/tag-pipeline.js")) addError("decap.html does not load Tag Pipeline before preSave");
+  if (editorSource.includes("const GENERIC_TAGS")) addError("editor.js still contains a local generic-tag authority");
+  if (editorSource.includes("const COMMON_TAGS")) addError("editor.js still contains a local tag-preset authority");
+}
+
+async function checkTagPipelineFixtures() {
+  await import(tagPipelinePath);
+  const [rules, fixtures] = await Promise.all([
+    readFile(tagRulesPath, "utf8").then(JSON.parse),
+    readFile(tagFixturesPath, "utf8").then(JSON.parse)
+  ]);
+  globalThis.RonnieTagPipeline.validateRules(rules);
+  for (const fixture of fixtures) {
+    try {
+      const result = globalThis.RonnieTagPipeline.buildTags(fixture.input, rules);
+      if (fixture.expected_error) {
+        addError(`${fixture.name}: expected ${fixture.expected_error}, but Tag Pipeline succeeded`);
+      } else if (JSON.stringify(result.tags) !== JSON.stringify(fixture.expected.tags)) {
+        addError(`${fixture.name}: unexpected tags ${JSON.stringify(result.tags)}`);
+      }
+    } catch (error) {
+      if (!fixture.expected_error || error.code !== fixture.expected_error) {
+        addError(`${fixture.name}: unexpected Tag Pipeline error ${error.code || error.message}`);
+      }
+    }
   }
 }
 
@@ -162,6 +201,7 @@ async function checkLocalFixtureRoundTrip() {
 }
 
 await checkSourceGuards();
+await checkTagPipelineFixtures();
 await checkLocalFixtureRoundTrip();
 
 console.log("Admin Save Flow Check");

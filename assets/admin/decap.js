@@ -54,9 +54,26 @@ function createArticleId() {
   return `post-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+const tagRulesPromise = fetch("/admin/tag-rules.json", { cache: "no-store" })
+  .then((response) => {
+    if (!response.ok) throw new Error(`标签规则加载失败（HTTP ${response.status}）`);
+    return response.json();
+  })
+  .then((rules) => {
+    if (!globalThis.RonnieTagPipeline) throw new Error("Tag Pipeline 模块未加载");
+    globalThis.RonnieTagPipeline.validateRules(rules);
+    return rules;
+  });
+
+function listValue(value) {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value.toJS === "function") return value.toJS();
+  return value ? [String(value)] : [];
+}
+
 CMS.registerEventListener({
   name: "preSave",
-  handler: ({ entry }) => {
+  handler: async ({ entry }) => {
     const data = entry.get("data");
     let nextData = data;
 
@@ -72,6 +89,19 @@ CMS.registerEventListener({
         nextData = nextData.set("description", fallbackDescription);
       }
     }
+
+    const rules = await tagRulesPromise;
+    const tagResult = globalThis.RonnieTagPipeline.buildTags(
+      {
+        title: data.get("title"),
+        scripture: data.get("scripture"),
+        category: data.get("category"),
+        author: data.get("author"),
+        manual_tags: listValue(data.get("tags"))
+      },
+      rules
+    );
+    nextData = nextData.set("tags", tagResult.tags);
 
     return nextData;
   }

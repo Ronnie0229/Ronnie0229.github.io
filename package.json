@@ -9,7 +9,8 @@
     "preview": "node scripts/run_astro.mjs preview",
     "sync": "node scripts/sync_from_github.mjs",
     "check:knowledge": "node scripts/check-knowledge-layer.mjs",
-    "check:admin-save": "node scripts/check-admin-save-flow.mjs"
+    "check:admin-save": "node scripts/check-admin-save-flow.mjs",
+    "check:tags": "node scripts/run_tag_pipeline_fixtures.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0"

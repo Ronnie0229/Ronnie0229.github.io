@@ -180,7 +180,7 @@ npm run sync
 7. 运行 `npm run build`。
 8. 更新 `docs/tasks/current.md`。
 
-分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。`--tags` 为必填 SEO 主题标签，使用逗号分隔；脚本会在有明确经文时自动补入圣经书卷名，并强制最终总数为 2-6 个。不得使用 `分享`、`灵命成长` 等内容类型或分类词代替人物、地点、教义与应用主题。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
+分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。统一 Tag Pipeline 会从 scripture 补入所有明确书卷，并按标题确定性规则推断人物、地点、事件和主题；`--tags` 保留为人工补充入口。人工标签与自动标签统一经过别名规范化、去重、generic 拒绝和最终 2–6 Gate。无法得到足够精准标签时必须 fail closed 并要求补充 `--tags`；不得使用 `分享`、`灵命成长` 等内容类型或分类词凑数。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
 
 ## 讲道流程摘要
 
@@ -196,6 +196,8 @@ npm run sync
 9. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
 10. 检查文章、报告、Git 差异。
 11. 运行构建并记录结果。
+
+讲道发布同样可用 `--tags "核心人物,核心地点,核心主题"` 补充人工标签。导入器不再默认生成 `讲道`、`教会讲道` 或讲员姓名；它从 scripture 与标题执行确定性生成，不足 2 个精准标签时停止并要求人工补充。所有标签规则与分享、Admin 共用 `assets/admin/tag-rules.json`。
 
 讲道发布必须指定单个 `--folder`，不得无参数全量扫描 `data/raw/教会讲道/`。脚本会记录 `docs/内容整理报告/sermon-import-registry.csv`，用于固定 source folder、slug、source SHA-256 与正式文章路径。经文识别若在 folder、文件名、正文前部之间冲突，会停止并要求人工确认。
 
@@ -297,4 +299,3 @@ docs/content-publishing-error-prevention.md
 - 讲道 publish 脚本可能重写旧讲道文章，提交前必须检查并排除无关旧文覆盖。
 - 新文章不出现在构建产物或出现 Duplicate id 时，优先清理 `.astro` 本地缓存后重建。
 - 线上验证优先使用正式域名 `https://ronniecross.com/`，不要只凭 GitHub Pages 默认域名判断失败。
-

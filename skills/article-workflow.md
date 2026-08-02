@@ -128,6 +128,8 @@ python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲�
 python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"
 ```
 
+Both share and sermon commands accept `--tags` for manual precise tags. The website Tag Pipeline also adds scripture books and deterministic title matches. Sermons must never fall back to `讲道`, `教会讲道`, or the speaker name; when deterministic rules produce fewer than two precise tags, rerun dry-run with explicit `--tags`.
+
 If updating the same already-registered sermon source folder, add `--update-existing`; do not use it to create a new post or new slug.
 
 Then add missing article IDs:
@@ -246,6 +248,7 @@ For a draft-only request, do not run build, commit, or push unless the user expl
 - Do not summarize when the user asks for translation.
 - Do not convert sermon translation into a shorter sermon outline.
 - Do not invent missing metadata.
+- Do not assemble frontmatter tags outside the shared Tag Pipeline or bypass its fail-closed result.
 - Do not change scripture meaning to make the text smoother.
 - Do not delete, move, or overwrite NAS protected archive files.
 - Do not touch unrelated untracked files.

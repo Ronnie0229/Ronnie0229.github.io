@@ -1,5 +1,21 @@
 # 当前任务
 
+## 当前任务状态（2026-08-02，统一 Tag Pipeline 建设）
+
+状态：`CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`
+
+已按 `tasks/current/content-workflow-tag-pipeline-construction/task.md` 完成统一标签架构设计和建设。新增单一 JSON 权威规则源、Python/浏览器双运行时，并接入分享、讲道、Custom Admin 草稿/发布和备用 Decap preSave；讲道不再默认输出 `讲道`、`教会讲道` 或讲员姓名。CLI/Admin 人工标签继续保留，统一执行书卷、确定性规则、别名、去重、generic、歧义、字符、context-only 和 2–6 fail-closed Gate。
+
+接口边界：未修改 `website-publication-package/v1.1`，`metadata.tags` 继续兼容可选；未收紧全局 content schema，未迁移历史文章。未修改 posts、raw、processed、Knowledge Layer、RonnieAutomation、n8n 或 NAS。
+
+验证：`python3 -m unittest discover -s scripts/tests` 为 21 tests PASS；`npm run check:tags` 为 17/17；`npm run check:admin-save` 为 0 errors；`npm run check:knowledge` 为 286 篇、0 errors、0 warnings；`npm run build` PASS；Python/Node 语法和 `git diff --check` PASS。
+
+当前实现和任务资料未 commit、未 push，未进行真实发布或生产副作用。完整设计、文件清单、验证、剩余风险和复审攻击面见 `tasks/current/content-workflow-tag-pipeline-construction/`。
+
+下一步：停止建设会话，仅由新的、完全独立会话执行建设后复审。不得自动进入修复、AI 标签、历史标签迁移或生产发布。
+
+---
+
 ## 当前任务状态（2026-08-02，Grayson《信仰的殿堂：雅各》整理发布）
 
 已从 NAS 讲道收件读取 8 页双语 PDF《Final - Hebrews 11_21 JACOB-2.pdf》，按完整讲章模式整理 Grayson 的《希伯来书 11:21、39-40｜信仰的殿堂：雅各》。已保留雅各从抓取到安息的生命脉络、信心的姿态/实践/眼光/悖论四个主点、Bryan Johnson、高山右近和阿拉斯加狗拉雪橇的全部例证、创世记 48:12-20 的交叉祝福、福音邀请、两道分组问题和结尾祷告邀请，没有摘要化。原始 PDF、英文提取稿、中文定稿与 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Grayson，日期为 2026-08-02。

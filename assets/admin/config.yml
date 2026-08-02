@@ -72,6 +72,7 @@ collections:
         widget: "list"
         required: false
         default: []
+        hint: "可填写人物、地点、事件或主题；保存时会统一补书卷、推断确定标签、规范别名并执行 2–6 个标签 Gate。"
       - label: "作者"
         name: "author"
         widget: "string"

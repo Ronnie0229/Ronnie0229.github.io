@@ -13,6 +13,11 @@ from zoneinfo import ZoneInfo
 
 from docx import Document
 
+try:
+    from tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+except ModuleNotFoundError:  # Imported as scripts.import_sermons in unit tests.
+    from scripts.tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "data" / "raw" / "教会讲道"
@@ -290,6 +295,25 @@ def validate_manual_description(description: str, body: str) -> None:
         raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
 
 
+def build_sermon_tags(
+    title: str,
+    scripture: str,
+    raw_tags: str | None,
+    category: str,
+    speaker: str,
+) -> list[str]:
+    try:
+        return build_tags(
+            title=title,
+            scripture=scripture,
+            manual_tags=parse_manual_tags(raw_tags),
+            category=category,
+            author=speaker,
+        ).tags
+    except TagPipelineError as exc:
+        raise SystemExit(f"Tag Pipeline [{exc.code}]: {exc.message}") from exc
+
+
 def sentence_aware_description(body: str, fallback: str) -> str:
     blocks = [block.strip() for block in re.split(r"\n\s*\n", body) if block.strip()]
     sentences: list[str] = []
@@ -386,7 +410,12 @@ def choose_source_file(folder: Path) -> Path | None:
     return None
 
 
-def markdown_for(folder: Path, source_file: Path, description_override: str | None = None) -> tuple[str, str]:
+def markdown_for(
+    folder: Path,
+    source_file: Path,
+    description_override: str | None = None,
+    manual_tags: str | None = None,
+) -> tuple[str, str]:
     _source_date, raw_title, speaker = folder_meta(folder)
     # Website display date must be the publication date, not the source folder date.
     published_at = datetime.now(ZoneInfo("Asia/Tokyo"))
@@ -408,9 +437,7 @@ def markdown_for(folder: Path, source_file: Path, description_override: str | No
 
     description = read_manual_description(folder, description_override)
     validate_manual_description(description, body)
-    tags = ["讲道", category]
-    if speaker:
-        tags.append(speaker)
+    tags = build_sermon_tags(title, scripture, manual_tags, category, speaker)
 
     frontmatter = textwrap.dedent(
         f"""\
@@ -437,6 +464,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--folder", help="Single sermon folder to import.")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
     parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
+    parser.add_argument(
+        "--tags",
+        help="Optional comma-separated precise tags. They are normalized and merged with deterministic scripture/title tags.",
+    )
     parser.add_argument("--update-existing", action="store_true", help="Update the already-registered post for this same source folder.")
     return parser.parse_args()
 
@@ -558,7 +589,7 @@ def main() -> None:
             continue
 
         source_hash = file_sha256(source_file)
-        date, markdown = markdown_for(folder, source_file, args.description)
+        date, markdown = markdown_for(folder, source_file, args.description, args.tags)
         source_date, _raw_title, _speaker = folder_meta(folder)
         title_match = re.search(r'^title: "([^"]+)"', markdown, flags=re.MULTILINE)
         publish_title = title_match.group(1) if title_match else folder.name
@@ -585,6 +616,8 @@ def main() -> None:
         print(f"Folder: {folder.name}")
         print(f"Source file: {source_file.name}")
         print(f"Title: {publish_title}")
+        tags_match = re.search(r'^tags: \[(.*)\]$', markdown, flags=re.MULTILINE)
+        print(f"Tags: {tags_match.group(1) if tags_match else ''}")
         print(f"Slug: {slug}")
         print(f"Processed target: {organized_path}")
         print(f"Post target: {post_path}")
