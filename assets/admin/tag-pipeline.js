@@ -80,7 +80,9 @@
     const aliases = new Map();
     for (const entry of rules.books) {
       const canonical = normalizeText(entry.canonical);
-      aliases.set(lookupKey(canonical), canonical);
+      for (const value of [canonical, ...(entry.aliases ?? [])]) {
+        aliases.set(lookupKey(value), canonical);
+      }
     }
     for (const entry of rules.tags) {
       const canonical = normalizeText(entry.canonical);

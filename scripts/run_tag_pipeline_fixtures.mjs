@@ -28,7 +28,12 @@ if (process.argv.includes("--json")) {
     const actual = results[index];
     if (fixture.expected_error) {
       if (actual.ok || actual.error.code !== fixture.expected_error) failures += 1;
-    } else if (!actual.ok || JSON.stringify(actual.result.tags) !== JSON.stringify(fixture.expected.tags)) {
+    } else if (
+      !actual.ok
+      || JSON.stringify(actual.result.tags) !== JSON.stringify(fixture.expected.tags)
+      || (fixture.expected.evidence
+        && JSON.stringify(actual.result.evidence) !== JSON.stringify(fixture.expected.evidence))
+    ) {
       failures += 1;
     }
   }

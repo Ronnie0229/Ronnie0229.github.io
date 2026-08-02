@@ -7,7 +7,7 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：统一 Tag Pipeline 建设已完成，等待新的独立复审。
+- 当前活动任务：统一 Tag Pipeline 最终独立复审已 `PASS`，已获准正式 Git 关闭。
 
 ## 统一 Tag Pipeline 建设（2026-08-02）
 
@@ -16,7 +16,26 @@
 - `website-publication-package/v1.1` 未升级，兼容可选 `metadata.tags` 保持不变；历史 content schema 和历史文章未修改。
 - 验证：Python 21 tests PASS；浏览器 fixture 17/17；Admin Save Flow 0 errors；Knowledge Layer 286 篇、0 errors、0 warnings；整站 Astro build PASS；`git diff --check` PASS。
 - 未执行真实文章发布、GitHub Admin 保存、部署、通知或 NAS。用户后续明确批准 Git 操作后，实现提交 `d47bf6e` 已推送到 `origin/main`。
-- 权威任务包：`tasks/current/content-workflow-tag-pipeline-construction/`。当前状态为 `CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`；下一步只能是新独立复审。
+- 权威任务包：`tasks/current/content-workflow-tag-pipeline-construction/`。建设阶段曾进入 `CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`；后续独立复审与 P1 修复状态见下节。
+
+### 独立复审 P1 定向修复
+
+- 独立安全与合同复审正式裁决 `FAIL`：人工标签 alias map 遗漏 `books[*].aliases`，Python/Browser 会一致地把 `1 John` 等别名原样写入。
+- 已最小修复两端 alias map；`1 John`、`John`、`约一`、`Genesis` 均进入标准书卷规范化，且与 scripture 自动书卷二次去重。
+- 原失败探针现返回 `['信心', '约翰一书', '恩典']`。
+- 回归：Python 21 tests、Browser 21/21、Admin 0 errors、Knowledge 286 篇 0/0、Astro build 全部 PASS。
+- 修复未修改规则 JSON、历史文章、Knowledge Layer 或 publication contract；未 commit、未 push、未部署、未发布、未操作 NAS。
+- 当前状态：`TARGETED_REMEDIATION_COMPLETE_PENDING_NEW_INDEPENDENT_REVIEW`。
+
+### P1 修复后复审与第二次定向修复
+
+- 修复后独立复审再次裁决 `FAIL`：alias map 算法已正确，但权威字典缺少 `First John`。
+- 已在单一 JSON 权威源中为所有编号书卷补齐 First/Second/Third 英文序数全称，不在 Python/Browser 写特例。
+- 新增 6 个跨运行时 fixture；已确认 First/Second/Third John 和 First Peter 规范化，且中英 scripture/人工别名交叉去重后保留 scripture evidence。
+- 定向回归：Python 21 tests PASS，Browser fixtures 27/27 PASS。完整验证记录见任务 `verification.md`。
+- 第二次修复后独立复审报告正式裁决 `PASS`，P0/P1/P2 均无，独立确认 17/17 编号书卷矩阵与全部回归通过。
+- 剩余风险仅为未来可将 17 卷矩阵全部固化为持久 fixture；不影响本次 `PASS`。
+- 当前状态：`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`；用户已批准 commit 与 push，实际 Git 证据待回填。
 
 ## Search Console canonical alternate 修复（2026-08-01）
 

@@ -58,3 +58,32 @@
 - 实现与首次完整任务资料提交：`d47bf6e feat: unify content tag pipeline`。
 - 用户后续明确批准后已推送到 `origin/main`。
 - 本次交接状态更新只记录实际 commit/push 结果，不修改实现范围。
+
+## P1 Targeted Remediation
+
+- `scripts/tag_pipeline.py`：将 `books[*].aliases` 纳入 Python 人工标签 alias map。
+- `assets/admin/tag-pipeline.js`：同步将书卷 aliases 纳入 Browser 人工标签 alias map。
+- `scripts/tests/fixtures/tag_pipeline_cases.json`：新增 4 个书卷人工别名与 scripture 二次去重合同 fixture。
+- 本任务设计、进度、验证、文件清单、交接以及项目状态文档：记录独立 `FAIL`、定向修复与新复审入口。
+- `INDEPENDENT_SECURITY_CONTRACT_REVIEW.md` 是独立复审会话新增的报告，本修复会话只读保护，未修改其内容。
+
+第一次定向修复没有修改 `assets/admin/tag-rules.json`、历史文章、Knowledge Layer 或 publication contract。
+
+## Second P1 Targeted Remediation
+
+- `assets/admin/tag-rules.json`：规则版本升为 `2026-08-02.2`；所有编号书卷补入 First/Second/Third 英文序数全称别名。
+- `scripts/tests/fixtures/tag_pipeline_cases.json`：新增 First/Second/Third John、First Peter，以及中英 scripture/人工别名交叉去重/evidence fixture，总数由 21 增至 27。
+- `scripts/tests/test_tag_pipeline.py`：支持 fixture 显式断言 evidence。
+- `scripts/run_tag_pipeline_fixtures.mjs`：Browser fixture runner 同步断言可选 evidence。
+- 任务设计、进度、验证、文件清单、交接及项目状态文档：记录第二份独立 `FAIL` 、定向修复和新复审入口。
+- `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md` 是第二次独立复审会话新增报告，本修复会话只读保护，未修改。
+
+本轮没有修改 Python/Browser 算法、历史文章、Knowledge Layer 或 publication contract。
+
+## Final Independent Review And Closure
+
+- `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md`：第三次、最终独立安全与合同复审报告，正式裁决 `PASS`。
+- `progress.md`、`verification.md`、`NEXT_HANDOFF.md`、`tag-pipeline-design.md`、`files-changed.md`：登记最终独立 `PASS`、剩余测试覆盖风险与 Git 闭环。
+- `STATUS.md`、`docs/tasks/current.md`：将当前任务更新为独立复审通过并获准正式关闭。
+
+三份独立报告都将作为审计历史随闭环提交保留；历史 `FAIL` 裁决不会被覆盖或改写。

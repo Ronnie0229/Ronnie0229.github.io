@@ -2,7 +2,7 @@
 
 ## Status
 
-`PASS_PENDING_INDEPENDENT_REVIEW`
+`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
 
 以下记录本建设会话实际执行的本地验证与后续用户授权的 Git 闭环。没有执行真实文章发布、GitHub Admin 写入、部署、通知或 NAS。
 
@@ -113,3 +113,151 @@ remote_range=b01b112..d47bf6e
 ```
 
 push 前执行 `git fetch origin`，`git rev-list --left-right --count HEAD...origin/main` 为 `0 0`，没有远端漂移。Git 操作没有触发真实文章发布、Cloudflare 手工部署、通知或 NAS 操作。
+
+## P1 Targeted Remediation Verification
+
+独立复审报告 `INDEPENDENT_SECURITY_CONTRACT_REVIEW.md` 裁决 `FAIL` 后，执行最小定向修复并重新验证。
+
+### 独立失败探针复跑
+
+```shell
+python3 -c "from scripts.tag_pipeline import build_tags; print(build_tags(title='Faith', scripture='', manual_tags=['1 John','Grace']).tags)"
+```
+
+修复后结果：
+
+```text
+['信心', '约翰一书', '恩典']
+```
+
+### 完整回归
+
+```text
+python3 -m unittest discover -s scripts/tests
+PASS: 21 tests
+
+npm run check:tags
+PASS: 21/21 browser fixtures
+
+npm run check:admin-save
+PASS: Errors 0
+
+npm run check:knowledge
+PASS: 286 posts, 0 errors, 0 warnings
+
+npm run build
+PASS: Astro static build
+
+python3 -m py_compile scripts/tag_pipeline.py
+PASS
+
+node --check assets/admin/tag-pipeline.js
+PASS
+
+git diff --check
+PASS
+```
+
+新增合同 fixture：
+
+- `1 John` → `约翰一书`；
+- `John` → `约翰福音`；
+- `约一` → `约翰一书`；
+- scripture 自动 `创世记` 与人工 `Genesis` → 单一 `创世记`。
+
+构建产物浏览器 Pipeline 与源码一致：
+
+```text
+tag-pipeline.js source/dist SHA-256 = 580c7090e128b30d12caad74cfaf0ab8e75f96363f5af67f426abdefdc0823fb
+tag-rules.json  source/dist SHA-256 = 052a827ed0e65b473d98981bdf49433f7cbceca856cae7e8071bebed3f9f757c
+```
+
+受保护范围 diff 检查无输出。本轮未 commit、未 push，等待新独立复审。
+
+## Second P1 Targeted Remediation Verification
+
+`INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md` 再次裁决 `FAIL`，原因为权威字典遗漏 `First John`。本轮将全部编号书卷的英文序数全称统一登记于 `assets/admin/tag-rules.json`。
+
+定向探针结果：
+
+```text
+First John    -> ['信心', '约翰一书', '恩典']
+Second John   -> ['信心', '约翰二书', '恩典']
+Third John    -> ['信心', '约翰三书', '恩典']
+First Peter   -> ['信心', '彼得前书', '恩典']
+Second Timothy -> ['信心', '提摩太后书', '恩典']
+```
+
+scripture `约翰一书 1:1` + 人工 `First John`，以及 scripture `First John 1:1` + 人工 `1 John`，结果均为 `['约翰一书', '信心']`，evidence 均为 `约翰一书/scripture`、`信心/rule`，没有重复 manual 书卷标签。
+
+新增 6 个 fixture 后：
+
+```text
+python3 -m unittest discover -s scripts/tests
+PASS: 21 tests
+
+npm run check:tags
+PASS: 27/27 browser fixtures
+```
+
+完整 Admin、Knowledge、build、语法、diff、构建产物 hash 与受保护范围检查在本节后续验证中重新执行并记录。
+
+### 第二次定向修复完整回归
+
+```text
+npm run check:admin-save
+PASS: Errors 0
+
+npm run check:knowledge
+PASS: 286 posts, 0 errors, 0 warnings
+
+npm run build
+PASS: Astro static build
+
+Python/Node syntax checks
+PASS
+
+git diff --check
+PASS
+
+git diff --name-only -- src/content/posts data src/lib/knowledge scripts/check-knowledge-layer.mjs
+PASS: no output
+```
+
+编号书卷英文序数全称字典完整性探针：17/17 通过，无缺失项。
+
+构建产物与源文件一致：
+
+```text
+tag-rules.json  source/dist SHA-256 = 85d4862acd63af34a11e3d2b5511a7f3d6659e826ec60bd5031f81e07d7b23f7
+tag-pipeline.js source/dist SHA-256 = 580c7090e128b30d12caad74cfaf0ab8e75f96363f5af67f426abdefdc0823fb
+```
+
+本轮只新增权威字典别名与测试/文档；Python/Browser alias 算法保留第一次定向修复的既有改动。未 commit、未 push、未部署、未发布、未操作 NAS。
+
+## Final Independent Security And Contract Review
+
+独立报告：`INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md`。
+
+最终正式裁决：`PASS`。
+
+独立复审重新执行并通过：
+
+```text
+Python: 21 tests PASS
+Browser: 27/27 fixtures PASS
+Admin Save Flow: Errors 0
+Knowledge Layer: 286 posts, 0 errors, 0 warnings
+Astro build: 328 pages PASS
+Python/Node syntax: PASS
+git diff --check: PASS
+numbered-book hard-coded audit matrix: 17/17 PASS
+```
+
+独立复审未发现 P0、P1、P2 或 P3 实现缺陷，且确认历史文章、历史 tags、Knowledge Layer、publication contract、RonnieAutomation、n8n 和 NAS 均未被修改。
+
+剩余测试覆盖风险：当前持久 fixtures 以 `First Peter` 代表约翰书信以外的其它编号书卷，尚未逐项固化全部 17 卷矩阵。独立硬编码探针已验证当前实现 17/17 正确，因此该建议不影响本次 `PASS`。
+
+## Git Closure Authorization
+
+用户已明确批准在检查完整 diff 和任务文档状态后进入正式关闭、commit 和 push。关闭前检查已覆盖 tracked/untracked 变更、三份独立报告、任务文档和受保护范围。实际 Git 证据将在成功后回填。

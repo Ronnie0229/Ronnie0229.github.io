@@ -25,6 +25,68 @@
     "expected": {"tags": ["创世记", "该隐", "恩典"]}
   },
   {
+    "name": "manual_numbered_english_book_alias",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["1 John", "Grace"]},
+    "expected": {"tags": ["信心", "约翰一书", "恩典"]}
+  },
+  {
+    "name": "manual_spelled_first_john_alias",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["First John", "Grace"]},
+    "expected": {"tags": ["信心", "约翰一书", "恩典"]}
+  },
+  {
+    "name": "manual_spelled_second_john_alias",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["Second John", "Grace"]},
+    "expected": {"tags": ["信心", "约翰二书", "恩典"]}
+  },
+  {
+    "name": "manual_spelled_third_john_alias",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["Third John", "Grace"]},
+    "expected": {"tags": ["信心", "约翰三书", "恩典"]}
+  },
+  {
+    "name": "manual_spelled_numbered_book_alias_policy",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["First Peter", "Grace"]},
+    "expected": {"tags": ["信心", "彼得前书", "恩典"]}
+  },
+  {
+    "name": "manual_english_book_alias",
+    "input": {"title": "Prayer", "scripture": "", "manual_tags": ["John", "Grace"]},
+    "expected": {"tags": ["祷告", "约翰福音", "恩典"]}
+  },
+  {
+    "name": "manual_chinese_book_alias",
+    "input": {"title": "Faith", "scripture": "", "manual_tags": ["约一", "Grace"]},
+    "expected": {"tags": ["信心", "约翰一书", "恩典"]}
+  },
+  {
+    "name": "manual_book_alias_deduplicates_scripture_book",
+    "input": {"title": "Faith", "scripture": "创世记 1:1", "manual_tags": ["Genesis"]},
+    "expected": {"tags": ["创世记", "信心"]}
+  },
+  {
+    "name": "manual_spelled_alias_deduplicates_scripture_book",
+    "input": {"title": "Faith", "scripture": "约翰一书 1:1", "manual_tags": ["First John"]},
+    "expected": {
+      "tags": ["约翰一书", "信心"],
+      "evidence": [
+        {"tag": "约翰一书", "source": "scripture"},
+        {"tag": "信心", "source": "rule"}
+      ]
+    }
+  },
+  {
+    "name": "scripture_spelled_alias_deduplicates_manual_numeric_alias",
+    "input": {"title": "Faith", "scripture": "First John 1:1", "manual_tags": ["1 John"]},
+    "expected": {
+      "tags": ["约翰一书", "信心"],
+      "evidence": [
+        {"tag": "约翰一书", "source": "scripture"},
+        {"tag": "信心", "source": "rule"}
+      ]
+    }
+  },
+  {
     "name": "multiple_scripture_books",
     "input": {"title": "学习祷告", "scripture": "路加福音 11:1-4；马太福音 6:9-13", "manual_tags": []},
     "expected": {"tags": ["路加福音", "马太福音", "祷告"]}

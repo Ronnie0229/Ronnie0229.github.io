@@ -2,7 +2,7 @@
 
 ## Current Status
 
-`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`
+`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
 
 ## Completed
 
@@ -46,4 +46,45 @@
 
 ## Safe Stop
 
-建设已完成。按任务合同停止，等待新的、完全独立的复审会话；不得在本会话自动进入复审、修复、AI 标签或历史迁移。
+## Independent Review And Targeted Remediation
+
+- 独立安全与合同复审报告：`INDEPENDENT_SECURITY_CONTRACT_REVIEW.md`。
+- 正式裁决：`FAIL`。
+- P1：Python/Browser 人工 alias map 遗漏 `books[*].aliases`，导致英文/中文书卷别名原样写入。
+- 已完成最小定向修复：两端都将书卷 canonical 与 aliases 纳入同一 alias map。
+- 新增 `1 John`、`John`、`约一` 和 `Genesis + scripture` 二次去重跨运行时 fixtures；浏览器 fixture 从 17 增至 21。
+- 独立探针已从 `['信心', '1 John', '恩典']` 修正为 `['信心', '约翰一书', '恩典']`。
+- 全部规定验证重新通过；详见 `verification.md`。
+- 本修复未 commit、未 push、未部署、未发布、未操作 NAS。
+
+## Safe Stop
+
+定向修复已完成。停止并等待新的、完全独立的修复后复审；不得在本会话自动作出 PASS、继续修复、进入 AI 标签或历史迁移。
+
+## Second Independent Review And Targeted Remediation
+
+- 第一次 P1 修复后独立复审报告：`INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md`。
+- 正式裁决：`FAIL`。
+- 新 P1：alias map 已正确，但权威 Tag Dictionary 遗漏 `First John`，两端会一致地将其当作自由标签。
+- 已将所有编号书卷的英文序数全称加入唯一权威 JSON，规则版本升为 `2026-08-02.2`。
+- 新增 6 个跨运行时 fixture，覆盖 First/Second/Third John、First Peter 同类政策，以及中英 scripture/人工别名交叉去重和 evidence 优先；fixture 总数为 27。
+- 定向探针和 Python/Browser 回归已通过；完整验证见 `verification.md`。
+- 本轮未 commit、未 push、未部署、未发布、未操作 NAS。
+
+## Safe Stop After Second Remediation
+
+第二次定向修复完成后停止，等待新的完全独立复审；本会话不自行裁决 PASS。
+
+## Final Independent Review
+
+- 报告：`INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md`。
+- 最终正式裁决：`PASS`。
+- P0/P1/P2：无；P3：无实现缺陷。
+- 独立验证：Python 21 tests、Browser 27/27、Admin 0 errors、Knowledge 286 posts 0/0、Astro 328 pages、语法与 diff 全部 PASS。
+- 独立硬编码矩阵确认 17/17 编号书卷英文序数全称映射正确。
+- 剩余风险：未将 17 卷矩阵全部固化为持久 fixture；该项不影响 `PASS`，只登记为后续维护建议。
+- 用户已明确批准进入正式关闭、commit 与 push。
+
+## Git Closure Pending
+
+当前先完成关闭前 diff/文档审计，随后执行远程同步检查、提交与推送；实际 commit 和 push 证据将在成功后回填。

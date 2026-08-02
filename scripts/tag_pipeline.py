@@ -108,7 +108,8 @@ def _alias_map(rules: dict[str, Any]) -> dict[str, str]:
     aliases: dict[str, str] = {}
     for entry in rules["books"]:
         canonical = normalize_text(entry["canonical"])
-        aliases[lookup_key(canonical)] = canonical
+        for value in [canonical, *entry.get("aliases", [])]:
+            aliases[lookup_key(value)] = canonical
     for entry in rules["tags"]:
         canonical = normalize_text(entry["canonical"])
         for value in [canonical, *entry.get("aliases", [])]:

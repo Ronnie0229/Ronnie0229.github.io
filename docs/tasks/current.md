@@ -1,5 +1,35 @@
 # 当前任务
 
+## 当前任务状态（2026-08-02，统一 Tag Pipeline 最终关闭）
+
+状态：`INDEPENDENT_REVIEW_PASS_APPROVED_FOR_GIT_CLOSURE`
+
+第一次 P1 修复后独立复审报告 `tasks/current/content-workflow-tag-pipeline-construction/INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md` 再次裁决 `FAIL`：alias map 已正确，但权威 Tag Dictionary 遗漏 `First John`。
+
+已完成第二次最小同类修复：所有编号书卷在单一权威 JSON 中补入 First/Second/Third 英文序数全称；新增 First/Second/Third John、First Peter 和中英 scripture/人工别名交叉去重/evidence 跨运行时 fixtures。
+
+定向验证：Python 21 tests PASS；Browser fixtures 27/27 PASS；`First John` 现规范化为 `约翰一书`，scripture 去重保留 scripture evidence。完整 Admin、Knowledge、Astro build、语法、diff 与受保护范围验证见任务 `verification.md`。
+
+第二次修复后独立报告 `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md` 已正式裁决 `PASS`：P0/P1/P2 均无，无 P3 实现缺陷；Python 21 tests、Browser 27/27、Admin 0 errors、Knowledge 286 posts 0/0、Astro 328 pages 和 17/17 编号书卷矩阵均通过。
+
+本轮未修改历史文章、Knowledge Layer、publication contract、RonnieAutomation、n8n 或 NAS；未部署、未发布。用户已批准在完整 diff 和任务文档检查后执行 commit 与 push，Git 证据待成功后回填。唯一剩余建议是未来将全 17 卷矩阵固化为持久 fixture，不影响本次 `PASS`。
+
+---
+
+## 当前任务状态（2026-08-02，统一 Tag Pipeline P1 定向修复）
+
+状态：`TARGETED_REMEDIATION_COMPLETE_PENDING_NEW_INDEPENDENT_REVIEW`
+
+独立安全与合同复审报告 `tasks/current/content-workflow-tag-pipeline-construction/INDEPENDENT_SECURITY_CONTRACT_REVIEW.md` 正式裁决 `FAIL`：Python 与 Browser 人工 alias map 遗漏 `books[*].aliases`，使 `1 John` 等书卷别名原样写入。
+
+已完成最小定向修复：两端统一登记书卷 canonical 与 aliases；新增 `1 John`、`John`、`约一` 和 `Genesis + scripture` 去重跨运行时 fixtures。原失败探针现在返回 `['信心', '约翰一书', '恩典']`。
+
+验证：Python 21 tests PASS；Browser fixtures 21/21；Admin Save Flow 0 errors；Knowledge Layer 286 篇、0 errors、0 warnings；Astro build PASS；Python/Node 语法与 `git diff --check` PASS；受保护范围 diff 无输出。
+
+本轮未修改历史文章、Knowledge Layer、规则 JSON、publication contract、RonnieAutomation、n8n 或 NAS；未 commit、未 push、未部署、未发布。下一步只能由新的完全独立会话执行修复后复审。
+
+---
+
 ## 当前任务状态（2026-08-02，统一 Tag Pipeline 建设）
 
 状态：`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`

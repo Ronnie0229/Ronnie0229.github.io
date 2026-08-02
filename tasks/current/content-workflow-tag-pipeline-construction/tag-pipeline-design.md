@@ -249,3 +249,21 @@ Knowledge Layer 只运行既有检查，不修改其实现或历史文章以消�
 实现与本设计一致：单一规则源、Python/浏览器双运行时、分享/讲道/Custom Admin/Decap 接入、契约兼容、fail-closed、历史读取兼容和跨运行时 fixture 均已落地。实现没有要求升级 `website-publication-package/v1.1`，没有修改全局 content schema，也没有修改历史文章或 Knowledge Layer。
 
 独立复审仍应攻击：规则加载失败、Decap 异步 preSave、书卷别名重叠、别名规范化后 generic/author 绕过、超过 6 个候选时的静默截断风险，以及任何仍可直接写 tags 的入口。
+
+## 13. P1 定向修复设计补正
+
+独立安全与合同复审裁决 `FAIL`，确认人工标签 alias map 只登记书卷 canonical、遗漏 `books[*].aliases`。定向修复将书卷与普通标签统一按 `[canonical, ...aliases]` 登记到人工 alias map；因此 `1 John`、`John`、`Genesis`、`约一` 等 CLI/Admin/Publication Package 人工标签会规范化为标准中文书卷名。
+
+scripture 层仍先生成书卷标签；人工书卷别名映射到相同 canonical 后由既有二次去重保留 scripture evidence，避免重复写入。该补正不修改规则 JSON、接口合同、历史文章或选择顺序。
+
+## 14. P1 第二次定向修复设计补正
+
+第一次修复后独立复审再次裁决 `FAIL`：alias map 算法已正确，但权威字典遗漏 `First John`。本轮不改算法，只在同一权威 JSON 中实施系统化的英文序数全称政策：所有带编号的正典书卷补入 `First`/`Second`/`Third` 形式，而不在 Python 或 Browser 内写两套特例。
+
+跨运行时 fixture 明确覆盖 `First John`、`Second John`、`Third John`、其它编号书卷代表 `First Peter`，以及 scripture 自动 `约翰一书` + 人工 `First John`、scripture `First John` + 人工 `1 John` 的双向 canonical 二次去重。后两项 fixture 还锁定 evidence 必须保留 `scripture` 优先级。
+
+## 15. 最终独立复审结论
+
+第二次 P1 修复后独立安全与合同复审报告 `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md` 正式裁决 `PASS`，未发现 P0、P1、P2 或实现缺陷。独立审计逐项确认 17 卷编号书卷的英文序数全称映射、John 边界、Unicode/NFKC、顺序、数量 fail closed、scripture evidence 优先和所有统一写入入口。
+
+独立复审仅建议未来将全部 17 卷硬编码 expected 矩阵固化为持久回归测试；该项为后续维护建议，不影响本次 `PASS` 或扩展本任务实现范围。

@@ -42,6 +42,8 @@ class TagPipelineTests(unittest.TestCase):
                 else:
                     result = build_tags(rules=self.rules, **fixture["input"])
                     self.assertEqual(fixture["expected"]["tags"], result.tags)
+                    if "evidence" in fixture["expected"]:
+                        self.assertEqual(fixture["expected"]["evidence"], result.evidence)
                     self.assertTrue(all(item["source"] in {"scripture", "rule", "manual"} for item in result.evidence))
 
     def test_share_entry_uses_pipeline_and_preserves_manual_tags(self) -> None:
