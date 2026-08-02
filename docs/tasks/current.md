@@ -4,7 +4,7 @@
 
 已从 NAS 讲道收件读取 8 页双语 PDF《Final - Hebrews 11_21 JACOB-2.pdf》，按完整讲章模式整理 Grayson 的《希伯来书 11:21、39-40｜信仰的殿堂：雅各》。已保留雅各从抓取到安息的生命脉络、信心的姿态/实践/眼光/悖论四个主点、Bryan Johnson、高山右近和阿拉斯加狗拉雪橇的全部例证、创世记 48:12-20 的交叉祝福、福音邀请、两道分组问题和结尾祷告邀请，没有摘要化。原始 PDF、英文提取稿、中文定稿与 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Grayson，日期为 2026-08-02。
 
-验证结果：npm run check:knowledge 通过，286 篇、0 错误、0 警告；npm run build 通过，328 个页面构建完成。提交、push 与部署结果将在完成后补记。
+验证结果：npm run check:knowledge 通过，286 篇、0 错误、0 警告；npm run build 通过，328 个页面构建完成。正文与发布记录提交为 f62ff19；push 与线上部署结果将在完成后补记。
 
 ---
 
