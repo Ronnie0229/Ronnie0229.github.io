@@ -15,7 +15,7 @@
 - 讲道导入不再默认生成 `讲道`、`教会讲道` 或讲员姓名；规则不足时 fail closed 并要求人工 `--tags`。
 - `website-publication-package/v1.1` 未升级，兼容可选 `metadata.tags` 保持不变；历史 content schema 和历史文章未修改。
 - 验证：Python 21 tests PASS；浏览器 fixture 17/17；Admin Save Flow 0 errors；Knowledge Layer 286 篇、0 errors、0 warnings；整站 Astro build PASS；`git diff --check` PASS。
-- 未执行真实文章发布、GitHub Admin 保存、部署、通知、NAS、commit 或 push。
+- 未执行真实文章发布、GitHub Admin 保存、部署、通知或 NAS。用户后续明确批准 Git 操作后，实现提交 `d47bf6e` 已推送到 `origin/main`。
 - 权威任务包：`tasks/current/content-workflow-tag-pipeline-construction/`。当前状态为 `CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`；下一步只能是新独立复审。
 
 ## Search Console canonical alternate 修复（2026-08-01）

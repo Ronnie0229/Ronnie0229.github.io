@@ -2,7 +2,7 @@
 
 ## 当前任务状态（2026-08-02，统一 Tag Pipeline 建设）
 
-状态：`CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`
+状态：`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`
 
 已按 `tasks/current/content-workflow-tag-pipeline-construction/task.md` 完成统一标签架构设计和建设。新增单一 JSON 权威规则源、Python/浏览器双运行时，并接入分享、讲道、Custom Admin 草稿/发布和备用 Decap preSave；讲道不再默认输出 `讲道`、`教会讲道` 或讲员姓名。CLI/Admin 人工标签继续保留，统一执行书卷、确定性规则、别名、去重、generic、歧义、字符、context-only 和 2–6 fail-closed Gate。
 
@@ -10,7 +10,7 @@
 
 验证：`python3 -m unittest discover -s scripts/tests` 为 21 tests PASS；`npm run check:tags` 为 17/17；`npm run check:admin-save` 为 0 errors；`npm run check:knowledge` 为 286 篇、0 errors、0 warnings；`npm run build` PASS；Python/Node 语法和 `git diff --check` PASS。
 
-当前实现和任务资料未 commit、未 push，未进行真实发布或生产副作用。完整设计、文件清单、验证、剩余风险和复审攻击面见 `tasks/current/content-workflow-tag-pipeline-construction/`。
+用户在建设完成后明确批准 commit 和 push。实现与任务资料提交为 `d47bf6e`（`feat: unify content tag pipeline`），已成功推送到 `origin/main`。未进行真实发布、部署、通知、NAS 或其它生产副作用。完整设计、文件清单、验证、剩余风险和复审攻击面见 `tasks/current/content-workflow-tag-pipeline-construction/`。
 
 下一步：停止建设会话，仅由新的、完全独立会话执行建设后复审。不得自动进入修复、AI 标签、历史标签迁移或生产发布。
 

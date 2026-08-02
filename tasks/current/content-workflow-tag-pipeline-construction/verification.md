@@ -4,7 +4,7 @@
 
 `PASS_PENDING_INDEPENDENT_REVIEW`
 
-以下只记录本建设会话实际执行的本地验证。没有执行真实文章发布、GitHub Admin 写入、部署、通知、NAS、commit 或 push。
+以下记录本建设会话实际执行的本地验证与后续用户授权的 Git 闭环。没有执行真实文章发布、GitHub Admin 写入、部署、通知或 NAS。
 
 ## Focused Tag Pipeline
 
@@ -99,4 +99,17 @@ git diff --name-only -- src/content/posts data src/lib/knowledge scripts/check-k
 - 真实分享/讲道生产 dry-run 或 publish：本任务禁止真实内容发布，测试使用固定 fixture 和临时 TXT。
 - 真实 Custom Admin/Decap GitHub PUT：会产生外部写入，未获授权。
 - Cloudflare 部署、线上验收、邮件、NAS：均在禁止范围。
-- commit/push：未获授权且任务要求停止等待独立复审。
+
+## Git Closure
+
+用户在建设完成后明确批准 commit 和 push。
+
+```text
+implementation_commit=d47bf6e
+commit_subject=feat: unify content tag pipeline
+push_target=origin/main
+push_result=success
+remote_range=b01b112..d47bf6e
+```
+
+push 前执行 `git fetch origin`，`git rev-list --left-right --count HEAD...origin/main` 为 `0 0`，没有远端漂移。Git 操作没有触发真实文章发布、Cloudflare 手工部署、通知或 NAS 操作。

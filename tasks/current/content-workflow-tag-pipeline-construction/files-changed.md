@@ -52,3 +52,9 @@
 - `scripts/check-knowledge-layer.mjs`
 - workspace-control interfaces/schemas
 - RonnieAutomation / n8n / NAS
+
+## Git Closure
+
+- 实现与首次完整任务资料提交：`d47bf6e feat: unify content tag pipeline`。
+- 用户后续明确批准后已推送到 `origin/main`。
+- 本次交接状态更新只记录实际 commit/push 结果，不修改实现范围。

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-`CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`
+`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`
 
 ## Completed
 
@@ -18,6 +18,7 @@
 - 建立 17 个固定跨运行时 fixture，以及分享、讲道、Admin、generic、duplicate、alias、rule generation、边界、歧义和回归测试。
 - 更新 SEO、内容工作流、防错清单、Admin 使用说明和 Codex 内容工作流文档。
 - 完成全部规定验证；结果见 `verification.md`。
+- 用户在建设完成后另行明确批准 commit 和 push；实现提交 `d47bf6e` 已成功推送到 `origin/main`。
 
 ## Boundaries Preserved
 
@@ -25,7 +26,7 @@
 - 未修改 GEO Knowledge Layer 实现、content schema、sitemap、RSS、canonical 或相关文章逻辑。
 - 未修改 RonnieAutomation、n8n workflow 或 NAS。
 - 未接入 AI Provider，未使用模型生成标签。
-- 未执行真实文章生产发布、部署、邮件、commit 或 push。
+- 未执行真实文章生产发布、部署、邮件或 NAS。Git commit/push 仅在用户后续明确授权后执行。
 - 未修改 `website-publication-package/v1.1`；`metadata.tags` 继续兼容可选。
 
 ## Not Implemented

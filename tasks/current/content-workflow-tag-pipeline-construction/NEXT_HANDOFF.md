@@ -2,7 +2,7 @@
 
 ## Current Status
 
-`CONSTRUCTION_COMPLETE_PENDING_INDEPENDENT_REVIEW`
+`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`
 
 ## Required Next Session
 
@@ -75,7 +75,7 @@ git status --short
 ## Git And Side Effects
 
 - 分支：`main`，开始时与 `origin/main` 一致。
-- 当前实现与任务资料均未 commit、未 push。
+- 用户在建设完成后明确批准 commit 和 push；实现提交 `d47bf6e feat: unify content tag pipeline` 已成功推送到 `origin/main`。
 - `tasks/` 在接管时已经是未跟踪目录，本会话保留并更新任务产物。
 - 没有生产发布、部署、通知、NAS、RonnieAutomation 或 n8n 副作用。
 
