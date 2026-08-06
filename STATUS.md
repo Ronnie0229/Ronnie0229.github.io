@@ -7,7 +7,7 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：《骆驼穿过针眼是什么意思》已完成本地整理、发布生成和构建验证，等待 Git 提交、push、Cloudflare 部署与邮件发送授权。
+- 当前活动任务：《骆驼穿过针眼是什么意思》已完成整理发布、Git push、Cloudflare 部署与邮件通知，任务正式关闭。
 
 ## 统一 Tag Pipeline 建设（2026-08-02）
 
