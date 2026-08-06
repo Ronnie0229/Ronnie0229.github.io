@@ -1,5 +1,17 @@
 # 当前任务
 
+## 当前任务状态（2026-08-06，《骆驼穿过针眼是什么意思》分享整理发布）
+
+状态：`LOCAL_PUBLICATION_COMPLETE_PENDING_GIT_AUTHORIZATION`
+
+已从 `NAS/分享收件` 接收英文 PDF `Camel through the Eye of a Needle.pdf`，完成 SHA 校验入库、英文内容提取、中文忠实整理和网站发布。文章以马太福音 19:23-26 为主经文，完整保留年轻财主的上下文、“针眼之门”与字面针眼两种解释、财富对人的属灵拦阻、救恩唯独出于神的恩典，以及知足和积攒天上财宝的应用。原稿末尾将箴言 30:8-9 误标为箴言 3:8-9，整理稿已按实际经文校正。
+
+生成文件包括原始 PDF、中文 raw、processed mirror 和正式 post。正式文章 slug 为 `2026-08-06-camel-through-eye-of-needle`，`articleId=post-fa05168ade9ea9b8`，作者 Ronnie，分类 `灵命成长`，标签为 `马太福音、救恩、财富、倚靠神、知足`。发布后发现导入器会压缩多行 blockquote 并把独立问句误识别为标题，已对本篇 processed/post 做最小格式修正并保持两处正文一致。
+
+验证：`npm run sync` 通过；分享收件只读检查确认 1 个文件；dry-run 通过；正式 publish 成功；`node scripts/add_article_ids.mjs` 检查 287 篇、0 个缺失；`python3 scripts/check_content_mirrors.py` 检查 574 项、0 errors；`npm run check:knowledge` 为 287 篇、0 errors、0 warnings；首次格式修正后构建出现本地内容缓存重复 ID 警告，随后执行 `npm run build -- --force` 清除 data store，329 pages 构建通过且警告消失。当前未 commit、未 push、未部署、未发送邮件；等待用户明确批准 Git 与生产副作用。
+
+---
+
 ## 当前任务状态（2026-08-02，统一 Tag Pipeline 最终关闭）
 
 状态：`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
