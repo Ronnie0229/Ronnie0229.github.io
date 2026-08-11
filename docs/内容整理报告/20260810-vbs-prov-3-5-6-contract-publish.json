@@ -1,0 +1,61 @@
+{
+  "interface": "website-publication-package-controlled-consumption",
+  "version": "1.0",
+  "contract_version": "1.1",
+  "mode": "publish",
+  "validation_passed": true,
+  "read_only": false,
+  "command": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/scripts/content_workflow.py",
+    "publish",
+    "sermon",
+    "--folder",
+    "data/raw/教会讲道/20260810_箴言3:5-6_VBS2026_Patrick",
+    "--description",
+    "Patrick 以箴言 3:5-6 分享如何在惧怕和困惑中尽心信靠神、在一切所行的事上认定他，并因耶稣基督的十字架确信神的良善与引导。",
+    "--tags",
+    "箴言,信靠神,信心,惧怕,十字架"
+  ],
+  "slug": "2026-08-10-箴言-3-5-6｜VBS-2026｜箴言-3-5-6",
+  "notification_policy": "normal_first_publish",
+  "archive_status": "pending",
+  "validator_report": {
+    "interface": "website-publication-package-consumer-validation",
+    "version": "1.0",
+    "contract": "../讲道整理/发布记录/publication-contracts/20260810-sermon-vbs-prov-3-5-6.json",
+    "consumer": "个人网页项目",
+    "read_only": true,
+    "pass": true,
+    "checks": {
+      "schema_shape_valid": true,
+      "interface_and_version_valid": true,
+      "metadata_minimum_present": true,
+      "metadata_content_type_matches": true,
+      "prepublish_path_present": true,
+      "prepublish_within_content_root": true,
+      "prepublish_exists": true,
+      "prepublish_sha_current": true,
+      "official_chinese_path_present": true,
+      "official_chinese_within_content_root": true,
+      "official_chinese_exists": true,
+      "official_chinese_sha_present": true,
+      "official_chinese_sha_current": true,
+      "english_source_path_present": true,
+      "english_source_within_content_root": true,
+      "english_source_exists": true,
+      "english_source_sha_present": true,
+      "english_source_sha_current": true,
+      "fidelity_status_accepted": true,
+      "notification_policy_accepted": true,
+      "archive_status_accepted": true
+    },
+    "errors": [],
+    "normalized": {
+      "slug": "2026-08-10-箴言-3-5-6｜VBS-2026｜箴言-3-5-6",
+      "content_type": "sermon",
+      "notification_policy": "normal_first_publish",
+      "archive_status": "pending"
+    }
+  }
+}

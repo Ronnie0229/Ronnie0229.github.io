@@ -1,5 +1,15 @@
 # 当前任务
 
+## 当前任务状态（2026-08-11，《箴言 3:5-6｜VBS2026》讲道整理发布）
+
+状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+
+已从受控讲道整理流程接收《VBS 2026｜箴言 3:5-6》正式英文源与经独立 E1 忠实度复审 PASS 的中文定稿；PDF source visual review 亦已由用户明确确认 PASS。网站侧 `website-publication-package/v1.1` plan/dry-run 经过两次 fail-closed 修正后通过：先修正 raw 目录经文解析为箴言 3:5-6，再移除通用标签，最终使用精准标签 `箴言、信靠神、信心、惧怕、十字架`。
+
+正式本地导入已生成 `data/processed/整理后的讲道文章/2026-08-10-箴言-3-5-6｜vbs2026.md` 与 `src/content/posts/2026-08-10-箴言-3-5-6｜vbs2026.md`；articleId 已补齐。验证：`npm run sync` PASS；contract dry-run PASS；288 篇文章 0 缺 articleId；mirror 576 项 0 errors；Knowledge Layer 288 篇 0 errors / 0 warnings；Astro build 330 pages PASS。受保护 NAS 归档已完成，只写入原始 PDF、正式英文原稿、最终中文原稿三类文件，共 3 文件 / 466700 bytes。当前只剩 Git commit/push、Cloudflare 线上正文与 deployment identity、首次发布通知验证。
+
+---
+
 ## 当前任务状态（2026-08-06，《骆驼穿过针眼是什么意思》分享整理发布）
 
 状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
