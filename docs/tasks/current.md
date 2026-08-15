@@ -2,13 +2,13 @@
 
 ## 当前任务状态（2026-08-15，《不义的管家》分享文章整理发布）
 
-状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
 
 已从 `NAS/分享收件` 通过 manifest-only intake 接收 `43不义的管家.docx`，固定 SHA-256=`f89cc2f61d6dc4dc77e7061ab0735e1f55f2edeafed3c6725da1acee8999a3c2`，移动到讲道整理受控原始资料并完成 immutable snapshot / intake closure PASS。源文档本身为中文，无英译中步骤；正式源稿完整保留原文，中文整理稿只做段落层级、标点、明显技术性文字修正，并按受控 Project Bible 核对路加福音 16:1-13。正文实际从 16:1-8 继续解释到 16:13，因此网站主经文登记为 `路加福音 16:1-13`。
 
 网站侧 `npm run sync` PASS；`website-publication-package/v1.1` plan PASS。首次 dry-run 因网站 raw/source 尚未交接而 fail closed；补齐 `data/raw/分享/20260815_不义的管家_Ronnie_中文.txt` 后，第二次 dry-run 又因旧预发布默认标签 `分享/灵命成长/Ronnie` 被统一 Tag Pipeline 拒绝而 fail closed；契约标签收窄为 `路加福音、管家、忠心、钱财、永恒` 后第三次 dry-run PASS。正式 publish 已生成 processed/post，slug=`2026-08-15-unjust-steward-eternal-faithfulness`，articleId=`post-85e0c86c624b24b8`，publishedAt=`2026-08-15T15:23:53+09:00`，分类=`灵命成长`，作者=`Ronnie`。
 
-本地验证：articleId 检查 289 篇、0 缺失；mirror gate 578 项、0 errors；Knowledge Layer 289 篇、0 errors / 0 warnings；`npm run build -- --force` PASS，331 pages built。分享文章不适用教会讲道 NAS 归档，`archive_status=not_applicable`。当前只剩本批 Git commit/push、Cloudflare deployment identity 与线上正文验证、首次发布邮件通知验证，以及发布记录闭环。
+本地验证：articleId 检查 289 篇、0 缺失；mirror gate 578 项、0 errors；Knowledge Layer 289 篇、0 errors / 0 warnings；`npm run build -- --force` PASS，331 pages built。分享文章不适用教会讲道 NAS 归档，`archive_status=not_applicable`。内容提交 `2be974a5813009f917fc634814ddbb58e60c50f4` 已成功 push 到 `origin/main`；Cloudflare `/deployment.json` 已确认部署到同一提交，`builtAt=2026-08-15T06:29:04.106Z`。线上文章 HTTP 200，标题、`路加福音 16:1-13` 与“耶稣赞的是精明，不是不义”正文指纹均通过。GitHub Actions `Email published posts` run `31869509140` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`。
 
 ---
 
