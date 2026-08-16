@@ -77,6 +77,14 @@ npm.cmd run check:knowledge
 - `source` 是否指向真实来源；不要伪造不存在的 raw 文件。
 - 导入脚本是否意外重写旧文章；发布前必须看 diff。
 
+文章页的长期移动端交互规则：
+
+- TOC 如果把 H2/H3 放在同一套连续编号中，必须统一左对齐；不得使用“连续平级编号 + 仅 H3 额外缩进”的混合视觉层级。
+- 如果未来确实需要嵌套目录，应使用真正的父子结构和对应编号，而不是只靠 CSS margin 伪造层级。
+- 文章 H2/H3 锚点必须为 sticky header 预留滚动偏移；header 高度、移动端导航或 safe-area 变化后必须重新验证 offset。
+- TOC/锚点问题属于全局文章渲染层，不得通过单篇 Markdown 增加空行、假标题或局部 margin 绕过。
+- 发布文章、修改文章模板/CSS/TOC/header 后，必须执行 `docs/content-publishing-error-prevention.md` 的“文章移动端视觉检查清单”；`npm run build` PASS 不能替代该视觉 smoke check。
+
 ## Codex / CodexPro 接手流程
 
 未来 Codex、CodexPro、本地模型或 Mac mini 接手时，默认按照仓库文档恢复上下文，不依赖旧聊天。

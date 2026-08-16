@@ -35,13 +35,13 @@ BOOK_ALIASES = sorted(ALIAS_TO_NAME, key=len, reverse=True)
 BOOK_PATTERN = "(?:" + "|".join(re.escape(alias) for alias in BOOK_ALIASES) + ")"
 
 COMPACT_REFERENCE_RE = re.compile(
-    rf"(?P<book>{BOOK_PATTERN})\s*"
+    rf"(?:《\s*)?(?P<book>{BOOK_PATTERN})(?:\s*》)?\s*"
     r"(?P<chapter>\d{1,3})\s*[:：]\s*(?P<verse>\d{1,3})"
     r"(?:\s*[-–—至到]\s*(?:(?P<end_chapter>\d{1,3})\s*[:：]\s*)?(?P<end_verse>\d{1,3}))?"
 )
 
 COMPACT_DETECTION_RE = re.compile(
-    rf"(?P<book>{BOOK_PATTERN})\s*\d{{1,3}}\s*[:：]\s*\d{{1,3}}"
+    rf"(?:《\s*)?(?P<book>{BOOK_PATTERN})(?:\s*》)?\s*\d{{1,3}}\s*[:：]\s*\d{{1,3}}"
 )
 
 

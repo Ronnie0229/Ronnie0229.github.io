@@ -45,6 +45,12 @@ class ScriptureReferenceNormalizerTests(unittest.TestCase):
         value = "罗马书8章38节到39节"
         self.assertEqual(normalize_scripture_references(value), value)
 
+    def test_book_title_brackets_are_normalized(self) -> None:
+        self.assertEqual(
+            normalize_scripture_references("《使徒行传》7:1-50"),
+            "使徒行传7章1节到50节",
+        )
+
     def test_unsupported_discontinuous_list_fails_detection_instead_of_partial_rewrite(self) -> None:
         value = "罗马书 8:28,31"
         normalized = normalize_scripture_references(value)

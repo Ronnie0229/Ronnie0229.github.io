@@ -1,0 +1,16 @@
+{
+  "schema_version": "bare-numeric-ref-decisions-v2",
+  "denominator": 10,
+  "decisions": {
+    "1": {"action":"FIX","replacements":[["(撒12:10)","（撒迦利亚书12章10节）"]]},
+    "2": {"action":"FIX","replacements":[["(希8:13)","（希伯来书8章13节）"]]},
+    "3": {"action":"FIX","replacements":[["(使15:10-11)","（使徒行传15章10节到11节）"]]},
+    "4": {"action":"FIX","replacements":[["约翰在1:18中","约翰在约翰福音1章18节中"]]},
+    "5": {"action":"NO_CHANGE_NON_SCRIPTURE","note":"clock time 10:30"},
+    "6": {"action":"NO_CHANGE_NON_SCRIPTURE","note":"clock time 12:30"},
+    "7": {"action":"FIX","replacements":[["参林6:12","参哥林多前书6章12节"]]},
+    "8": {"action":"FIX","replacements":[["(马18:33)","（马太福音18章33节）"]]},
+    "9": {"action":"FIX","replacements":[["延伸至8:2","延伸至罗马书8章2节"]]},
+    "10": {"action":"NO_CHANGE_NON_SCRIPTURE","note":"clock interval 6:00-6:30"}
+  }
+}
