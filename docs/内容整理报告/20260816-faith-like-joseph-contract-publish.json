@@ -1,0 +1,61 @@
+{
+  "interface": "website-publication-package-controlled-consumption",
+  "version": "1.0",
+  "contract_version": "1.1",
+  "mode": "publish",
+  "validation_passed": true,
+  "read_only": false,
+  "command": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/scripts/content_workflow.py",
+    "publish",
+    "sermon",
+    "--folder",
+    "data/raw/教会讲道/20260816_希伯来书11:22_像约瑟一样的信心_Patrick",
+    "--description",
+    "Patrick 以希伯来书 11:22 和约瑟的一生分享如何在苦难、创伤与不公中凭信心从悲伤走向恩典、从论断走向怜悯，并从惧怕走向盼望。",
+    "--tags",
+    "希伯来书,约瑟,信心,苦难,盼望"
+  ],
+  "slug": "2026-08-16-希伯来书-11-22｜像约瑟一样的信心",
+  "notification_policy": "normal_first_publish",
+  "archive_status": "pending",
+  "validator_report": {
+    "interface": "website-publication-package-consumer-validation",
+    "version": "1.0",
+    "contract": "../讲道整理/发布记录/contracts/20260816-sermon-faith-like-joseph.publication-package.json",
+    "consumer": "个人网页项目",
+    "read_only": true,
+    "pass": true,
+    "checks": {
+      "schema_shape_valid": true,
+      "interface_and_version_valid": true,
+      "metadata_minimum_present": true,
+      "metadata_content_type_matches": true,
+      "prepublish_path_present": true,
+      "prepublish_within_content_root": true,
+      "prepublish_exists": true,
+      "prepublish_sha_current": true,
+      "official_chinese_path_present": true,
+      "official_chinese_within_content_root": true,
+      "official_chinese_exists": true,
+      "official_chinese_sha_present": true,
+      "official_chinese_sha_current": true,
+      "english_source_path_present": true,
+      "english_source_within_content_root": true,
+      "english_source_exists": true,
+      "english_source_sha_present": true,
+      "english_source_sha_current": true,
+      "fidelity_status_accepted": true,
+      "notification_policy_accepted": true,
+      "archive_status_accepted": true
+    },
+    "errors": [],
+    "normalized": {
+      "slug": "2026-08-16-希伯来书-11-22｜像约瑟一样的信心",
+      "content_type": "sermon",
+      "notification_policy": "normal_first_publish",
+      "archive_status": "pending"
+    }
+  }
+}
