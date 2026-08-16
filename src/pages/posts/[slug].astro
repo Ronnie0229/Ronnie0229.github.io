@@ -5,6 +5,7 @@ import Comments from "../../components/Comments.astro";
 import HomeSubscribeBanner from "../../components/HomeSubscribeBanner.astro";
 import { buildPostKnowledge, getRelatedPosts } from "../../lib/knowledge";
 import { getCategoryRouteByCategory } from "../../lib/categories";
+import projectBibleBooks from "../../../scripts/project_bible_book_aliases.json";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
@@ -41,6 +42,33 @@ const formattedScripture = post.data.scripture
   .replace(/\s*:\s*/g, ":")
   .replace(/\s*-\s*/g, "-")
   .replace(/\s+/g, " ");
+
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^{}()|[\]\\]/g, (character) => `\\${character}`);
+const scriptureAliases = projectBibleBooks.books
+  .flatMap((book) => [book.book_name, book.book_abbr])
+  .sort((a, b) => b.length - a.length)
+  .map(escapeRegExp);
+const scriptureAliasToName = new Map(
+  projectBibleBooks.books.flatMap((book) => [
+    [book.book_name, book.book_name],
+    [book.book_abbr, book.book_name]
+  ])
+);
+const compactScripturePattern = new RegExp(
+  `(${scriptureAliases.join("|")})\\s*(\\d{1,3})\\s*[:：]\\s*(\\d{1,3})(?:\\s*[-–—至到]\\s*(?:(\\d{1,3})\\s*[:：]\\s*)?(\\d{1,3}))?`,
+  "g"
+);
+const toSpokenScriptureDisplay = (value: string) =>
+  value.replace(compactScripturePattern, (_match, book, chapter, verse, endChapter, endVerse) => {
+    const fullBook = scriptureAliasToName.get(book) ?? book;
+    if (!endVerse) return `${fullBook}${chapter}章${verse}节`;
+    if (!endChapter) return `${fullBook}${chapter}章${verse}节到${endVerse}节`;
+    return `${fullBook}${chapter}章${verse}节到${endChapter}章${endVerse}节`;
+  });
+const displayTitle = toSpokenScriptureDisplay(post.data.title);
+const displayScripture = toSpokenScriptureDisplay(formattedScripture);
+const displayDescription = toSpokenScriptureDisplay(post.data.description);
 const categoryRoute = getCategoryRouteByCategory(post.data.category);
 const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}`;
 ---
@@ -68,13 +96,13 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
         <span class="meta-text" data-relative-time datetime={(post.data.publishedAt ?? post.data.date).toISOString()} hidden></span>
         <span class="meta-text">阅读 {knowledge.readingTimeMinutes} 分钟</span>
       </p>
-      <h1>{post.data.title}</h1>
-      {formattedScripture && <p class="article-scripture">{formattedScripture}</p>}
+      <h1>{displayTitle}</h1>
+      {displayScripture && <p class="article-scripture">{displayScripture}</p>}
       <div class="article-stats" aria-label="文章阅读和留言次数">
         <span>阅读 <strong data-post-views={post.slug} data-increment-view>--</strong> 次</span>
         <span>留言 <strong data-post-comments={post.slug}>--</strong> 条</span>
       </div>
-      <p>{post.data.description}</p>
+      <p>{displayDescription}</p>
       <div class="tag-list">
         {post.data.tags.map((tag) => <span>{tag}</span>)}
       </div>

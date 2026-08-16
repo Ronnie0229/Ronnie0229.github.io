@@ -15,8 +15,16 @@ from docx import Document
 
 try:
     from tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+    from scripture_reference_normalizer import (
+        find_compact_chinese_references,
+        normalize_scripture_references,
+    )
 except ModuleNotFoundError:  # Imported as scripts.import_sermons in unit tests.
     from scripts.tag_pipeline import TagPipelineError, build_tags, parse_manual_tags
+    from scripts.scripture_reference_normalizer import (
+        find_compact_chinese_references,
+        normalize_scripture_references,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -142,6 +150,25 @@ def title_parts(title: str) -> tuple[str, str]:
     normalized = clean_title(title)
     normalized = re.sub(r"^(?:中文|福音\d+)", "", normalized).strip()
     books = "|".join(sorted((re.escape(book) for book in BOOKS), key=len, reverse=True))
+
+    spoken_match = re.search(
+        rf"(?P<book>{books})\s*(?P<chapter>\d+)章(?P<verse>\d+)节"
+        rf"(?:到(?:(?P<end_chapter>\d+)章)?(?P<end_verse>\d+)节)?",
+        normalized,
+    )
+    if spoken_match:
+        book = "约拿书" if spoken_match.group("book") == "约拿" else spoken_match.group("book")
+        chapter = spoken_match.group("chapter")
+        verse = spoken_match.group("verse")
+        end_chapter = spoken_match.group("end_chapter")
+        end_verse = spoken_match.group("end_verse")
+        scripture = f"{book} {chapter}:{verse}"
+        if end_verse:
+            scripture += f"-{end_chapter + ':' if end_chapter else ''}{end_verse}"
+        summary = (normalized[:spoken_match.start()] + normalized[spoken_match.end():]).strip(" _-:;，。")
+        summary = re.sub(r"^(?:系列:)?", "", summary).strip(" _-:;，。")
+        return scripture, summary
+
     match = re.search(
         rf"(?P<book>{books})\s*(?:第(?:(?P<cn>[一二三四五六七八九十]+)|(?P<chapter_named>\d+))章|(?P<chapter>\d+)(?P<range>-\d+)?章?)"
         rf"(?:\s*[:;,]\s*(?P<verses>\d+(?:-\d+:\d+|-\d+)?(?:[;,]\d+(?:-\d+)?)?))?",
@@ -230,6 +257,7 @@ def normalize_body(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n").strip()
     for old, new in TEXT_REPLACEMENTS.items():
         text = text.replace(old, new)
+    text = normalize_scripture_references(text)
     lines = [line.strip() for line in text.splitlines()]
     blocks: list[str] = []
     current: list[str] = []
@@ -277,6 +305,26 @@ def normalize_body(text: str) -> str:
     for line in body.splitlines():
         if re.match(r"^\d+[.)]\s+.+\s+\d+[.)]\s+", line):
             raise SystemExit(f"Collapsed ordered list detected after normalization: {line[:160]}")
+
+    remaining_compact = find_compact_chinese_references(body)
+    if remaining_compact:
+        raise SystemExit(
+            "Unnormalized Chinese scripture reference(s) remain after normalization: "
+            + ", ".join(remaining_compact[:5])
+        )
+
+    english_books = sorted(ENGLISH_BOOKS, key=len, reverse=True)
+    english_book_pattern = "(?:" + "|".join(re.escape(book) for book in english_books) + ")"
+    english_reference_re = re.compile(
+        rf"(?<![A-Za-z]){english_book_pattern}\s+\d{{1,3}}\s*[:：]\s*\d{{1,3}}",
+        re.IGNORECASE,
+    )
+    english_match = english_reference_re.search(body)
+    if english_match:
+        raise SystemExit(
+            "English scripture reference remains in Chinese website body; translate and normalize before publishing: "
+            + english_match.group(0)
+        )
     return body
 
 

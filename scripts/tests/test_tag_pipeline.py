@@ -100,6 +100,23 @@ class TagPipelineTests(unittest.TestCase):
             normalize_body("1. 第一项 2. 第二项")
         self.assertIn("Collapsed ordered list detected", str(caught.exception))
 
+    def test_sermon_body_normalizes_scripture_refs_for_tts(self) -> None:
+        body = normalize_body("请读罗 1:15-18，并参看创世记 50:19-21。")
+        self.assertIn("罗马书1章15节到18节", body)
+        self.assertIn("创世记50章19节到21节", body)
+        self.assertNotIn("1:15", body)
+        self.assertNotIn("50:19", body)
+
+    def test_sermon_body_rejects_untranslated_english_scripture_ref(self) -> None:
+        with self.assertRaises(SystemExit) as caught:
+            normalize_body("请读 Romans 8:38-39。")
+        self.assertIn("English scripture reference remains", str(caught.exception))
+
+    def test_sermon_body_rejects_unsupported_compact_reference_list(self) -> None:
+        with self.assertRaises(SystemExit) as caught:
+            normalize_body("请读罗马书 8:28,31。")
+        self.assertIn("Unnormalized Chinese scripture reference", str(caught.exception))
+
     def test_sermon_markdown_uses_pipeline_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp) / "20260802希伯来书11:21信仰的殿堂雅各_Grayson"
