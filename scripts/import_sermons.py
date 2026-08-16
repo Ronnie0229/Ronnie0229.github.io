@@ -234,13 +234,35 @@ def normalize_body(text: str) -> str:
     blocks: list[str] = []
     current: list[str] = []
 
+    def normalize_heading_label(line: str) -> str:
+        match = re.match(r"^(#{1,6}\s+)(.+)$", line)
+        if not match:
+            return line
+        prefix, label = match.groups()
+        normalized = re.sub(r"\s+", " ", label.strip())
+        if re.fullmatch(r"WAKACHIAI(?:\s*[／/]\s*(?:分享问题|分享|讨论问题))?", normalized, re.IGNORECASE):
+            return f"{prefix}小组讨论"
+        if normalized.upper() == "DOXOLOGY":
+            return f"{prefix}荣耀颂"
+        if normalized.upper() == "BENEDICTION":
+            return f"{prefix}祝祷"
+        return line
+
+    def is_block_line(line: str) -> bool:
+        return bool(
+            re.match(r"^#{1,6}\s+", line)
+            or re.match(r"^[-*]\s+", line)
+            or re.match(r"^\d+[.)]\s+", line)
+        )
+
     for line in lines:
+        line = normalize_heading_label(line)
         if not line:
             if current:
                 blocks.append(" ".join(current).strip())
                 current = []
             continue
-        if re.match(r"^#{1,6}\s+", line) or re.match(r"^[-*]\s+", line):
+        if is_block_line(line):
             if current:
                 blocks.append(" ".join(current).strip())
                 current = []
@@ -251,7 +273,11 @@ def normalize_body(text: str) -> str:
     if current:
         blocks.append(" ".join(current).strip())
 
-    return "\n\n".join(blocks).strip()
+    body = "\n\n".join(blocks).strip()
+    for line in body.splitlines():
+        if re.match(r"^\d+[.)]\s+.+\s+\d+[.)]\s+", line):
+            raise SystemExit(f"Collapsed ordered list detected after normalization: {line[:160]}")
+    return body
 
 
 def yaml_escape(value: str) -> str:

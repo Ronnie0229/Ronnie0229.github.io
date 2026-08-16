@@ -880,10 +880,6 @@ mark {
   padding-left: 22px;
 }
 
-.article-toc .nested {
-  margin-left: 18px;
-}
-
 .article-content {
   max-width: 760px;
   margin: 34px auto;
@@ -905,6 +901,7 @@ b {
 .article-content h2,
 .article-content h3 {
   margin-top: 2.2em;
+  scroll-margin-top: 104px;
 }
 
 .article-content blockquote {
@@ -1252,6 +1249,11 @@ b {
 
   .article-content {
     font-size: 17px;
+  }
+
+  .article-content h2,
+  .article-content h3 {
+    scroll-margin-top: 88px;
   }
 
   .comment-item {

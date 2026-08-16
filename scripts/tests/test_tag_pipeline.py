@@ -17,7 +17,7 @@ if "pypdf" not in sys.modules:
     sys.modules["pypdf"] = types.SimpleNamespace(PdfReader=None)
 
 from scripts.content_workflow import publish
-from scripts.import_sermons import build_sermon_tags, markdown_for
+from scripts.import_sermons import build_sermon_tags, markdown_for, normalize_body
 from scripts.import_shares import build_share_tags
 from scripts.tag_pipeline import TagPipelineError, build_tags, load_rules
 
@@ -76,6 +76,29 @@ class TagPipelineTests(unittest.TestCase):
         with self.assertRaises(SystemExit) as caught:
             build_sermon_tags("普通标题", "罗马书 8:1", None, "教会讲道", "Patrick")
         self.assertIn("TAG_COUNT_TOO_LOW", str(caught.exception))
+
+    def test_sermon_body_preserves_ordered_list_items(self) -> None:
+        body = normalize_body(
+            "因着信，我们看待人生的方式会发生转变：\n\n"
+            "1. 过去：从悲伤到恩典\n"
+            "2. 现在：从论断到怜悯\n"
+            "3. 未来：从惧怕到盼望\n"
+        )
+        self.assertIn(
+            "1. 过去：从悲伤到恩典\n\n2. 现在：从论断到怜悯\n\n3. 未来：从惧怕到盼望",
+            body,
+        )
+
+    def test_sermon_body_normalizes_known_section_labels(self) -> None:
+        body = normalize_body("## WAKACHIAI／分享问题\n\n## DOXOLOGY\n\n## BENEDICTION")
+        self.assertIn("## 小组讨论", body)
+        self.assertIn("## 荣耀颂", body)
+        self.assertIn("## 祝祷", body)
+
+    def test_sermon_body_rejects_collapsed_ordered_list(self) -> None:
+        with self.assertRaises(SystemExit) as caught:
+            normalize_body("1. 第一项 2. 第二项")
+        self.assertIn("Collapsed ordered list detected", str(caught.exception))
 
     def test_sermon_markdown_uses_pipeline_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

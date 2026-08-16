@@ -85,7 +85,7 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
           <p>文章目录</p>
           <ol>
             {tableOfContents.map((heading) => (
-              <li class:list={[heading.depth === 3 && "nested"]}>
+              <li>
                 <a href={`#${heading.slug}`}>{heading.text}</a>
               </li>
             ))}
