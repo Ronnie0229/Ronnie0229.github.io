@@ -1,5 +1,19 @@
 # 当前任务
 
+## 当前任务状态（2026-08-16，《希伯来书 11:22｜像约瑟一样的信心》讲道整理发布）
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED_ARCHIVED`
+
+已从讲道整理受控流程接收《像约瑟一样的信心》正式英文源与中文定稿；独立 E1 忠实度审核按 2026-08-16 当前治理边界确认 `missing=0 / compressed=0 / mistranslated=0 / needs_confirmation=0`，正式记为 `independently_verified`。source boundary 依据 12/12 页均有实质抽取内容与 E1 全文覆盖关闭；未声称人工视觉看页。
+
+网站侧 `npm run sync` PASS。publication contract v1.1 首轮 dry-run 因 raw 文件夹 `希伯来书11-22` 被解析为错误经文范围而 fail-closed，修正为 `希伯来书11:22`；第二轮因通用标签 `讲道` 被 Tag Pipeline 拒绝，收窄为 `希伯来书、约瑟、信心、苦难、盼望` 后第三轮 PASS。正式 publish、articleId、mirror 580/580、Knowledge Layer 290 篇 0 errors / 0 warnings、Astro build 332 pages 全部 PASS。
+
+内容提交 `3b0acb0674c1f2a77b6be0122f212f80ad21b434` 已 push；Cloudflare `/deployment.json` 确认部署到同一 commit，`builtAt=2026-08-16T00:47:27.614Z`。线上文章 HTTP 200，标题、“从悲伤到恩典”、“耶稣是那位更大的约瑟”三项正文指纹均 PASS。GitHub Actions `Email published posts` run `31918018601` 成功：1 篇 / 2 收件人 / 2 成功 / 0 失败。自动部署等待期间手动 Wrangler fallback 因本机无 `CLOUDFLARE_API_TOKEN` fail-closed，未产生手动部署，随后自动部署正常完成。
+
+NAS 受保护归档已完成：`/Volumes/share/教会讲道/20260816_希伯来书11:22_像约瑟一样的信心_Patrick`，只归档原始 PDF、正式英文源、最终中文稿，共 3 文件 / 802600 bytes，SHA-256 3/3 一致。
+
+---
+
 ## 当前任务状态（2026-08-15，《不义的管家》分享文章整理发布）
 
 状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
