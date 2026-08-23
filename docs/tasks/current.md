@@ -1,5 +1,13 @@
 # 当前任务
 
+## 当前任务状态（2026-08-23，《希伯来书 11:23-29｜摩西的信心之旅》讲道整理发布）
+
+状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+
+已从讲道整理受控流程接收通过独立 E1 忠实度审核的英文源与中文定稿。网站 `npm run sync` PASS；raw/source 单篇目录按可解析的 `希伯来书11:23-29` 命名，只新增原始 PDF、英文源和中文原稿。首次 dry-run 因中文 raw 文件名使用“11章23-29节”被解析为仅第11章而 fail-closed，随后仅将网站 raw 副本文件名改为 `希伯来书11:23-29` 格式，内容 SHA 不变；第二次 dry-run PASS。正式单篇 publish 完成，slug=`2026-08-23-希伯来书-11-23-29｜摩西的信心之旅`，articleId=`post-669ae7b367ddb8ce`，正文结尾展示术语按现行规则规范为“小组讨论 / 荣耀颂”。NAS 受保护归档已只新增 3 文件，共 778765 bytes。
+
+本地验证：291 篇文章 0 缺 articleId；mirror 582 项 0 errors；Knowledge Layer 291 篇 0 errors / 0 warnings；`npm run build -- --force` PASS，333 pages built；`git diff --check` PASS。下一步仅剩网站内容 commit/push、Cloudflare 自动部署身份与正式 URL 验证、自动邮件 workflow 验证。
+
 ## 当前任务状态（2026-08-16，《希伯来书 11:22｜像约瑟一样的信心》讲道整理发布）
 
 状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED_ARCHIVED`
