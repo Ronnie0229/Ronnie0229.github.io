@@ -1,5 +1,17 @@
 # 当前任务
 
+## 当前任务状态（2026-08-29，《大卫是一个有罪的人，为什么仍被称为“合神心意的人”？》分享文章整理发布）
+
+状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+
+已从 `NAS/分享收件` 通过 manifest-only intake 接收英文 PDF `How Can David.pdf`，source SHA-256=`2f7beb46cc37ddccb465d5167ea268490070e92e0db96d32c15aece6178ac651`；4/4 页均完成英文源抽取与人工内容核对。中文稿按原文完整保留大卫生平、拔示巴与乌利亚、悔改、赦免、诗篇和结论，没有摘要化。原文将孩子患病死亡叙事误标为 `1 Samuel 12:15-19`，已用受控 Project Bible/CUV 核对并在中文整理稿订正为 `撒母耳记下 12:15-19`；英文正式源保留原错误作为来源证据。
+
+网站原正式 worktree 存在与本篇无关的 F004 / Project Standard 未提交治理改动，因此按 `docs/branch-workflow.md` 新建独立发布 worktree，未触碰原改动；`npm run sync` PASS。`website-publication-package/v1.1` plan PASS。首轮无主经文 apply 只生成 processed、未生成 post，`Missing scripture=1`，未误判为发布成功。重新依据题目“合神心意的人”、原文明确提及《使徒行传》及受控 CUV，网站编辑性主经文重判为 `使徒行传 13:22`；v2 dry-run / publish 均 PASS，`Missing scripture=0`。正式 slug=`2026-08-29-david-man-after-gods-own-heart`，articleId=`post-8e46079a73cab736`，publishedAt=`2026-08-29T12:20:31+09:00`，分类=`灵命成长`，作者=`Ronnie`，精准标签=`使徒行传、大卫、悔改、赦免、恩典、信靠神`。
+
+本地验证：292 篇文章 0 缺 articleId；mirror 584 项 0 errors；Knowledge Layer 292 篇 0 errors / 0 warnings；Tag Pipeline fixtures 27/27 PASS；`npm run build` PASS，334 pages built，新文章路由已生成。分享文章 NAS 讲道归档不适用，`archive_status=not_applicable`。下一步仅剩本篇内容 commit/push、Cloudflare deployment identity 与正式 URL 验证、首次发布邮件 workflow 验证。
+
+---
+
 ## 当前任务状态（2026-08-23，《希伯来书 11:23-29｜摩西的信心之旅》讲道整理发布）
 
 状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
