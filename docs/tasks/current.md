@@ -1,5 +1,19 @@
 # 当前任务
 
+## 当前任务状态（2026-08-29，《How Can David》翻译忠实度补审后已发布正文修正）
+
+状态：`LOCAL_CORRECTION_PASS_PENDING_COMMIT_PUSH_DEPLOY_VERIFY`
+
+讲道整理 Owner 已对当前英文源与中文候选完成通用 translation fidelity 补审：Attempt 1 为 30/30 reviewed、blocking=7；仅修复 records 8 / 9 / 14 / 15 / 25 / 26 / 27；Attempt 2 为 30/30 complete、blocking=0，最终 `release_disposition=independently_verified`。当前正式中文 candidate SHA-256=`98c9562a5e2478997d5566121e01d70450489c2ca4988f9ec6f2adb7295990eb`。
+
+本轮只同步上述 7 处修正到既有 raw / processed / post 正文，articleId、slug、title、description、date、publishedAt、category、scripture、author、tags 均保持不变。使用独立干净 worktree `个人网页项目-david-fidelity-correction-20260829`；远端同步 PASS。邮件 workflow 仅对 Git 新增文章使用 `--diff-filter=A` 取 slug，因此本次修改既有 post 不会触发首次发布邮件，notification 保持 suppress。
+
+本地验证：raw 与 independently verified candidate SHA 完全一致；content mirror 584 项 0 errors；Knowledge Layer 292 篇 0 errors / 0 warnings；Tag Pipeline 27/27 PASS；`npm run build -- --force` PASS，334 pages built。首次 build 因新 worktree 缺本地 `node_modules/astro` 失败，随后仅复用正式网站工作树已有 `node_modules` 作为本地依赖，不修改 package/lock，重跑 PASS。
+
+下一步仅允许提交本次正文修正与必要状态文档，push 到 main，等待 Cloudflare Pages 自动部署并验证 `/deployment.json` 与正式文章 7 处正文指纹；不得手动触发邮件 workflow。
+
+---
+
 ## 当前任务状态（2026-08-29，《大卫是一个有罪的人，为什么仍被称为“合神心意的人”？》分享文章整理发布）
 
 状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`

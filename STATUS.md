@@ -7,7 +7,7 @@
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：《大卫是一个有罪的人，为什么仍被称为“合神心意的人”？》分享文章已完成整理、发布与生产验收。内容提交 `e678e246863a968746a7b1558a113f6d9e836b64` 已 push 到 `origin/main`；Cloudflare `/deployment.json` 已确认同一提交，`builtAt=2026-08-29T03:25:34.378Z`；正式文章 HTTP 200，标题、`使徒行传 13:22` 和正文关键指纹均通过。GitHub Actions `Email published posts` run `33231300691` 成功：1 篇 / 2 收件人 / 2 成功 / 0 失败。
+- 当前活动任务：《How Can David》首次发布已经完成；随后通用 translation fidelity 补审 Attempt 1 发现 7 个 blocking，经一次定向 repair 后 Attempt 2 达到 30/30 complete、blocking=0，最终 `independently_verified`。网站正在执行已发布正文修正，只同步 records 8 / 9 / 14 / 15 / 25 / 26 / 27 的 7 处修改，原 articleId/slug/title/date/publishedAt/category/scripture/author/tags 全部锁定不变。当前本地 mirror / Knowledge / Tag / Astro build 均 PASS；待本次 correction commit/push、Cloudflare 自动部署与线上正文验证。首次发布内容提交 `e678e246863a968746a7b1558a113f6d9e836b64`、闭环提交 `7aac906f163eb0065c3eb5fa6ebc84a5f40d0f52` 与历史邮件 run `33231300691` 保持原 chronology，不重发首次发布邮件。
 
 ## 统一 Tag Pipeline 建设（2026-08-02）
 
