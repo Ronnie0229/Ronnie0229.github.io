@@ -2,7 +2,7 @@
 
 ## 状态
 
-`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
 
 ## 来源与受控交付
 
@@ -43,13 +43,13 @@
 - `npm run check:tags`：27/27 PASS
 - `npm run build`：PASS / 334 pages；新路由 `/posts/2026-08-29-david-man-after-gods-own-heart/` 已生成
 
-## 待完成
+## 生产验收
 
-仅剩：
+- 内容提交：`e678e246863a968746a7b1558a113f6d9e836b64`，已 push 到 `origin/main`。
+- Cloudflare：`/deployment.json` 确认 commit=`e678e246863a968746a7b1558a113f6d9e836b64`，`builtAt=2026-08-29T03:25:34.378Z`。
+- 正式 URL：`https://ronniecross.com/posts/2026-08-29-david-man-after-gods-own-heart/`，HTTP 200。
+- 线上正文指纹：标题 / `使徒行传 13:22` / “没有任何一件他做过的事能够抹去神对他的爱和赦免”全部 PASS。
+- GitHub Actions `Email published posts`：run `33231300691`，completed / success；`postCount=1`、`recipientCount=2`、`successCount=2`、`failedCount=0`。
+- 原正式 worktree 的 F004 / Project Standard 未提交治理改动未进入本篇内容提交。
 
-1. 只提交本篇文章及其必要整理记录，不夹带原正式 worktree 的治理改动；
-2. push 到 `origin/main`；
-3. 验证 Cloudflare `/deployment.json` 对应同一 commit；
-4. 验证正式 URL HTTP 200 与正文指纹；
-5. 验证首次发布邮件 workflow；
-6. 更新 `STATUS.md` / `docs/tasks/current.md` 为最终完成态。
+结论：`PASS / PUBLICATION_COMPLETE`。
