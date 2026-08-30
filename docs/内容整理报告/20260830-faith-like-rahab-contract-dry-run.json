@@ -1,0 +1,62 @@
+{
+  "interface": "website-publication-package-controlled-consumption",
+  "version": "1.0",
+  "contract_version": "1.1",
+  "mode": "dry-run",
+  "validation_passed": true,
+  "read_only": true,
+  "command": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "/Volumes/DevSSD/RonnieWork/RonnieCross/.publication-worktrees/20260830-faith-like-rahab/scripts/content_workflow.py",
+    "publish",
+    "sermon",
+    "--folder",
+    "data/raw/教会讲道/20260830_希伯来书11:30-31_像喇合一样的信心_Patrick",
+    "--description",
+    "Patrick 以希伯来书 11:30-31 和喇合的故事分享得救信心的三个方面：进入、效忠与行动，并说明神如何借着信心改变人的过去、现在与后代。",
+    "--tags",
+    "希伯来书,喇合,信心,顺服,行动",
+    "--dry-run"
+  ],
+  "slug": "2026-08-30-希伯来书-11-30-31｜像喇合一样的信心",
+  "notification_policy": "normal_first_publish",
+  "archive_status": "pending",
+  "validator_report": {
+    "interface": "website-publication-package-consumer-validation",
+    "version": "1.0",
+    "contract": "../../讲道整理/发布记录/contracts/20260830-sermon-faith-like-rahab.publication-package.json",
+    "consumer": "个人网页项目",
+    "read_only": true,
+    "pass": true,
+    "checks": {
+      "schema_shape_valid": true,
+      "interface_and_version_valid": true,
+      "metadata_minimum_present": true,
+      "metadata_content_type_matches": true,
+      "prepublish_path_present": true,
+      "prepublish_within_content_root": true,
+      "prepublish_exists": true,
+      "prepublish_sha_current": true,
+      "official_chinese_path_present": true,
+      "official_chinese_within_content_root": true,
+      "official_chinese_exists": true,
+      "official_chinese_sha_present": true,
+      "official_chinese_sha_current": true,
+      "english_source_path_present": true,
+      "english_source_within_content_root": true,
+      "english_source_exists": true,
+      "english_source_sha_present": true,
+      "english_source_sha_current": true,
+      "fidelity_status_accepted": true,
+      "notification_policy_accepted": true,
+      "archive_status_accepted": true
+    },
+    "errors": [],
+    "normalized": {
+      "slug": "2026-08-30-希伯来书-11-30-31｜像喇合一样的信心",
+      "content_type": "sermon",
+      "notification_policy": "normal_first_publish",
+      "archive_status": "pending"
+    }
+  }
+}
