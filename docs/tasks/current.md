@@ -1,38 +1,18 @@
 # 当前任务
 
-## 当前任务状态（2026-08-29，《How Can David》翻译忠实度补审后已发布正文修正）
+## Current-effective override（2026-08-28）
 
-状态：`LOCAL_CORRECTION_PASS_PENDING_COMMIT_PUSH_DEPLOY_VERIFY`
+当前没有待执行的摩西文章生产动作。《希伯来书 11:23-29｜摩西的信心之旅》正式 `website-publication-result/v1.1` 已记录 commit=`a72f499f67be090dc407f0185b8f9946bee80ea4`、`push_status=pushed`、`deployment_status=deployed`、`notification_status=sent`。因此下方 2026-08-23 条目中的 `LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY` 与“下一步仅剩 commit/push/deploy/notify”只保留为原执行 epoch 的历史 chronology，已被本 override superseded，不得重新执行。
 
-讲道整理 Owner 已对当前英文源与中文候选完成通用 translation fidelity 补审：Attempt 1 为 30/30 reviewed、blocking=7；仅修复 records 8 / 9 / 14 / 15 / 25 / 26 / 27；Attempt 2 为 30/30 complete、blocking=0，最终 `release_disposition=independently_verified`。当前正式中文 candidate SHA-256=`98c9562a5e2478997d5566121e01d70450489c2ca4988f9ec6f2adb7295990eb`。
+正常 cold-start 时，以 `STATUS.md` 顶部 current truth、本区以及 fresh formal task/evidence 为 current authority；历史条目的 `ACTIVE/PENDING` 不覆盖 current-effective truth。没有新的正式网站业务任务时，不为了维持“当前任务”形式而伪造 ACTIVE production task。
 
-本轮只同步上述 7 处修正到既有 raw / processed / post 正文，articleId、slug、title、description、date、publishedAt、category、scripture、author、tags 均保持不变。使用独立干净 worktree `个人网页项目-david-fidelity-correction-20260829`；远端同步 PASS。邮件 workflow 仅对 Git 新增文章使用 `--diff-filter=A` 取 slug，因此本次修改既有 post 不会触发首次发布邮件，notification 保持 suppress。
+## 历史任务状态（2026-08-23，《希伯来书 11:23-29｜摩西的信心之旅》讲道整理发布）
 
-本地验证：raw 与 independently verified candidate SHA 完全一致；content mirror 584 项 0 errors；Knowledge Layer 292 篇 0 errors / 0 warnings；Tag Pipeline 27/27 PASS；`npm run build -- --force` PASS，334 pages built。首次 build 因新 worktree 缺本地 `node_modules/astro` 失败，随后仅复用正式网站工作树已有 `node_modules` 作为本地依赖，不修改 package/lock，重跑 PASS。
-
-下一步仅允许提交本次正文修正与必要状态文档，push 到 main，等待 Cloudflare Pages 自动部署并验证 `/deployment.json` 与正式文章 7 处正文指纹；不得手动触发邮件 workflow。
-
----
-
-## 当前任务状态（2026-08-29，《大卫是一个有罪的人，为什么仍被称为“合神心意的人”？》分享文章整理发布）
-
-状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
-
-已从 `NAS/分享收件` 通过 manifest-only intake 接收英文 PDF `How Can David.pdf`，source SHA-256=`2f7beb46cc37ddccb465d5167ea268490070e92e0db96d32c15aece6178ac651`；4/4 页均完成英文源抽取与人工内容核对。中文稿按原文完整保留大卫生平、拔示巴与乌利亚、悔改、赦免、诗篇和结论，没有摘要化。原文将孩子患病死亡叙事误标为 `1 Samuel 12:15-19`，已用受控 Project Bible/CUV 核对并在中文整理稿订正为 `撒母耳记下 12:15-19`；英文正式源保留原错误作为来源证据。
-
-网站原正式 worktree 存在与本篇无关的 F004 / Project Standard 未提交治理改动，因此按 `docs/branch-workflow.md` 新建独立发布 worktree，未触碰原改动；`npm run sync` PASS。`website-publication-package/v1.1` plan PASS。首轮无主经文 apply 只生成 processed、未生成 post，`Missing scripture=1`，未误判为发布成功。重新依据题目“合神心意的人”、原文明确提及《使徒行传》及受控 CUV，网站编辑性主经文重判为 `使徒行传 13:22`；v2 dry-run / publish 均 PASS，`Missing scripture=0`。正式 slug=`2026-08-29-david-man-after-gods-own-heart`，articleId=`post-8e46079a73cab736`，publishedAt=`2026-08-29T12:20:31+09:00`，分类=`灵命成长`，作者=`Ronnie`，精准标签=`使徒行传、大卫、悔改、赦免、恩典、信靠神`。
-
-本地验证：292 篇文章 0 缺 articleId；mirror 584 项 0 errors；Knowledge Layer 292 篇 0 errors / 0 warnings；Tag Pipeline fixtures 27/27 PASS；`npm run build` PASS，334 pages built，新文章路由已生成。分享文章 NAS 讲道归档不适用，`archive_status=not_applicable`。内容提交 `e678e246863a968746a7b1558a113f6d9e836b64` 已成功 push 到 `origin/main`；Cloudflare `/deployment.json` 确认同一提交，`builtAt=2026-08-29T03:25:34.378Z`。正式 URL HTTP 200，标题、`使徒行传 13:22` 与正文关键句三项线上指纹 PASS。GitHub Actions `Email published posts` run `33231300691` 完成且 conclusion=`success`：`postCount=1`、`recipientCount=2`、`successCount=2`、`failedCount=0`。
-
----
-
-## 当前任务状态（2026-08-23，《希伯来书 11:23-29｜摩西的信心之旅》讲道整理发布）
-
-状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+历史状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`（已被 2026-08-28 current-effective override superseded）
 
 已从讲道整理受控流程接收通过独立 E1 忠实度审核的英文源与中文定稿。网站 `npm run sync` PASS；raw/source 单篇目录按可解析的 `希伯来书11:23-29` 命名，只新增原始 PDF、英文源和中文原稿。首次 dry-run 因中文 raw 文件名使用“11章23-29节”被解析为仅第11章而 fail-closed，随后仅将网站 raw 副本文件名改为 `希伯来书11:23-29` 格式，内容 SHA 不变；第二次 dry-run PASS。正式单篇 publish 完成，slug=`2026-08-23-希伯来书-11-23-29｜摩西的信心之旅`，articleId=`post-669ae7b367ddb8ce`，正文结尾展示术语按现行规则规范为“小组讨论 / 荣耀颂”。NAS 受保护归档已只新增 3 文件，共 778765 bytes。
 
-本地验证：291 篇文章 0 缺 articleId；mirror 582 项 0 errors；Knowledge Layer 291 篇 0 errors / 0 warnings；`npm run build -- --force` PASS，333 pages built；`git diff --check` PASS。下一步仅剩网站内容 commit/push、Cloudflare 自动部署身份与正式 URL 验证、自动邮件 workflow 验证。
+当时本地验证：291 篇文章 0 缺 articleId；mirror 582 项 0 errors；Knowledge Layer 291 篇 0 errors / 0 warnings；`npm run build -- --force` PASS，333 pages built；`git diff --check` PASS。当时记录的后续 commit/push、Cloudflare 部署与邮件通知现均已完成，见顶部 current-effective override。
 
 ## 当前任务状态（2026-08-16，《希伯来书 11:22｜像约瑟一样的信心》讲道整理发布）
 

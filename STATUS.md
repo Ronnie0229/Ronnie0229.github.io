@@ -1,13 +1,15 @@
 # 个人网页项目状态
 
-最后更新：2026-08-29 +09:00
+最后更新：2026-08-28 +09:00
 
 ## 当前状态
 
+- 2026-08-30 `website-publication-package/v1.2` 已进入 lifecycle/default-write adoption write-set successor candidate：当前 candidate truth=`contract_stable / default write`，validator/controlled consumer 按现有 version-bound 实现消费 v1.1/v1.2；v1.1 保留为 `contract_stable / non_default / compatibility-preserved`，并继续拒绝 max-audit literal。网站未复制或解释讲道 max-audit 业务语义；publish 仍需既有显式授权。该状态待独立 lifecycle adoption audit。
 - 项目：使用 Astro 构建的中文文章网站，部署目标为 Cloudflare Pages。
 - 当前分支：`main`。
 - 当前任务入口：`docs/tasks/current.md`。
-- 当前活动任务：《How Can David》首次发布已经完成；随后通用 translation fidelity 补审 Attempt 1 发现 7 个 blocking，经一次定向 repair 后 Attempt 2 达到 30/30 complete、blocking=0，最终 `independently_verified`。网站正在执行已发布正文修正，只同步 records 8 / 9 / 14 / 15 / 25 / 26 / 27 的 7 处修改，原 articleId/slug/title/date/publishedAt/category/scripture/author/tags 全部锁定不变。当前本地 mirror / Knowledge / Tag / Astro build 均 PASS；待本次 correction commit/push、Cloudflare 自动部署与线上正文验证。首次发布内容提交 `e678e246863a968746a7b1558a113f6d9e836b64`、闭环提交 `7aac906f163eb0065c3eb5fa6ebc84a5f40d0f52` 与历史邮件 run `33231300691` 保持原 chronology，不重发首次发布邮件。
+- 当前有效业务/生产事实：《希伯来书 11:23-29｜摩西的信心之旅》已完成网站 commit/push、Cloudflare 部署与自动邮件通知；正式 `website-publication-result/v1.1` 记录 commit=`a72f499f67be090dc407f0185b8f9946bee80ea4`、`push_status=pushed`、`deployment_status=deployed`、`notification_status=sent`。该文章不再存在待执行的 commit/push/deploy/notify 动作。
+- current-over-history precedence：正常 cold-start 以本文件顶部 current truth、`docs/tasks/current.md` 顶部 current-effective 区及 fresh formal task/evidence 为准；下方历史 chronology 中旧 `ACTIVE/PENDING` 只代表原执行 epoch，不得据此恢复已完成的生产动作。若没有新的正式网站业务任务，不为了填充 current 状态伪造 ACTIVE production task。
 
 ## 统一 Tag Pipeline 建设（2026-08-02）
 
@@ -76,8 +78,8 @@
 ## 当前发布与接口边界
 
 - 正式内容位于 `src/content/posts/`，网站 raw 与 processed 镜像分别位于 `data/raw/` 和 `data/processed/`。
-- 网站拥有 `website-publication-package/v1.1` 的消费和 `website-publication-result/v1.1` 的生成职责。
-- v1.1 接口状态为 `contract_stable`，不等于自动发布，也不等于 `production_acceptance_passed`。
+- 网站拥有 current default `website-publication-package/v1.2` 的消费、v1.1 compatibility 消费，以及 `website-publication-result/v1.1` 的生成职责。
+- v1.2 当前 adoption candidate=`contract_stable / default write`；v1.1=`contract_stable / non_default / compatibility-preserved`。这些接口状态不等于自动发布，也不等于 `production_acceptance_passed`。
 - 网站写入、构建、push、Cloudflare 部署和邮件发送必须按任务授权和发布流程执行。
 - 已发布讲道正文修正不得改变 slug、articleId、日期、作者、分类、经文等锁定身份字段，除非任务明确授权。
 
