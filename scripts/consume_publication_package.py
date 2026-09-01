@@ -48,8 +48,8 @@ def run_validator(validator: Path, contract: Path, schema: Path, content_root: P
 
 def import_command(package: dict[str, Any], workflow: Path, mode: str, allow_write: bool) -> list[str]:
     version = package.get("version")
-    if version != "1.1":
-        raise SystemExit("controlled import requires website-publication-package version 1.1")
+    if version not in {"1.1", "1.2"}:
+        raise SystemExit("controlled import requires website-publication-package version 1.1 or 1.2")
 
     metadata = package.get("metadata")
     if not isinstance(metadata, dict):
@@ -100,7 +100,7 @@ def import_command(package: dict[str, Any], workflow: Path, mode: str, allow_wri
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Validate website-publication-package/v1.1 before entering the existing website import flow."
+        description="Validate website-publication-package/v1.1 or v1.2 before entering the existing website import flow."
     )
     parser.add_argument("--contract", required=True, type=Path)
     parser.add_argument("--schema", required=True, type=Path)

@@ -140,6 +140,51 @@ class ValidatePublicationPackageTest(unittest.TestCase):
             finally:
                 self.schema = schema
 
+    def test_fidelity_status_is_version_bound_for_v11_and_v12(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.1"
+            package["prepublish"]["sha256"] = self._sha(Path(package["prepublish"]["path"]))
+            package["fidelity_status"] = "pass_by_max_audit_policy"
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.1.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid fidelity_status", result.stdout)
+
+                package["version"] = "1.2"
+                contract.write_text(json.dumps(package), encoding="utf-8")
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 0, result.stdout)
+
+                package["fidelity_status"] = "unknown_status"
+                contract.write_text(json.dumps(package), encoding="utf-8")
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid fidelity_status", result.stdout)
+            finally:
+                self.schema = old_schema
+
+    def test_schema_version_mismatch_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.2"
+            package["prepublish"]["sha256"] = self._sha(Path(package["prepublish"]["path"]))
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.1.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid version", result.stdout)
+            finally:
+                self.schema = old_schema
+
 
 if __name__ == "__main__":
     unittest.main()

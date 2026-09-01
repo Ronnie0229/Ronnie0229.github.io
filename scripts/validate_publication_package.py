@@ -85,7 +85,7 @@ def main() -> int:
 
     checks["interface_and_version_valid"] = (
         package.get("interface") == "website-publication-package"
-        and package.get("version") in {"1.0", "1.1"}
+        and package.get("version") in {"1.0", "1.1", "1.2"}
     )
     if not checks["interface_and_version_valid"]:
         errors.append("interface/version mismatch")
@@ -141,18 +141,21 @@ def main() -> int:
             checks["prepublish_sha_current"] = sha256(resolved) == expected_sha
             if not checks["prepublish_sha_current"]:
                 errors.append(f"sha mismatch: prepublish: {path}")
-        elif package.get("version") == "1.1":
+        elif package.get("version") in {"1.1", "1.2"}:
             checks["prepublish_sha_required"] = False
-            errors.append("website-publication-package/v1.1 requires prepublish.sha256")
+            errors.append(f"website-publication-package/v{package.get('version')} requires prepublish.sha256")
         else:
             checks["prepublish_sha_not_available"] = True
 
     fidelity = package.get("fidelity_status")
-    checks["fidelity_status_accepted"] = fidelity in {
+    accepted_fidelity_statuses = {
         "not_required",
         "independently_verified",
         "authorized_exception",
     }
+    if package.get("version") == "1.2":
+        accepted_fidelity_statuses.add("pass_by_max_audit_policy")
+    checks["fidelity_status_accepted"] = fidelity in accepted_fidelity_statuses
     if not checks["fidelity_status_accepted"]:
         errors.append(f"invalid fidelity_status: {fidelity!r}")
 

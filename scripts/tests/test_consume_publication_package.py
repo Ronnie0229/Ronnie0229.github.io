@@ -21,7 +21,7 @@ class ConsumePublicationPackageTest(unittest.TestCase):
     def sha(path: Path) -> str:
         return hashlib.sha256(path.read_bytes()).hexdigest()
 
-    def fixture(self, root: Path) -> Path:
+    def fixture(self, root: Path, version: str = "1.1", fidelity_status: str = "independently_verified") -> Path:
         pre = root / "pre.md"
         zh = root / "zh.txt"
         en = root / "en.txt"
@@ -29,12 +29,12 @@ class ConsumePublicationPackageTest(unittest.TestCase):
             path.write_text(text, encoding="utf-8")
         package = {
             "interface": "website-publication-package",
-            "version": "1.1",
+            "version": version,
             "content_type": "sermon",
             "prepublish": {"path": str(pre), "sha256": self.sha(pre)},
             "official_chinese": {"path": str(zh), "sha256": self.sha(zh)},
             "english_source": {"path": str(en), "sha256": self.sha(en)},
-            "fidelity_status": "independently_verified",
+            "fidelity_status": fidelity_status,
             "metadata": {
                 "slug": "sample",
                 "publish_date": "2026-07-20",
@@ -149,6 +149,27 @@ class ConsumePublicationPackageTest(unittest.TestCase):
             self.assertIn("2026-07-23-obey-christ-commands", args)
             self.assertIn("--tags", args)
             self.assertIn("顺服,律法,恩典", args)
+
+    def test_v12_max_audit_can_enter_controlled_dry_run(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract = self.fixture(root, version="1.2", fidelity_status="pass_by_max_audit_policy")
+            old_schema = self.schema
+            output = root / "args.json"
+            workflow = root / "workflow.py"
+            workflow.write_text(
+                "import json,sys\nfrom pathlib import Path\n"
+                f"Path({str(output)!r}).write_text(json.dumps(sys.argv[1:]), encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self.invoke(contract, root, "dry-run", workflow)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                args = json.loads(output.read_text(encoding="utf-8"))
+                self.assertIn("--dry-run", args)
+            finally:
+                self.schema = old_schema
 
 
 if __name__ == "__main__":
