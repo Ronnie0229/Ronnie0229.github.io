@@ -71,6 +71,11 @@ def main() -> int:
             "notification_status": args.notification_status,
         }
     else:
+        final_status_authority = (
+            "个人网页项目 fixed dry-run evidence"
+            if args.status == "dry_run_passed"
+            else "workspace-control publication-acceptance-evidence/v1 bundle"
+        )
         payload = {
             "interface": "website-publication-result",
             "version": "1.1",
@@ -99,7 +104,7 @@ def main() -> int:
                 "acceptance_evidence_id": args.acceptance_evidence_id,
                 "acceptance_evidence_path": args.acceptance_evidence_path,
                 "acceptance_evidence_sha256": args.acceptance_evidence_sha256,
-                "final_status_authority": "workspace-control publication-acceptance-evidence/v1 bundle",
+                "final_status_authority": final_status_authority,
                 "error_stage": args.error_stage,
             },
         }

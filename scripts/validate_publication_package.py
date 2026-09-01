@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -35,28 +36,56 @@ def is_within(path: Path, root: Path) -> bool:
         return False
 
 
+def _matches_type(value: Any, expected_type: str) -> bool:
+    if expected_type == "object":
+        return isinstance(value, dict)
+    if expected_type == "string":
+        return isinstance(value, str)
+    if expected_type == "array":
+        return isinstance(value, list)
+    if expected_type == "boolean":
+        return isinstance(value, bool)
+    if expected_type == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if expected_type == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if expected_type == "null":
+        return value is None
+    return True
+
+
+def _validate_schema_node(value: Any, definition: dict[str, Any], path: str, errors: list[str]) -> None:
+    if "const" in definition and value != definition["const"]:
+        errors.append(f"invalid {path}: expected {definition['const']!r}")
+
+    if "enum" in definition and value not in definition["enum"]:
+        errors.append(f"invalid {path}: {value!r}")
+
+    expected_type = definition.get("type")
+    if isinstance(expected_type, str) and not _matches_type(value, expected_type):
+        errors.append(f"invalid {path}: expected {expected_type}")
+        return
+
+    pattern = definition.get("pattern")
+    if isinstance(pattern, str) and isinstance(value, str) and re.search(pattern, value) is None:
+        errors.append(f"invalid {path}: does not match pattern {pattern!r}")
+
+    if isinstance(value, dict):
+        for required_key in definition.get("required", []):
+            if required_key not in value:
+                errors.append(f"missing required field: {path}.{required_key}")
+        properties = definition.get("properties", {})
+        if isinstance(properties, dict):
+            for key, nested_definition in properties.items():
+                if key in value and isinstance(nested_definition, dict):
+                    nested_path = f"{path}.{key}" if path else key
+                    _validate_schema_node(value[key], nested_definition, nested_path, errors)
+
+
 def validate_schema_shape(package: dict[str, Any], schema: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    for key in schema.get("required", []):
-        if key not in package:
-            errors.append(f"missing required field: {key}")
-
-    properties = schema.get("properties", {})
-    for key, definition in properties.items():
-        if key not in package:
-            continue
-        value = package[key]
-        if "const" in definition and value != definition["const"]:
-            errors.append(f"invalid {key}: expected {definition['const']!r}")
-        if "enum" in definition and value not in definition["enum"]:
-            errors.append(f"invalid {key}: {value!r}")
-        expected_type = definition.get("type")
-        if expected_type == "object" and not isinstance(value, dict):
-            errors.append(f"invalid {key}: expected object")
-        for nested in definition.get("required", []):
-            if isinstance(value, dict) and nested not in value:
-                errors.append(f"missing required field: {key}.{nested}")
-    return errors
+    _validate_schema_node(package, schema, "", errors)
+    return [error.replace("field: .", "field: ").replace("invalid .", "invalid ") for error in errors]
 
 
 def main() -> int:

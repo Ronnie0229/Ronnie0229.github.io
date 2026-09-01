@@ -169,6 +169,75 @@ class ValidatePublicationPackageTest(unittest.TestCase):
             finally:
                 self.schema = old_schema
 
+    def test_v12_rejects_nested_publish_date_pattern(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.2"
+            package["prepublish"]["sha256"] = self._sha(Path(package["prepublish"]["path"]))
+            package["metadata"]["publish_date"] = "NOT-A-DATE"
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid metadata.publish_date", result.stdout)
+                self.assertIn("does not match pattern", result.stdout)
+            finally:
+                self.schema = old_schema
+
+    def test_v12_rejects_nested_wrong_type(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.2"
+            package["prepublish"]["sha256"] = self._sha(Path(package["prepublish"]["path"]))
+            package["metadata"]["publish_date"] = 123
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid metadata.publish_date: expected string", result.stdout)
+            finally:
+                self.schema = old_schema
+
+    def test_v12_rejects_nested_enum(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.2"
+            package["prepublish"]["sha256"] = self._sha(Path(package["prepublish"]["path"]))
+            package["metadata"]["content_type"] = "invalid"
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid metadata.content_type", result.stdout)
+            finally:
+                self.schema = old_schema
+
+    def test_v12_rejects_nested_sha_pattern(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract, package = self._fixture(root)
+            package["version"] = "1.2"
+            package["prepublish"]["sha256"] = "not-a-sha"
+            contract.write_text(json.dumps(package), encoding="utf-8")
+            old_schema = self.schema
+            try:
+                self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+                result = self._run(contract, root)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("invalid prepublish.sha256", result.stdout)
+                self.assertIn("does not match pattern", result.stdout)
+            finally:
+                self.schema = old_schema
+
     def test_schema_version_mismatch_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

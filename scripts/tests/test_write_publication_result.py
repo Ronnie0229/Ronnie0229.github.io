@@ -52,7 +52,7 @@ class WritePublicationResultTest(unittest.TestCase):
             self.assertEqual(payload["evidence"]["source_contract"], "contract.json")
             self.assertEqual(payload["evidence"]["acceptance_evidence_id"], "ev-1")
             self.assertEqual(payload["evidence"]["acceptance_evidence_sha256"], "a" * 64)
-            self.assertIn("evidence", payload["evidence"]["final_status_authority"])
+            self.assertEqual(payload["evidence"]["final_status_authority"], "个人网页项目 fixed dry-run evidence")
             self.assertFalse(any(path.suffix == ".tmp" for path in Path(tmp).iterdir()))
 
 
