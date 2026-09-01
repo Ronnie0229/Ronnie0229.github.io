@@ -24,22 +24,10 @@
 
 整改：
 
-- 翻译任务中，`docs/content-style.md` 的 Translation Fidelity 优先于润色和公众号化表达。
-- 逐句按原意翻译，保留论点、例子、经文、引用、转折、语气和结论。
-- 讲道默认采用“完整讲章模式（Full Sermon Mode）”，必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂（Doxology）及结束经文。
-- 中文正文经文引用必须在发布前统一为受控书卷全名 + `章/节/到` 的 TTS 友好形式；导入器对可安全识别的 compact 引用自动规范化，对残留英文书卷引用、不连续 compact 引用 fail-closed。frontmatter/SEO/scripture metadata 不受此显示规则影响。
-- 可以调整中文语序，但不能删减信息或新增原文没有的应用，也不能因网站发布而只保留讲道正文主体。“逐句完整”不等于照搬英文句法、标点或 OCR 换行。
-- 标题、小标题、编号列表、经文、引文、对话和讨论问题必须按中文阅读习惯分行分段；三个提纲或多个问题挤在同一行属于可读性检查失败。
-- 仅可删除与讲章内容无关的内部制作标记和噪音，例如 `[SLIDE]`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题。`JP`、`EN`、`CN` 等缩写必须先做现场语境判断。
-- 完成后检查中文 TXT 是否是完整讲道译稿，而不是摘要、提纲或灵修改写。
-- 原文已经写明引用经文出处时，中文翻译必须自然保留并译出对应经文章节，不得省略；例如原文写 Galatians 2:14，中文正文应保留并规范为“加拉太书2章14节”。
-- 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文；经文出处与范围必须保留，但读者可见的经文正文不得显示逐节数字节号。连续两节及以上引用去掉每节正文前的数字节号，单节正文也不重复节号；不得因此删减或摘要经文。Project Bible/CUVMPS Rv2 仍按逐节数据核验，讲员解释中自然出现的“第5节”等语义性节号不得删除。如需解释英文词语、原文词义或其他译本差异，可在和合本经文之外另加说明，但不得用其他中文译本替代正文经文。
-- 翻译完成后必须按英文原稿顺序逐段自审，不能只检查字数、关键词或首尾。
-- 自审必须覆盖经文、引用来源、例证对话、现场互动、过渡、反问、重复强调、结束语、小组讨论、祝祷、荣耀颂和结束经文。
-- 发现跳段、摘要化或信息压缩后必须先修正，再进行第二次反向核对；审计结果不是“无遗漏、无摘要化、无未确认缺口”时不得发布。
-- 自审必须单独通过中文可读性检查：语序自然、段落清楚、标题和编号列表独立成行，不能把忠实翻译误解为生硬直译。
-- 自审必须单独通过现场语境检查：判断 `JP`、`EN`、`CN`、`MC`、`Translator` 等缩写或角色的真实含义。例如 `JP for sake of time` 在双语读经语境中表示“因为时间关系，只用日语来读”，不是“请 JP 来读”。
-- 语境无法确定时标记 `needs_confirmation`，不得用猜测完成定稿。
+- sermon fidelity 的业务真值不再由本网站文档定义。Full Sermon Mode、E1、经文/ending fidelity、审核/修复轮次、Attempt 3 final repair 与 max-audit release semantics 一律引用 `../../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../../讲道整理/docs/translation-fidelity-quality-control.md`、`../../讲道整理/docs/sermon-independent-audit-orchestration.md`。
+- 网站默认接受 `website-publication-package/v1.2` 交付的讲道 Owner 已成立正式稿 identity/SHA、publication-facing fidelity status/evidence 与发布元数据；v1.1 继续用于历史、已生成、在途 package 与显式兼容。不得用网站 build、mirror、SHA 或 JSON 检查替代 fidelity approval。
+- 网站继续负责自身的 Markdown/rendering 可读性、正文经文 TTS-friendly display normalization、frontmatter/SEO/scripture metadata 机器格式、import fail-closed、raw/processed/posts 一致性以及后续 build/deploy/SEO/Git/notification Gate。
+- 如果 package、identity/SHA、metadata 或网站显示/导入 Gate 不满足要求，网站应 fail-closed；但不得因此自行发明或重判 sermon fidelity verdict。
 
 ## 3. 跨项目文档同步防漏规则
 
@@ -47,9 +35,9 @@
 
 整改：
 
-- 涉及讲道整理、讲道翻译、讲道发布、NAS 归档、日期、元数据、发布前 MD、导出或质量门禁的规则变更，都要同步检查讲道整理项目和个人网页项目。
-- 如果暂时只能更新一个项目，最终汇报必须明确写出另一个项目未同步，并列为后续任务。
-- 新开对话或切换新账号时，处理讲道整理相关任务必须先读 AGENTS.md、CONTENT_WORKFLOW.md、docs/统一内容整理与发布流程.md、docs/content-publishing-error-prevention.md 和 skills/article-workflow.md。
+- 讲道 Owner 的 fidelity 规则变化时，不再要求两个项目同步复制相同业务规则正文。网站侧只检查 sermon canonical reference 与 current default `website-publication-package/v1.2`（以及需要时的 v1.1 compatibility）consumer/contract compatibility。
+- 只有网站自己的消费、display/metadata、import、raw/processed/posts、build、Git、deploy、SEO、notification Gate 受影响时，才更新对应网站文档或实现；讲道 fidelity truth 始终回到讲道 Owner canonical authority fresh-read。
+- 新开对话或切换新账号处理讲道发布时，网站应先读本项目 `AGENTS.md`、`CONTENT_WORKFLOW.md` 与相关发布文档，并按其中 canonical reference fresh-read 讲道 Owner authority；不得把网站旧规则副本当作 sermon truth。
 
 ## 4. 摘要 description 容易截断
 

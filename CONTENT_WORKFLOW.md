@@ -44,55 +44,20 @@
 5. `skills/article-workflow.md`。
 6. 过去聊天记录或旧草稿。
 
-## 翻译原则
+## 讲道 Owner 输入与网站消费 Gate
 
-翻译任务必须忠实原文，尤其是讲道 PDF、讲章、双语稿、英文资料、日文资料。
+讲道翻译、Full Sermon Mode、E1、经文/ending fidelity、审核/修复轮次、Attempt 3 final repair 和 max-audit release semantics 不由网站项目定义。当前 sermon canonical authority 统一引用：`../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../讲道整理/docs/translation-fidelity-quality-control.md`、`../讲道整理/docs/sermon-independent-audit-orchestration.md`。
 
-要求：
+网站默认通过 `website-publication-package/v1.2` 接收讲道 Owner 已成立的正式中文稿/英文源 identity 与 SHA、publication-facing fidelity status/evidence、发布前 Markdown 和发布元数据；v1.1 继续用于历史、已生成、在途 package 与显式兼容。不得用 build、mirror、SHA、JSON 计数或网站自身判断替代 sermon fidelity approval。
 
-- 逐句完整翻译，不能用摘要代替翻译；讲道默认采用“完整讲章模式（Full Sermon Mode）”。
-- 保留论点、例子、经文、引用、过渡句、重复强调和结论。
-- 完整讲章模式必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂及结束经文。固定显示：`WAKACHIAI` → “小组讨论”，`Doxology` → “荣耀颂”，`Benediction` → “祝祷”；不得把 Doxology 与 Benediction 混译。
-- 可以调整中文语序，但不能删减信息，也不能因网站发布而只保留讲道正文主体。“逐句完整”约束的是信息不能遗漏，不要求照搬英文句法、标点、OCR 换行或生硬表达。
-- 标题、小标题、编号列表、经文、引文、对话和讨论问题必须按中文阅读习惯分行分段，不能因为源稿排版、OCR 或网站导入规范化把多项内容挤在同一行。网站导入器必须保留 `1. / 2. / 3.` 等有序列表为独立 Markdown list item；规范化后若仍出现同一行多个编号项，应 fail-closed。
-- 仅可删除与讲章内容无关的内部制作标记和噪音，例如 `[SLIDE]`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题。`JP`、`EN`、`CN` 等缩写必须先做现场语境判断，不得直接当作可删除标记。
-- 不添加原文没有的解释、应用或神学判断。
-- 原文已经写明引用经文出处时，中文翻译必须自然保留并译出对应经文章节，不得省略；例如原文写 Galatians 2:14，中文正文应保留并规范为“加拉太书2章14节”。
-- 中文正文中直接引用圣经经文时，默认全部使用《和合本》译文；经文出处与范围必须保留，但面向读者的经文正文不显示逐节数字节号。连续两节及以上经文只保留连续经文文字，不在每节前重复 `15 / 16 / 17` 等节号；单节正文也不重复节号。Project Bible 仍按逐节记录校验，讲员解释中自然出现的“第5节”等语义性节号不得删除。如需解释英文词语、原文词义或其他译本差异，可在和合本经文之外另加说明，但不得用其他中文译本替代正文经文。
-- 为兼容自动有声阅读，网站正文中的经文引用统一显示为受控书卷全名 + `章/节/到` 的完整口语形式，例如 `罗马书 1:15-18` → `罗马书1章15节到18节`。书卷名/简称映射来自 CUVMPS Rv2 Project Bible 66 卷受控表；网站 frontmatter、SEO 和 `scripture` metadata 继续允许紧凑 `书卷 章:节` 机器格式。导入器必须自动规范化可安全识别的引用，并对残留英文书卷引用、不连续 compact 引用 fail-closed。
-- 如果源资料有多语言版本，先确认以哪一种语言为翻译源。
+网站自己的消费与显示 Gate 继续生效：
 
-### 翻译后自我审查与修正
+- 导入时核对 package、正式稿 identity/SHA、metadata 与目标路径，异常时 fail-closed。
+- 正文 Markdown 的标题、小标题、编号列表、引文、对话、祷告、讨论问题等必须保持可读层级；网站导入器继续负责自身 Markdown/rendering 规范。
+- 网站正文经文显示继续执行受控书卷全名 + `章/节/到` 的 TTS-friendly rendering；frontmatter、SEO 和 `scripture` metadata 继续允许紧凑机器格式。该项是网站 display/import 责任，不构成网站对 sermon scripture fidelity 的重新判断。
+- raw/processed/posts、metadata、slug/articleId、build、Git、deploy、SEO、notification 与线上发布事实继续归网站 Owner。
 
-每篇讲道完成中文翻译后，必须按英文原稿顺序逐段自我审查，并在发现遗漏或摘要化时先修正，再进入 processed/posts：
-
-1. 检查每个论点、例子、经文、引用、过渡句、反问、现场互动、重复强调、应用和结论是否都有中文对应。
-2. 检查完整引用的经文是否被完整翻译，而不是改成摘要。
-3. 特别检查讲章末尾的祷告邀请、小组讨论、反思问题、祝祷、荣耀颂和结束经文。
-4. 检查人物姓名、引用归属、例证对话和细节是否完整保留。
-5. 修正后再从中文稿反向核对英文原稿，确认没有遗漏，也没有新增原文不存在的解释。
-6. 必须生成或更新翻译审计记录；只有结论为“无遗漏、无摘要化、无错译、无与讲道内容有关的未确认缺口”时，才允许进入独立只读审计。
-7. 后续尚未重译讲道必须在“讲道整理”项目完成全文逐段v2独立审计，并达到E1证据等级后，网站项目才允许接收和发布。构建通过、三处正文一致、文件存在、SHA一致或JSON计数合法，只能证明技术流程成功，不能替代翻译忠实度证明。
-8. 翻译、修复和独立审计必须分离；修复后的文章必须由新的独立只读会话从英文原稿和当前中文稿重新复审，PASS后才能同步raw、processed、post和NAS。
-
-### 中文可读性检查（强制质量门）
-
-完整性审查后必须进行中文可读性检查。允许在信息完全保留的前提下调整语序、断句、标点和段落；禁止删减、摘要化或改变原意。
-
-- 标题、小标题和编号列表必须各自独立成行。
-- 经文、引文、对话、祷告、讨论问题和荣耀颂应按内容层级合理分段。
-- 不得机械照搬英文句法、标点或 OCR 换行。
-- 优化后必须再次核对英文原稿，确认没有因润色造成信息损失。
-
-### 现场语境检查（强制质量门）
-
-定稿前必须检查依赖双语聚会、教会现场或内部缩写才能正确理解的内容：
-
-- `JP`、`EN`、`CN` 等是否表示日语、英语、中文，而不是人名。
-- `Pastor`、`Leader`、`MC`、`Translator` 等是否表示职分或流程角色。
-- 是否存在双语读经、翻译切换、敬拜流程、投影片提示或内部简称。
-- 例如 `Genesis 4:1-8 (JP for sake of time)` 应结合双语聚会语境译为“因为时间关系，这段经文只用日语来读”，不得译成“请 JP 来读”。
-- 无法确认真实含义时，必须标记 `needs_confirmation`，不得擅自定稿。
+若讲道 Owner 的 fidelity 规则发生变化，网站不复制新的规则正文；只检查 canonical reference 与 current default `website-publication-package/v1.2`（以及需要时的 v1.1 compatibility）consumer/contract compatibility，并在确有网站侧兼容需求时调整消费或显示 Gate。
 
 ### 已发布讲道正文修正模式
 

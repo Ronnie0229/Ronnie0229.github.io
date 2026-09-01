@@ -43,15 +43,15 @@
 
 ## 全账号通用工作原则
 
-### 讲道整理跨项目同步硬规则
+### 讲道 Owner → 网站 consumer 边界
 
-讲道整理项目与个人网页项目共同维护讲道发布流程。以后只要新增或修改讲道整理、讲道翻译、讲道发布、NAS 归档、发布日期、元数据、发布前 MD、文章导出、processed/posts 质量门禁相关规则，都必须同步检查两个项目的对应文档。
+讲道 fidelity、Full Sermon Mode、E1、经文/ending 完整性、审核/修复轮次、Attempt 3 final repair 与 max-audit release semantics 只由 `讲道整理` Owner 的 current canonical authority 定义。网站不得复制、重新定义或自行判定这些业务规则。当前 canonical reference：`../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../讲道整理/docs/translation-fidelity-quality-control.md`、`../讲道整理/docs/sermon-independent-audit-orchestration.md`。
 
-本项目侧至少检查：AGENTS.md、CONTENT_WORKFLOW.md、docs/统一内容整理与发布流程.md、docs/content-publishing-error-prevention.md、skills/article-workflow.md。若只更新了其中一个项目，最终汇报必须明确说明另一个项目未同步及原因。
+网站通过已登记、`contract_stable / default write` 的 `website-publication-package/v1.2` 消费讲道 Owner 已成立的正式稿 identity/SHA、publication-facing fidelity status/evidence 与发布元数据；v1.1 继续作为 `contract_stable / non_default / compatibility-preserved` 保留，用于历史、已生成、在途 package 与显式兼容。网站继续拥有并执行自己的 raw/processed/posts、display/metadata/scripture rendering、import fail-closed、build、Git、deploy、SEO、notification 与线上发布事实；这些网站职责不得反向推给讲道 Owner。
 
-讲道翻译还必须遵守“完整讲章模式（Full Sermon Mode）”：原文已有经文出处时，中文翻译要保留经文章节；中文直接引用经文时，默认使用《和合本》；中文正文中的经文引用统一使用 TTS 友好的受控书卷全名 + `章/节/到` 形式，例如 `罗马书 1:15-18` 显示为 `罗马书1章15节到18节`，书卷名/简称映射来自 CUVMPS Rv2 Project Bible 66 卷受控表，frontmatter/SEO/scripture metadata 可继续保留紧凑机器格式。面向读者的直接经文正文不显示逐节数字节号：连续两节及以上经文只保留完整出处范围和连续经文文字，不在每节前重复 `15 / 16 / 17` 等节号；单节正文也不重复节号。Project Bible 仍按逐节记录核验，讲员解释中自然出现的“第5节”等语义性节号不得删除；必须保留讲员结束语（如“让我们祷告”）、讲道后的应用/反思/小组讨论（包括 Discussion、WAKACHIAI、Reflection Questions 等）、祝祷、荣耀颂（Doxology）及结束经文。逐句完整只约束信息不得遗漏，不要求照搬英文句法、标点、OCR 换行或生硬表达；标题、小标题、编号列表、经文、引文、对话和讨论问题必须按中文阅读习惯分行分段。仅可删除 `[SLIDE]`、`NOTE`、Speaker Notes、页码、OCR 噪音和完全重复标题等无关标记；`JP`、`EN`、`CN` 等必须先做现场语境判断。每篇讲道定稿前必须强制通过中文可读性、现场语境、硬事实、经文和结尾检查，无法确认的缩写或角色含义标记为 `needs_confirmation`，不得擅自定稿。后续尚未重译讲道必须先在“讲道整理”项目完成全文逐段v2独立只读审计，并达到E1证据等级；构建、三处一致、SHA或JSON计数合法不能替代翻译忠实度证明。翻译、修复和独立审计必须由不同会话完成。
+以后讲道 Owner 规则变化时，不再双边复制 sermon 业务规则正文；网站只需检查上述 canonical reference 与 current default `website-publication-package/v1.2`（以及需要时的 v1.1 compatibility）consumer/contract compatibility，并仅在网站自己的消费、显示或发布 Gate 需要调整时修改网站文档/实现。
 
-已发布讲道的批量复核必须使用正文修正模式：逐篇对照英文原稿，只修改正文和必要分段；锁定 slug、标题、日期、articleId、作者、分类、经文和 source；禁止触发邮件、补发、订阅通知或 `workflow_dispatch`。frontmatter 只允许按 GEO 规则补正 2-6 个精准 tags，优先包含圣经书卷与核心主题，不得堆砌关键词。
+已发布讲道的批量复核属于网站正文修正流程时，仍须锁定 slug、标题、日期、articleId、作者、分类、经文和 source，禁止误触发邮件、补发、订阅通知或 `workflow_dispatch`；frontmatter 的 GEO/tag 规则继续由网站 Owner 维护。
 
 1. 不要依赖账号自身的聊天记忆；先读取仓库文档。
 2. 修改前先确认 `STATUS.md` 和 `docs/tasks/current.md`。
