@@ -2,11 +2,13 @@
 
 ## 当前任务状态（2026-09-05，《耶稣为何自称人子》分享文章整理发布）
 
-状态：LOCAL_PUBLICATION_PASS / ALL_LOCAL_GATES_PASS / PUSH_NOT_AUTHORIZED
+状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS
 
 已从讲道整理 website-publication-package/v1.2 接收本篇正式中文稿；npm run sync PASS，contract plan PASS。首次 dry-run 因当前 Python 缺少 pypdf/python-docx 依赖 fail-closed，按项目文档安装 requirements.txt 后恢复；第二次 dry-run 因网站 raw/source 尚未交接而 fail-closed，仅复制本篇正式中文稿到 data/raw/分享/20260905_耶稣为何自称人子_Ronnie_中文.txt 后第三次 dry-run PASS。正式本地 publish 成功，slug=2026-09-05-why-jesus-called-himself-son-of-man，articleId=post-3ae5349dbe24efc3，分类=灵命成长，标签=以西结书、但以理书、人子、耶稣基督、圣灵。
 
-本地验证过程中发现全站 17 个既有 body drift。机械追溯确认 17/17 的正式 post 最后正文修改均来自 H8 commit 15a99304d878608213c88dfd00783dba169c0a49，而对应 processed mirror 没有同步 H8 正文；本轮没有改正式 post，只把 H8 已批准 post 正文机械同步到 17 个 processed mirror。修复后：articleId 294/294 PASS；mirror 588/588 PASS；Knowledge Layer 294 篇 0 errors / 0 warnings；npm run build -- --force PASS，336 pages built；git diff --check PASS。当前仅剩本地 Git closure；push/deploy/notification 仍是 separate authorization boundary。
+本地验证过程中发现全站 17 个既有 body drift。机械追溯确认 17/17 的正式 post 最后正文修改均来自 H8 commit 15a99304d878608213c88dfd00783dba169c0a49，而对应 processed mirror 没有同步 H8 正文；本轮没有改正式 post，只把 H8 已批准 post 正文机械同步到 17 个 processed mirror。修复后：articleId 294/294 PASS；mirror 588/588 PASS；Knowledge Layer 294 篇 0 errors / 0 warnings；npm run build -- --force PASS，336 pages built；git diff --check PASS。
+
+用户明确授权将既有三个 commits normal non-force fast-forward push 到 origin/main。push 成功后 fresh readback 确认 remote main exact SHA=f553ec4fb75478622f971a07ac9e390e08bad20b，本地与 origin/main=0/0。Cloudflare /deployment.json 随后更新到同一 commit，builtAt=2026-09-05T06:39:16.146Z。线上文章 HTTP 200，标题、canonical、正文指纹“枯骨复活与五旬节”以及“人子来，为要寻找拯救失丧的人”全部通过。GitHub Actions Email published posts run 33950361513 自动等待部署后成功发送：postCount=1、recipientCount=2、successCount=2、failedCount=0、skippedSlugs=[]。本篇生产发布闭环已完成。
 
 ---
 
