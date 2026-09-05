@@ -1,5 +1,12 @@
 # 个人网页项目状态
 
+## 2026-09-05 — 《耶稣为何自称人子》本地发布状态
+
+- 当前状态：LOCAL_PUBLICATION_PASS / ALL_LOCAL_GATES_PASS / PUSH_NOT_AUTHORIZED。
+- website-publication-package/v1.2 contract plan/dry-run PASS；本篇 raw、processed、post 已生成，slug=2026-09-05-why-jesus-called-himself-son-of-man，articleId=post-3ae5349dbe24efc3。
+- 发现全站 17 个既有 body drift 后，独立机械追溯确认 17/17 的正式 post 最后正文修改均来自 H8 commit 15a99304d878608213c88dfd00783dba169c0a49，而 processed mirror 未同步；本轮只将 H8 已批准 post 正文机械同步到对应 processed mirror，不改正式 post。
+- 最终本地验证：articleId 294/294 PASS；mirror 588/588 PASS；Knowledge 294 篇 0 errors / 0 warnings；Astro build 336 pages PASS；git diff --check PASS。当前只剩本地 Git closure 与另行授权的 push/deploy/notification。
+
 最后更新：2026-08-28 +09:00
 
 ## 当前状态

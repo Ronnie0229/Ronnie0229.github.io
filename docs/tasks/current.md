@@ -1,5 +1,15 @@
 # 当前任务
 
+## 当前任务状态（2026-09-05，《耶稣为何自称人子》分享文章整理发布）
+
+状态：LOCAL_PUBLICATION_PASS / ALL_LOCAL_GATES_PASS / PUSH_NOT_AUTHORIZED
+
+已从讲道整理 website-publication-package/v1.2 接收本篇正式中文稿；npm run sync PASS，contract plan PASS。首次 dry-run 因当前 Python 缺少 pypdf/python-docx 依赖 fail-closed，按项目文档安装 requirements.txt 后恢复；第二次 dry-run 因网站 raw/source 尚未交接而 fail-closed，仅复制本篇正式中文稿到 data/raw/分享/20260905_耶稣为何自称人子_Ronnie_中文.txt 后第三次 dry-run PASS。正式本地 publish 成功，slug=2026-09-05-why-jesus-called-himself-son-of-man，articleId=post-3ae5349dbe24efc3，分类=灵命成长，标签=以西结书、但以理书、人子、耶稣基督、圣灵。
+
+本地验证过程中发现全站 17 个既有 body drift。机械追溯确认 17/17 的正式 post 最后正文修改均来自 H8 commit 15a99304d878608213c88dfd00783dba169c0a49，而对应 processed mirror 没有同步 H8 正文；本轮没有改正式 post，只把 H8 已批准 post 正文机械同步到 17 个 processed mirror。修复后：articleId 294/294 PASS；mirror 588/588 PASS；Knowledge Layer 294 篇 0 errors / 0 warnings；npm run build -- --force PASS，336 pages built；git diff --check PASS。当前仅剩本地 Git closure；push/deploy/notification 仍是 separate authorization boundary。
+
+---
+
 ## Current-effective override（2026-08-28）
 
 当前没有待执行的摩西文章生产动作。《希伯来书 11:23-29｜摩西的信心之旅》正式 `website-publication-result/v1.1` 已记录 commit=`a72f499f67be090dc407f0185b8f9946bee80ea4`、`push_status=pushed`、`deployment_status=deployed`、`notification_status=sent`。因此下方 2026-08-23 条目中的 `LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY` 与“下一步仅剩 commit/push/deploy/notify”只保留为原执行 epoch 的历史 chronology，已被本 override superseded，不得重新执行。
