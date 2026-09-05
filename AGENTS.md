@@ -8,6 +8,17 @@
 
 本项目不依赖任何单个账号的聊天记忆。项目事实、当前状态、设计规范、内容流程、部署流程和交接记录，都以仓库内文档为准。
 
+## Project Standard governance locator / read-only consumption
+
+Website future governance cold-start 必须能够稳定定位 current Project Standard：
+
+- stable locator：`/Volumes/DevSSD/RonnieWork/ProjectStandard/AGENTS.md` → `CURRENT.md` → `standards/v1/STANDARD.md`；先 fresh-read/verify current Standard identity，再只按当前治理任务需要读取 task-relevant Core，不 pin 某次 maintenance release，也不复制 Standard 长正文；
+- `Website -> ProjectStandard` 仅是 ProjectStandard-specific governance read-only secondary authority channel。读取 Project Standard 不产生 ProjectStandard 或 Website 写权限，不转移 Website 或其它 Owner authority，也不使 Project Standard 成为 Website 的 content/site/SEO/publication/deployment/email business superior；
+- 本 channel 不扩大、不替代 Website 现有 RonnieCross root / Sermon / Translation / RonnieAutomation / SkillFactory secondary authority。普通 cross-project secondary authority 仍必须由 current task、contract、interface、locator、read scope 与 purpose 明确约束；任何 cross-project write 仍须 separate explicit current authorization；
+- 若当前治理动作把 Project Standard authority 列为 mandatory input，而 stable locator、current identity 或 task-relevant Core 无法合法 fresh-read/verify，则该治理动作必须 fail-closed / BLOCKED，不得以聊天摘要、stale copy、其它项目转述或猜测替代；
+- 发现新的 current Standard 或 maintenance delta 只形成 awareness，不自动产生 adoption、remediation、requalification 或 audit；future ACTIVE/in-flight task 继续按其冻结 authority/task/handoff 执行，在自然安全边界后再由 Website own current authority fresh Gate。
+- Website 启用 current Project Standard 的 `Shared Knowledge Collaboration` Optional Module，并沿用上述 stable locator，不复制模块正文；Website own authority/current truth 始终优先，shared knowledge / OB 仅作 advisory，lookup/reference 不等于 adoption。meaningful closure 后按该模块做 non-blocking Feedback Check（允许 `NO_UPDATE_REQUIRED`）；任何 cross-owner write 仍需 separate current authorization。本声明不改变 Website 的 business/content/Git/deploy/production authority。
+
 ## 项目定位
 
 - 本仓库是 RonnieCross 个人文章网站的唯一正式代码仓库。
