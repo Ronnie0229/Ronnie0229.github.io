@@ -1,0 +1,32 @@
+{
+  "interface": "website-publication-result",
+  "version": "1.1",
+  "status": "built",
+  "slug": "2026-09-06-腓立比书-1-1-7｜属于基督",
+  "article_id": "post-2ed8151d25c1e7ea",
+  "published_at": "2026-09-06T10:17:12+09:00",
+  "post_path": "src/content/posts/2026-09-06-腓立比书-1-1-7｜属于基督.md",
+  "processed_path": "data/processed/整理后的讲道文章/2026-09-06-腓立比书-1-1-7｜属于基督.md",
+  "build": {
+    "status": "passed",
+    "passed": true,
+    "command": "npm run build",
+    "completed_at": null,
+    "error": null
+  },
+  "commit_hash": null,
+  "push_status": "not_run",
+  "deployment_status": "not_run",
+  "notification_status": "not_run",
+  "evidence": {
+    "producer": "个人网页项目/scripts/write_publication_result.py",
+    "written_at": "2026-09-06T01:19:50.374934+00:00",
+    "atomic_write": true,
+    "source_contract": "/Volumes/DevSSD/RonnieWork/RonnieCross/讲道整理-wt-web-content-git-closure-20260902/发布记录/contracts/20260906-sermon-philippians-1-1-7-belong-to-christ.publication-package.json",
+    "acceptance_evidence_id": null,
+    "acceptance_evidence_path": null,
+    "acceptance_evidence_sha256": null,
+    "final_status_authority": "workspace-control publication-acceptance-evidence/v1 bundle",
+    "error_stage": null
+  }
+}
