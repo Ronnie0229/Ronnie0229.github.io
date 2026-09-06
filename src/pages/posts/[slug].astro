@@ -26,10 +26,7 @@ export async function getStaticPaths() {
 
 const { post, previousPost, nextPost, relatedPosts } = Astro.props;
 const knowledge = buildPostKnowledge(post);
-const { Content, headings } = await render(post);
-const tableOfContents = headings.filter(
-  (heading) => heading.depth === 2 || heading.depth === 3
-);
+const { Content } = await render(post);
 const formattedDate = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
   month: "2-digit",
@@ -107,20 +104,6 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
         {post.data.tags.map((tag) => <span>{tag}</span>)}
       </div>
     </header>
-    {
-      tableOfContents.length > 0 && (
-        <nav class="article-toc" aria-label="文章目录">
-          <p>文章目录</p>
-          <ol>
-            {tableOfContents.map((heading) => (
-              <li>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      )
-    }
     <div class="article-content">
       <Content />
     </div>
