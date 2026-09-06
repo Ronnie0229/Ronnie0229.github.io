@@ -1,5 +1,21 @@
 # 当前任务
 
+## 2026-09-06 — 《属于基督》presentation revision closure
+
+状态：`PRESENTATION_REVISION_DEPLOYED / LIVE_PRESENTATION_VERIFY_PASS / SEMANTIC_LOSS_GATE_PASS / DUPLICATE_NOTIFICATION_SUPPRESSED`
+
+首次发布的 fidelity baseline 保持 `c738a970...` 独立审核结论不变；发布稿重排/中文文风编辑产生新 SHA=`9d92ef8f...`，95/95 semantic-loss gate PASS、经文正文 unchanged。Website revision commit=`6eae292deaf61956b6f43096cbd66bb6c1b60eb3` 已部署；线上结构验证为 5 个核心 H2、10 个经文 blockquote、115 个段落、最长段落 134 字、舞台提示 0。此次为既有 post 修改，notification workflow run `34006652657` success 且未重复发送邮件。
+
+---
+
+## 当前任务状态（2026-09-06，《属于基督》讲道正式发布完成）
+
+状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS
+
+Website 已接收并发布 `website-publication-package/v1.2`；本篇 local publish/build gates PASS，commit=`ca3d87bd6ed275151441f10e2ed8933daa7dce9f` 已 normal fast-forward push 到 `origin/main`。Cloudflare Pages 后续自动部署到同一 exact commit，`deployment.json` builtAt=`2026-09-06T01:53:45.682Z`，线上文章 HTTP 200。GitHub Actions Email published posts run `34005008294` success：1 post / 2 recipients / 2 success / 0 failed。正式 `website-publication-result/v1.1` 已更新为 deployed/pushed/sent。讲道 NAS 三文件归档由内容侧 RonnieCross final closure 记录为 archived。
+
+---
+
 ## 当前任务状态（2026-09-05，《耶稣为何自称人子》分享文章整理发布）
 
 状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS

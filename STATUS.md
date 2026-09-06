@@ -1,5 +1,24 @@
 # 个人网页项目状态
 
+## 2026-09-06 — 《属于基督》发布稿排版与中文文风整改
+
+- 根因：首次发布漏掉 publication-presentation gate；fidelity PASS 不能替代发布排版/中文编辑验收。
+- independently verified semantic baseline SHA=`c738a9705aaf6ae2da7f76b8b9344e3cc21ebd2827ae71e397d2a8d6805eef06`。
+- presentation-style revision SHA=`9d92ef8ff7e8fdc0ad66372378ac1b33c939774938cec4f6e1ca83024059ffad`；95/95 semantic-loss diff gate PASS；controlled scripture text unchanged。
+- Website revision commit=`6eae292deaf61956b6f43096cbd66bb6c1b60eb3` 已 push/deployed；deployment builtAt=`2026-09-06T02:31:51.856Z`。
+- live presentation verify：三大点/小组分享/荣耀颂均为 H2；10 个 scripture blockquote；115 paragraphs；max paragraph=134 chars；stage-direction markers=0。
+- 更新既有文章，不属于新增 post；Email workflow run `34006652657` success，未重复发送订阅邮件。
+- 本地正式中文稿、Website raw/processed/post、NAS archived Chinese 已同步到 SHA `9d92ef8f...`。
+
+## 2026-09-06 — 《属于基督》正式发布完成
+
+- 当前状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS。
+- production commit=`ca3d87bd6ed275151441f10e2ed8933daa7dce9f`；`main...origin/main` clean。
+- Cloudflare `deployment.json` 已确认 exact commit=`ca3d87bd6ed275151441f10e2ed8933daa7dce9f`，builtAt=`2026-09-06T01:53:45.682Z`；文章 live HTTP 200。
+- GitHub Actions `Email published posts` run `34005008294` success：postCount=1、recipientCount=2、successCount=2、failedCount=0、skippedSlugs=[]。
+- Website publication result v1.1 已更新为 status=`deployed`、push_status=`pushed`、deployment_status=`deployed`、notification_status=`sent`。
+- 讲道 NAS 三文件归档由内容侧 RonnieCross registry/task 记录为 `archived`。
+
 ## 2026-09-05 — 《耶稣为何自称人子》正式发布完成
 
 - 当前状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS。
