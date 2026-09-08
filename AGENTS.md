@@ -44,7 +44,7 @@ Website future governance cold-start 必须能够稳定定位 current Project St
 按任务类型继续阅读：
 
 - 设计 / 前端 / 主题：`DESIGN.md`、`docs/ui-spec.md`、`风格重新设计素材/ronniecross_astro_design_spec.md`
-- 内容 / 文章 / 讲道 / 分享：`CONTENT_WORKFLOW.md`、`docs/统一内容整理与发布流程.md`、`docs/content-style.md`、`docs/content-publishing-error-prevention.md`、`skills/article-workflow.md`
+- 内容 / 文章 / 讲道 / 分享：`CONTENT_WORKFLOW.md`、`docs/统一内容整理与发布流程.md`、`docs/content-style.md`、`docs/content-publishing-error-prevention.md`、`skills/article-workflow.md`；讲道 publication presentation/rendering 还必须读取 `docs/sermon-content-rendering-binding.md`。
 - SEO：`SEO.md`、`src/pages/sitemap.xml.ts`、`src/pages/rss.xml.ts`、`src/pages/search-index.json.ts`
 - 部署 / 后台：`DEPLOY.md`、`docs/网站后台使用与配置.md`、`wrangler.jsonc`、`functions/`
 - Git / worktree / 多账号协作：`docs/branch-workflow.md`、`docs/account-switching.md`
@@ -82,6 +82,7 @@ Website future governance cold-start 必须能够稳定定位 current Project St
 16. 给 Codex 写执行任务时，任务内容必须明确要求 Codex 在完成构建、提交、push 或其他执行动作后，更新 `docs/tasks/current.md` 的任务完成状态，记录构建结果、提交哈希、push 结果、修改文件、未完成事项和需要用户验证的内容。
 17. 任何网站项目总控/阶段总控在每一轮决定下一步或扩大修改范围前，必须对标“当前最终目标 + 当前正式任务 + 当前 Git/生产状态”，并检查 `scope drift` 与 `overbuilding`。网站项目不得因为跨项目调用方便而吸收讲道忠实度、模型 runtime、通用 agent/automation 等其他 Owner 的业务逻辑；若发现职责漂移或存在更小复用路径，先 redecision，再派发任务。检查结论必须写入 `docs/tasks/current.md`、`STATUS.md` 或对应正式 task。
 18. 总控分发执行/审计任务时，完整任务必须先写入正式 task/`docs/tasks/current.md` 与项目 handoff；聊天只保留概要说明和短提示词，不得重复完整合同、长分母、长禁止清单或历史证据。短提示词只负责指向正式文档和停止交回点；默认不输出大进度表，除非用户明确要求。
+19. 本项目长期采用 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`：`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目` 应作为 canonical stable business worktree，优先服务成熟文章发布、紧急修文和正常部署。SkillFactory、P4、Agent、SEO/架构大改及大型治理整改等长期/并行建设默认不得长期占用 canonical tree，应在本仓库使用 Owner-local 独立 task branch + bounded-stage worktree；一个 construction worktree 只承载一个可独立闭合 stage，完成 Owner 要求的验证/audit/integration 后 retire。文章发布导致 `main` 前进后，仍在进行的 construction lane 必须 fresh-read 最新 baseline，并按当前 Owner authority 做必要 reconciliation/requalification；历史 PASS 不自动覆盖新 baseline。完整分支/worktree规则见 `docs/branch-workflow.md`。
 
 ## Codex 输出控制
 

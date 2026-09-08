@@ -1,5 +1,21 @@
 # 个人网页项目状态
 
+## 2026-09-08 — Publication Fast Lane / Construction Isolation Owner Adoption
+
+- Website Owner 正式采用 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`：canonical business worktree 保持用于成熟文章发布；长期/并行建设承担 branch/worktree 隔离与后续 baseline requalification 成本。
+- 本轮同时把 2026-09-06 已独立通过的 B-min/C-min presentation closure exact files 迁入当前 `main` worktree，保持 B-min SHA=`be9f36e48ae1c60c730a78b264acbef0247cdf6a8b274f6d6d81448798e93f6e`、C-min SHA=`f8d0132d7e97a333cfb46f5691ad054e822b34a70a6c8962d639a35a16272d6f` 不变。
+- 本轮不改变 renderer/CSS/layout/已发布正文，不执行 deploy/notification；legacy 20260902 worktree 的物理 retirement 由 RonnieCross topology normalization 总控在零未分类内容后单独执行。
+
+## 2026-09-06 — Sermon Publication Presentation Website Owner Closure
+
+- RonnieCross `Sermon Publication Presentation Minimal Owner Closure` 已完成正式闭环；首轮独立审计曾因 B-min `F-01` false-positive 裁决 `FAIL`，随后只做该 finding 的最小定向修复，并经新的 targeted independent re-audit `PASS`。历史 FAIL chronology 保留。
+- 当前正式 Website Owner closure identities 固定为：
+  - B-min Gate：`scripts/validate_sermon_presentation.mjs`，SHA-256=`be9f36e48ae1c60c730a78b264acbef0247cdf6a8b274f6d6d81448798e93f6e`；
+  - C-min Rendering Binding：`docs/sermon-content-rendering-binding.md`，SHA-256=`f8d0132d7e97a333cfb46f5691ad054e822b34a70a6c8962d639a35a16272d6f`。
+- 当前状态：`OWNER_CLOSURE_COMPLETE / NO_FURTHER_WEBSITE_REMEDIATION_REQUIRED_NOW`。
+- 为保持已接受 closure identity，本阶段不再修改上述 B-min/C-min 实体，即使文件内部保留形成 candidate 时的历史状态文字，也不得仅为更新状态标签而改变已验收 SHA。
+- 当前不修改 Website renderer/CSS/layout，不新增 sermon-only TOC，不重做/扩大 B-min checks，不建立通用 Markdown/presentation framework，不扫描历史 sermon，不修改/部署《属于基督》。
+
 ## 2026-09-06 — 《属于基督》发布稿排版与中文文风整改
 
 - 根因：首次发布漏掉 publication-presentation gate；fidelity PASS 不能替代发布排版/中文编辑验收。

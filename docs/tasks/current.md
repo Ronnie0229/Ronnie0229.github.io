@@ -1,5 +1,24 @@
 # 当前任务
 
+## 2026-09-08 — Worktree topology normalization / Publication Fast Lane adoption
+
+状态：`OWNER_ADOPTION_APPLIED / LEGACY_WORKTREE_RETIREMENT_PENDING_ROOT_MASTER`
+
+Website Owner 已采用 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`。成熟文章发布继续以 canonical business worktree 为默认 lane；SkillFactory/P4/Agent/SEO/架构等长期并行建设默认进入 Owner-local bounded-stage worktree。2026-09-06 presentation B-min/C-min 已按独立审核接受的 exact bytes 迁入当前 `main`，SHA identities 不变。legacy 20260902 worktree 的物理路径恢复/retirement 仍由 RonnieCross root topology normalization 总控在零未分类 current 内容后执行，本 Owner 不越权做强制清理。
+
+## 当前任务状态（2026-09-06，Sermon Publication Presentation Website Owner Closure）
+
+状态：`OWNER_CLOSURE_COMPLETE / NO_FURTHER_WEBSITE_REMEDIATION_REQUIRED_NOW`
+
+RonnieCross root `Sermon Publication Presentation Minimal Owner Closure` 已正式 PASS。首轮独立审计曾因 B-min `F-01` 裁决 FAIL，随后仅做该 finding 的最小修复，并经 targeted independent re-audit PASS；历史 FAIL chronology 保留。
+
+当前接受且冻结的 Website Owner identities：
+
+- B-min：`scripts/validate_sermon_presentation.mjs`，SHA-256=`be9f36e48ae1c60c730a78b264acbef0247cdf6a8b274f6d6d81448798e93f6e`；
+- C-min：`docs/sermon-content-rendering-binding.md`，SHA-256=`f8d0132d7e97a333cfb46f5691ad054e822b34a70a6c8962d639a35a16272d6f`。
+
+当前不继续 Website remediation：不改 renderer/CSS/layout，不新增 sermon-only TOC，不重做或扩大 B-min，不建通用 Markdown/presentation framework，不扫描历史 sermon，不修改或重新部署《属于基督》。
+
 ## 2026-09-06 — 《属于基督》presentation revision closure
 
 状态：`PRESENTATION_REVISION_DEPLOYED / LIVE_PRESENTATION_VERIFY_PASS / SEMANTIC_LOSS_GATE_PASS / DUPLICATE_NOTIFICATION_SUPPRESSED`

@@ -64,6 +64,14 @@ new-branch
 
 多个任务并行时，推荐按任务创建 worktree，而不是在同一个目录频繁切换分支。
 
+### Publication Fast Lane / Construction Isolation
+
+- `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目` 是 Website canonical stable business worktree，默认优先服务成熟文章发布、紧急修文和正常部署。
+- SkillFactory、P4、Agent、SEO/架构大改及大型治理整改等长期/并行建设，默认使用本仓库独立 task branch + bounded-stage worktree；不要要求文章发布通过 stash、临时迁移或 archive canonical tree 为建设让路。
+- 一个 construction worktree 只承载一个可独立闭合、验证、审核、集成并退休的 stage。长期工程应拆成连续 stage worktree，而不是维护永久 dirty worktree。
+- 若 publication 使 `main` 前进，active construction lane 必须 fresh-read 最新 canonical baseline；按变更重叠情况做 Owner 允许的 reconciliation/requalification，历史 PASS 不自动覆盖新 baseline。
+- 跨 Website + Sermon 的联合建设应分别使用各自 Owner-local worktree；联合任务不产生跨 Owner worktree mutation authority。
+
 示例目录：
 
 ```text
