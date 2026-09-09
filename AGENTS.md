@@ -230,3 +230,6 @@ Admin 页面可以加载 `/styles/tokens.css` 共享变量，但不要把 Admin 
 - 不要在 `src/styles/global.css` 里加入 Admin 编辑器、表格、图片库、评论管理、数据概览等后台样式。
 - 不要同时维护两份前台 `global.css`。
 
+## Git disposition closure（2026-09-09 起）
+
+本项目已采用 ProjectStandard current `GIT_DISPOSITION_CLOSURE`。任何 bounded task/stage 最终 closure 前必须 fresh-read `PROJECTSTANDARD_GIT_DISPOSITION_ADOPTION.md` 并明确 Git/repository disposition；未给出 disposition 不得视为完整收口。该规则只补充 closure completeness，不改变本项目业务 authority，也不自动授权 commit/push。
