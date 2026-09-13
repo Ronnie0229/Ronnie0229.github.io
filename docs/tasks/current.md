@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-09-13 — 《为爱心祷告》两项排版修订
+
+状态：`LOCAL_REVISION_PASS / PENDING_EXPLICIT_PUSH_DEPLOY_AUTHORIZATION`
+
+仅修正已发布文章的两项 Website presentation：①“我们会回答三个问题”后的三个问题改为 3 个独立有序列表项；②`小组分享（WAKACHIAI）` 改为仅保留 `小组分享`。Website raw / processed / post 三份副本同步；未修改讲道整理 Owner 正式中文稿、经文、metadata、slug、articleId、publishedAt 或正文 proposition。`validate_sermon_presentation.mjs` PASS，mirror 592/592 PASS；首次普通 build 出现 stale content-store `Duplicate id` warning，fresh `npm run build -- --force` 清空 data store 后 338 pages PASS 且 warning 消失。构建产物机械确认 WAKACHIAI 不存在、`小组分享` 存在、三个问题均渲染为独立 `<li>`。当前尚未 commit/push/deploy，等待当前 Website 规则要求的显式生产授权。
+
 ## 2026-09-13 — Website Publication Fast Lane dirty-state redecision
 
 状态：`PASS_DIRTY_STATE_REDECISION / P5_PARSER_WRITESET_COMMITTED_SEPARATELY / CANONICAL_CLEAN / SYNC_PASS / READY_FOR_PARENT_PUBLICATION_CONSUMPTION`
