@@ -200,6 +200,20 @@
 - 不允许通过给单篇文章增加空行、空标题、假锚点或局部 margin 来规避导航遮挡；此类问题应在全局文章渲染层修复。
 - TOC/锚点属于网站全局交互行为，修复后至少抽查 1 篇同时含 H2/H3 的长文章和 1 个移动端窄屏尺寸。
 
+## 16. 视觉编号不等于 Markdown 列表；公开小组分享标题不得残留 WAKACHIAI
+
+问题：2026-09-13《为爱心祷告》发布后发现两类 presentation 缺口：`1）/2）/3）` 虽在源文件中视觉分行，但 Astro/Markdown 不保证把它们渲染为独立列表项；同时 `小组分享（WAKACHIAI）` 把内部/源语言辅助标签直接带到了公开页面。
+
+原因：已有 Gate 主要识别明确的小组讨论/重点 section 和标准 Markdown list，没有覆盖正文中“我们会回答三个问题”这类未带 heading 的提纲，也没有把公开小组分享标题的中文显示规范编码成机械检查。
+
+整改：
+
+- 两个以上连续 `1）/2）/...` 视觉编号，或同一行出现多个此类编号，一律不得作为最终 Website Markdown；必须转换为标准 `1. / 2. / 3.` 或无序列表语法。
+- `scripts/validate_sermon_presentation.mjs` 必须对上述伪列表 fail-closed，并保留对应 regression fixture。
+- 公开讲道的小组分享 H2/H3 必须显示为 `小组分享`；仍含 `WAKACHIAI` 的小组分享 heading 必须 fail-closed。
+- 该 normalization 只属于 Website presentation/display，不重开 sermon translation fidelity，不修改 Project Bible、经文正文或讲道 Owner 正式稿。
+- 对相关事故修复，除 source 检查外还必须用实际 Astro Markdown processor 或最终构建 HTML 证明独立 `<li>` 与目标 heading 已正确渲染。
+
 ## 文章移动端视觉检查清单
 
 文章发布、文章模板/CSS/TOC 修改或移动端导航修改后，至少执行以下人工或浏览器 smoke check。该检查不能只由 `npm run build` 代替：

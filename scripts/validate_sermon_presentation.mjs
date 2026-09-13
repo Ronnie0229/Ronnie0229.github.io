@@ -64,7 +64,54 @@ const productionResiduePatterns = [
 
 const itemizedSectionPattern =
   /(重点|要点|主要论点|提纲|小组讨论|讨论问题|反思问题|key\s*points?|reflection\s*questions?|discussion(?:\s*questions?)?|wakachiai)/i;
-const listItemPattern = /^\s*(?:[-+*]|\d+[.)、．])\s+\S/;
+const listItemPattern = /^\s*(?:[-+*]|\d+[.)])\s+\S/;
+const pseudoOrderedListLinePattern = /^\s*(\d+)[）、．]\s*\S/;
+const pseudoOrderedListInlinePattern = /(?:^|\s)(\d+)[）、．]\s*\S/g;
+const nonPublicSmallGroupHeadingPattern =
+  /^\s*#{2,3}\s+(?:小组分享.*WAKACHIAI.*|WAKACHIAI(?:\s.*)?)\s*$/i;
+
+function collectPseudoOrderedListFailures(lines) {
+  const failures = [];
+  let run = [];
+
+  function flushRun() {
+    if (run.length >= 2) {
+      failures.push({
+        kind: "consecutive_pseudo_ordered_list_lines",
+        lines: run.map((entry) => entry.line),
+        text: run.map((entry) => entry.text).join(" | ")
+      });
+    }
+    run = [];
+  }
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const lineMatch = line.match(pseudoOrderedListLinePattern);
+    if (lineMatch) {
+      const number = Number(lineMatch[1]);
+      const expected = run.length ? run[run.length - 1].number + 1 : number;
+      if (run.length && number !== expected) flushRun();
+      run.push({ line: index + 1, number, text: line.trim() });
+    } else if (line.trim()) {
+      flushRun();
+    }
+
+    const inlineNumbers = [...line.matchAll(pseudoOrderedListInlinePattern)].map((match) =>
+      Number(match[1])
+    );
+    if (inlineNumbers.length >= 2) {
+      failures.push({
+        kind: "inline_pseudo_ordered_list",
+        line: index + 1,
+        numbers: inlineNumbers,
+        text: line.trim()
+      });
+    }
+  }
+  flushRun();
+  return failures;
+}
 
 function collectItemizedSections(lines) {
   const sections = [];
@@ -198,11 +245,16 @@ async function main() {
   }
 
   const headingFailures = [];
+  const smallGroupHeadingFailures = [];
   for (let index = 0; index < lines.length; index += 1) {
     const match = lines[index].match(/^\s*#{2,3}\s+(\d+)\s*[.、．)]\s*\S/);
     if (match) headingFailures.push({ line: index + 1, text: lines[index].trim() });
+    if (nonPublicSmallGroupHeadingPattern.test(lines[index])) {
+      smallGroupHeadingFailures.push({ line: index + 1, text: lines[index].trim() });
+    }
   }
 
+  const pseudoOrderedListFailures = collectPseudoOrderedListFailures(lines);
   const itemizedSections = collectItemizedSections(lines);
   const sourceStructureFailures = itemizedSections
     .filter(
@@ -260,6 +312,16 @@ async function main() {
       "toc_heading_duplicate_numbering_risk",
       headingFailures,
       "Current Website TOC is an ordered list over H2/H3; source H2/H3 must not carry an Arabic list-number prefix."
+    ),
+    makeCheck(
+      "pseudo_ordered_list_requires_markdown_list",
+      pseudoOrderedListFailures,
+      "Two or more ordered items written as Chinese visual markers such as 1）/2） are not stable Markdown list blocks and must be normalized to standard Markdown list syntax before publication."
+    ),
+    makeCheck(
+      "small_group_heading_public_label",
+      smallGroupHeadingFailures,
+      "Public sermon presentation uses the exact Chinese heading 小组分享; source-language helper label WAKACHIAI must not remain in the public H2/H3 heading."
     ),
     makeCheck(
       "itemized_section_source_structure",

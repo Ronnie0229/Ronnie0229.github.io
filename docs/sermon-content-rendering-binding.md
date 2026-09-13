@@ -57,6 +57,11 @@ TOC 使用 `<ol>`，浏览器会自动显示列表序号；链接文字直接使
 
 当前 Astro renderer 会把它们渲染为 `<ol>/<ul>`，每项为独立 `<li>` block。B-min 不只检查 source list marker，还用 Website 当前 `@astrojs/markdown-remark` processor 渲染同一 source candidate，并验证对应 section 的 rendered HTML 中存在匹配数量的独立 `<li>`。
 
+2026-09-13 incident 后补充两条机械约束：
+
+- 连续两个以上 `1）/2）/3）` 这类中文视觉编号，或同一行内出现多个此类编号，不能作为最终 Website Markdown；它们必须先规范成标准 Markdown list，否则 presentation Gate fail-closed。
+- 公开讲道的小组分享标题统一为 `小组分享`；`小组分享（WAKACHIAI）`、仅 `WAKACHIAI` 或其他仍保留 `WAKACHIAI` 的小组分享 H2/H3 不能进入公开页面。该项只是 Website display normalization，不修改讲道 Owner 的正式翻译稿或 fidelity verdict。
+
 ## 6. scripture metadata 与正文 scripture display
 
 frontmatter `scripture` 是网站 metadata；文章页会把它格式化并用 `toSpokenScriptureDisplay()` 转为 TTS 友好显示，渲染在 `<p class="article-scripture">`。

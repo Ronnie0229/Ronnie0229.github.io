@@ -101,6 +101,56 @@ test("FAIL fixture closes F-01 mixed list plus adjacent plain-text tail false-po
   assert.equal(section.unstructuredInlineTails[0].text, "第三项");
 });
 
+test("FAIL fixture blocks consecutive Chinese visual numbering that is not Markdown list syntax", () => {
+  const result = runFixture("fail-pseudo-ordered-list-lines.md");
+  assert.equal(result.status, 1);
+  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
+});
+
+test("FAIL fixture blocks multiple Chinese visual-number items collapsed on one source line", () => {
+  const result = runFixture("fail-pseudo-ordered-list-inline.md");
+  assert.equal(result.status, 1);
+  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
+});
+
+test("FAIL fixture blocks Chinese dunhao numbering that is not CommonMark ordered-list syntax", () => {
+  const result = runFixture("fail-pseudo-ordered-list-dunhao.md");
+  assert.equal(result.status, 1);
+  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
+});
+
+test("FAIL fixture blocks WAKACHIAI helper text in the public small-group heading", () => {
+  const result = runFixture("fail-wakachiai-heading.md");
+  assert.equal(result.status, 1);
+  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.ok(failedCheckIds(result.output).includes("small_group_heading_public_label"));
+});
+
+test("PASS incident fixture renders the three questions as li blocks and keeps exact Chinese small-group heading", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ronniecross-sermon-incident-"));
+  const renderedOutput = path.join(tempDir, "incident.html");
+  try {
+    const result = runFixture("pass-incident-list-and-small-group.md", [
+      "--rendered-output",
+      renderedOutput
+    ]);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.equal(result.output.status, "MECHANICAL_PRESENTATION_PASS");
+    const html = fs.readFileSync(renderedOutput, "utf8");
+    assert.match(
+      html,
+      /<ol>[\s\S]*<li>什么是真正的爱？<\/li>[\s\S]*<li>我们怎样分辨？<\/li>[\s\S]*<li>结果是什么？——纯洁。<\/li>[\s\S]*<\/ol>/
+    );
+    assert.match(html, /<h2[^>]*>小组分享<\/h2>/);
+    assert.doesNotMatch(html, /WAKACHIAI/i);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("PASS fixture does not misclassify blank-line-separated transition or ordinary prose", () => {
   const result = runFixture("pass-itemized-with-transition.md");
   assert.equal(result.status, 0, result.stderr || result.stdout);

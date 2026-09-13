@@ -1,5 +1,12 @@
 # 个人网页项目状态
 
+## 2026-09-13 — Sermon presentation list / small-group heading incident remediation PASS
+
+- 《为爱心祷告》发布后暴露的两类 Website presentation 缺口已做最小 source-owner remediation：非 CommonMark 视觉编号（`1）/1、/1．` 等）不再被当作稳定列表；公开小组分享 H2/H3 仍含 `WAKACHIAI` 时 fail-closed。
+- `scripts/validate_sermon_presentation.mjs` 新增 `pseudo_ordered_list_requires_markdown_list` 与 `small_group_heading_public_label`；标准有序列表只接受可稳定渲染的 `1.` / `1)`。新增 5 个事故 fixtures（4 个负向 + 1 个真实 Astro renderer 正向），presentation regression fresh `12/12 PASS`，既有 7 项全部保持 PASS；正向 fixture 机械确认三个问题为独立 `<li>`、H2 精确为 `小组分享` 且无 `WAKACHIAI`。
+- 今天修正后的《为爱心祷告》在新 Gate 下 `MECHANICAL_PRESENTATION_PASS`；Knowledge Layer 296 posts / 0 errors / 0 warnings；fresh forced build 338 pages PASS。
+- 规则已同步进入 `docs/sermon-content-rendering-binding.md` 与 `docs/content-publishing-error-prevention.md`。本整改仅属于 Website presentation/display；未重开 sermon fidelity、Project Bible、翻译正式稿或通知语义，也未修改当前线上文章内容。
+
 ## 2026-09-13 — Publication Fast Lane dirty-state restoration PASS
 
 - Sermon Parent handoff 指定的 Website canonical dirty-state blocker 已关闭：既有 P4→P5 shadow/preflight/parser lineage 经 formal evidence 归属确认后，以独立本地 commit `6fc35cc` 封存；没有 stash/reset/覆盖/删除或夹带未归属 concurrent change。

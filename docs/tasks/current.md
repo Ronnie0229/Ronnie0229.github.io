@@ -1,10 +1,16 @@
 # 当前任务
 
+## 2026-09-13 — Sermon presentation list + small-group heading incident remediation
+
+状态：`PASS_TARGETED_REMEDIATION / 12_OF_12_PRESENTATION_REGRESSION_PASS / CURRENT_ARTICLE_PASS / KNOWLEDGE_PASS / BUILD_PASS / IMPLEMENTATION_COMPLETE`
+
+针对《为爱心祷告》发布后暴露的两类 Website presentation 缺口做最小整改：`scripts/validate_sermon_presentation.mjs` 新增 `pseudo_ordered_list_requires_markdown_list` 与 `small_group_heading_public_label` 两个 fail-closed check。连续两个以上 `1）/2）/...`、`1、/2、/...`、`1．/2．/...` 等非 CommonMark 视觉编号，以及同一行多个此类编号会被拒绝；标准有序列表只接受可稳定渲染的 `1.` / `1)` 语法。公开讲道 H2/H3 的小组分享标题若仍含 `WAKACHIAI` 也会被拒绝。新增 5 个事故 regression fixtures（4 个负向 + 1 个真实 renderer 正向），并保留原 7 项行为，fresh suite 12/12 PASS；正向 fixture 由 Astro Markdown processor 机械证明三个问题渲染为独立 `<li>`、H2 精确为 `小组分享` 且无 `WAKACHIAI`。今天《为爱心祷告》修正后 post 在新 Gate 下 `MECHANICAL_PRESENTATION_PASS`。`npm run check:knowledge`：296 posts / 0 errors / 0 warnings；`npm run build -- --force`：338 pages PASS。规则已同步写入 `docs/sermon-content-rendering-binding.md` 与 `docs/content-publishing-error-prevention.md`。范围严格停留在 Website presentation/display；未修改 sermon Owner 正式翻译稿、fidelity、Project Bible、经文、metadata、slug/articleId、通知语义或当前线上文章内容。
+
 ## 2026-09-13 — 《为爱心祷告》两项排版修订
 
-状态：`LOCAL_REVISION_PASS / PENDING_EXPLICIT_PUSH_DEPLOY_AUTHORIZATION`
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED / LIVE_VERIFY_PASS / NOTIFICATION_SUPPRESSED_AS_REVISION`
 
-仅修正已发布文章的两项 Website presentation：①“我们会回答三个问题”后的三个问题改为 3 个独立有序列表项；②`小组分享（WAKACHIAI）` 改为仅保留 `小组分享`。Website raw / processed / post 三份副本同步；未修改讲道整理 Owner 正式中文稿、经文、metadata、slug、articleId、publishedAt 或正文 proposition。`validate_sermon_presentation.mjs` PASS，mirror 592/592 PASS；首次普通 build 出现 stale content-store `Duplicate id` warning，fresh `npm run build -- --force` 清空 data store 后 338 pages PASS 且 warning 消失。构建产物机械确认 WAKACHIAI 不存在、`小组分享` 存在、三个问题均渲染为独立 `<li>`。当前尚未 commit/push/deploy，等待当前 Website 规则要求的显式生产授权。
+仅修正已发布文章的两项 Website presentation：①“我们会回答三个问题”后的三个问题改为 3 个独立有序列表项；②`小组分享（WAKACHIAI）` 改为仅保留 `小组分享`。Website processed / post 副本同步，Website raw 亦按 presentation 规则对齐；未修改讲道整理 Owner 正式中文稿、经文、metadata、slug、articleId、publishedAt 或正文 proposition。`validate_sermon_presentation.mjs` PASS，mirror 592/592 PASS；fresh `npm run build -- --force` 338 pages PASS。revision commit=`26ca90f0eba5b5f69cd24ad5e9ba44ceeaf36a91` 已 push，Cloudflare `/deployment.json` 已切到该 commit（builtAt=`2026-09-13T02:27:46.323Z`），线上机械确认三个问题均为独立 `<li>`、标题仅为 `小组分享`、无 `WAKACHIAI`。GitHub Actions run `34733047392` 明确返回 `No changed published posts were found in this push.`，未重复发送订阅邮件。
 
 ## 2026-09-13 — Website Publication Fast Lane dirty-state redecision
 
