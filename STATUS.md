@@ -1,5 +1,33 @@
 # 个人网页项目状态
 
+## 2026-09-11 — P5 Website scripture parser targeted remediation + independent read-only audit PASS
+
+- Parent-classified blocker `WEBSITE_OWNER_DETERMINISTIC_SCRIPTURE_RANGE_PARSER_COMPATIBILITY_GAP` 已做最小 source-owner remediation：`scripts/import_sermons.py::title_parts()` 仅扩展 spoken range separator 支持 `至`，并仅在紧跟 `至` 时允许首个 `节` 省略；未重写 parser、未 special-case article/package/operation identity。
+- test chronology 保留：首轮仅加 `到|至` 后 targeted tests FAIL（1 failure + 1 error）；随后收窄修正后 targeted 5/5 PASS，全部 Python scripts tests 55/55 PASS。
+- exact `罗马书12章1至2节` -> `罗马书 12:1-2`；既有 `到`、colon、跨章 range 不回归；exact P5 body 不再产生 `body=罗马书 12` false conflict；genuine conflict 仍 `SystemExit / Scripture conflict detected` fail-closed。
+- separate read-only counterexample-oriented verification process PASS；同一 CodexPro session，非独立 LLM context。文章正文、metadata、package、fidelity、Scripture Gate 均未修改/重开；未执行第二次 Website dry-run，未创建新 operation id；build/publish/push/deploy=not_run，notification=suppressed_not_run，production mutation=false，side_effects=[]，commit/push=0/0。返回 P5 Parent redecision。
+
+## 2026-09-11 — P5 successor preflight PASS; exactly one fixed dry-run consumed and fail-closed on Scripture conflict
+
+- Hermes path-only successor SHA=`07c11adfead2b98c3143769434f6c1d657c46e7ed71e2725cc727b8001ddaa5b` 已 fresh-read，并按 current path-boundary 要求 byte-exact复制为 Website task-local carrier；carrier SHA同值，byte equality=true。
+- 完整 WEBSITE_CONSUMER_PREFLIGHT=`PASS`：prepublish/official_chinese/English source 均在 RonnieCross content-root 内且 SHA current；staged corrected child SHA exact；metadata.website_source、tags current policy、production_publish_authorized=false、notification_policy=suppress、scope均通过。
+- fresh operation id=`p5-same-article-shadow-successor-20260911-v1` 被 exactly one fixed non-production dry-run实际消费；dry-run terminal=`FAIL_CLOSED_WEBSITE_DRY_RUN`，error_stage=`website_dry_run`，consumer stderr=`Scripture conflict detected; please confirm metadata manually: folder=罗马书 12:1-2; file=罗马书 12:1-2; body=罗马书 12`。未重试、未整改。
+- website-publication-result/v1.1未创建；dry-run evidence SHA=`3c774594db0b35f4f54a1e371b7b52cb169a49f515b0c87dbbe5d85cdea498ea`；zero-side-effect evidence SHA=`e731e3cadecad217eb3411e76150b5c5cd736269ea0be5d406b003ee22e2702e`。build/publish/push/deploy均not_run，notification suppressed_not_run，production mutation=false，side_effects=[]，commit/push=0/0。正式返回 P5 Parent redecision，不宣告 global closure。
+
+## 2026-09-11 — P5 Website targeted preflight remediation completed; requalification fail-closed on new reference boundary
+
+- Parent-authorized exact blocker A/B remediation completed: Hermes package was copied byte-for-byte into Website task-local carrier; source/carrier SHA both=`8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a`, byte equality=true, no package semantic rebuild/re-serialization. Website task-local staged Chinese was replaced by corrected-child exact bytes, SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9`; `metadata.website_source` locator unchanged.
+- Full consumer preflight requalification then returned FAIL_CLOSED: current Website validator requires package references inside RonnieCross content-root, while unchanged package `prepublish.path` and `official_chinese.path` still point to Hermes. Because package semantic rewrite/rebuild is not authorized, fixed dry-run was not entered.
+- actual Website operation id=`NOT_CREATED`, consumed=false; website-publication-result/v1.1 and dry-run evidence were not created. real publish/build/push/deploy=`not_run`, notification=`suppressed_not_run`, production mutation=false, production side_effects=[], commit/push=0/0.
+- Formal return to `P5_HQ_SAME_ARTICLE_COMPATIBILITY_JOINT_PRODUCT_MASTER_CONTROL / ACTIVE_MASTER` for redecision on the newly exposed reference-boundary blocker; Website Owner does not declare P5 global closure.
+
+## 2026-09-11 — P5 same-article Website non-production shadow preflight fail-closed
+
+- P5 exact package SHA=`8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a` 与 corrected child SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9` 已 fresh-read；interface/version、production_publish_authorized=false、notification_policy=suppress、scope 与 tags 均符合 Parent route，current tag policy PASS。
+- WEBSITE_CONSUMER_PREFLIGHT=`FAIL_CLOSED`：current fixed dry-run surface要求 contract 位于 RonnieCross 内，exact package 位于 Hermes；机械 probe exit=2 / `contract_path`，operation directory 未创建、operation id 未消费。另 current website_source 的 staged Chinese 仍为 P4 SHA=`b4ce3d9d93f89dd341f6ab75ff2a4b13df1d74875b4495a0edba06998250316a`，未绑定 corrected child SHA。
+- 按 frozen rule 未修包、未 staging mutation、未进入 fixed dry-run，因此 website-publication-result/v1.1 与 dry-run evidence 均未创建。real publish/build/push/deploy/notification/production mutation/commit/Git push 全部未运行；zero production side effects PASS。
+- 正式返回 `P5_HQ_SAME_ARTICLE_COMPATIBILITY_JOINT_PRODUCT_MASTER_CONTROL / ACTIVE_MASTER` 做 redecision；Website Owner 不宣告 P5 global closure。
+
 ## 2026-09-08 — Publication Fast Lane / Construction Isolation Owner Adoption
 
 - Website Owner 正式采用 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`：canonical business worktree 保持用于成熟文章发布；长期/并行建设承担 branch/worktree 隔离与后续 baseline requalification 成本。

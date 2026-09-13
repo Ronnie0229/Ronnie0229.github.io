@@ -1,0 +1,51 @@
+{
+  "verdict": "FAIL_CLOSED",
+  "run_id": "p5-route-a-initial-translation-20260910T144919376373Z",
+  "authorization": "CONSUMED_ONCE",
+  "package": {
+    "sha256": "8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a",
+    "interface": "website-publication-package",
+    "version": "1.2",
+    "corrected_child_sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+    "website_source": "data/raw/教会讲道/20260910_罗马书12:1-2_心意更新与日常服事_Patrick",
+    "tags": ["Patrick", "罗马书", "心意更新", "服事"],
+    "production_publish_authorized": false,
+    "notification_policy": "suppress",
+    "scope": "P5_SAME_ARTICLE_SHADOW_ONLY"
+  },
+  "checks": {
+    "package_sha_exact": true,
+    "interface_version_exact": true,
+    "corrected_child_binding_exact": true,
+    "production_publish_authorized_false": true,
+    "notification_policy_suppress": true,
+    "scope_exact": true,
+    "tags_current_policy_accepted": true,
+    "website_source_exists": true,
+    "website_source_current_chinese_sha_matches_corrected_child": false,
+    "fixed_dry_run_exact_contract_path_eligible": false
+  },
+  "tag_policy": {
+    "verdict": "PASS",
+    "normalized_tags": ["罗马书", "Patrick", "心意更新", "服事"],
+    "rules_version": "2026-08-02.2"
+  },
+  "website_source_readback": {
+    "staged_chinese_sha256": "b4ce3d9d93f89dd341f6ab75ff2a4b13df1d74875b4495a0edba06998250316a",
+    "required_corrected_child_sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+    "binding": "FAIL"
+  },
+  "fixed_surface_probe": {
+    "operation_id_argument": "p5-same-article-shadow-20260911-v1",
+    "returncode": 2,
+    "error_stage": "contract_path",
+    "error": "contract must be a file within RonnieCross",
+    "operation_directory_created": false,
+    "operation_id_consumed": false
+  },
+  "blockers": [
+    "EXACT_PACKAGE_CONTRACT_PATH_OUTSIDE_CURRENT_FIXED_RONNIECROSS_BOUNDARY",
+    "CURRENT_WEBSITE_SOURCE_STAGING_NOT_BOUND_TO_CORRECTED_CHILD_SHA"
+  ],
+  "disposition": "FAIL_CLOSED_RETURN_PARENT_NO_PACKAGE_REPAIR_NO_DRY_RUN"
+}

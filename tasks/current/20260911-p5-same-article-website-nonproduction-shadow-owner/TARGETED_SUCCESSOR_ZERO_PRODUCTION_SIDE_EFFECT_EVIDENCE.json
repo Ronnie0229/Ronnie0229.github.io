@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS_ZERO_PRODUCTION_SIDE_EFFECT_VERIFICATION",
+  "authorized_owner_local_remediation": {
+    "package_carrier_copy": true,
+    "staged_chinese_byte_exact_replacement": true
+  },
+  "fixed_dry_run_started": false,
+  "actual_website_operation_id": null,
+  "operation_id_consumed": false,
+  "website_publication_result_created": false,
+  "dry_run_evidence_created": false,
+  "real_publish": "not_run",
+  "build": "not_run",
+  "push": "not_run",
+  "deploy": "not_run",
+  "notification": "suppressed_not_run",
+  "production_mutation": false,
+  "commit": "not_run",
+  "git_push": "not_run",
+  "production_side_effects": []
+}

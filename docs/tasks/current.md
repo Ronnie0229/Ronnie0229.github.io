@@ -1,5 +1,29 @@
 # 当前任务
 
+## 2026-09-11 — P5 Website scripture parser targeted remediation
+
+状态：`PASS_TARGETED_REMEDIATION / DETERMINISTIC_TESTS_PASS / PASS_INDEPENDENT_READ_ONLY_AUDIT / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+`WEBSITE_OWNER_DETERMINISTIC_SCRIPTURE_RANGE_PARSER_COMPATIBILITY_GAP` 已按 Parent 限定做最小修复：`scripts/import_sermons.py::title_parts()` 仅扩展 spoken-range parser 对 `至` 的支持，并仅在紧跟 `至` 时允许首个 `节` 省略，使 `罗马书12章1至2节` -> `罗马书 12:1-2`。首轮 targeted test 失败 chronology 已保留；收窄修正后 targeted 5/5 PASS，Python scripts tests 55/55 PASS。只读反例审计直接验证 `至`、既有 `到`、colon、跨章 range 与 genuine conflict fail-closed 均 PASS。未修改 article/package/metadata，未重开 fidelity/Scripture Gate，未执行第二次 Website dry-run，未创建新 operation id，production mutation=false，side_effects=[]，commit/push=0/0。返回 P5 Parent。
+
+## 2026-09-11 — P5 Website successor resume
+
+状态：`CONSUMER_PREFLIGHT_PASS / EXACTLY_ONE_FIXED_NONPRODUCTION_DRY_RUN_CONSUMED / FAIL_CLOSED_WEBSITE_DRY_RUN_SCRIPTURE_CONFLICT / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Hermes path-only successor SHA=`07c11adfead2b98c3143769434f6c1d657c46e7ed71e2725cc727b8001ddaa5b` 已按 current Website boundary byte-exact复制为 task-local carrier，carrier SHA同值且 byte equality=true。完整 consumer preflight PASS；随后 fresh operation id=`p5-same-article-shadow-successor-20260911-v1` 被 exactly one fixed non-production dry-run消费。dry-run 在 `website_dry_run` 阶段 FAIL_CLOSED，原因=`Scripture conflict detected; please confirm metadata manually: folder=罗马书 12:1-2; file=罗马书 12:1-2; body=罗马书 12`。未重试、未 remediation。website-publication-result/v1.1未创建；dry-run evidence SHA=`3c774594db0b35f4f54a1e371b7b52cb169a49f515b0c87dbbe5d85cdea498ea`；zero-side-effect evidence SHA=`e731e3cadecad217eb3411e76150b5c5cd736269ea0be5d406b003ee22e2702e`。build/publish/push/deploy均not_run，notification suppressed_not_run，production mutation=false，side_effects=[]，commit/push=0/0。返回 P5 Parent redecision，不宣告 global closure。
+
+## 2026-09-11 — P5 Website targeted preflight remediation successor
+
+状态：`TARGETED_BLOCKERS_A_B_REMEDIATED / CONSUMER_PREFLIGHT_REQUALIFICATION_FAIL_CLOSED_ON_NEW_REFERENCE_BOUNDARY_BLOCKER / FIXED_DRY_RUN_NOT_ENTERED / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Hermes exact package 已按原始 bytes复制到 Website task-local carrier，source/carrier SHA均为 `8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a` 且 byte equality=true；未重序列化或修改 package。`metadata.website_source` locator保持不变，其 staged Chinese已用 corrected child byte-exact替换，SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9`。完整 consumer preflight requalification 随后 FAIL_CLOSED：package内未修改的 `prepublish.path` 与 `official_chinese.path` 仍位于 Hermes，current Website validator要求二者位于 RonnieCross content-root。当前授权禁止 package semantic rewrite/rebuild，因此没有进入 fixed dry-run；actual operation id=`NOT_CREATED` / consumed=false；publication-result与dry-run evidence未创建；build/publish/push/deploy均not_run，notification suppressed_not_run，production mutation=false，production side_effects=[]，commit/push=0/0。正式返回 P5 Parent redecision，不宣告 global closure。
+
+## 2026-09-11 — P5 same-article Website non-production shadow preflight
+
+状态：`FAIL_CLOSED_WEBSITE_CONSUMER_PREFLIGHT / FIXED_DRY_RUN_NOT_ENTERED / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Exact package SHA=`8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a`、corrected child SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9` 已 fresh-read；interface/version、production_publish_authorized=false、notification_policy=suppress、scope 与 tags 均通过 preflight，current tag policy将 exact tags规范为 `罗马书, Patrick, 心意更新, 服事` 并 PASS。两个 blocker 使本 stage按 Parent route fail-closed：current fixed dry-run wrapper要求 exact contract file位于 RonnieCross，而 package位于 Hermes，机械 probe exit=2 / `contract_path` 且 operation directory未创建；同时 current `metadata.website_source` staged Chinese SHA仍为 P4 `b4ce3d9d...0316a`，不是 corrected child `e91d2954...3ca9`。因此未修包、未做 staging mutation、未进入 fixed dry-run；operation id未创建（probe argument `p5-same-article-shadow-20260911-v1` 未消费），publication-result/dry-run evidence均未创建，build/publish/push/deploy/notification/production/commit/Git push均为0。正式交回 P5 Parent redecision。
+
 ## 2026-09-08 — Worktree topology normalization / Publication Fast Lane adoption
 
 状态：`OWNER_ADOPTION_APPLIED / LEGACY_WORKTREE_RETIREMENT_PENDING_ROOT_MASTER`

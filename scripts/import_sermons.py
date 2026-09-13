@@ -152,8 +152,8 @@ def title_parts(title: str) -> tuple[str, str]:
     books = "|".join(sorted((re.escape(book) for book in BOOKS), key=len, reverse=True))
 
     spoken_match = re.search(
-        rf"(?P<book>{books})\s*(?P<chapter>\d+)章(?P<verse>\d+)节"
-        rf"(?:到(?:(?P<end_chapter>\d+)章)?(?P<end_verse>\d+)节)?",
+        rf"(?P<book>{books})\s*(?P<chapter>\d+)章(?P<verse>\d+)(?:节|(?=至))"
+        rf"(?:(?:到|至)(?:(?P<end_chapter>\d+)章)?(?P<end_verse>\d+)节)?",
         normalized,
     )
     if spoken_match:

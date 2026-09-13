@@ -1,0 +1,46 @@
+{
+  "verdict": "FAIL_CLOSED_WEBSITE_CONSUMER_PREFLIGHT_REQUALIFICATION",
+  "run_id": "p5-route-a-initial-translation-20260910T144919376373Z",
+  "authorization": "CONSUMED_ONCE",
+  "original_package": {
+    "path": "/Volumes/DevSSD/RonnieWork/Hermes本地模型测试/tasks/current/hermes-hq-p5-route-a-corrected-child-continuation/website-publication-package.v1.2.json",
+    "sha256": "8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a"
+  },
+  "carrier_package": {
+    "path": "tasks/current/20260911-p5-same-article-website-nonproduction-shadow-owner/website-publication-package.carrier.v1.2.json",
+    "sha256": "8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a",
+    "byte_equality": true,
+    "semantic_rebuild": false
+  },
+  "staged_corrected_child": {
+    "website_source": "data/raw/教会讲道/20260910_罗马书12:1-2_心意更新与日常服事_Patrick",
+    "staged_file": "data/raw/教会讲道/20260910_罗马书12:1-2_心意更新与日常服事_Patrick/20260910_罗马书12:1-2_心意更新与日常服事_Patrick_中文.txt",
+    "sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+    "corrected_child_byte_equality": true,
+    "metadata_website_source_changed": false
+  },
+  "requalification": {
+    "schema_shape_valid": true,
+    "interface_and_version_valid": true,
+    "metadata_minimum_present": true,
+    "metadata_content_type_matches": true,
+    "english_source_within_content_root": true,
+    "english_source_exists": true,
+    "english_source_sha_current": true,
+    "fidelity_status_accepted": true,
+    "notification_policy_accepted": true,
+    "archive_status_accepted": true,
+    "prepublish_within_content_root": false,
+    "official_chinese_within_content_root": false,
+    "validator_pass": false
+  },
+  "new_blockers": [
+    "PACKAGE_PREPUBLISH_REFERENCE_OUTSIDE_RONNIECROSS_CONTENT_ROOT",
+    "PACKAGE_OFFICIAL_CHINESE_REFERENCE_OUTSIDE_RONNIECROSS_CONTENT_ROOT"
+  ],
+  "dry_run_release": false,
+  "actual_website_operation_id": null,
+  "operation_id_consumed": false,
+  "fixed_dry_run": "NOT_ENTERED",
+  "disposition": "FAIL_CLOSED_RETURN_PARENT_NO_PACKAGE_REWRITE"
+}

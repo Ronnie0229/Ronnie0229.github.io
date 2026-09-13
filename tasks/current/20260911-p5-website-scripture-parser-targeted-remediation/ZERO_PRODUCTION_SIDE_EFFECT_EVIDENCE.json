@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS_ZERO_PRODUCTION_SIDE_EFFECT_VERIFICATION",
+  "stage": "P5_WEBSITE_SCRIPTURE_PARSER_TARGETED_REMEDIATION",
+  "source_changes": [
+    "scripts/import_sermons.py",
+    "scripts/tests/test_import_sermons_scripture_parser.py"
+  ],
+  "article_content_mutation": false,
+  "metadata_mutation": false,
+  "package_mutation": false,
+  "model_generation": false,
+  "fidelity_reopen": false,
+  "scripture_gate_reopen": false,
+  "website_dry_run_executed": false,
+  "new_website_operation_id_created": false,
+  "build": "not_run",
+  "publish": "not_run",
+  "push": "not_run",
+  "deploy": "not_run",
+  "notification": "suppressed_not_run",
+  "p6": "not_run",
+  "p8": "not_run",
+  "production_mutation": false,
+  "production_side_effects": [],
+  "commit": "not_run",
+  "git_push": "not_run",
+  "frozen_successor_carrier_sha256": "07c11adfead2b98c3143769434f6c1d657c46e7ed71e2725cc727b8001ddaa5b",
+  "frozen_prepublish_sha256": "a33f8671ba14131ec58a2975e054181ac8da20d3c74cbf5426507ea346381ad2",
+  "frozen_official_chinese_sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+  "existing_consumed_operation_id": "p5-same-article-shadow-successor-20260911-v1",
+  "existing_consumed_operation_preserved": true,
+  "second_operation_created": false
+}

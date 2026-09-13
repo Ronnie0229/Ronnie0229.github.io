@@ -1,0 +1,45 @@
+{
+  "interface": "website-publication-package",
+  "version": "1.2",
+  "content_type": "sermon",
+  "prepublish": {
+    "path": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/tasks/current/20260911-p5-same-article-website-nonproduction-shadow-owner/reference-artifacts/prepublish.corrected-child.md",
+    "sha256": "a33f8671ba14131ec58a2975e054181ac8da20d3c74cbf5426507ea346381ad2"
+  },
+  "official_chinese": {
+    "path": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/tasks/current/20260911-p5-same-article-website-nonproduction-shadow-owner/reference-artifacts/official_chinese.corrected-child.txt",
+    "sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9"
+  },
+  "english_source": {
+    "path": "/Volumes/DevSSD/RonnieWork/RonnieCross/本地讲章翻译增强项目/tasks/current/20260902-p4-translation-owner-job-input-binding-source-acquisition-successor/source.txt",
+    "sha256": "e0369b6e18cde3d7bb773fdfa3b10a405024fc9fbc12e90520444d344f9800f7"
+  },
+  "fidelity_status": "independently_verified",
+  "metadata": {
+    "slug": "renewed-mind-daily-service",
+    "publish_date": "2026-09-10",
+    "batch_id": "p5-route-a-initial-translation-20260910T144919376373Z",
+    "content_type": "sermon",
+    "article_object_id": "s4-fixture-article-001",
+    "scripture": "罗马书 12:1-2",
+    "speaker": "Patrick",
+    "chinese_title": "心意更新与日常服事",
+    "description": "这篇短讲从罗马书12章1至2节出发，思想把身体献上当作活祭，以及心意更新如何具体改变日常工作，并邀请教会群体以祷告和实际服事回应。",
+    "topic_slug": "renewed-mind-daily-service",
+    "website_source": "data/raw/教会讲道/20260910_罗马书12:1-2_心意更新与日常服事_Patrick",
+    "metadata_confirmed": true,
+    "category": "教会讲道",
+    "tags": ["Patrick", "罗马书", "心意更新", "服事"],
+    "notification_policy": "suppress",
+    "production_publish_authorized": false,
+    "scope": "P5_SAME_ARTICLE_SHADOW_ONLY",
+    "source": {
+      "path": "/Volumes/DevSSD/RonnieWork/RonnieCross/本地讲章翻译增强项目/tasks/current/20260902-p4-translation-owner-job-input-binding-source-acquisition-successor/source.txt",
+      "sha256": "e0369b6e18cde3d7bb773fdfa3b10a405024fc9fbc12e90520444d344f9800f7"
+    },
+    "official_chinese_sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+    "fidelity_status": "independently_verified"
+  },
+  "notification_policy": "suppress",
+  "archive_status": "pending"
+}

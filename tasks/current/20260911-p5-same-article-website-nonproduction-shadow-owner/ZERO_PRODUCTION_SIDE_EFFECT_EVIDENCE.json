@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS_ZERO_PRODUCTION_SIDE_EFFECT_VERIFICATION",
+  "fixed_dry_run_started": false,
+  "operation_id": null,
+  "operation_id_argument_not_consumed": "p5-same-article-shadow-20260911-v1",
+  "operation_directory_created": false,
+  "website_publication_result_created": false,
+  "dry_run_evidence_created": false,
+  "staging_mutation_performed": false,
+  "real_publish": "not_run",
+  "build": "not_run",
+  "push": "not_run",
+  "deploy": "not_run",
+  "notification": "suppressed_not_run",
+  "production_mutation": false,
+  "commit": "not_run",
+  "git_push": "not_run",
+  "side_effects": []
+}

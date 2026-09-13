@@ -1,0 +1,37 @@
+{
+  "verdict": "PASS_REFERENCE_ARTIFACT_TASK_LOCAL_STAGING",
+  "scope": "WEBSITE_CONTENT_ROOT_REFERENCE_ARTIFACT_STAGING_ONLY",
+  "content_root": "/Volumes/DevSSD/RonnieWork/RonnieCross",
+  "prepublish": {
+    "source_path": "/Volumes/DevSSD/RonnieWork/Hermes本地模型测试/tasks/current/hermes-hq-p5-route-a-corrected-child-continuation/prepublish.corrected-child.md",
+    "local_path": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/tasks/current/20260911-p5-same-article-website-nonproduction-shadow-owner/reference-artifacts/prepublish.corrected-child.md",
+    "sha256": "a33f8671ba14131ec58a2975e054181ac8da20d3c74cbf5426507ea346381ad2",
+    "byte_equality": true,
+    "within_content_root": true,
+    "exists": true
+  },
+  "official_chinese": {
+    "source_path": "/Volumes/DevSSD/RonnieWork/Hermes本地模型测试/tasks/current/hermes-hq-p5-route-a-corrected-child-continuation/official_chinese.corrected-child.txt",
+    "local_path": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目/tasks/current/20260911-p5-same-article-website-nonproduction-shadow-owner/reference-artifacts/official_chinese.corrected-child.txt",
+    "sha256": "e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9",
+    "byte_equality": true,
+    "within_content_root": true,
+    "exists": true
+  },
+  "package_or_carrier_json_modified": false,
+  "metadata_modified": false,
+  "content_modified": false,
+  "consumer_dry_run_executed": false,
+  "website_operation_id_created": false,
+  "processed_post_registry_production_mutation": false,
+  "build": "not_run",
+  "push": "not_run",
+  "deploy": "not_run",
+  "notification": "not_run",
+  "p6": "not_run",
+  "p8": "not_run",
+  "production": "not_run",
+  "commit": "not_run",
+  "git_push": "not_run",
+  "production_side_effects": []
+}
