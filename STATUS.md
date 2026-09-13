@@ -1,5 +1,11 @@
 # 个人网页项目状态
 
+## 2026-09-13 — Publication Fast Lane dirty-state restoration PASS
+
+- Sermon Parent handoff 指定的 Website canonical dirty-state blocker 已关闭：既有 P4→P5 shadow/preflight/parser lineage 经 formal evidence 归属确认后，以独立本地 commit `6fc35cc` 封存；没有 stash/reset/覆盖/删除或夹带未归属 concurrent change。
+- parser remediation fresh regression `55/55 PASS`；随后 `npm run sync` exit=0，`main` 对 `origin/main` 检查为 up to date，canonical 已恢复可 sync 的稳定 fast-lane 状态。
+- 本 bounded redecision 未重做 sermon translation/fidelity，未消费新讲道 publication package，未执行 article import/build/deploy/notification。P5/parser commit 的 push 不在本轮单独扩大执行；返回 Sermon Parent 继续 current production route。
+
 ## 2026-09-11 — P5 Website scripture parser targeted remediation + independent read-only audit PASS
 
 - Parent-classified blocker `WEBSITE_OWNER_DETERMINISTIC_SCRIPTURE_RANGE_PARSER_COMPATIBILITY_GAP` 已做最小 source-owner remediation：`scripts/import_sermons.py::title_parts()` 仅扩展 spoken range separator 支持 `至`，并仅在紧跟 `至` 时允许首个 `节` 省略；未重写 parser、未 special-case article/package/operation identity。

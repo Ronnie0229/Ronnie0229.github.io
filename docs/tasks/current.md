@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-09-13 — Website Publication Fast Lane dirty-state redecision
+
+状态：`PASS_DIRTY_STATE_REDECISION / P5_PARSER_WRITESET_COMMITTED_SEPARATELY / CANONICAL_CLEAN / SYNC_PASS / READY_FOR_PARENT_PUBLICATION_CONSUMPTION`
+
+按 Sermon Parent handoff，仅处理 Website canonical 既有 P5/parser dirty state；未重做讲道翻译或忠实度审核。fresh evidence 确认 parser remediation 已通过 true separate independent audit，当前 dirty denominator 属于 P4→P5 shadow/preflight/parser 同一已闭合 Website lineage，没有发现未归属 concurrent change；55/55 Python scripts tests fresh PASS。该既有 write-set 已作为独立 Git commit `6fc35cc`（`fix: close P5 scripture parser remediation`）封存，未 stash/reset/覆盖/删除任何变化。随后 `npm run sync` exit=0，`main` 已成功 rebase/check against `origin/main` 且 remote 当时 up to date。当前 publication fast lane 已恢复稳定；本 redecision 不进入文章 import/build/deploy/notification。Git disposition：parser/P5 write-set committed locally；push 未由本 bounded dirty-state task 单独扩大执行，留待 Parent/current production route 按授权处理。
+
 ## 2026-09-11 — P5 Website scripture parser targeted remediation
 
 状态：`PASS_TARGETED_REMEDIATION / DETERMINISTIC_TESTS_PASS / PASS_INDEPENDENT_READ_ONLY_AUDIT / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
