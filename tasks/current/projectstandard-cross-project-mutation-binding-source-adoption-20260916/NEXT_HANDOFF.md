@@ -1,35 +1,32 @@
 # NEXT_HANDOFF — Website A5 Source Adoption
 
-STATUS=`BLOCKED_NEEDS_USER_GIT_DECISION`
+STATUS=`CLOSED`
 RETURN_TO=`WEBSITE_OWNER / USER`
 
 ## Current truth
 
-A5 minimal governance implementation 已完成并通过 source-local verification。
+A5 minimal governance adoption 已完成并通过 source-local verification。
 
-`REPOSITORY_CLOSURE=OPEN / GIT_DECISION_REQUIRED`
+`REPOSITORY_CLOSURE=CLOSED / COMMITTED_PUSHED`
 
-当前唯一未闭合事项是 exact Website repo 中本 task-local governance write-set 的 local commit disposition。
-
-## Exact repository binding
-
-Repository=`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`
+Website exact repository=`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`
 
 Branch=`main`
 
-Write-set：
+主 adoption commit=`c2f79ca`（`chore: adopt cross-project mutation binding`），已 normal push 到 `origin/main`。
 
-- `AGENTS.md`
-- `STATUS.md`
-- `docs/tasks/current.md`
-- `tasks/current/projectstandard-cross-project-mutation-binding-source-adoption-20260916/`
+随后仅在同一冻结 governance write-set 内补齐 closure metadata，并形成独立 closure metadata commit 后再次 normal push。
 
-## Required next decision
+## Preserved boundaries
 
-若用户批准：只对上述 exact write-set 做 staging verification + local commit；不得夹带其它 concurrent/unrelated change。
+- publication/deploy/email/content/runtime authority 不变；
+- `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION` 不变；
+- 未新增 validator/service/platform/registry/watcher/daemon；
+- 未修改业务代码、正式内容、raw/processed/posts；
+- 本 stage 未主动运行 publish/build/deploy/notification。
 
-`PUSH` 不包含在该授权中，必须之后另行 Gate。
+## Safe continuation point
 
-若用户不批准 commit：保留当前 dirty governance write-set，并将 stage 维持 `REPOSITORY_CLOSURE=OPEN`，不得伪装为已完整关闭。
+A5 已关闭，无剩余 blocker。
 
-publication/deploy/email/runtime/business truth 均不得因此改变。
+以后任何新的 Website mutation、commit 或 push 都必须重新按 Website source-local current authority fresh/exact binding；本次授权不得复用。

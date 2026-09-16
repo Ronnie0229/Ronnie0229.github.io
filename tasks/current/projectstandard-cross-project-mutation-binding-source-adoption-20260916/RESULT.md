@@ -4,7 +4,7 @@ DATE=`2026-09-16`
 
 ## Formal verdict
 
-`BLOCKED_SOURCE_ADOPTION_REPOSITORY_CLOSURE / MINIMAL_GOVERNANCE_IMPLEMENTED_AND_VERIFIED / GIT_DECISION_REQUIRED / ZERO_PUBLICATION_DEPLOY_EMAIL_RUNTIME_CHANGE`
+`PASS_SOURCE_ADOPTION_CLOSED / MINIMAL_GOVERNANCE_ADOPTED_AND_VERIFIED / REPOSITORY_CLOSURE_CLOSED / COMMITTED_PUSHED / ZERO_PUBLICATION_DEPLOY_EMAIL_RUNTIME_CHANGE`
 
 ## 已完成
 
@@ -47,16 +47,18 @@ Current task-local write-set：
 - `docs/tasks/current.md`
 - `tasks/current/projectstandard-cross-project-mutation-binding-source-adoption-20260916/`
 
-`COMMIT_AUTHORITY_NOT_ESTABLISHED`
+`COMMIT_AUTHORIZED_AND_COMPLETED`
 
-`PUSH_NOT_AUTHORIZED`
+Primary adoption commit=`c2f79ca` (`chore: adopt cross-project mutation binding`)
 
-`REPOSITORY_CLOSURE=OPEN / GIT_DECISION_REQUIRED`
+`PUSH_AUTHORIZED_AND_COMPLETED`
 
-根据本项目已采用的 `PROJECTSTANDARD_GIT_DISPOSITION_ADOPTION.md`，该 bounded governance stage 属于稳定 milestone，不能把“尚未取得 commit authority”静默解释为“不需要 commit”。因此 A5 的治理实现已经完成并验证，但 source adoption 尚不能宣告 repository-closed。
+Primary adoption commit 已 normal push 到 `origin/main`；随后仅在同一冻结 governance write-set 内补齐 closure metadata，并形成独立 closure metadata commit 后再次 normal push。
+
+`REPOSITORY_CLOSURE=CLOSED`
 
 ## Return condition
 
-`BLOCKED_NEEDS_USER_GIT_DECISION`
+`SOURCE_ADOPTION_CLOSED_OR_BLOCKED = SOURCE_ADOPTION_CLOSED`
 
-只需要 Website Owner / User 对本 exact task-local write-set 单独裁决 local commit；push 仍必须另行授权。
+A5 已满足 source-local implementation、verification、exact repository binding、commit 与 push closure；无剩余 A5 blocker。
