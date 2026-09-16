@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
+
+状态：`PASS_MINIMAL_GOVERNANCE_IMPLEMENTATION / SOURCE_ADOPTION_IMPLEMENTED / REPOSITORY_CLOSURE_OPEN / GIT_DECISION_REQUIRED`
+
+按 ProjectStandard matrix `A5 — RonnieCross / 个人网页项目`，已在 Website 现有 root governance entry `AGENTS.md` 做极薄 adoption：cross-project `READ_ONLY` 保持允许；mutation 前必须由 Website/source-local current authority fresh/exact 绑定 `target root + task/role + bounded write-set + operation class`；默认/最近 workspace、聊天/Project 上下文、历史授权、旧 handoff 或 ProjectStandard release/proposal 不能代替本次 mutation authority；`COMMIT` / `PUSH` 额外绑定 exact Website repository identity 且保持独立 Gate。publication/deploy/email/content/runtime authority 与 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION` 完全不变，未增加 validator/service/platform/registry/watcher/daemon，未运行 build/publish/deploy/notification。stage 开始前 Website repo=`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`、branch=`main`、working tree clean。当前 task-local write-set 仅为 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md` 与 `tasks/current/projectstandard-cross-project-mutation-binding-source-adoption-20260916/`。依据本项目 `PROJECTSTANDARD_GIT_DISPOSITION_ADOPTION.md`，该 bounded governance milestone 当前 commit authority 尚未成立，因此 `REPOSITORY_CLOSURE=OPEN / GIT_DECISION_REQUIRED`；未 commit、未 push。完整结果与验证见同名 task 目录。
+
 ## 2026-09-13 — Sermon presentation list + small-group heading incident remediation
 
 状态：`COMPLETE / TARGETED_REMEDIATION_PASS / 12_OF_12_PRESENTATION_REGRESSION_PASS / CURRENT_ARTICLE_PASS / KNOWLEDGE_PASS / BUILD_PASS / COMMITTED_PUSHED_DEPLOYED / NO_FURTHER_ACTION_REQUIRED`

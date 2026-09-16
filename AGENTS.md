@@ -19,6 +19,13 @@ Website future governance cold-start 必须能够稳定定位 current Project St
 - 发现新的 current Standard 或 maintenance delta 只形成 awareness，不自动产生 adoption、remediation、requalification 或 audit；future ACTIVE/in-flight task 继续按其冻结 authority/task/handoff 执行，在自然安全边界后再由 Website own current authority fresh Gate。
 - Website 启用 current Project Standard 的 `Shared Knowledge Collaboration` Optional Module，并沿用上述 stable locator，不复制模块正文；Website own authority/current truth 始终优先，shared knowledge / OB 仅作 advisory，lookup/reference 不等于 adoption。meaningful closure 后按该模块做 non-blocking Feedback Check（允许 `NO_UPDATE_REQUIRED`）；任何 cross-owner write 仍需 separate current authorization。本声明不改变 Website 的 business/content/Git/deploy/production authority。
 
+### Cross-project mutation / repository binding
+
+- lawful cross-project `READ_ONLY` 保持允许；任何 cross-project mutation 在发生前，必须由 Website/source-local current authority fresh、exact 地绑定 `target root + task/role + bounded write-set + operation class`。默认/最近 workspace、最近聊天或 Project 上下文、历史授权、旧 handoff、ProjectStandard release/proposal 都不能代替本次 mutation authority。
+- 若 operation class 是 `COMMIT` 或 `PUSH`，还必须额外绑定 exact Website repository identity；`COMMIT` 与 `PUSH` 继续作为两个独立 Gate，授权一个不得推导另一个。
+- 发现 wrong-root / wrong-repo / wrong-task mutation 时必须保留 chronology 并 fail-closed；不得通过 auto reset/rebase/amend/force-push 静默抹平可恢复历史。
+- 本规则不改变 Website 的 publication/deploy/email/content/runtime authority，不改变 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`，也不授权建设新的 validator/service/platform/registry/watcher/daemon。优先复用现有 current task、handoff、Owner authority 与 Git closure 机制。
+
 ## 项目定位
 
 - 本仓库是 RonnieCross 个人文章网站的唯一正式代码仓库。

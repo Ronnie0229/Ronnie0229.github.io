@@ -1,5 +1,12 @@
 # 个人网页项目状态
 
+## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
+
+- 当前 verdict：`PASS_MINIMAL_GOVERNANCE_IMPLEMENTATION / SOURCE_ADOPTION_IMPLEMENTED / REPOSITORY_CLOSURE_OPEN / GIT_DECISION_REQUIRED`。
+- Website 已在现有 root governance entry `AGENTS.md` 极薄采用 cross-project mutation exact binding：lawful `READ_ONLY` 保持允许；mutation 前必须由 source-local current authority fresh/exact 绑定 `target root + task/role + bounded write-set + operation class`；`COMMIT` / `PUSH` 额外绑定 exact Website repository identity 且继续分 Gate。
+- publication/deploy/email/content/runtime authority 与 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION` 均未改变；未新增 validator/service/platform/registry/watcher/daemon；未修改 `src/`、`functions/`、`assets/`、`scripts/`、raw/processed/posts。
+- 本轮为 governance-only 文档 adoption，不运行 build/publish/deploy/notification。当前 Website exact repo=`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`，branch=`main`；stage 开始前 clean。根据 `PROJECTSTANDARD_GIT_DISPOSITION_ADOPTION.md`，该 bounded governance milestone 的 commit authority 尚未成立，因此 repository closure 保持 `OPEN / GIT_DECISION_REQUIRED`；未 commit、未 push。
+
 ## 2026-09-13 — Sermon presentation list / small-group heading incident remediation COMPLETE
 
 - 正式 verdict：`COMPLETE / TARGETED_REMEDIATION_PASS / 12_OF_12_PRESENTATION_REGRESSION_PASS / COMMITTED_PUSHED_DEPLOYED / NO_FURTHER_ACTION_REQUIRED`。
