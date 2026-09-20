@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-09-20 — 《腓立比书 1:12-19｜生命中的喜乐》首次发布
+
+状态：`LOCAL_PUBLICATION_READY / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED / WEBSITE_GATES_PASS / PENDING_GIT_PUSH_DEPLOY_NOTIFICATION_ARCHIVE`
+
+讲道 Owner 已释放 `website-publication-package/v1.2`：source SHA=`5cbc3e17a9b4f7bd45641ea83abd22c17170a6e207445777e1e7e464d9df19c5`，final Chinese SHA=`2aa6390407a58f13df648179955e2e237476c1fd0a16ba89ce36e50af6d2c575`；Attempt 1 E1 111/111 FAIL（2 blocking）后仅做两处 targeted repair，Attempt 2 E1 111/111 PASS / 0 blocking / `independently_verified`。Website `npm run sync` PASS；v1.2 consumer validation PASS。canonical importer dry-run PASS 后正式生成 processed/post，articleId=`post-6db195f9b8296559`，publishedAt=`2026-09-20T09:54:33+09:00`，tags=`腓立比书, Patrick, 喜乐, 信靠, 福音`。首次 presentation Gate 因 H2 数字前缀与 Website TOC 编号重复而 FAIL；只在 Website processed/post 两份 display 副本移除 H2 的 `2.` / `3.` 前缀，正式 sermon candidate 未修改；recheck `MECHANICAL_PRESENTATION_PASS`。mirror=`594/594 PASS`；Knowledge Layer=`297 posts / 0 errors / 0 warnings`。构建 chronology：前两次长 build 被外层 Code Mode timeout 截断但实际进程继续，造成并发竞争 `dist/` 并出现一次 `ENOENT dist/chunks/... FAIL`；清理确认无残留 build process 后，唯一 fresh `npm run build -- --force` 正式终态 `339 pages / Complete`。当前仅待 exact-scope Git commit/push、Cloudflare/live、首次通知与 NAS protected archive。
+
 ## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
 
 状态：`PASS_SOURCE_ADOPTION_CLOSED / MINIMAL_GOVERNANCE_ADOPTED / REPOSITORY_CLOSURE_CLOSED / COMMITTED_PUSHED`
