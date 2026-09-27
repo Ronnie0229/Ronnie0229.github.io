@@ -1,5 +1,13 @@
 # 个人网页项目状态
 
+## 2026-09-27 — 《路得记 1:1-22｜请加满》local publication built
+
+- 当前 verdict：`LOCAL_PUBLICATION_BUILT / WEBSITE_GATES_PASS / AWAITING_SEPARATE_GIT_COMMIT_PUSH_AUTHORIZATION`。
+- Frozen v1.2 package SHA=`ebadb6c7efc458debf84d92316f6e811b7741bd6c317ed7e2495932ca81cb3e3`；candidate SHA=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`；Attempt 2 fidelity 已由 Sermon Owner independently verified，Website 未重开 fidelity。
+- Website publication 前两次 fail-closed chronology 均保留：①显式 `Patrick父亲` 被旧 substring alias 覆盖成 `Patrick`；②正文首个子范围 `路得记 1:1-5` 被误判与主范围 `路得记 1:1-22` 冲突。均做 bounded importer compatibility remediation；旧 Patrick suffix 与 genuine conflict fail-closed 行为保持。
+- 验证：targeted 9/9 PASS；Python scripts 59/59 PASS；package dry-run PASS；local publish成功；author=`Patrick父亲`；articleId=`post-daed26238a75a8d2`；presentation PASS；mirror 596/596；Knowledge 298/0/0；Tag fixtures 27/27；forced build RC=0 / 341 pages / Complete。
+- 正式 `website-publication-result/v1.1` 已写为 `status=built`；`push_status=not_run`、`deployment_status=not_run`、`notification_status=not_run`。Git commit/push、Cloudflare deploy、邮件、NAS archive 均未执行，继续受独立 Gate。
+
 ## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
 
 - 当前 verdict：`PASS_SOURCE_ADOPTION_CLOSED / MINIMAL_GOVERNANCE_ADOPTED / REPOSITORY_CLOSURE_CLOSED / COMMITTED_PUSHED`。

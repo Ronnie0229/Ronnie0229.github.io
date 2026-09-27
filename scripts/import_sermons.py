@@ -199,6 +199,26 @@ def scripture_from_body(body: str) -> str:
     return scripture
 
 
+def same_chapter_scripture_contains(container: str, candidate: str) -> bool:
+    pattern = re.compile(
+        r"^(?P<book>.+?)\s+(?P<chapter>\d+):(?P<start>\d+)(?:-(?P<end>\d+))?$"
+    )
+    container_match = pattern.match(container)
+    candidate_match = pattern.match(candidate)
+    if not container_match or not candidate_match:
+        return False
+    if (
+        container_match.group("book") != candidate_match.group("book")
+        or container_match.group("chapter") != candidate_match.group("chapter")
+    ):
+        return False
+    container_start = int(container_match.group("start"))
+    container_end = int(container_match.group("end") or container_start)
+    candidate_start = int(candidate_match.group("start"))
+    candidate_end = int(candidate_match.group("end") or candidate_start)
+    return container_start <= candidate_start and candidate_end <= container_end
+
+
 def resolve_scripture(raw_title: str, source_file: Path, body: str) -> tuple[str, str]:
     candidates: dict[str, str] = {}
     folder_scripture, _summary = title_parts(raw_title)
@@ -213,6 +233,17 @@ def resolve_scripture(raw_title: str, source_file: Path, body: str) -> tuple[str
 
     unique = sorted(set(candidates.values()))
     if len(unique) > 1:
+        folder_scripture = candidates.get("folder")
+        file_scripture = candidates.get("file")
+        body_scripture = candidates.get("body")
+        if (
+            folder_scripture
+            and file_scripture
+            and folder_scripture == file_scripture
+            and body_scripture
+            and same_chapter_scripture_contains(folder_scripture, body_scripture)
+        ):
+            return folder_scripture, "high"
         details = "; ".join(f"{source}={scripture}" for source, scripture in candidates.items())
         raise SystemExit(f"Scripture conflict detected; please confirm metadata manually: {details}")
     if unique:
@@ -431,10 +462,11 @@ def folder_meta(folder: Path) -> tuple[str, str, str]:
             title = before.strip()
             speaker = after.strip()
 
-    for key, value in SPEAKER_TAGS.items():
-        if key.lower() in name.lower():
-            speaker = value
-            break
+    if not speaker:
+        for key, value in SPEAKER_TAGS.items():
+            if key.lower() in name.lower():
+                speaker = value
+                break
 
     title = clean_title(title or name)
     return date, title, speaker

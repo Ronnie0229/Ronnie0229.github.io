@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-09-27 — 《路得记 1:1-22｜请加满》Website publication
+
+状态：`LOCAL_PUBLICATION_BUILT / WEBSITE_GATES_PASS / AWAITING_SEPARATE_GIT_COMMIT_PUSH_AUTHORIZATION`
+
+讲道 Owner frozen `website-publication-package/v1.2` 已由用户明确授权 Website production publication，package SHA=`ebadb6c7efc458debf84d92316f6e811b7741bd6c317ed7e2495932ca81cb3e3`，candidate SHA=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`。Website `npm run sync` PASS。首次 pre-publish probe 发现 importer 会将显式讲员 `Patrick父亲` 因 substring alias 漂移成 `Patrick`，fail-closed；最小修复为仅在目录未提供显式 speaker suffix 时才启用旧 SPEAKER_TAGS fallback。随后 dry-run 又发现正文首个经文子范围 `路得记 1:1-5` 与主经文 `路得记 1:1-22` 被误判冲突，第二个最小修复仅允许 folder/file 一致且 body 为同书同章被主范围完整包含的子范围通过，超范围/异章 genuine conflict 继续 fail-closed。targeted parser tests 9/9 PASS，全部 Python scripts tests 59/59 PASS；正式 package dry-run PASS 后 exactly one local publish 成功，title=`路得记 1:1-22｜请加满`，author=`Patrick父亲`，articleId=`post-daed26238a75a8d2`，publishedAt=`2026-09-27T11:33:18+09:00`。presentation=`MECHANICAL_PRESENTATION_PASS`；articleId check 298/298 PASS；mirror 596/596 PASS；Knowledge 298 posts / 0 errors / 0 warnings；Tag fixtures 27/27 PASS。前两次 foreground build 被调用层 timeout 截断，确认无残留 build process 后改用单一受控后台 build 并轮询终态，最终 `npm run build -- --force` RC=0，341 pages / Complete。正式 result：`tasks/current/20260927-sermon-ruth-1-fill-it-up-result.json`，status=`built`，push/deployment/notification 均 `not_run`。本轮未执行 Git commit/push、Cloudflare deploy、邮件或 NAS archive；这些继续受独立 Gate。
+
 ## 2026-09-20 — 《腓立比书 1:12-19｜生命中的喜乐》首次发布
 
 状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED_ARCHIVED / LIVE_VERIFY_PASS / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED`
