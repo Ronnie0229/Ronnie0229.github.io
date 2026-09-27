@@ -2,11 +2,12 @@
 
 ## 2026-09-27 — 《路得记 1:1-22｜请加满》local publication built
 
-- 当前 verdict：`LOCAL_PUBLICATION_BUILT / WEBSITE_GATES_PASS / AWAITING_SEPARATE_GIT_COMMIT_PUSH_AUTHORIZATION`。
+- 当前 verdict：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS / NAS_ARCHIVED / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED`。
 - Frozen v1.2 package SHA=`ebadb6c7efc458debf84d92316f6e811b7741bd6c317ed7e2495932ca81cb3e3`；candidate SHA=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`；Attempt 2 fidelity 已由 Sermon Owner independently verified，Website 未重开 fidelity。
 - Website publication 前两次 fail-closed chronology 均保留：①显式 `Patrick父亲` 被旧 substring alias 覆盖成 `Patrick`；②正文首个子范围 `路得记 1:1-5` 被误判与主范围 `路得记 1:1-22` 冲突。均做 bounded importer compatibility remediation；旧 Patrick suffix 与 genuine conflict fail-closed 行为保持。
 - 验证：targeted 9/9 PASS；Python scripts 59/59 PASS；package dry-run PASS；local publish成功；author=`Patrick父亲`；articleId=`post-daed26238a75a8d2`；presentation PASS；mirror 596/596；Knowledge 298/0/0；Tag fixtures 27/27；forced build RC=0 / 341 pages / Complete。
 - 正式 `website-publication-result/v1.1` 已写为 `status=built`；`push_status=not_run`、`deployment_status=not_run`、`notification_status=not_run`。Git commit/push、Cloudflare deploy、邮件、NAS archive 均未执行，继续受独立 Gate。
+- 后续用户明确将“授权发布”定义为标准发布流程全部收口，并补充授权邮件：Website 主发布 commit=`bb52bf0bd1c3952d09b7ed3b81db160753486e4f` 已 normal push；Cloudflare Pages success，生产 `/deployment.json` builtAt=`2026-09-27T02:46:55.227Z` 且绑定同一 commit；公开 canonical URL=`/posts/2026-09-27-路得记-1-1-22请加满/`，HTTP 200，title/author/两处 targeted-repair 指纹 PASS，RSS/Sitemap 均包含新文章。`verify_publication_release.py` 先后因 Unicode URL 与本机 Python SSL issuer chain 两次 FAIL，随后以 sitemap-derived canonical URL + curl 等价 live verify PASS，chronology 保留。Email run=`36289462999` success：1 post / 2 recipients / 2 success / 0 failed。NAS protected archive 3/3 SHA exact：PDF=`5d46847877e31e80c573b3108f874d21f32dcefab4937263ae6152fd3336f682`、English=`dc6aa3931308003a456bebd71242a2b5febd51de9d4d15c58ebaef315002bf62`、Chinese=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`。正式 result 已更新为 deployed/pushed/deployed/sent。
 
 ## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
 
