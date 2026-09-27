@@ -92,31 +92,28 @@
 - `.astro` 是本地构建缓存，不是源内容；清理它不等于删除文章。
 - 最终构建必须无新增 Duplicate id 警告。
 
-## 8. 线上验证用正式域名
+## 8. 线上验证属于“下一次发布前置核验”
 
-问题：GitHub Pages 默认域名可能返回 404，但正式域名已经可访问。
-
-原因：项目使用正式域名 `ronniecross.com` 作为公开访问入口，GitHub Pages 域名不一定代表最终线上状态。
+问题：部署平台和邮件通知存在异步延迟；如果本轮发布会话持续等待 Cloudflare、公开页面和通知终态，会把异步结果等待错误地变成 Publication Fast Lane 的尾部阻塞。
 
 整改：
 
-- 线上验证优先使用 `https://ronniecross.com/`。
-- 验证新文章 URL 返回 200。
-- 页面必须包含标题、分类、经文、讲员/作者、完整摘要关键句和正文代表句。
-- 如正式域名未更新，再查看 GitHub Actions 状态；不要只凭 GitHub Pages 默认域名 404 判定失败。
+- 本轮完成 commit/push、deployment/notification trigger、NAS 归档与发布记录回写后，记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 并结束，不等待本次线上终态。
+- 下一次发布开始前，先核验上一次发布；线上验证使用正式域名 `https://ronniecross.com/`。
+- 核验至少包括：production deployment commit、canonical URL HTTP 状态、标题、分类、经文、讲员/作者、正文代表句、RSS/Sitemap、notification result。
+- HTTP 200 不是充分条件；页面必须匹配上一轮 frozen publication identity。
+- 如果上一轮正式域名尚未更新、deployment/notification 仍 pending 或结果 FAIL，本轮新发布不得开始，必须先闭合上一轮。
 
-## 9. 提交和交接必须分清内容提交与交接提交
+## 9. 提交和交接必须分清“本轮发布完成”与“下轮前置核验”
 
-问题：内容发布完成后，还需要更新 `STATUS.md` 和 `docs/tasks/current.md`，否则下一个账号无法准确接手。
-
-原因：线上验证结果通常要等推送后才知道，不能完全写在内容提交之前。
+问题：如果把本轮线上终态写成 closure 前置条件，就会产生无必要等待，并容易再生成一个只为记录验证结果的 docs-only closure publish。
 
 整改：
 
-- 内容文章先提交推送并线上验证。
-- 验证完成后更新 `STATUS.md` 和 `docs/tasks/current.md`。
-- 交接文档可以单独提交，记录构建结果、提交号、线上 URL、归档校验和剩余未跟踪文件。
-- 最终回复必须说明：改了哪些文件、构建结果、线上验证、当前 Git 状态和注意事项。
+- 本轮内容 commit/push、deployment/notification trigger、NAS 归档和状态回写完成后，即可用 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 收口。
+- `STATUS.md` / `docs/tasks/current.md` 在本轮记录 publication commit、trigger 状态、归档状态和“待下次 preflight 核验”；不需要等待本轮线上终态再做第二个 closure commit。
+- 下一次发布开始前核验上一轮，并把核验结果作为当前新任务的 preflight evidence；PASS 后继续新发布。
+- 最终回复必须明确区分：本轮已完成的发布动作，与留给下一次 preflight 的异步结果核验。
 
 ## 10. 正文段落空行不能被压扁
 

@@ -1,5 +1,13 @@
 # 个人网页项目状态
 
+## 2026-09-27 — Publication Fast Lane governance remediation
+
+- 正式规则已整改：本次 publication 不再等待本次 Cloudflare/live/email terminal；完成 commit/push、deployment/notification trigger、NAS/registry/status/Git closure 后记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 并结束。下一次内容发布开始前，先核验上一轮 production deployment、canonical URL、RSS/Sitemap 与 notification result；上一轮未 PASS 时不得叠加新发布。
+- Publication Fast Lane 的计划内人工断点只保留 independent reviewer handoff。Reviewer PASS 后 Owner 自动连续进入 scripture gate → publication preparation → Website consumer → build → commit/push → deployment/notification trigger → NAS archive → registry/Git closure；真实 blocker 仍 fail-closed。
+- 一次 exact-object `授权发布`（或 current task 已明确包含正式发布）是该 frozen publication object 的 bounded transaction authority；不再把 commit、push、deploy、email、NAS 分拆成重复授权。普通开发/治理/修复任务仍保持原有细粒度 Gate。
+- Speaker identity 改为显式完整值：`Patrick` 与 `Patrick父亲` 是不同 identity；显式 speaker 不得被 substring/contains fallback 覆盖；`SPEAKER_TAGS` 仅在没有显式 speaker 时可作为 legacy fallback。
+- 本次为 governance/docs-only remediation；未修改业务代码、未触发 build/publish/deploy/notification，未 commit/push。
+
 ## 2026-09-27 — 《路得记 1:1-22｜请加满》local publication built
 
 - 当前 verdict：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS / NAS_ARCHIVED / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED`。

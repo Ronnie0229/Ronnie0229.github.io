@@ -150,22 +150,26 @@ npm run sync
 
 ## 讲道流程摘要
 
-0. 同步远端：`npm run sync`
-1. 只读检查：`python scripts/content_workflow.py inspect sermon`
-2. 确认日期、经文标题和讲员。
-3. 入库：`python scripts/content_workflow.py ingest sermon --date YYYYMMDD --title "经文与标题" --speaker "讲员"`
-4. 检查 PDF 提取稿。
-5. 逐句完整翻译并校订中文 TXT。
-6. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`
-7. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"`
-8. 正式发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"`
-9. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
-10. 检查文章、报告、Git 差异。
-11. 运行构建并记录结果。
+0. **先核验上一次发布**：确认上一轮 production commit/deployment、公开 canonical URL、RSS/Sitemap 与 notification result 已 PASS；上一轮仍 pending/FAIL 时先闭合上一轮，不开始本轮发布写动作。
+1. 同步远端：`npm run sync`。
+2. 只读检查：`python scripts/content_workflow.py inspect sermon`。
+3. 确认日期、经文标题和讲员。
+4. 入库：`python scripts/content_workflow.py ingest sermon --date YYYYMMDD --title "经文与标题" --speaker "讲员"`。
+5. 检查 PDF 提取稿。
+6. 逐句完整翻译并校订中文 TXT。
+7. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`。
+8. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"`。
+9. 正式发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"`。
+10. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
+11. 检查文章、报告、Git 差异并运行构建。
+12. 当前 frozen publication object 一旦获得一次 `授权发布`，该授权覆盖标准 Publication Fast Lane 的 Website write → build → commit → push → deployment trigger → notification trigger → NAS append-only archive → registry/status/Git closure。除真实 blocker 外，不再为 commit、push、deploy、email、NAS 分别暂停并重复索权。
+13. 本轮不等待本次 deployment/live/email 终态；记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 后结束。下一次发布从第 0 步核验本次结果。
 
 讲道发布同样可用 `--tags "核心人物,核心地点,核心主题"` 补充人工标签。导入器不再默认生成 `讲道`、`教会讲道` 或讲员姓名；它从 scripture 与标题执行确定性生成，不足 2 个精准标签时停止并要求人工补充。所有标签规则与分享、Admin 共用 `assets/admin/tag-rules.json`。
 
 讲道发布必须指定单个 `--folder`，不得无参数全量扫描 `data/raw/教会讲道/`。脚本会记录 `docs/内容整理报告/sermon-import-registry.csv`，用于固定 source folder、slug、source SHA-256 与正式文章路径。经文识别若在 folder、文件名、正文前部之间冲突，会停止并要求人工确认。
+
+讲员身份必须按**显式完整值**处理。目录、package 或 metadata 已提供 speaker 时，该值就是当前 publication object 的 speaker identity；不得再用 substring/contains 规则把它归并到较短名字。`Patrick` 与 `Patrick父亲` 是两个独立 identity，除非存在用户明确确认的 alias mapping。历史 `SPEAKER_TAGS` 只允许在“没有显式 speaker”时作为 legacy fallback，不得覆盖显式 speaker。
 
 ## 公众号迁移稿
 
