@@ -21,7 +21,13 @@ class ConsumePublicationPackageTest(unittest.TestCase):
     def sha(path: Path) -> str:
         return hashlib.sha256(path.read_bytes()).hexdigest()
 
-    def fixture(self, root: Path, version: str = "1.1", fidelity_status: str = "independently_verified") -> Path:
+    def fixture(
+        self,
+        root: Path,
+        version: str = "1.1",
+        fidelity_status: str = "independently_verified",
+        with_presentation: bool = False,
+    ) -> Path:
         pre = root / "pre.md"
         zh = root / "zh.txt"
         en = root / "en.txt"
@@ -45,6 +51,35 @@ class ConsumePublicationPackageTest(unittest.TestCase):
             "notification_policy": "suppress",
             "archive_status": "archived",
         }
+        if with_presentation:
+            artifact = root / "presentation.md"
+            artifact.write_text("zh", encoding="utf-8")
+            manifest = root / "presentation-manifest.json"
+            manifest.write_text(json.dumps({
+                "interface": "sermon-presentation",
+                "version": "1.0",
+                "presentation_status": "mechanically_verified",
+                "text_identity_status": "exact_record_order_preserved",
+                "candidate": {"path": str(zh), "sha256": self.sha(zh), "record_count": 1},
+                "artifact": {
+                    "path": str(artifact),
+                    "sha256": self.sha(artifact),
+                    "restored_record_count": 1,
+                    "heading_count": 0,
+                    "paragraph_count": 1,
+                    "list_item_count": 0,
+                    "blockquote_count": 0,
+                },
+                "allowed_transformations": ["blank_line_boundaries"],
+                "forbidden_constructs": [],
+                "first_mismatch": None,
+            }), encoding="utf-8")
+            package["presentation"] = {
+                "manifest": {"path": str(manifest), "sha256": self.sha(manifest)},
+                "artifact": {"path": str(artifact), "sha256": self.sha(artifact)},
+                "presentation_status": "mechanically_verified",
+                "text_identity_status": "exact_record_order_preserved",
+            }
         contract = root / "contract.json"
         contract.write_text(json.dumps(package), encoding="utf-8")
         return contract
@@ -88,7 +123,9 @@ class ConsumePublicationPackageTest(unittest.TestCase):
     def test_dry_run_calls_workflow_with_dry_run(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            contract = self.fixture(root)
+            contract = self.fixture(root, version="1.2", with_presentation=True)
+            old_schema = self.schema
+            self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
             output = root / "args.json"
             workflow = root / "workflow.py"
             workflow.write_text(
@@ -96,19 +133,28 @@ class ConsumePublicationPackageTest(unittest.TestCase):
                 f"Path({str(output)!r}).write_text(json.dumps(sys.argv[1:]), encoding='utf-8')\n",
                 encoding="utf-8",
             )
-            result = self.invoke(contract, root, "dry-run", workflow)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            args = json.loads(output.read_text())
-            self.assertIn("--dry-run", args)
-            self.assertIn("data/raw/教会讲道/sample", args)
+            try:
+                result = self.invoke(contract, root, "dry-run", workflow)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                args = json.loads(output.read_text())
+                self.assertIn("--dry-run", args)
+                self.assertIn("--presentation-file", args)
+                self.assertIn("data/raw/教会讲道/sample", args)
+            finally:
+                self.schema = old_schema
 
     def test_publish_requires_explicit_authorization(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            contract = self.fixture(root)
-            result = self.invoke(contract, root, "publish")
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn("requires --allow-write", result.stderr)
+            contract = self.fixture(root, version="1.2", with_presentation=True)
+            old_schema = self.schema
+            self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+            try:
+                result = self.invoke(contract, root, "publish")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("requires --allow-write", result.stderr)
+            finally:
+                self.schema = old_schema
 
     def test_share_contract_passes_metadata_overrides(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -153,7 +199,12 @@ class ConsumePublicationPackageTest(unittest.TestCase):
     def test_v12_max_audit_can_enter_controlled_dry_run(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            contract = self.fixture(root, version="1.2", fidelity_status="pass_by_max_audit_policy")
+            contract = self.fixture(
+                root,
+                version="1.2",
+                fidelity_status="pass_by_max_audit_policy",
+                with_presentation=True,
+            )
             old_schema = self.schema
             output = root / "args.json"
             workflow = root / "workflow.py"
@@ -168,6 +219,22 @@ class ConsumePublicationPackageTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 args = json.loads(output.read_text(encoding="utf-8"))
                 self.assertIn("--dry-run", args)
+            finally:
+                self.schema = old_schema
+
+
+    def test_legacy_sermon_without_presentation_can_plan_but_cannot_dry_run(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            contract = self.fixture(root, version="1.2", with_presentation=False)
+            old_schema = self.schema
+            self.schema = self.workspace / "workspace-control/schemas/website-publication-package-v1.2.schema.json"
+            try:
+                plan = self.invoke(contract, root, "plan")
+                self.assertEqual(plan.returncode, 0, plan.stderr)
+                dry_run = self.invoke(contract, root, "dry-run")
+                self.assertNotEqual(dry_run.returncode, 0)
+                self.assertIn("PRESENTATION_ARTIFACT_REQUIRED", dry_run.stderr)
             finally:
                 self.schema = old_schema
 

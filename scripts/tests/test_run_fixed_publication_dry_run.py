@@ -28,6 +28,28 @@ class FixedPublicationDryRunTest(unittest.TestCase):
         pre.write_text("pre", encoding="utf-8")
         zh.write_text("zh", encoding="utf-8")
         en.write_text("en", encoding="utf-8")
+        artifact = root / "presentation.md"
+        artifact.write_text("zh", encoding="utf-8")
+        manifest = root / "presentation-manifest.json"
+        manifest.write_text(json.dumps({
+            "interface": "sermon-presentation",
+            "version": "1.0",
+            "presentation_status": "mechanically_verified",
+            "text_identity_status": "exact_record_order_preserved",
+            "candidate": {"path": str(zh), "sha256": self.sha(zh), "record_count": 1},
+            "artifact": {
+                "path": str(artifact),
+                "sha256": self.sha(artifact),
+                "restored_record_count": 1,
+                "heading_count": 0,
+                "paragraph_count": 1,
+                "list_item_count": 0,
+                "blockquote_count": 0,
+            },
+            "allowed_transformations": ["blank_line_boundaries"],
+            "forbidden_constructs": [],
+            "first_mismatch": None,
+        }), encoding="utf-8")
         package = {
             "interface": "website-publication-package",
             "version": version,
@@ -45,6 +67,12 @@ class FixedPublicationDryRunTest(unittest.TestCase):
             },
             "notification_policy": "suppress",
             "archive_status": "archived",
+            "presentation": {
+                "manifest": {"path": str(manifest), "sha256": self.sha(manifest)},
+                "artifact": {"path": str(artifact), "sha256": self.sha(artifact)},
+                "presentation_status": "mechanically_verified",
+                "text_identity_status": "exact_record_order_preserved",
+            },
         }
         contract = root / "contract.json"
         contract.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")

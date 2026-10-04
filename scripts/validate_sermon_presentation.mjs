@@ -4,9 +4,11 @@ import path from "node:path";
 import { createMarkdownProcessor } from "@astrojs/markdown-remark";
 import projectBibleBooks from "./project_bible_book_aliases.json" with { type: "json" };
 
-const GATE_ID = "sermon-publication-presentation-mechanical/v1";
-const COMPLETION_CEILING =
-  "incident_proven_mechanical_checks_only_not_full_reader_quality_or_aesthetic_pass";
+const GATE_ID = "sermon-publication-presentation-structure/v2";
+const PASS_STATUS = "SERMON_PRESENTATION_STRUCTURE_PASS";
+const FAIL_STATUS = "SERMON_PRESENTATION_STRUCTURE_FAIL";
+const COMPLETION_CEILING_PASS = "publication_structure_ready";
+const COMPLETION_CEILING_FAIL = "publication_structure_blocked";
 
 function parseArgs(argv) {
   const args = {};
@@ -205,6 +207,26 @@ function makeCheck(id, failures, detail) {
   };
 }
 
+function collectRenderedStructureMetrics(body, html) {
+  const sourceHeadingCount = (body.match(/^\s*#{2,3}\s+\S/gm) ?? []).length;
+  const renderedParagraphCount = (html.match(/<p\b/gi) ?? []).length;
+  const renderedListItemCount = (html.match(/<li\b/gi) ?? []).length;
+  const renderedBlockquoteCount = (html.match(/<blockquote\b/gi) ?? []).length;
+  const renderedHeadingCount = (html.match(/<h[23]\b/gi) ?? []).length;
+  const renderedTextChars = plainTextFromHtml(html).replace(/\s+/g, "").length;
+  const contentBlockCount =
+    renderedParagraphCount + renderedListItemCount + renderedBlockquoteCount + renderedHeadingCount;
+  return {
+    source_heading_count: sourceHeadingCount,
+    rendered_heading_count: renderedHeadingCount,
+    rendered_paragraph_count: renderedParagraphCount,
+    rendered_list_item_count: renderedListItemCount,
+    rendered_blockquote_count: renderedBlockquoteCount,
+    rendered_text_chars: renderedTextChars,
+    rendered_content_block_count: contentBlockCount
+  };
+}
+
 async function main() {
   let args;
   try {
@@ -291,6 +313,40 @@ async function main() {
       has_list_block: section.hasListBlock
     }));
 
+  const structureMetrics = collectRenderedStructureMetrics(body, renderedHtml);
+  const paragraphCollapseFailures = [];
+  if (
+    structureMetrics.rendered_text_chars >= 1200 &&
+    structureMetrics.rendered_paragraph_count <= 1 &&
+    structureMetrics.rendered_list_item_count === 0
+  ) {
+    paragraphCollapseFailures.push({
+      rendered_text_chars: structureMetrics.rendered_text_chars,
+      rendered_paragraph_count: structureMetrics.rendered_paragraph_count,
+      rendered_list_item_count: structureMetrics.rendered_list_item_count
+    });
+  }
+
+  const renderedBlockDensityFailures = [];
+  if (
+    structureMetrics.rendered_text_chars >= 2000 &&
+    structureMetrics.rendered_content_block_count < 6
+  ) {
+    renderedBlockDensityFailures.push({
+      rendered_text_chars: structureMetrics.rendered_text_chars,
+      rendered_content_block_count: structureMetrics.rendered_content_block_count,
+      minimum_required_blocks: 6
+    });
+  }
+
+  const headingRenderIntegrityFailures = [];
+  if (structureMetrics.source_heading_count !== structureMetrics.rendered_heading_count) {
+    headingRenderIntegrityFailures.push({
+      source_heading_count: structureMetrics.source_heading_count,
+      rendered_heading_count: structureMetrics.rendered_heading_count
+    });
+  }
+
   if (args["rendered-output"]) {
     const renderedPath = path.resolve(args["rendered-output"]);
     fs.mkdirSync(path.dirname(renderedPath), { recursive: true });
@@ -332,18 +388,33 @@ async function main() {
       "itemized_section_rendered_blocks",
       renderedStructureFailures,
       "Renders this exact source candidate with Astro's Markdown processor and requires independent rendered <li> blocks."
+    ),
+    makeCheck(
+      "paragraph_collapse_guard",
+      paragraphCollapseFailures,
+      "Long-form sermon content must not collapse into a single rendered paragraph."
+    ),
+    makeCheck(
+      "rendered_block_density",
+      renderedBlockDensityFailures,
+      "Long-form sermon content requires a minimum rendered block density so multi-thousand-character bodies cannot pass as a few giant blocks."
+    ),
+    makeCheck(
+      "heading_render_integrity",
+      headingRenderIntegrityFailures,
+      "Every source H2/H3 presentation boundary must survive Markdown rendering as an H2/H3 boundary."
     )
   ];
 
-  const status = checks.every((check) => check.status === "PASS")
-    ? "MECHANICAL_PRESENTATION_PASS"
-    : "MECHANICAL_PRESENTATION_FAIL";
+  const passed = checks.every((check) => check.status === "PASS");
+  const status = passed ? PASS_STATUS : FAIL_STATUS;
 
   const result = {
     gate: GATE_ID,
     candidate_id: args["candidate-id"],
     status,
-    completion_ceiling: COMPLETION_CEILING,
+    legacy_mechanical_status: passed ? "MECHANICAL_PRESENTATION_PASS" : "MECHANICAL_PRESENTATION_FAIL",
+    completion_ceiling: passed ? COMPLETION_CEILING_PASS : COMPLETION_CEILING_FAIL,
     source: {
       path: sourcePath,
       sha256: sha256(source)
@@ -354,11 +425,12 @@ async function main() {
       output_path: args["rendered-output"] ? path.resolve(args["rendered-output"]) : null
     },
     checks,
+    rendered_structure_metrics: structureMetrics,
     rendered_section_evidence: renderedSectionEvidence
   };
 
   console.log(JSON.stringify(result, null, 2));
-  process.exitCode = status === "MECHANICAL_PRESENTATION_PASS" ? 0 : 1;
+  process.exitCode = status === PASS_STATUS ? 0 : 1;
 }
 
 main().catch((error) => {

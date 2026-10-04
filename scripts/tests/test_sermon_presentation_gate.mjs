@@ -30,10 +30,10 @@ test("PASS fixture binds source to rendered independent list blocks and mechanic
   try {
     const result = runFixture("pass.md", ["--rendered-output", renderedOutput]);
     assert.equal(result.status, 0, result.stderr || result.stdout);
-    assert.equal(result.output.status, "MECHANICAL_PRESENTATION_PASS");
+    assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_PASS");
     assert.equal(
       result.output.completion_ceiling,
-      "incident_proven_mechanical_checks_only_not_full_reader_quality_or_aesthetic_pass"
+      "publication_structure_ready"
     );
     assert.match(result.output.source.sha256, /^[a-f0-9]{64}$/);
     assert.match(result.output.rendered_html.sha256, /^[a-f0-9]{64}$/);
@@ -58,7 +58,7 @@ test("PASS fixture binds source to rendered independent list blocks and mechanic
 test("FAIL fixture blocks slide/page production residue", () => {
   const result = runFixture("fail-production-residue.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("production_residue"));
 });
 
@@ -89,7 +89,7 @@ test("FAIL fixture proves plain source newlines do not establish itemized render
 test("FAIL fixture closes F-01 mixed list plus adjacent plain-text tail false-positive", () => {
   const result = runFixture("fail-mixed-list-plain-tail.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("itemized_section_source_structure"));
   const section = result.output.rendered_section_evidence.find(
     (entry) => entry.heading === "三个重点"
@@ -104,28 +104,28 @@ test("FAIL fixture closes F-01 mixed list plus adjacent plain-text tail false-po
 test("FAIL fixture blocks consecutive Chinese visual numbering that is not Markdown list syntax", () => {
   const result = runFixture("fail-pseudo-ordered-list-lines.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
 });
 
 test("FAIL fixture blocks multiple Chinese visual-number items collapsed on one source line", () => {
   const result = runFixture("fail-pseudo-ordered-list-inline.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
 });
 
 test("FAIL fixture blocks Chinese dunhao numbering that is not CommonMark ordered-list syntax", () => {
   const result = runFixture("fail-pseudo-ordered-list-dunhao.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("pseudo_ordered_list_requires_markdown_list"));
 });
 
 test("FAIL fixture blocks WAKACHIAI helper text in the public small-group heading", () => {
   const result = runFixture("fail-wakachiai-heading.md");
   assert.equal(result.status, 1);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_FAIL");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
   assert.ok(failedCheckIds(result.output).includes("small_group_heading_public_label"));
 });
 
@@ -138,7 +138,7 @@ test("PASS incident fixture renders the three questions as li blocks and keeps e
       renderedOutput
     ]);
     assert.equal(result.status, 0, result.stderr || result.stdout);
-    assert.equal(result.output.status, "MECHANICAL_PRESENTATION_PASS");
+    assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_PASS");
     const html = fs.readFileSync(renderedOutput, "utf8");
     assert.match(
       html,
@@ -154,11 +154,30 @@ test("PASS incident fixture renders the three questions as li blocks and keeps e
 test("PASS fixture does not misclassify blank-line-separated transition or ordinary prose", () => {
   const result = runFixture("pass-itemized-with-transition.md");
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.equal(result.output.status, "MECHANICAL_PRESENTATION_PASS");
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_PASS");
   const section = result.output.rendered_section_evidence.find(
     (entry) => entry.heading === "三个重点"
   );
   assert.equal(section.sourceListItemCount, 3);
   assert.equal(section.renderedListItemCount, 3);
   assert.deepEqual(section.unstructuredInlineTails, []);
+});
+
+test("FAIL incident fixture blocks long sermon collapsed to one paragraph", () => {
+  const result = runFixture("fail-paragraph-collapse.md");
+  assert.equal(result.status, 1);
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_FAIL");
+  assert.ok(failedCheckIds(result.output).includes("paragraph_collapse_guard"));
+  assert.ok(failedCheckIds(result.output).includes("rendered_block_density"));
+  assert.equal(result.output.rendered_structure_metrics.rendered_paragraph_count, 1);
+});
+
+test("PASS structural fixture keeps long-form content as multiple rendered blocks and headings", () => {
+  const result = runFixture("pass-long-structured.md");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(result.output.status, "SERMON_PRESENTATION_STRUCTURE_PASS");
+  assert.equal(result.output.completion_ceiling, "publication_structure_ready");
+  assert.ok(result.output.rendered_structure_metrics.rendered_paragraph_count >= 12);
+  assert.equal(result.output.rendered_structure_metrics.source_heading_count, 3);
+  assert.equal(result.output.rendered_structure_metrics.rendered_heading_count, 3);
 });

@@ -115,12 +115,14 @@ python scripts/content_workflow.py publish share --source-file "data/raw/分享/
 python scripts/content_workflow.py publish share --source-file "data/raw/分享/<file>" --description "人工概括型摘要。" --tags "核心人物,核心地点,核心主题"
 ```
 
-For a sermon:
+For a sermon, the frozen Chinese TXT is fidelity authority, not the Website paragraph contract. First consume the verified `sermon-presentation/v1` artifact supplied by the Sermon Owner:
 
 ```shell
-python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"
-python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"
+python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --presentation-file "<presentation-prepared.md>" --dry-run --description "人工概括型摘要。"
+python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --presentation-file "<presentation-prepared.md>" --description "人工概括型摘要。"
 ```
+
+A new sermon dry-run/publish without `--presentation-file` must fail with `PRESENTATION_ARTIFACT_REQUIRED`. Before production write, `scripts/validate_sermon_presentation.mjs` must return `SERMON_PRESENTATION_STRUCTURE_PASS` with `completion_ceiling=publication_structure_ready`.
 
 Both share and sermon commands accept `--tags` for manual precise tags. The website Tag Pipeline also adds scripture books and deterministic title matches. Sermons must never fall back to `讲道`, `教会讲道`, or the speaker name; when deterministic rules produce fewer than two precise tags, rerun dry-run with explicit `--tags`.
 

@@ -1,0 +1,127 @@
+{
+  "schema_version": "sermon-presentation-boundary-hardening-b01-targeted-independent-reaudit/v1",
+  "audit_role": "SERMON_PRESENTATION_BOUNDARY_HARDENING_B01_TARGETED_INDEPENDENT_REAUDITOR",
+  "chronology": {
+    "prior_terminal": "BLOCKED_INDEPENDENT_AUDIT_WEBSITE_NODE_DEPENDENCIES_NOT_MATERIALIZED",
+    "prior_result": "tasks/current/20261004-sermon-presentation-boundary-hardening/independent-audit/result.md",
+    "prior_evidence": "tasks/current/20261004-sermon-presentation-boundary-hardening/independent-audit/evidence.json",
+    "inherited_non_blocking_conclusions": "UNCHANGED"
+  },
+  "entrypoint": {
+    "path": "tasks/current/20261004-sermon-presentation-boundary-hardening/independent-reaudit-b01/NEXT_HANDOFF.md",
+    "sha256": "28631c9f14dd4e514907b3c15d28ba51fbe704ac3a85a54a849dd37e05c9afba"
+  },
+  "mode": [
+    "SEPARATE",
+    "INDEPENDENT",
+    "READ_ONLY",
+    "COUNTEREXAMPLE_ORIENTED",
+    "TARGETED_B01_ONLY",
+    "ZERO_REMEDIATION",
+    "ZERO_COMMIT",
+    "ZERO_PUSH",
+    "ZERO_PRODUCTION"
+  ],
+  "verdict": "PASS_TARGETED_INDEPENDENT_REAUDIT_B01",
+  "readiness": "READY_FOR_CANONICAL_ADOPTION",
+  "b01": {
+    "dependency_materialization": {
+      "pass": true,
+      "exact_worktree": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening",
+      "node_modules_exists": true,
+      "node_modules_is_symlink": false,
+      "node_modules_realpath": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening/node_modules",
+      "astro": {
+        "exists": true,
+        "is_symlink": false,
+        "realpath": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening/node_modules/astro"
+      },
+      "markdown_remark": {
+        "exists": true,
+        "is_symlink": false,
+        "realpath": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening/node_modules/@astrojs/markdown-remark"
+      },
+      "canonical_or_neighbor_dependency_borrowing": false,
+      "package_json_changed": false,
+      "package_lock_json_changed": false,
+      "node_modules_in_git_changed_paths": false
+    },
+    "node_presentation_suite": {
+      "command": "node --test scripts/tests/test_sermon_presentation_gate.mjs",
+      "exit_code": 0,
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "status": "PASS"
+    },
+    "targeted_negative_fixture": {
+      "source": "scripts/tests/fixtures/sermon_presentation/fail-paragraph-collapse.md",
+      "exit_code": 1,
+      "status": "SERMON_PRESENTATION_STRUCTURE_FAIL",
+      "failed_checks": [
+        "paragraph_collapse_guard",
+        "rendered_block_density"
+      ],
+      "metrics": {
+        "rendered_paragraph_count": 1,
+        "rendered_content_block_count": 1,
+        "rendered_text_chars": 8400
+      }
+    },
+    "targeted_healthy_fixture": {
+      "source": "scripts/tests/fixtures/sermon_presentation/pass-long-structured.md",
+      "exit_code": 0,
+      "status": "SERMON_PRESENTATION_STRUCTURE_PASS",
+      "completion_ceiling": "publication_structure_ready",
+      "all_checks_pass": true,
+      "metrics": {
+        "source_heading_count": 3,
+        "rendered_heading_count": 3,
+        "rendered_paragraph_count": 16,
+        "rendered_content_block_count": 19
+      }
+    },
+    "curve_ahead": {
+      "source": "/Volumes/DevSSD/RonnieWork/RonnieCross/讲道整理-presentation-hardening/tasks/current/20261004-sermon-presentation-boundary-hardening/evidence/curve-ahead.presentation.md",
+      "candidate_id": "096a21672fc3a353b94b86749ae31d3bb5e0e17de553d83bc8a4ca0d083d8b73",
+      "exit_code": 0,
+      "source_sha256": "cee4791eab18fea14e0df5775641771d2adeca65a53a5ac45b06a00d1d239328",
+      "status": "SERMON_PRESENTATION_STRUCTURE_PASS",
+      "completion_ceiling": "publication_structure_ready",
+      "rendered_structure_metrics": {
+        "source_heading_count": 6,
+        "rendered_heading_count": 6,
+        "rendered_paragraph_count": 138,
+        "rendered_content_block_count": 144
+      },
+      "all_structure_checks_pass": true
+    },
+    "forced_build": {
+      "command": "npm run build -- --force",
+      "exit_code": 0,
+      "built_pages": 344,
+      "complete": true,
+      "exact_markers": [
+        "344 page(s) built",
+        "Complete!"
+      ]
+    },
+    "scope_hygiene": {
+      "pass": true,
+      "node_modules_changed_path_contamination": false,
+      "dependency_symlink": false,
+      "package_json_mutation": false,
+      "package_lock_json_mutation": false,
+      "production_article_mutation": false,
+      "workspace_control_mutation": false,
+      "unrelated_business_assets": false,
+      "commit_push_deploy_notification_nas_side_effects": false,
+      "note": "Fresh show_changes lists only the existing presentation-hardening implementation/docs/tests/task assets plus auditor-owned chronology; no node_modules, package manifests, src/content/posts, workspace-control, or side-effect artifacts appeared."
+    }
+  },
+  "closure": {
+    "prior_b01_blocker_closed": true,
+    "inherited_attempt1_non_blocking_passes": true,
+    "formal_terminal": "PASS_TARGETED_INDEPENDENT_REAUDIT_B01 / READY_FOR_CANONICAL_ADOPTION"
+  }
+}

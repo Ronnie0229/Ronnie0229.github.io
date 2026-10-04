@@ -123,10 +123,12 @@
 
 整改：
 
-- 中文原稿合并、发布前 Markdown 生成、导出到网站三个阶段都必须保留段落空行。
-- 允许压缩三个以上连续空行为一个空行，但不得删除所有空行。
-- 发布前抽查 `src/content/posts/<文章>.md`，确认正文段落之间存在空行。
-- 线上验证时检查公开页面正文是否有正常段落间距。
+- **禁止把 fidelity record boundary 当作 presentation boundary。** Frozen Chinese TXT 的逐行记录主要服务 source/candidate 对齐与 fidelity denominator；它不能直接作为 Website Markdown paragraph contract。
+- Fidelity release 后必须先生成独立 body-only presentation artifact，并用 `sermon-presentation/v1` identity Gate 证明：去除白名单 Markdown 结构标记后，frozen candidate 的 record 文字与顺序 exact preserved。
+- Canonical sermon importer 不再把 plain TXT 连续普通行通过 `" ".join(...)` 猜成一个 paragraph；新 sermon dry-run/publish 缺 `--presentation-file` 时必须 `PRESENTATION_ARTIFACT_REQUIRED`。
+- Website `sermon-publication-presentation-structure/v2` 必须在 publish 前 PASS：长篇正文若渲染成单一 `<p>`，命中 `paragraph_collapse_guard`；多千字符正文块数量异常低，命中 `rendered_block_density`；source H2/H3 未完整渲染，命中 `heading_render_integrity`。
+- 唯一结构准入 terminal 是 `SERMON_PRESENTATION_STRUCTURE_PASS` 且 `completion_ceiling=publication_structure_ready`。旧 `MECHANICAL_PRESENTATION_PASS` 只能表示 legacy incident checks 的兼容结果，不再支撑“完整排版已验收”的结论。
+- 发布前仍应抽查最终 `src/content/posts/<文章>.md` 与 rendered metrics；人工抽查是补充，不替代上述 deterministic Gate。
 
 ## 11. 讲稿/投影片标记不得进入正文
 

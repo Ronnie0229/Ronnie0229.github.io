@@ -179,12 +179,15 @@ def publish(
     scripture: str | None = None,
     slug: str | None = None,
     slug_topic: str | None = None,
+    presentation_file: str | None = None,
 ) -> None:
     command = [sys.executable, str(IMPORTERS[kind])]
     if kind == "sermon":
         if not folder:
             raise SystemExit("Sermon publish requires --folder to avoid importing all sermon folders.")
-        command.extend(["--folder", folder])
+        if not presentation_file:
+            raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: sermon publish requires --presentation-file")
+        command.extend(["--folder", folder, "--presentation-file", presentation_file])
     elif kind == "share":
         if not source_file:
             raise SystemExit("Share publish requires --source-file to avoid importing all share files.")
@@ -233,6 +236,7 @@ def parse_args() -> argparse.Namespace:
     publish_parser = subparsers.add_parser("publish", help="生成文章和整理报告")
     publish_parser.add_argument("kind", choices=("sermon", "share"))
     publish_parser.add_argument("--folder", help="讲道发布时必须指定的单个 data/raw/教会讲道 子目录。")
+    publish_parser.add_argument("--presentation-file", help="讲道发布必须指定的已验证 presentation-prepared Markdown artifact。")
     publish_parser.add_argument("--source-file", help="分享发布时必须指定的单个 data/raw/分享 源文件。")
     publish_parser.add_argument("--dry-run", action="store_true", help="只预览导入结果，不写入文件。")
     publish_parser.add_argument("--description", help="人工概括型摘要；不得使用正文截取或模板句。")
@@ -288,6 +292,7 @@ def main() -> None:
             args.scripture,
             args.slug,
             args.slug_topic,
+            args.presentation_file,
         )
     elif args.command == "publish-contract":
         command = [

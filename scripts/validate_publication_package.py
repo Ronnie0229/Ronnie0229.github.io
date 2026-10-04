@@ -176,6 +176,85 @@ def main() -> int:
         else:
             checks["prepublish_sha_not_available"] = True
 
+    presentation = package.get("presentation")
+    if package.get("content_type") == "sermon" and presentation is None:
+        checks["presentation_legacy_readonly_compatibility"] = True
+    elif package.get("content_type") == "sermon":
+        checks["presentation_binding_object"] = isinstance(presentation, dict)
+        if not checks["presentation_binding_object"]:
+            errors.append("presentation binding must be an object for sermon package")
+        else:
+            presentation_status = presentation.get("presentation_status")
+            text_identity_status = presentation.get("text_identity_status")
+            checks["presentation_status_verified"] = presentation_status == "mechanically_verified"
+            checks["presentation_text_identity_verified"] = (
+                text_identity_status == "exact_record_order_preserved"
+            )
+            if not checks["presentation_status_verified"]:
+                errors.append("presentation_status must be mechanically_verified")
+            if not checks["presentation_text_identity_verified"]:
+                errors.append("presentation text identity must be exact_record_order_preserved")
+
+            for label in ("manifest", "artifact"):
+                entry = presentation.get(label)
+                raw = entry.get("path") if isinstance(entry, dict) else None
+                expected_sha = entry.get("sha256") if isinstance(entry, dict) else None
+                path = Path(raw) if isinstance(raw, str) else None
+                checks[f"presentation_{label}_path_present"] = path is not None
+                if path is None:
+                    errors.append(f"missing presentation {label} path")
+                    continue
+                resolved = path.resolve(strict=False)
+                checks[f"presentation_{label}_within_content_root"] = is_within(resolved, content_root)
+                if not checks[f"presentation_{label}_within_content_root"]:
+                    errors.append(f"presentation {label} outside content root: {path}")
+                    continue
+                checks[f"presentation_{label}_exists"] = resolved.is_file()
+                if not checks[f"presentation_{label}_exists"]:
+                    errors.append(f"missing presentation {label}: {path}")
+                    continue
+                checks[f"presentation_{label}_sha_current"] = (
+                    isinstance(expected_sha, str) and sha256(resolved) == expected_sha
+                )
+                if not checks[f"presentation_{label}_sha_current"]:
+                    errors.append(f"sha mismatch: presentation {label}: {path}")
+
+            manifest_entry = presentation.get("manifest")
+            manifest_raw = manifest_entry.get("path") if isinstance(manifest_entry, dict) else None
+            manifest_path = Path(manifest_raw) if isinstance(manifest_raw, str) else None
+            if manifest_path is not None and manifest_path.resolve(strict=False).is_file():
+                try:
+                    presentation_manifest = load_json(manifest_path.resolve(strict=False))
+                except ValueError as exc:
+                    checks["presentation_manifest_readable"] = False
+                    errors.append(str(exc))
+                else:
+                    checks["presentation_manifest_readable"] = True
+                    checks["presentation_manifest_identity"] = (
+                        presentation_manifest.get("interface") == "sermon-presentation"
+                        and presentation_manifest.get("version") == "1.0"
+                        and presentation_manifest.get("presentation_status") == "mechanically_verified"
+                        and presentation_manifest.get("text_identity_status") == "exact_record_order_preserved"
+                    )
+                    if not checks["presentation_manifest_identity"]:
+                        errors.append("presentation manifest identity/status mismatch")
+                    candidate_entry = presentation_manifest.get("candidate")
+                    artifact_entry = presentation_manifest.get("artifact")
+                    official_sha = package.get("official_chinese", {}).get("sha256")
+                    bound_artifact_sha = presentation.get("artifact", {}).get("sha256")
+                    checks["presentation_candidate_sha_matches_official"] = (
+                        isinstance(candidate_entry, dict)
+                        and candidate_entry.get("sha256") == official_sha
+                    )
+                    checks["presentation_artifact_sha_matches_manifest"] = (
+                        isinstance(artifact_entry, dict)
+                        and artifact_entry.get("sha256") == bound_artifact_sha
+                    )
+                    if not checks["presentation_candidate_sha_matches_official"]:
+                        errors.append("presentation candidate SHA does not match official Chinese SHA")
+                    if not checks["presentation_artifact_sha_matches_manifest"]:
+                        errors.append("presentation artifact SHA does not match manifest")
+
     fidelity = package.get("fidelity_status")
     accepted_fidelity_statuses = {
         "not_required",

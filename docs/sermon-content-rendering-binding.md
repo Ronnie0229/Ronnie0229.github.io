@@ -1,6 +1,6 @@
 # Sermon Content → Website Rendering 最小绑定（C-min）
 
-状态：`OWNER_CANDIDATE / PENDING_INDEPENDENT_AUDIT`
+状态：`CURRENT / STRUCTURE_V2_HARD_GATE`
 
 Owner：`个人网页项目`
 
@@ -90,13 +90,17 @@ node scripts/validate_sermon_presentation.mjs --source <single-sermon-candidate.
 
 Gate 自己从该同一 source 生成 rendered HTML，因此 source evidence 与 rendered evidence 绑定到同一 candidate；输出 JSON 同时记录 source SHA-256、rendered HTML SHA-256、检查结果与 completion ceiling。
 
-成功 terminal：`MECHANICAL_PRESENTATION_PASS`。
+Current success terminal：`SERMON_PRESENTATION_STRUCTURE_PASS`。
 
-失败 terminal：`MECHANICAL_PRESENTATION_FAIL`。
+Current failure terminal：`SERMON_PRESENTATION_STRUCTURE_FAIL`。
 
-固定 completion ceiling：`incident_proven_mechanical_checks_only_not_full_reader_quality_or_aesthetic_pass`。
+Current success completion ceiling：`publication_structure_ready`；failure ceiling：`publication_structure_blocked`。
 
-该 PASS 不能替代 fidelity/semantic PASS、Project Bible/CUV exactness、完整 reader-quality/aesthetic 判断、build/deploy/live technical PASS。
+Gate 除既有 production residue / scripture label / TOC / list / small-group checks 外，必须同时检查：`paragraph_collapse_guard`、`rendered_block_density`、`heading_render_integrity`，并输出 rendered paragraph/heading/list/blockquote/text-char/content-block metrics。像 2026-10-04《前方弯道》事故中“4091 字 / 1 paragraph / 0 H2”的形态必须 deterministic fail-closed。
+
+输出仍保留 `legacy_mechanical_status=MECHANICAL_PRESENTATION_PASS|FAIL` 仅用于历史 chronology/兼容；该字段不再是 publication acceptance authority。Current publication 只能采信 `SERMON_PRESENTATION_STRUCTURE_PASS + publication_structure_ready`。
+
+该结构 PASS 仍不能替代 fidelity/semantic PASS、Project Bible/CUV exactness、完整 reader-quality/aesthetic 判断、build/deploy/live technical PASS；但它是 sermon Website publish 前不可缺少的结构硬门。
 
 ## 8. Current implementation anchors
 

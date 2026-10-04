@@ -62,7 +62,19 @@ def import_command(package: dict[str, Any], workflow: Path, mode: str, allow_wri
 
     command = [sys.executable, str(workflow), "publish", str(content_type)]
     if content_type == "sermon":
-        command.extend(["--folder", website_source])
+        presentation = package.get("presentation")
+        if not isinstance(presentation, dict):
+            raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: sermon dry-run/publish requires presentation binding")
+        artifact = presentation.get("artifact")
+        artifact_path = artifact.get("path") if isinstance(artifact, dict) else None
+        if (
+            presentation.get("presentation_status") != "mechanically_verified"
+            or presentation.get("text_identity_status") != "exact_record_order_preserved"
+            or not isinstance(artifact_path, str)
+            or not artifact_path.strip()
+        ):
+            raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: invalid sermon presentation binding")
+        command.extend(["--folder", website_source, "--presentation-file", artifact_path])
     elif content_type == "share":
         command.extend(["--source-file", website_source])
     else:

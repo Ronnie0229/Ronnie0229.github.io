@@ -156,14 +156,17 @@ npm run sync
 3. 确认日期、经文标题和讲员。
 4. 入库：`python scripts/content_workflow.py ingest sermon --date YYYYMMDD --title "经文与标题" --speaker "讲员"`。
 5. 检查 PDF 提取稿。
-6. 逐句完整翻译并校订中文 TXT。
-7. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`。
-8. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --dry-run --description "人工概括型摘要。"`。
-9. 正式发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --description "人工概括型摘要。"`。
-10. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
-11. 检查文章、报告、Git 差异并运行构建。
-12. 当前 frozen publication object 一旦获得一次 `授权发布`，该授权覆盖标准 Publication Fast Lane 的 Website write → build → commit → push → deployment trigger → notification trigger → NAS append-only archive → registry/status/Git closure。除真实 blocker 外，不再为 commit、push、deploy、email、NAS 分别暂停并重复索权。
-13. 本轮不等待本次 deployment/live/email 终态；记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 后结束。下一次发布从第 0 步核验本次结果。
+6. 逐句完整翻译并校订中文 TXT；该 TXT 是 frozen fidelity candidate，不是 Website presentation artifact。
+7. Fidelity release + Project Bible Gate PASS 后，由讲道 Owner 生成 body-only `presentation-prepared.md`；只允许空行、H2/H3、标准 Markdown list、blockquote、whole-record emphasis 等白名单 presentation transformation，并生成 `sermon-presentation/v1` manifest，机械证明去掉 presentation markup 后 frozen records 的文字与顺序完全一致。
+8. 新 v1.2 sermon package 必须绑定该 manifest/artifact。Website read-only validator 可兼容历史无 binding package，但 sermon dry-run/publish 对无 binding package 必须返回 `PRESENTATION_ARTIFACT_REQUIRED`。
+9. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`。
+10. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --presentation-file "<presentation-prepared.md>" --dry-run --description "人工概括型摘要。"`。
+11. 正式发布：同上移除 `--dry-run`；canonical importer 直接消费已验证 presentation Markdown，不再对 plain TXT 执行 paragraph guessing/`normalize_body()`。
+12. 正式写入前必须运行 `scripts/validate_sermon_presentation.mjs`；唯一可作为结构准入的 terminal 是 `SERMON_PRESENTATION_STRUCTURE_PASS` 且 `completion_ceiling=publication_structure_ready`。`MECHANICAL_PRESENTATION_PASS` 仅保留为 legacy compatibility 字段，不得再解释为完整排版验收。
+13. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
+14. 检查文章、报告、Git 差异并运行构建。
+15. 当前 frozen publication object 一旦获得一次 `授权发布`，该授权覆盖标准 Publication Fast Lane 的 Website write → build → commit → push → deployment trigger → notification trigger → NAS append-only archive → registry/status/Git closure。除真实 blocker 外，不再为 commit、push、deploy、email、NAS 分别暂停并重复索权。
+16. 本轮不等待本次 deployment/live/email 终态；记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 后结束。下一次发布从第 0 步核验本次结果。
 
 讲道发布同样可用 `--tags "核心人物,核心地点,核心主题"` 补充人工标签。导入器不再默认生成 `讲道`、`教会讲道` 或讲员姓名；它从 scripture 与标题执行确定性生成，不足 2 个精准标签时停止并要求人工补充。所有标签规则与分享、Admin 共用 `assets/admin/tag-rules.json`。
 
@@ -229,7 +232,7 @@ docs/内容整理报告/source-path-check.csv
 - 导入脚本不得清空 `src/content/posts/`。
 - 不得因为整理某一类文章而删除另一类文章。
 - 目标文件已存在时，停止并核对，不要自动覆盖。
-- 分享发布必须使用 `publish share --source-file ...`，讲道发布必须使用 `publish sermon --folder ...`；无参数全量导入已禁用。
+- 分享发布必须使用 `publish share --source-file ...`；讲道发布必须使用 `publish sermon --folder ... --presentation-file ...`。无参数全量导入和 sermon plain-TXT presentation guessing 均已禁用。
 - 正式发布前优先运行 `--dry-run`，确认目标路径、标题、经文、摘要和 Git diff 范围。
 - `description` 必须由整理者人工概括正文主旨；脚本不得用正文前部、模板句或占位符代替。
 - 讲道 `slug` 由 source folder 日期稳定生成，正式发布记录在 `sermon-import-registry.csv`；更新旧文必须显式使用 `--update-existing`。

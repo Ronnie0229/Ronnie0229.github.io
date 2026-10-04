@@ -123,10 +123,13 @@ class TagPipelineTests(unittest.TestCase):
             folder.mkdir()
             source = folder / "希伯来书11:21信仰的殿堂雅各_中文.txt"
             source.write_text("希伯来书 11:21\n\n雅各因着信心敬拜神。", encoding="utf-8")
+            presentation = Path(tmp) / "presentation.md"
+            presentation.write_text("希伯来书 11:21\n\n雅各因着信心敬拜神。", encoding="utf-8")
             _date, markdown = markdown_for(
                 folder,
                 source,
                 "Grayson 根据希伯来书十一章分享雅各晚年因信心敬拜神，并仰望神应许的生命。",
+                presentation_file=presentation,
             )
         self.assertIn('tags: ["希伯来书", "雅各", "信心"]', markdown)
         tags_line = next(line for line in markdown.splitlines() if line.startswith("tags:"))
@@ -137,10 +140,22 @@ class TagPipelineTests(unittest.TestCase):
     def test_content_workflow_forwards_manual_tags_to_sermon(self) -> None:
         with patch("scripts.content_workflow.subprocess.run") as run:
             run.return_value.returncode = 0
-            publish("sermon", folder="data/raw/教会讲道/sample", tags="Faith,Jacob", dry_run=True)
+            publish(
+                "sermon",
+                folder="data/raw/教会讲道/sample",
+                tags="Faith,Jacob",
+                dry_run=True,
+                presentation_file="/tmp/presentation.md",
+            )
         command = run.call_args.args[0]
         self.assertIn("--tags", command)
         self.assertIn("Faith,Jacob", command)
+
+
+    def test_content_workflow_requires_presentation_artifact_for_sermon(self) -> None:
+        with self.assertRaises(SystemExit) as caught:
+            publish("sermon", folder="data/raw/教会讲道/sample", dry_run=True)
+        self.assertIn("PRESENTATION_ARTIFACT_REQUIRED", str(caught.exception))
 
     def test_python_and_browser_runtime_results_match(self) -> None:
         completed = subprocess.run(

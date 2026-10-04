@@ -1,0 +1,33 @@
+{
+  "scan": "historical-sermon-presentation-structure-readonly/v1",
+  "denominator": 219,
+  "structural_failure_count": 1,
+  "paragraph_collapse_count": 1,
+  "block_density_count": 1,
+  "heading_integrity_count": 0,
+  "other_existing_gate_failure_count": 71,
+  "structural_failures": [
+    {
+      "path": "src/content/posts/2026-07-09-马太福音-7-1-6｜论断人.md",
+      "status": "SERMON_PRESENTATION_STRUCTURE_FAIL",
+      "failed_checks": [
+        "production_residue",
+        "paragraph_collapse_guard",
+        "rendered_block_density"
+      ],
+      "structural_failures": [
+        "paragraph_collapse_guard",
+        "rendered_block_density"
+      ],
+      "metrics": {
+        "source_heading_count": 0,
+        "rendered_heading_count": 0,
+        "rendered_paragraph_count": 1,
+        "rendered_list_item_count": 0,
+        "rendered_blockquote_count": 0,
+        "rendered_text_chars": 4300,
+        "rendered_content_block_count": 1
+      }
+    }
+  ]
+}

@@ -1,5 +1,14 @@
 # 个人网页项目状态
 
+## 2026-10-04 — Sermon presentation boundary hardening
+
+- 《前方弯道》paragraph-collapse 事故的系统整改已在 Owner-local construction worktree 完成并全量验证：fidelity candidate 与 presentation artifact 正式分层；new sermon publication 强制 `sermon-presentation/v1` binding / `--presentation-file`；Website structural Gate 升级为 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`。
+- 新 hard checks：`paragraph_collapse_guard`、`rendered_block_density`、`heading_render_integrity`；旧 `MECHANICAL_PRESENTATION_PASS` 仅作 legacy chronology，不再是 publication acceptance authority。
+- 验证：Website Python 61/61、Node presentation 14/14、mirrors 600/600、Knowledge 300/0/0、tags 27/27、forced build 344 pages、diff-check PASS。
+- 真实 Curve Ahead cross-project candidate：144/144 text identity，138 p / 6 H2 / 144 blocks，package validator/consumer plan PASS。
+- 历史只读扫描 219 sermon posts，发现 exact1 同类旧结构坍塌：`2026-07-09-马太福音-7-1-6｜论断人.md`（4300 chars / 1 p）；本轮只登记，不自动修复。
+- chronology 保留：Attempt 1=`BLOCKED_INDEPENDENT_AUDIT_WEBSITE_NODE_DEPENDENCIES_NOT_MATERIALIZED`；B-01 targeted re-audit=`PASS_TARGETED_INDEPENDENT_REAUDIT_B01 / READY_FOR_CANONICAL_ADOPTION`。用户已单独授权本整改 canonical adoption + Git commit/push。
+
 ## 2026-10-04 — 《前方弯道》presentation-only hotfix
 
 - Incident：首次 publication post 正文被 importer normalization 压成 1 个 4091 字 paragraph（0 blank lines / 0 H2）；现有 `sermon-publication-presentation-mechanical/v1` 未覆盖整篇 paragraph-collapse，因此此前 mechanical PASS 不能代表完整排版 PASS。

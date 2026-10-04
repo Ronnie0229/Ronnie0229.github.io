@@ -1,0 +1,206 @@
+{
+  "schema_version": "sermon-presentation-boundary-hardening-independent-audit/v1",
+  "audit_role": "SERMON_PRESENTATION_BOUNDARY_HARDENING_INDEPENDENT_AUDITOR",
+  "terminal": "BLOCKED_INDEPENDENT_AUDIT_WEBSITE_NODE_DEPENDENCIES_NOT_MATERIALIZED",
+  "audit_mode": {
+    "separate": true,
+    "independent": true,
+    "read_only": true,
+    "counterexample_oriented": true,
+    "zero_remediation": true,
+    "zero_commit": true,
+    "zero_push": true,
+    "zero_production": true
+  },
+  "entrypoint": {
+    "path": "tasks/current/20261004-sermon-presentation-boundary-hardening/NEXT_HANDOFF.md",
+    "sha256": "2ae711519b7f13f51c133f177daca7b617e705909a70f21970396c59f46764c7",
+    "exact_workspace": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening"
+  },
+  "worktrees": {
+    "website": {
+      "root": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-presentation-hardening",
+      "branch": "task/sermon-presentation-boundary-hardening-20261004",
+      "changed_scope_review": "PASS_NO_SCOPE_CONTAMINATION_OBSERVED"
+    },
+    "sermon": {
+      "root": "/Volumes/DevSSD/RonnieWork/RonnieCross/讲道整理-presentation-hardening",
+      "branch": "task/sermon-presentation-boundary-hardening-20261004",
+      "changed_scope_review": "PASS_NO_SCOPE_CONTAMINATION_OBSERVED"
+    }
+  },
+  "findings": [
+    {
+      "id": "B-01",
+      "severity": "BLOCKER",
+      "class": "audit_environment",
+      "title": "Exact Website construction worktree cannot execute rendered structural suite or forced Astro build",
+      "evidence": {
+        "node_presentation_suite_command": "node --test scripts/tests/test_sermon_presentation_gate.mjs",
+        "node_presentation_suite_result": "EXIT_1 / tests=14 pass=0 fail=14",
+        "node_root_cause": "ERR_MODULE_NOT_FOUND: @astrojs/markdown-remark",
+        "build_command": "npm run build",
+        "build_result": "EXIT_1",
+        "build_root_cause": "MODULE_NOT_FOUND: node_modules/astro/astro.js"
+      },
+      "impact": [
+        "Cannot independently establish required fresh 14/14 rendered presentation suite.",
+        "Cannot independently execute Curve Ahead Website structure validator in the exact construction worktree.",
+        "Cannot independently establish required fresh forced build 344 pages / Complete."
+      ],
+      "non_remediation_reason": "Audit contract is READ_ONLY and explicitly forbids construction-only symlink or other remediation; installing dependencies or borrowing canonical node_modules would mutate/blur the exact-worktree boundary."
+    }
+  ],
+  "independently_verified": {
+    "contract_boundary": {
+      "status": "PASS",
+      "facts": [
+        "Frozen Chinese TXT remains fidelity authority and is distinct from presentation artifact.",
+        "Presentation preparation is a separate body-only artifact and exact-record identity manifest.",
+        "Presentation validator compares restored presentation records to frozen candidate records without rewriting candidate.",
+        "Fidelity PASS, presentation identity PASS, and Website structure PASS are documented and implemented as separate proofs; none substitutes for another."
+      ]
+    },
+    "sermon_producer_gate": {
+      "status": "PASS",
+      "source_review": [
+        "scripts/validate_sermon_presentation_artifact.py",
+        "scripts/build_website_publication_package.py",
+        "scripts/generate_prepublish_md.py",
+        "directly related tests"
+      ],
+      "fresh_tests": {
+        "python_suite": "20/20 PASS",
+        "py_compile": "PASS",
+        "counterexamples": {
+          "wording_change": "FAIL as required",
+          "record_omission": "FAIL as required",
+          "record_reorder": "FAIL as required",
+          "forbidden_code_fence": "FAIL as required"
+        },
+        "v12_sermon_missing_presentation_manifest": "covered by fresh 20/20 suite explicit negative test",
+        "generate_prepublish_v12_missing_manifest": "fresh direct FAIL_CLOSED"
+      }
+    },
+    "website_consumer_gate": {
+      "status": "PASS",
+      "source_review": [
+        "scripts/validate_publication_package.py",
+        "scripts/consume_publication_package.py",
+        "scripts/content_workflow.py",
+        "scripts/import_sermons.py",
+        "directly related tests"
+      ],
+      "facts": [
+        "Historical no-presentation sermon packages may validate/plan read-only.",
+        "New sermon dry-run/publish without binding returns PRESENTATION_ARTIFACT_REQUIRED.",
+        "Canonical sermon publish requires --presentation-file.",
+        "Canonical importer reads presentation Markdown directly; normalize_body() is not called in canonical sermon path.",
+        "Consumer constructs sermon execution command from presentation.artifact.path and does not execute metadata.website_publish_command.",
+        "No alternate canonical sermon publication bypass was found in reviewed script surfaces."
+      ],
+      "fresh_python_suite": "61/61 PASS"
+    },
+    "website_rendered_structural_gate": {
+      "static_review": "PASS_CODE_AND_TEST_CONTRACT_PRESENT",
+      "dynamic_review": "BLOCKED_BY_B-01",
+      "required_terminals": {
+        "current_pass": "SERMON_PRESENTATION_STRUCTURE_PASS",
+        "current_ceiling": "publication_structure_ready",
+        "legacy": "MECHANICAL_PRESENTATION_PASS only compatibility/chronology"
+      },
+      "static_test_cases_present": [
+        "long-form single-paragraph collapse",
+        "rendered block density",
+        "heading render integrity",
+        "existing list/scripture-label/TOC/small-group incidents",
+        "healthy long-form structured sermon"
+      ]
+    },
+    "curve_ahead_integration": {
+      "status": "PARTIAL_PASS_DYNAMIC_STRUCTURE_BLOCKED",
+      "canonical_candidate_sha256": "096a21672fc3a353b94b86749ae31d3bb5e0e17de553d83bc8a4ca0d083d8b73",
+      "frozen_record_denominator": 144,
+      "presentation_restored_records": 144,
+      "exact_text_and_order": true,
+      "presentation_paragraph_count": 138,
+      "presentation_h2_count": 6,
+      "presentation_artifact_sha256": "cee4791eab18fea14e0df5775641771d2adeca65a53a5ac45b06a00d1d239328",
+      "package_candidate_sha256": "1b68bdde1754fdfde4390db0c588a54ae4465845ab8c760491de34d19375f8eb",
+      "website_package_validator": "PASS",
+      "website_consumer_plan": "PASS",
+      "website_structure_validator": "BLOCKED_BY_B-01"
+    },
+    "historical_scan": {
+      "status": "PASS",
+      "denominator": 219,
+      "same_class_paragraph_collapse_hits": [
+        {
+          "path": "src/content/posts/2026-07-09-马太福音-7-1-6｜论断人.md",
+          "rendered_char_approx": 4287,
+          "paragraph_count": 1,
+          "h2_count": 0,
+          "list_item_count": 0
+        }
+      ],
+      "hit_count": 1,
+      "historical_article_mutation": false
+    },
+    "fresh_validation_matrix": {
+      "website_python": "61/61 PASS",
+      "website_node_presentation": "BLOCKED_BY_B-01 (14 tests could not load validator dependency)",
+      "content_mirrors": "600/600 PASS",
+      "knowledge": "300 posts / 0 errors / 0 warnings PASS",
+      "tag_fixtures": "27/27 PASS",
+      "forced_build": "BLOCKED_BY_B-01",
+      "website_git_diff_check": "NOT_EXECUTED: CodexPro connector policy forbids bash git diff; full changed diff was independently reviewed with show_changes",
+      "sermon_python": "20/20 PASS",
+      "sermon_py_compile": "PASS",
+      "sermon_git_diff_check": "NOT_EXECUTED: CodexPro connector policy forbids bash git diff; full changed diff was independently reviewed with show_changes"
+    },
+    "changed_paths_scope": {
+      "status": "PASS_NO_CONTAMINATION_OBSERVED",
+      "production_article_content_mutation": false,
+      "unrelated_business_article": false,
+      "node_modules_change": false,
+      "construction_only_symlink_change": false,
+      "workspace_control_schema_mutation": false,
+      "deploy_notification_nas_side_effect": false,
+      "unrelated_task_asset": false,
+      "git_commit_or_push_by_auditor": false
+    },
+    "authority_consistency": {
+      "status": "PASS",
+      "website_docs": [
+        "AGENTS.md",
+        "CONTENT_WORKFLOW.md",
+        "docs/content-publishing-error-prevention.md",
+        "docs/sermon-content-rendering-binding.md",
+        "docs/统一内容整理与发布流程.md",
+        "skills/article-workflow.md"
+      ],
+      "sermon_docs": [
+        "AGENTS.md",
+        "docs/end-to-end-content-publishing-workflow.md",
+        "docs/sermon-independent-audit-orchestration.md",
+        "docs/workflows/sermon-publication-presentation-readiness.md",
+        "docs/chinese-to-prepublish-md-workflow.md"
+      ],
+      "facts": [
+        "Current authority contains no canonical sermon plain-TXT -> importer presentation path.",
+        "Current authority explicitly rejects fidelity record boundary as paragraph boundary.",
+        "New v1.2 sermon publication requires presentation binding.",
+        "Website canonical publish requires --presentation-file.",
+        "Current publication structure acceptance is SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready.",
+        "Legacy MECHANICAL_PRESENTATION_PASS is described only as compatibility/chronology, not current complete presentation acceptance."
+      ]
+    }
+  },
+  "closure": {
+    "implementation_findings_detected": 0,
+    "environment_blockers": 1,
+    "pass_claim_allowed": false,
+    "fail_claim_for_implementation_allowed": false,
+    "required_next_condition": "Materialize the Website construction worktree's declared Node/Astro dependencies without contaminating the audit boundary, then rerun the exact Node presentation suite, real Curve Ahead structure validator, forced build, and remaining diff hygiene verification in a fresh independent audit context."
+  }
+}

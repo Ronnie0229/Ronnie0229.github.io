@@ -521,6 +521,7 @@ def markdown_for(
     source_file: Path,
     description_override: str | None = None,
     manual_tags: str | None = None,
+    presentation_file: Path | None = None,
 ) -> tuple[str, str]:
     _source_date, raw_title, speaker = folder_meta(folder)
     # Website display date must be the publication date, not the source folder date.
@@ -528,11 +529,11 @@ def markdown_for(
     date = published_at.strftime("%Y-%m-%d")
     _folder_scripture, summary = title_parts(raw_title)
     category = category_for(raw_title)
-    if source_file.suffix.lower() == ".docx":
-        body = read_docx(source_file)
-    else:
-        body = decode_text(source_file)
-    body = normalize_body(body)
+    if presentation_file is None:
+        raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: canonical sermon import requires --presentation-file")
+    body = presentation_file.read_text(encoding="utf-8-sig").strip()
+    if body.startswith("---"):
+        raise SystemExit("presentation artifact must be body-only Markdown without frontmatter")
     scripture, scripture_confidence = resolve_scripture(raw_title, source_file, body)
     if scripture_confidence == "low":
         raise SystemExit("No scripture could be identified; please confirm metadata manually before publishing.")
@@ -568,6 +569,7 @@ def markdown_for(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Import one sermon folder safely.")
     parser.add_argument("--folder", help="Single sermon folder to import.")
+    parser.add_argument("--presentation-file", help="Verified presentation-prepared body-only Markdown artifact.")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
     parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
     parser.add_argument(
@@ -666,6 +668,11 @@ def main() -> None:
         raise SystemExit(f"找不到源目录: {SOURCE_DIR}")
 
     target_folder = resolve_folder(args.folder)
+    if not args.presentation_file:
+        raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: canonical sermon import requires --presentation-file")
+    presentation_file = Path(args.presentation_file).expanduser().resolve(strict=True)
+    if not presentation_file.is_file():
+        raise SystemExit(f"presentation artifact not found: {presentation_file}")
 
     if not args.dry_run:
         ORGANIZED_DIR.mkdir(exist_ok=True)
@@ -695,7 +702,13 @@ def main() -> None:
             continue
 
         source_hash = file_sha256(source_file)
-        date, markdown = markdown_for(folder, source_file, args.description, args.tags)
+        date, markdown = markdown_for(
+            folder,
+            source_file,
+            args.description,
+            args.tags,
+            presentation_file,
+        )
         source_date, _raw_title, _speaker = folder_meta(folder)
         title_match = re.search(r'^title: "([^"]+)"', markdown, flags=re.MULTILINE)
         publish_title = title_match.group(1) if title_match else folder.name
