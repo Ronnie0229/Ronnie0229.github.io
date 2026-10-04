@@ -1,5 +1,13 @@
 # 当前任务
 
+## 2026-10-04 — 《前方弯道》presentation-only hotfix
+
+- Incident：首次 publication post 正文被 importer normalization 压成 1 个 4091 字 paragraph（0 blank lines / 0 H2）；现有 `sermon-publication-presentation-mechanical/v1` 未覆盖整篇 paragraph-collapse，因此此前 mechanical PASS 不能代表完整排版 PASS。
+- Hotfix 边界：不改 frozen candidate 任何文字；从 fidelity PASS 的 144 条中文记录重建 Website Markdown block，仅增加 blank-line boundaries、6 个 source-native H2（引言 / 我们的挑战 / 我们的处境——请读第1节到第4节 / 我们的选择 / 我们的把握 / 结论），并用 Markdown emphasis 包裹原有经文题头以满足现有 scripture-label Gate；去除 Markdown 标记后与 frozen candidate 144/144 逐行完全一致。
+- 修复后 rendered evidence：138 `<p>` / 6 `<h2>`；presentation gate PASS；mirror 600/600 PASS；build 344 pages / Complete。
+- articleId、slug、publishedAt、author=`Patrick父亲` 均保持不变；这是 existing-post presentation correction，不是新 publication object。
+- 后续另行整改 presentation Gate 的 paragraph-collapse mechanical hard gate；本轮先恢复当前公开文章可读性。
+
 ## 2026-09-27 — Publication Fast Lane governance remediation
 
 - 正式规则已整改：本次 publication 不再等待本次 Cloudflare/live/email terminal；完成 commit/push、deployment/notification trigger、NAS/registry/status/Git closure 后记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 并结束。下一次内容发布开始前，先核验上一轮 production deployment、canonical URL、RSS/Sitemap 与 notification result；上一轮未 PASS 时不得叠加新发布。
