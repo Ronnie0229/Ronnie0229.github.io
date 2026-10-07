@@ -1,14 +1,17 @@
 # 当前任务
 
-## 2026-10-07｜有声阅读建设预备计划（PRE-TASK）
+## 2026-10-07｜有声阅读 Phase 0 construction intake
 
-- 状态：`PLAN_FROZEN_FOR_TASK_INTAKE / NOT_ACTIVE_CONSTRUCTION_YET`
+- 状态：`PASS_PHASE0_INTAKE_VERIFIED / HANDOFF_TO_ARTICLE_READ_ALOUD_MASTER_CONTROL`
 - 正式计划：`docs/tasks/article-read-aloud-construction-plan-20261007.md`
-- Owner 裁决：有声阅读归属 Website Owner，不在 RonnieCross root 新建第四个并列业务项目/Owner。
-- 建设方式：正式启动前必须重新做 Website preflight/closure check；通过后使用 Owner-local task branch + bounded-stage construction worktree，不长期占用 canonical `main`。
-- 2026-10-07 预盘点：Website `main == origin/main`、working tree clean、HEAD=`bb483c2`；当前没有必须先清理的 Website dirty code。
-- 当前未授权/未执行：未创建 task/worktree，未调用正式 TTS，未生成 WAV/MP3，未建设 R2，未修改播放器，未 deploy/commit/push。
-- 下一步：正式开启任务时 fresh-check Git/tasks/worktrees/lane evidence，确认 `GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING` 后再创建 Phase 0/1A construction task。
+- 正式任务：`docs/tasks/article-read-aloud-phase0-20261007/task.md`
+- construction worktree：`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007`
+- branch：`task/article-read-aloud-phase0-20261007`
+- baseline：canonical HEAD = construction HEAD = `029419a13921c065e6864be6dc57b55542038905`；canonical `main...origin/main` clean/synced。
+- fresh lane check：`CONSTRUCTION_ISOLATION_GATE_PASS`；`GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING` 继续成立。
+- 本轮边界：只完成 Phase 0 intake/verification；未调用真实 TTS、未生成 WAV/MP3、未修改业务代码/正式文章、未建设 R2、未写 NAS、未 deploy，未进入 Phase 1A。
+- Git disposition：construction worktree 当前仅有 Phase 0 task package 文档变化；`REPOSITORY_CLOSURE=OPEN / COMMIT_DISPOSITION=GIT_DECISION_REQUIRED / PUSH_DISPOSITION=NOT_AUTHORIZED`。
+- 下一步：交回 `ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL` 做 Phase 0 repository closure/redecision；未经新的正式 authority 不进入 Phase 1A。
 
 ## 2026-10-04 — Sermon presentation boundary hardening
 
