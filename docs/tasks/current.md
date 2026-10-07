@@ -1,5 +1,15 @@
 # 当前任务
 
+## 2026-10-07｜有声阅读建设预备计划（PRE-TASK）
+
+- 状态：`PLAN_FROZEN_FOR_TASK_INTAKE / NOT_ACTIVE_CONSTRUCTION_YET`
+- 正式计划：`docs/tasks/article-read-aloud-construction-plan-20261007.md`
+- Owner 裁决：有声阅读归属 Website Owner，不在 RonnieCross root 新建第四个并列业务项目/Owner。
+- 建设方式：正式启动前必须重新做 Website preflight/closure check；通过后使用 Owner-local task branch + bounded-stage construction worktree，不长期占用 canonical `main`。
+- 2026-10-07 预盘点：Website `main == origin/main`、working tree clean、HEAD=`bb483c2`；当前没有必须先清理的 Website dirty code。
+- 当前未授权/未执行：未创建 task/worktree，未调用正式 TTS，未生成 WAV/MP3，未建设 R2，未修改播放器，未 deploy/commit/push。
+- 下一步：正式开启任务时 fresh-check Git/tasks/worktrees/lane evidence，确认 `GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING` 后再创建 Phase 0/1A construction task。
+
 ## 2026-10-04 — Sermon presentation boundary hardening
 
 - 《前方弯道》paragraph-collapse 事故的系统整改已在 Owner-local construction worktree 完成并全量验证：fidelity candidate 与 presentation artifact 正式分层；new sermon publication 强制 `sermon-presentation/v1` binding / `--presentation-file`；Website structural Gate 升级为 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`。
