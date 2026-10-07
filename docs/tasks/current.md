@@ -1,17 +1,20 @@
 # 当前任务
 
-## 2026-10-07｜有声阅读 Phase 0 construction intake
+## 2026-10-07｜有声阅读 Phase 1A — TTS Render View Pilot
 
-- 状态：`PASS_PHASE0_INTAKE_VERIFIED / HANDOFF_TO_ARTICLE_READ_ALOUD_MASTER_CONTROL`
+- 状态：`PASS_PHASE1A_TTS_RENDER_VIEW_VERIFIED / HANDOFF_TO_ARTICLE_READ_ALOUD_MASTER_CONTROL`
 - 正式计划：`docs/tasks/article-read-aloud-construction-plan-20261007.md`
-- 正式任务：`docs/tasks/article-read-aloud-phase0-20261007/task.md`
-- construction worktree：`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007`
-- branch：`task/article-read-aloud-phase0-20261007`
-- baseline：canonical HEAD = construction HEAD = `029419a13921c065e6864be6dc57b55542038905`；canonical `main...origin/main` clean/synced。
-- fresh lane check：`CONSTRUCTION_ISOLATION_GATE_PASS`；`GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING` 继续成立。
-- 本轮边界：只完成 Phase 0 intake/verification；未调用真实 TTS、未生成 WAV/MP3、未修改业务代码/正式文章、未建设 R2、未写 NAS、未 deploy，未进入 Phase 1A。
-- Git disposition：construction worktree 当前仅有 Phase 0 task package 文档变化；`REPOSITORY_CLOSURE=OPEN / COMMIT_DISPOSITION=GIT_DECISION_REQUIRED / PUSH_DISPOSITION=NOT_AUTHORIZED`。
-- 下一步：交回 `ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL` 做 Phase 0 repository closure/redecision；未经新的正式 authority 不进入 Phase 1A。
+- Phase 0：`PASS_PHASE0_INTAKE_VERIFIED`；task package closure commit=`ef1f8a8d85ab62d278f7eddc6d540943fe0d1b74`，已 push 至 `origin/task/article-read-aloud-phase0-20261007`。
+- Phase 1A task：`docs/tasks/article-read-aloud-phase1a-20261007/task.md`
+- Pilot：`基督徒不应该做计划吗？`，articleId=`post-32d30724d859c99c`。
+- frozen source：`src/content/posts/2026-10-06-does-james-4-say-not-to-make-plans.md`，fresh SHA-256=`14dcd20d98b1b644a6613d4f54813b065842af3b221d8347c8713d20957c7398`，与冻结值一致。
+- Render View：`docs/tasks/article-read-aloud-phase1a-20261007/tts-readaloud.txt`，SHA-256=`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`，UTF-8=`10658` bytes。
+- fidelity verification：source body 51/51 paragraphs exact preserved in original order；仅主经文 reference `雅各书 4:13-17` 机械转换为 `雅各书4章13节到17节`；frontmatter 非朗读 metadata 与 Markdown/YAML 控制结构未进入 Render View。
+- chronology：首个只读验证命令因 shell backtick quoting exit=2；无 mutation；等价修正版 exit=0 PASS，旧 FAIL 保留。
+- 本轮边界：未调用真实 TTS、未生成 WAV/MP3、未修改正式文章/业务代码、未操作 R2/NAS/VOICE_AI，未进入 Phase 1B。
+- Gate：`PASS_MINIMAL_AND_ALIGNED / GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING`。
+- repository disposition：Phase 1A task-local docs/render output 仍为未提交变化；本 Executor 未获 COMMIT/PUSH authority，交回 Master Control 做 closure/redecision。
+- 下一步：`ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL` 审核 Phase 1A 结果并决定 repository closure；未经新的正式 authority 不进入 Phase 1B。
 
 ## 2026-10-04 — Sermon presentation boundary hardening
 
