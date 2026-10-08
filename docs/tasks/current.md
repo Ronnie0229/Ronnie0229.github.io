@@ -16,7 +16,9 @@
 - 本地验证：player tests 4/4 PASS；full Website Python 124/124 PASS；Astro 345 pages PASS。
 - 已知且接受的 Pilot 限制：`著名` 读音仍错误；PROJECT_OWNER 已明确停止本 Pilot 继续 TTS 改善，不阻塞上线。
 - unrelated dirty 明确保留在 feature/closure commit 外：`AGENTS.md`、`docs/task-handoff-protocol.md`。
-- 下一步：Pilot 已正式上线；后续只在需要扩大更多文章有声阅读时另开下一业务阶段，不自动批量生成。
+- PROJECT_OWNER 线上人工验证：`PASS`；实际页面播放器与音频播放体验已人工确认通过。
+- 最终人工+机械验收：`PASS_ARTICLE_READ_ALOUD_PILOT_FINAL_ACCEPTANCE / PRODUCTION_HUMAN_VERIFIED`。
+- 下一步：Pilot 已正式闭合；后续只在需要扩大更多文章有声阅读时另开下一业务阶段，不自动批量生成。
 
 ## 2026-10-08｜R2 Pilot Delivery + Real URL Binding
 

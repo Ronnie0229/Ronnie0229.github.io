@@ -265,3 +265,4 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Production `/deployment.json` now reports exact commit `415f94f2483f206cc6c4ee710f926c18e279d2bc`; live article title/scripture/player/R2 pointer and live audio HTTP 206 Range were verified.
 - Final local verification: read-aloud player 4/4, full Website Python 124/124, Astro 345 pages.
 - Known accepted Pilot limitation: `著名` pronunciation remains incorrect; no further Pilot TTS remediation is planned.
+- PROJECT_OWNER completed live manual verification and returned `PASS`; final acceptance is `PASS_ARTICLE_READ_ALOUD_PILOT_FINAL_ACCEPTANCE / PRODUCTION_HUMAN_VERIFIED`.

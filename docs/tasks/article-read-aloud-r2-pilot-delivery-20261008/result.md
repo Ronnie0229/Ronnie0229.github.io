@@ -108,3 +108,5 @@ Final verdict:
 - production `/deployment.json`: exact `415f94f2483f206cc6c4ee710f926c18e279d2bc`
 - live article title/scripture/player/exact R2 URL: PASS
 - live R2 audio Range 206 / audio-mpeg / exact total bytes: PASS
+- PROJECT_OWNER live manual verification: PASS
+- final acceptance: `PASS_ARTICLE_READ_ALOUD_PILOT_FINAL_ACCEPTANCE / PRODUCTION_HUMAN_VERIFIED`
