@@ -1,5 +1,23 @@
 # 当前任务
 
+## 2026-10-09｜Article Read-Aloud Pilot Production Launch Closure
+
+- 正式状态：`PASS_ARTICLE_READ_ALOUD_PILOT_PRODUCTION_LAUNCH / LIVE_PLAYER_AND_R2_AUDIO_VERIFIED`。
+- feature commit：`415f94f2483f206cc6c4ee710f926c18e279d2bc`（`feat: publish article read-aloud pilot`）。
+- push：construction branch 与 `origin/main` 均正常 fast-forward 到 `415f94f...`；无 force push。
+- Cloudflare R2：bucket=`ronniecross-audio`；custom domain=`audio.ronniecross.com`；object=`audio/articles/post-32d30724d859c99c/article.mp3`；远端 SHA=`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`，与本地 accepted 64K exact match。
+- Website：Pilot frontmatter 已绑定正式 `audioUrl`；native `<audio controls preload="metadata">` 已上线。
+- deployment chronology：Git push 后 Cloudflare Pages 控制面创建 `415f94f` Production/Preview deployment，但初始 deployment-specific URL 返回 `Deployment Not Found`，且 `ronniecross.com/deployment.json` 仍为旧 `029419a`；短时轮询未 ready，保留 FAIL chronology。
+- manual fallback attempt 1：在真正上传前被 identity gate 拦下，因为普通本地 build 的 `dist/deployment.json` 为 `commit=local`；未上传该错误 identity build。
+- manual fallback attempt 2：fresh-read `src/pages/deployment.json.ts` 后，用 `CF_PAGES_COMMIT_SHA=415f94f2483f206cc6c4ee710f926c18e279d2bc` 重新 build；dist identity exact PASS；Wrangler Pages production deploy success。
+- production readback：`https://ronniecross.com/deployment.json` exact commit=`415f94f2483f206cc6c4ee710f926c18e279d2bc`。
+- live article：HTTP 200；标题、`雅各书 4:13-17`、exact R2 URL、native audio markup 全部存在。
+- live audio：Range `bytes=0-1023` 返回 HTTP 206；`Content-Type: audio/mpeg`；`Content-Range: bytes 0-1023/7331949`；Cloudflare cache HIT。
+- 本地验证：player tests 4/4 PASS；full Website Python 124/124 PASS；Astro 345 pages PASS。
+- 已知且接受的 Pilot 限制：`著名` 读音仍错误；PROJECT_OWNER 已明确停止本 Pilot 继续 TTS 改善，不阻塞上线。
+- unrelated dirty 明确保留在 feature/closure commit 外：`AGENTS.md`、`docs/task-handoff-protocol.md`。
+- 下一步：Pilot 已正式上线；后续只在需要扩大更多文章有声阅读时另开下一业务阶段，不自动批量生成。
+
 ## 2026-10-08｜R2 Pilot Delivery + Real URL Binding
 
 - 状态：`PASS_R2_PILOT_DELIVERY_AND_REAL_URL_BINDING / READY_FOR_GIT_AND_PRODUCTION_DEPLOY_AUTHORIZATION`。

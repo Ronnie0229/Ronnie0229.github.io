@@ -92,3 +92,19 @@ Generated Pilot HTML contains both:
 
 Next authority breakpoint:
 Git disposition + production deployment.
+
+
+## Production launch closure
+
+Final verdict:
+
+`PASS_ARTICLE_READ_ALOUD_PILOT_PRODUCTION_LAUNCH / LIVE_PLAYER_AND_R2_AUDIO_VERIFIED`
+
+- feature commit: `415f94f2483f206cc6c4ee710f926c18e279d2bc`
+- normal branch push + fast-forward main push: PASS
+- initial Git-triggered Pages deployments: registered but returned `Deployment Not Found`; production remained on old commit during initial polling
+- manual fallback attempt 1: blocked before upload because local build reported `commit=local`
+- manual fallback attempt 2: rebuilt with exact `CF_PAGES_COMMIT_SHA=415f94f2483f206cc6c4ee710f926c18e279d2bc`; dist identity PASS; bounded Wrangler Pages production deployment PASS
+- production `/deployment.json`: exact `415f94f2483f206cc6c4ee710f926c18e279d2bc`
+- live article title/scripture/player/exact R2 URL: PASS
+- live R2 audio Range 206 / audio-mpeg / exact total bytes: PASS

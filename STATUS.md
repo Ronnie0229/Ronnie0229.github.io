@@ -253,3 +253,15 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Regression: S4 54/54, S5 5/5, full Website Python 120/120, py_compile and git diff-check PASS.
 - No TTS generation, R2/NAS/deploy, commit or push in this relocation.
 - Next step is manual listening, then player/publication decision.
+
+
+## 2026-10-09 — Article Read-Aloud Pilot production launch
+
+- Status: `PASS_ARTICLE_READ_ALOUD_PILOT_PRODUCTION_LAUNCH / LIVE_PLAYER_AND_R2_AUDIO_VERIFIED`.
+- Feature commit `415f94f2483f206cc6c4ee710f926c18e279d2bc` was normally pushed to the construction branch and fast-forwarded to `main`; no force push.
+- R2 delivery is live at `https://audio.ronniecross.com/audio/articles/post-32d30724d859c99c/article.mp3`; remote bytes/SHA and Range behavior were verified.
+- Pilot article now renders the native Website audio player against the production R2 URL.
+- Deployment chronology is preserved: initial Git-triggered Pages deployments returned `Deployment Not Found` and production remained on `029419a`; the first manual fallback was blocked before upload because local `deployment.json` identified itself as `local`; rebuilding with the official `CF_PAGES_COMMIT_SHA=415f94f...` identity and one bounded Wrangler Pages production deploy succeeded.
+- Production `/deployment.json` now reports exact commit `415f94f2483f206cc6c4ee710f926c18e279d2bc`; live article title/scripture/player/R2 pointer and live audio HTTP 206 Range were verified.
+- Final local verification: read-aloud player 4/4, full Website Python 124/124, Astro 345 pages.
+- Known accepted Pilot limitation: `著名` pronunciation remains incorrect; no further Pilot TTS remediation is planned.
