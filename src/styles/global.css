@@ -858,11 +858,30 @@ mark {
 }
 
 .article-header,
+.article-audio,
 .article-toc,
 .related-posts,
 .comments {
   margin: 18px 0;
   padding: clamp(24px, 4vw, 36px);
+}
+
+.article-audio {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(24px) saturate(150%);
+}
+
+.article-audio .eyebrow {
+  margin-bottom: 12px;
+}
+
+.article-audio audio {
+  display: block;
+  width: 100%;
+  max-width: 100%;
 }
 
 .article-header h1 {

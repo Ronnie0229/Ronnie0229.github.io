@@ -9,6 +9,7 @@ category: "灵命成长"
 scripture: "雅各书 4:13-17"
 author: "Ronnie"
 reviewed: false
+audioUrl: "https://audio.ronniecross.com/audio/articles/post-32d30724d859c99c/article.mp3"
 source: "data/raw/分享/20261006_雅各书4章13节到17节_基督徒不应该做计划吗_Ronnie_中文.txt"
 ---
 雅各书4章13节到17节是在告诉我们不要做计划吗？

@@ -1,20 +1,124 @@
 # 当前任务
 
-## 2026-10-07｜有声阅读 Phase 1A — TTS Render View Pilot
+## 2026-10-08｜R2 Pilot Delivery + Real URL Binding
 
-- 状态：`PASS_PHASE1A_TTS_RENDER_VIEW_VERIFIED / HANDOFF_TO_ARTICLE_READ_ALOUD_MASTER_CONTROL`
-- 正式计划：`docs/tasks/article-read-aloud-construction-plan-20261007.md`
-- Phase 0：`PASS_PHASE0_INTAKE_VERIFIED`；task package closure commit=`ef1f8a8d85ab62d278f7eddc6d540943fe0d1b74`，已 push 至 `origin/task/article-read-aloud-phase0-20261007`。
-- Phase 1A task：`docs/tasks/article-read-aloud-phase1a-20261007/task.md`
-- Pilot：`基督徒不应该做计划吗？`，articleId=`post-32d30724d859c99c`。
-- frozen source：`src/content/posts/2026-10-06-does-james-4-say-not-to-make-plans.md`，fresh SHA-256=`14dcd20d98b1b644a6613d4f54813b065842af3b221d8347c8713d20957c7398`，与冻结值一致。
-- Render View：`docs/tasks/article-read-aloud-phase1a-20261007/tts-readaloud.txt`，SHA-256=`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`，UTF-8=`10658` bytes。
-- fidelity verification：source body 51/51 paragraphs exact preserved in original order；仅主经文 reference `雅各书 4:13-17` 机械转换为 `雅各书4章13节到17节`；frontmatter 非朗读 metadata 与 Markdown/YAML 控制结构未进入 Render View。
-- chronology：首个只读验证命令因 shell backtick quoting exit=2；无 mutation；等价修正版 exit=0 PASS，旧 FAIL 保留。
-- 本轮边界：未调用真实 TTS、未生成 WAV/MP3、未修改正式文章/业务代码、未操作 R2/NAS/VOICE_AI，未进入 Phase 1B。
-- Gate：`PASS_MINIMAL_AND_ALIGNED / GOAL_ALIGNED / NO_SCOPE_DRIFT / NO_OVERBUILDING`。
-- repository disposition：Phase 1A task-local docs/render output 仍为未提交变化；本 Executor 未获 COMMIT/PUSH authority，交回 Master Control 做 closure/redecision。
-- 下一步：`ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL` 审核 Phase 1A 结果并决定 repository closure；未经新的正式 authority 不进入 Phase 1B。
+- 状态：`PASS_R2_PILOT_DELIVERY_AND_REAL_URL_BINDING / READY_FOR_GIT_AND_PRODUCTION_DEPLOY_AUTHORIZATION`。
+- Cloudflare R2 bucket：`ronniecross-audio`。
+- custom domain：`audio.ronniecross.com`，Active/Access enabled；public development URL 保持 disabled。
+- exactly one Pilot object uploaded：`audio/articles/post-32d30724d859c99c/article.mp3`。
+- production URL：`https://audio.ronniecross.com/audio/articles/post-32d30724d859c99c/article.mp3`。
+- remote verification：HTTP 200；Content-Type `audio/mpeg`；Content-Length 7331949；Accept-Ranges bytes；Range request 206；远端完整下载 SHA 与本地 exact match：`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- Pilot article 已绑定 exact production `audioUrl`。
+- generated HTML 已验证 exact R2 URL + native `<audio controls preload="metadata">`。
+- chronology：绑定真实 URL 后，旧测试仍要求 Pilot 无 audioUrl，产生 1 次 expected stage-transition FAIL；测试随后更新为 exact production URL assertion，最终 4/4 PASS。
+- chronology：一次 build 出现 Astro Duplicate id warning；fresh read-only search 证明只有一个同名文件/一个 articleId；清除当前 worktree ignored `.astro` cache 后重新 build，warning 消失。
+- final verification：player tests 4/4 PASS；full Website Python 124/124 PASS；Astro 345 pages PASS；git diff --check PASS。
+- 未执行：新 TTS、NAS、commit、push、Pages deploy。
+- next breakpoint：Git disposition + production deploy authorization。
+
+## 2026-10-08｜R2 Delivery Authorization — Awaiting Cloudflare Authentication
+
+- PROJECT_OWNER 已授权最小 R2 delivery：fresh-check Cloudflare/R2、必要时创建 `ronniecross-audio`、上传 exactly one accepted 64K Pilot MP3、连接 production custom domain、bind real `audioUrl`、rebuild；暂不 commit/push/deploy。
+- exact worktree 临时 materialized Wrangler via `npx --yes wrangler@4.148.0`；未修改 package.json/package-lock.json。
+- Wrangler version：4.148.0。
+- `wrangler whoami`：`You are not authenticated. Please run wrangler login.`
+- non-interactive `r2 bucket list` 无法执行；Wrangler要求当前环境提供 Cloudflare authenticated session/API token。
+- 当前没有创建 bucket、没有启用 public access/custom domain、没有上传 MP3、没有 frontmatter binding。
+- human breakpoint：使用现有 RonnieCross Cloudflare account 完成 R2 subscription activation（若尚未启用）并在本机授权 Wrangler login；之后继续原 bounded task。
+## 2026-10-08｜Pilot Second Listening + Minimal Player Prep
+
+- PROJECT_OWNER second listening：`PASS`；`pilot-repaired-64k.mp3` 作为当前 Pilot 正式本地交付候选。
+- accepted delivery SHA：`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- known accepted limitation：`著名` 仍读音错误；本 Pilot 明确停止继续 TTS 改善，不阻塞继续发布准备。
+- Website player prep：`PASS_MINIMAL_ARTICLE_AUDIO_PLAYER_PREP / READY_FOR_AUDIO_UPLOAD_AND_REAL_URL_BINDING_AUTHORIZATION`。
+- implementation：posts schema 新增 optional `audioUrl`；文章详情页仅在字段存在时渲染 native `<audio controls preload="metadata">`；位置在 article header/tags 后、正文前；无 autoplay、无 custom JS runtime。
+- Pilot 正式文章当前仍无 `audioUrl`，没有写 placeholder/fake production URL。
+- chronology：首次 Astro build 因 exact worktree 缺 `node_modules/astro/astro.js` 而在 build 前 FAIL；按仓库既有规则用本 worktree 自身 lockfile `npm ci` materialize dependencies 后 closure。
+- final verification：player tests `4/4 PASS`；full Website Python `124/124 PASS`；Astro `345 pages PASS`；`git diff --check PASS`；node_modules real local dir / not symlink / no Git changed-path contamination。
+- npm audit output报告 11 项 dependency vulnerabilities（1 low / 9 high / 1 critical）；本任务未运行 audit fix、未升级依赖，避免 scope expansion。
+- frozen R2 object-path design：`audio/articles/<article-id-or-slug>/article.mp3`；Pilot proposed object key=`audio/articles/post-32d30724d859c99c/article.mp3`。
+- current authority gap：仓库尚无实际 R2 bucket binding/name/custom audio domain，不能凭空构造 production URL。
+- 未执行：R2 create/upload、article audioUrl binding、NAS、commit/push/deploy。
+- next authority breakpoint：明确授权最小 R2 delivery + exactly one Pilot MP3 upload + real URL binding；之后再决定 Git/Pages上线。
+
+## 2026-10-08｜Pilot Targeted Chunk-0 Repair
+
+- 状态：`PASS_TARGETED_CHUNK0_REPAIR / READY_FOR_SECOND_LISTENING`
+- PROJECT_OWNER manual selection：`chunk-000-sample-2.wav` 发音正确且语气符合整体风格；sample-3 也读对但情绪略强，因此不采用。
+- `著名` diagnostic samples 1/2/3 均未读对，本轮明确停止继续改善；保留为 VOICE_AI 多音字/发音问题候选，不阻塞本次 chunk-0 修复。
+- repair：仅替换原 chunk 0 [0,78720)；replacement=109440 frames，+1.28s。原 frame 78720 之后全部 sample-identical PASS。
+- chunk 57（含“著名”）未修改；原 [10277760,10671360) 与修复后平移边界 [10308480,10702080) sample identity exact PASS。
+- repaired WAV：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired.wav`，duration=916.40s，SHA=`ac2bc2d78cb4c87303653e0d727a6cce1054e83a77ccdfe2fc01a981c283a6a1`。
+- repaired 64K：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-64k.mp3`，bytes=7331949，SHA=`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- WAV/MP3 full decode PASS；原始 Pilot 文件保留。
+- 本轮未执行新的 TTS generation、R2/NAS/deploy/player/commit/push。
+- next breakpoint：PROJECT_OWNER 二次试听 repaired 64K；若通过，再决定播放器/发布。
+
+## 2026-10-08｜Pilot Manual Listening Decision
+
+- manual listening completed by PROJECT_OWNER.
+- delivery choice：`64K MP3` accepted；96K candidate rejected as unnecessary.
+- accepted local delivery file：
+  `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007/artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-64k.mp3`
+- pronunciation defect observed at opening sentence：expected `基督徒`，audio sounded like `真督徒`.
+- source attribution check：Website frozen TTS Render View line 1 is exactly `基督徒不应该做计划吗？`.
+- source/render SHA：`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`，bytes=10658.
+- VOICE_AI N6 state and N3 receipt input record the exact same `text_sha256` and byte count.
+- conclusion：`NOT_A_WEBSITE_RENDER_TEXT_ERROR`；the mispronunciation occurred inside the voice-generation side after receipt of the correct text (frontend normalization/pronunciation or model synthesis). Current evidence does not distinguish those two internal provider sub-stages.
+- no regeneration performed. Any corrective re-generation requires a separate explicit generation authorization.
+- next publication decision must not silently ship the known mispronunciation unless PROJECT_OWNER explicitly accepts it or authorizes targeted regeneration/remediation.
+
+## 2026-10-08｜有声阅读 Runtime Workspace Relocation
+
+- 状态：`PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKTREE`
+- 用户授权：批准有声阅读作业区目录整改；既有试听文件不得重新生成，整改后移动到当前工作区；不含 commit/push/deploy/R2/NAS/第二次 TTS generation。
+- 新 runtime authority：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud`。该目录属于 RonnieCross DevSSD 项目域，但位于 Git worktree 外，用于 jobs/claims/tmp/artifact-cache/logs 等持久运行状态。
+- 旧 runtime：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud` 已在完整复制 + relative-path/size/SHA manifest exact verify 后删除；以后新 Website read-aloud 作业不得再使用该路径。
+- runner：`scripts/read_aloud_s4_runner.py` 的默认 `PRODUCTION_ROOT` 已切换到新 runtime；S4/S5 tests 改为断言 runtime 位于 Git worktree 外，而不是要求 production root 永远不存在。
+- Pilot job/claim/verified cache 已迁移；Website Pilot 仍为 `TERMINAL_PASS`，execution owner absent，未重新生成音频。
+- 试听交付物已原样移动到：`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007/artifacts/read-aloud/pilot/post-32d30724d859c99c/`。
+- SHA 保持不变：WAV=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`；64k=`71af88368246bfc1bb85d6752f0f1e89ac982602964ca57ffa03e9cfa22db585`；96k=`824f607267234f4dc6e3cbdc8ed04ca9d083f6f8d7720093133f661a37922fe4`。
+- `artifacts/read-aloud/` 已加入 repository-local `.git/info/exclude`，不进入版本控制；没有修改仓库 `.gitignore`。
+- 验证：py_compile PASS；S4 runner `54/54 PASS`；S5 activation `5/5 PASS`；full Website Python `120/120 PASS`；`git diff --check` PASS；old Library runtime absent；new runtime/terminal artifact readback PASS。
+- formal evidence：`docs/tasks/article-read-aloud-runtime-workspace-relocation-20261008/`。
+- 未执行：TTS generation、reconcile/worker-once、new request_id/epoch、R2/NAS/deploy、commit/push。
+- 下一 breakpoint：从工作区 artifacts 目录人工试听 WAV/64k/96k；随后再决定播放器/frontmatter + delivery publication。
+
+## 2026-10-08｜有声阅读 P1B — Pilot Operator Resolution + Local Audio Closure
+
+- 状态：`PASS_PILOT_OPERATOR_RESOLUTION_AND_LOCAL_AUDIO_CLOSURE / READY_FOR_MANUAL_LISTENING_AND_PLAYER_PUBLICATION_DECISION`
+- user authority：用户明确授权 bounded operator resolution + exactly one same-id reconcile + Website artifact closure + local WAV QC + local 64/96 kbps MP3；不授权第二 generation、player/frontmatter、R2/NAS/deploy、commit/push。
+- frozen identity保持不变：article_id=`post-32d30724d859c99c`；request_id=`rc-readaloud-v1:49e16f2f1972ea4b4ad3f39534b367ec664584d623cc0d3d985e54e24e397005`；generation_epoch=`pilot-20261007-a1`；render_sha256=`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`。
+- pre-mutation revalidation：Website UNKNOWN、claim、owner job/request binding、dead PID 96759、N6 `TERMINAL_PASS`、exact text SHA/run_id/artifact SHA、N3 `generation_count=1 / retry_count=0` 全部 fresh PASS。
+- stale-owner resolution：只删除 exact current `execution-owner.json`；owner-before SHA=`1a8597f05f713b8e7c26babdf2c41329b1aa1488732f2a798dfb9bcc9c126a43`；directory fsync完成；claim/job/provider state未删除。
+- exactly one same-id reconcile：成功返回 Website `TERMINAL_PASS`；没有第二次 reconcile/retry loop；final status/result仅做只读 readback。
+- provider terminal identity：run_id=`n3v1-a3276246f6c748e09d93ef669fdd979e`；artifact_ref=`voice-ai-artifact:n3v1-a3276246f6c748e09d93ef669fdd979e`；artifact_sha256=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`。
+- exactly-once closure：reconcile后 N3 仍 `generation_count=1`、`retry_count=0`；同 frozen request_id 仅一个 N6 request state；无第二 request_id、run、epoch、submit或generation identity。
+- Website artifact：verified=true；cache SHA与 provider terminal SHA exact match；execution owner终态 absent。
+- WAV local QC：24kHz / mono / `pcm_f32le` / 32-bit float；duration=`915.12s`（15:15.12）；bytes=`87851600`；full decode PASS；首5秒 mean/max=-27.9/-6.9 dB，末5秒=-31.0/-10.6 dB，首尾均非静音。
+- local WAV：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot.wav`，SHA=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`。
+- local MP3 64k：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot-64k.mp3`，bytes=`7321581`，SHA=`71af88368246bfc1bb85d6752f0f1e89ac982602964ca57ffa03e9cfa22db585`。
+- local MP3 96k：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot-96k.mp3`，bytes=`10982349`，SHA=`824f607267234f4dc6e3cbdc8ed04ca9d083f6f8d7720093133f661a37922fe4`。
+- formal task evidence：`docs/tasks/article-read-aloud-p1b-pilot-operator-resolution-local-closure-20261008/verification.md`、`result.md`、`listening-checklist.md`。
+- 未执行：第二 TTS generation、新 request_id/epoch、article player/frontmatter、R2、NAS、deploy、commit/push。
+- next real breakpoint：人工听感比较 64k/96k 与内容完整性；确认后再决定播放器/frontmatter + delivery publication authority。任何再生成必须单独新授权。
+
+
+## 2026-10-08｜有声阅读 P1B-pre — S5 Minimal Pilot Activation Preparation
+
+- 状态：`PASS_S5_MINIMAL_PILOT_ACTIVATION_PREP / READY_FOR_CONTROLLED_SINGLE_ARTICLE_PILOT_AUTHORIZATION`
+- chronology：此前全部 S4 PASS/BLOCKED/intermediate test-error 继续永久保留；S4 fresh independent closure 为 `PASS_S4_MALFORMED_STATUS_TYPE_SAFETY_FRESH_INDEPENDENT_AUDIT / READY_FOR_ACTIVATION_DESIGN`，aggregate material findings=0。
+- scope correction：Master采用 `REVISE_SCOPE_OVERENGINEERED` 纠偏；S5 只服务 exactly one controlled real article Pilot，不建设长期音频平台。
+- implementation choice：直接复用现有 `scripts/read_aloud_s4_runner.py worker-once`；不新增 activation wrapper、daemon loop、launchd、scheduler、queue/watchdog/registry/health framework、Redis/Celery/database或multiworker。
+- start/stop：启动=人工调用一次 `worker-once`；无job时立即返回且不接触provider；停止=one-shot返回后进程已退出，不再调用下一次即可；jobs/claims/owners/evidence全部保留。
+- exactly-once：queued job只进入既有S4 path；request_id/generation epoch不变；terminal不会再次选中；UNKNOWN只允许原request_id语义；stale owner不自动takeover。
+- S5-specific tests：`5/5 PASS`，覆盖idle no-provider-contact、queued exactly-once、terminal second invocation no duplicate speech、provider-not-ready no POST、UNKNOWN same request_id、production root absent。
+- regression：S4 runner `54/54 PASS`；full Website Python含S5为 `120/120 PASS`；py_compile PASS。
+- long-lifecycle chronology：两次S5测试文件写入被CodexPro secret-looking guard在pre-write阶段拒绝、无mutation；首次py_compile引用原宽scope下并未创建的wrapper而FAIL；随后按Pilot-first实际write-set重跑并全部PASS。
+- 5个Pilot-readiness问题全部YES：idle安全；单篇job只走S4 exactly-once；UNKNOWN/stale-owner/terminal不产生新identity或不安全重复成本路径；可明确停止并保留evidence；下一步只差用户对真实 minimal activation + exactly one frozen Pilot generation 的明确授权。
+- S5没有修改 `scripts/read_aloud_s4_runner.py` 或任何S4 closed safety semantics，因此不触发Pilot前额外fresh independent audit。
+- frozen Pilot authorization 仍 `UNCLAIMED / NOT_CONSUMED`；本轮无production runtime、LaunchAgent、persistent worker、Pilot claim/submit、真实 `/v1/speech`、音频、R2/NAS/deploy、commit/push。
+- 当前真正 breakpoint：停止工程建设并交回 `ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL`；下一项最高价值动作是请求/等待用户对 minimal activation + exactly one frozen Pilot generation 的明确授权，然后尽快完成真实TTS、WAV QC、64/96 kbps MP3对比、人工听感和简单文章播放器。
 
 ## 2026-10-04 — Sermon presentation boundary hardening
 

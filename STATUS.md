@@ -241,3 +241,15 @@
 RonnieAutomation已登记为外部编排参与者，不是网站Owner。网站正式文章、raw/processed/posts、Git、build、Cloudflare和邮件事实仍由本项目拥有。
 
 两个automation-business-operation/v1接口当前仅为`draft`，受控业务代理和网站自动化调用均未实现。未来写入仍必须通过网站正式发布契约、显式授权和本项目Gate；RonnieAutomation不得直接写网站仓库或自我声明发布成功。
+
+
+## 2026-10-08 — Article read-aloud runtime workspace relocation
+
+Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKTREE`.
+
+- Runtime moved from `/Users/ronnie/Library/Application Support/RonnieCross/read-aloud` to `/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud` after exact manifest verification; old Library runtime removed.
+- Pilot remains `TERMINAL_PASS`; verified artifact cache and claim/job state preserved; no execution owner.
+- Existing WAV/64k/96k listening files were not regenerated and now live under the active worktree `artifacts/read-aloud/pilot/post-32d30724d859c99c/` with unchanged SHA-256.
+- Regression: S4 54/54, S5 5/5, full Website Python 120/120, py_compile and git diff-check PASS.
+- No TTS generation, R2/NAS/deploy, commit or push in this relocation.
+- Next step is manual listening, then player/publication decision.

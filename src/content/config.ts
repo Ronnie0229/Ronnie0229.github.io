@@ -13,7 +13,8 @@ const posts = defineCollection({
     author: z.string().default(""),
     reviewed: z.boolean().default(false),
     draft: z.boolean().default(false),
-    source: z.string().default("")
+    source: z.string().default(""),
+    audioUrl: z.string().url().optional()
   })
 });
 

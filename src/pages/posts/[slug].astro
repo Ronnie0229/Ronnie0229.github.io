@@ -104,6 +104,16 @@ const fallbackReturnUrl = `${categoryRoute?.path ?? "/posts/"}#post-${post.slug}
         {post.data.tags.map((tag) => <span>{tag}</span>)}
       </div>
     </header>
+    {
+      post.data.audioUrl && (
+        <section class="article-audio" aria-labelledby="article-audio-title">
+          <p class="eyebrow" id="article-audio-title">听文章</p>
+          <audio controls preload="metadata" src={post.data.audioUrl}>
+            您的浏览器不支持音频播放。
+          </audio>
+        </section>
+      )
+    }
     <div class="article-content">
       <Content />
     </div>
