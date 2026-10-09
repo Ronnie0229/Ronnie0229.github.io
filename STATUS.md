@@ -266,3 +266,13 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Final local verification: read-aloud player 4/4, full Website Python 124/124, Astro 345 pages.
 - Known accepted Pilot limitation: `著名` pronunciation remains incorrect; no further Pilot TTS remediation is planned.
 - PROJECT_OWNER completed live manual verification and returned `PASS`; final acceptance is `PASS_ARTICLE_READ_ALOUD_PILOT_FINAL_ACCEPTANCE / PRODUCTION_HUMAN_VERIFIED`.
+
+
+## 2026-10-09 — Article read-aloud targeted pronunciation production replacement
+
+- PROJECT_OWNER approved one audio-only fidelity exception: source text remains `著名教师`, while the audio is allowed to say `著名的教师`.
+- Integrated listening of the rebuilt full 64K MP3 passed.
+- The existing R2 object was overwritten in place at the same production URL; final remote SHA is `d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`, bytes=7337901.
+- Public readback verified `audio/mpeg`, HTTP 206 Range, exact total bytes, and the live article still points to the unchanged URL.
+- No Website URL change or redeploy was required.
+- Final verdict: `PASS_TARGETED_CHUNK57_PRODUCTION_REPLACEMENT / INTEGRATED_LISTENING_AND_REMOTE_VERIFY_PASS`.

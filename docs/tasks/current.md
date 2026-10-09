@@ -1,5 +1,28 @@
 # 当前任务
 
+## 2026-10-09｜Pilot Chunk-57 Production Replacement Closure
+
+- PROJECT_OWNER integrated listening：`PASS`。
+- approved fidelity exception：正文仍为 `著名教师`；音频该处读为 `著名的教师`。
+- accepted final 64K：`pilot-repaired-v2-64k.mp3`，SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`，bytes=7337901。
+- 原 R2 object key 原地覆盖：`audio/articles/post-32d30724d859c99c/article.mp3`；URL 不变。
+- remote full download SHA exact match；`Content-Type=audio/mpeg`；Range 206；`Content-Range=bytes 0-1023/7337901`。
+- live article 仍引用同一正式 URL，native player markup PASS；无需重新部署 Website。
+- final：`PASS_TARGETED_CHUNK57_PRODUCTION_REPLACEMENT / INTEGRATED_LISTENING_AND_REMOTE_VERIFY_PASS`。
+
+## 2026-10-09｜Pilot Targeted Chunk-57 Fidelity-Exception Repair
+
+- 状态：`PASS_TARGETED_CHUNK57_REPAIR / READY_FOR_INTEGRATED_LISTENING`。
+- PROJECT_OWNER 已明确批准 audio-only fidelity 例外：原文 `著名教师`，音频允许读为 `著名的教师`；Website 正文不修改。
+- replacement：VOICE_AI `candidate-2.wav`，人工确认“著名”发音正确；SHA=`bf23d2ad2cf307948d4699437992edb64021d1af05d4faa98fd7a249729cfecc`。
+- repair：仅替换当前 `pilot-repaired.wav` 的 chunk 57 [10308480,10702080)；replacement=411840 frames，较旧 chunk +18240 frames / +0.76s。
+- sample identity：chunk57 前缀 exact PASS；chunk57 后缀 shift 后 exact PASS；此前 chunk0 “基督徒”修复 exact PASS。
+- new WAV：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-v2.wav`，917.16s，SHA=`bf26a7cddd1900bbe4abe00ce835611de5ada45204832ba0a01403ab7167a245`。
+- new 64K：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-v2-64k.mp3`，7337901 bytes，SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`。
+- WAV/MP3 full decode PASS；没有新增 TTS generation。
+- 当前线上 R2 object 暂未替换，等待整篇拼接版本人工试听，重点检查约 7:09.5–7:26.7 的 chunk57 以及前后接缝。
+- next breakpoint：PROJECT_OWNER integrated listening PASS 后，原 URL 下原子替换 R2 object + remote SHA/Range 验证；无需改文章 URL。
+
 ## 2026-10-09｜Article Read-Aloud Pilot Production Launch Closure
 
 - 正式状态：`PASS_ARTICLE_READ_ALOUD_PILOT_PRODUCTION_LAUNCH / LIVE_PLAYER_AND_R2_AUDIO_VERIFIED`。
