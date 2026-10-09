@@ -1,5 +1,14 @@
 # 当前任务
 
+## 2026-10-09｜Task Orchestration Governance Adoption
+
+- 起因：Article Read-Aloud Pilot 的 exactly-one-article 试读阶段曾因 implementation / remediation / re-audit / handoff 切分过细，造成建设周期被流程拉长。
+- PROJECT_OWNER 明确要求减少无意义碎片化：同一 Owner / authority / bounded write-set 内，由一个 Executor 连续推进 implementation → test → local remediation → regression → evidence closure，直到真正 authority breakpoint。
+- 正式采用现有两处治理改动：`AGENTS.md` 的 single-executor 规则，以及 `docs/task-handoff-protocol.md` 的长生命周期 Executor / authority-breakpoint 规则。
+- 边界保持不变：真实副作用仍需授权；独立 Auditor/Reviewer 仍保持独立；scope/Owner/write-set 扩大仍必须停；不得以本规则绕过 commit/push/deploy/TTS/production Gate。
+- 本轮仅治理文档 adoption，无业务代码、音频、运行时或部署变更。
+- verdict：`PASS_USER_DIRECTED_TASK_ORCHESTRATION_GOVERNANCE_ADOPTION / READY_FOR_GIT_CLOSURE`。
+
 ## 2026-10-09｜Pilot Chunk-57 Production Replacement Closure
 
 - PROJECT_OWNER integrated listening：`PASS`。

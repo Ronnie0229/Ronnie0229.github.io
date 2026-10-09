@@ -276,3 +276,12 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Public readback verified `audio/mpeg`, HTTP 206 Range, exact total bytes, and the live article still points to the unchanged URL.
 - No Website URL change or redeploy was required.
 - Final verdict: `PASS_TARGETED_CHUNK57_PRODUCTION_REPLACEMENT / INTEGRATED_LISTENING_AND_REMOTE_VERIFY_PASS`.
+
+
+## 2026-10-09 — Task orchestration fragmentation remediation
+
+- During the Article Read-Aloud exactly-one-article Pilot, task fragmentation and repeated handoff/audit slicing materially lengthened the construction cycle.
+- PROJECT_OWNER explicitly directed that work inside the same Owner / authority / bounded write-set should normally stay with one Executor through implementation, verification, local remediation, regression, and evidence closure until a real authority breakpoint.
+- The corresponding governance changes in `AGENTS.md` and `docs/task-handoff-protocol.md` are now formally adopted.
+- This does not weaken authorization boundaries, independent Auditor/Reviewer separation, scope/Owner/write-set gates, or production side-effect controls.
+- Verdict: `PASS_USER_DIRECTED_TASK_ORCHESTRATION_GOVERNANCE_ADOPTION / READY_FOR_GIT_CLOSURE`.

@@ -8,7 +8,22 @@
 
 ## 一句话流程
 
-每次执行任务时，请先按照 `AGENTS.md` 和 `docs/task-handoff-protocol.md` 完成启动检查，然后执行任务。完成后更新 `STATUS.md` 和 `docs/tasks/current.md`，再进行交接。给 Codex 写任务时，必须把“完成后更新 `docs/tasks/current.md` 的任务完成状态”写入执行要求。
+每次执行任务时，请先按照 `AGENTS.md` 和 `docs/task-handoff-protocol.md` 完成启动检查，然后执行任务。默认由**一个 Executor 连续推进到下一真实 authority breakpoint**，而不是每个小步骤都交回；在同一 authority/write-set 内，普通实现、测试、局部修复和回归应由同一 Executor 连续完成。只有需要用户明确授权、必须切换独立 Auditor/Reviewer、需要扩大 scope/Owner/write-set、出现无法安全继续的 blocker，或 task 明确 stop condition 时才交接。完成后更新 `STATUS.md` 和 `docs/tasks/current.md`，再进行交接。给 Codex 写任务时，必须把“推进到下一 authority breakpoint”以及“完成后更新 `docs/tasks/current.md` 的任务完成状态”写入执行要求。
+
+### 默认长生命周期 Executor 规则
+
+1. Task 应一次性覆盖同一目标链路内可预见的 implementation、mechanical verification、局部 remediation、regression rerun 和 evidence closure。
+2. 普通测试失败、race、边界条件 bug 或同一 write-set 内可安全修复的问题，不构成新的人工断点；Executor 应保留 FAIL chronology 后继续最小修复并重跑。
+3. 不得为了流程形式把一个连续目标拆成“implementation task → tiny remediation task → tiny recheck task → another remediation task”。
+4. 必须停下交回的典型断点：
+   - 需要用户明确授权的真实副作用；
+   - 需要新的独立 Auditor/Reviewer 上下文；
+   - scope/write-set/Owner 必须扩大；
+   - 外部项目 mutation 需要新的 authority；
+   - 证据冲突或安全不确定性必须由 PROJECT_OWNER 裁决；
+   - task 明确冻结的 stop condition。
+5. 独立审核与执行仍保持角色隔离。Auditor 不直接实施修复；但应聚合本轮所有 material findings 后一次性交回，避免逐 finding 制造多个短任务。
+6. Master/Coordinator 下一次分发时，应以“让一个 Executor 一直推进到下一个必须授权/独立审核/Owner 决策的断点”为默认设计原则。
 
 ## 任务开始前：一级必读
 

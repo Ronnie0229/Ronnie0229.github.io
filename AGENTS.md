@@ -26,6 +26,14 @@ Website future governance cold-start 必须能够稳定定位 current Project St
 - 发现 wrong-root / wrong-repo / wrong-task mutation 时必须保留 chronology 并 fail-closed；不得通过 auto reset/rebase/amend/force-push 静默抹平可恢复历史。
 - 本规则不改变 Website 的 publication/deploy/email/content/runtime authority，不改变 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`，也不授权建设新的 validator/service/platform/registry/watcher/daemon。优先复用现有 current task、handoff、Owner authority 与 Git closure 机制。
 
+### Task orchestration — single executor until authority breakpoint
+
+- 默认任务分发采用**一个长生命周期 Executor 连续推进**，而不是把 implementation、局部修复、回归验证、窄整改拆成多个短任务。一次分发时应把同一 Owner、同一 authority、同一 write-set 内可预见的执行/验证/局部 remediation 都写进同一个 task。
+- Executor 在不扩大 authority、不改变 Owner、不越过副作用 Gate 的前提下，应连续执行：实现 → 测试/验证 → 对自身发现的局部实现缺陷做最小修复 → 重跑验证 → 更新 task evidence/chronology。不得因为普通测试 FAIL、可定位的局部 bug、同一 task 范围内的窄整改就提前交回用户。
+- **只有到真实 authority breakpoint 才停止交回**，包括：需要用户明确授权的真实副作用（例如 commit/push、production mutation、真实 TTS generation、deploy/email/NAS overwrite 等）；必须切换到独立 Auditor/Reviewer 以保持独立性；发现需要扩大 scope/write-set/Owner 或修改外部项目；出现无法安全判定或必须由 PROJECT_OWNER 裁决的冲突；或 task 明确冻结的 stop condition。
+- 独立审核仍必须保持独立角色/上下文，不能由原 Executor 自审替代；但 Auditor 如仅发现同一 bounded scope 内的 material finding，应一次性交回一个**聚合后的最小整改边界**，Master 后续再分发一个 Executor 连续整改到下一个真实 authority breakpoint，避免 finding-by-finding 碎片化分发。
+- Master/Coordinator 写 task 时必须优先设计“推进到下一授权断点”的完整生命周期，而不是“完成一个小步骤就停”。除非独立性、安全性或 authority 明确要求拆分，否则不得把同一目标连续链路机械切碎。
+
 ## 项目定位
 
 - 本仓库是 RonnieCross 个人文章网站的唯一正式代码仓库。
