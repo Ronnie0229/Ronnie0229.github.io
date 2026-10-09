@@ -1,5 +1,18 @@
 # 当前任务
 
+## 2026-10-09｜Article Read-Aloud Phase 1D Media Lifecycle Closure
+
+- 状态：`PASS_PHASE1D_MEDIA_LIFECYCLE_PILOT / NAS_R2_MANIFEST_PATHS_FROZEN`。
+- NAS archive mount fresh-verified：`/Volumes/home` -> `RonnieNAS.local/home`；PROJECT_OWNER 已确认 `/Volumes/home/RonnieArchive` 为正式长期资产根。
+- frozen archive root：`/Volumes/home/RonnieArchive/ReadAloud/articles`。
+- Pilot archival master：`/Volumes/home/RonnieArchive/ReadAloud/articles/2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c/master/2026-10-06_基督徒不应该做计划吗_master.wav`。
+- NAS WAV readback SHA=`bf26a7cddd1900bbe4abe00ce835611de5ada45204832ba0a01403ab7167a245`，bytes=88047440，exact PASS。
+- manifest：`/Volumes/home/RonnieArchive/ReadAloud/articles/2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c/metadata/audio-manifest.json`；schema=`ronniecross-readaloud-audio-manifest/v1`；JSON validate PASS。
+- R2 final delivery fresh readback SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`，bytes=7337901，exact PASS。
+- 正式职责冻结：RonnieArchive=WAV master + manifest；R2=MP3 delivery；Git=code/article pointer/governance evidence。归档命名冻结为 `YYYY-MM-DD_<title>_<articleId>`，WAV 文件名为 `YYYY-MM-DD_<title>_master.wav`。
+- chronology：首次误放到 `/Volumes/share/网站有声阅读` 的 Pilot-only 副本在 PROJECT_OWNER 否决该 root 后保留至新 Archive 路径完成 SHA/bytes/R2 readback 验证；验证通过后已删除误放副本。
+- Phase 1D 已闭合；下一阶段回到原总计划 Phase 2 剩余工作：总共 2–3 篇真实 Pilot + multi-device/browser validation，不扩建通用平台。
+
 ## 2026-10-09｜Task Orchestration Governance Adoption
 
 - 起因：Article Read-Aloud Pilot 的 exactly-one-article 试读阶段曾因 implementation / remediation / re-audit / handoff 切分过细，造成建设周期被流程拉长。

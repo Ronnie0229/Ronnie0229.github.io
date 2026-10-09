@@ -2,8 +2,8 @@
 
 版本：2026-10-07
 Owner：Website / `个人网页项目`
-当前阶段：PRE-TASK / Pilot 准备
-状态：PLAN_FROZEN_FOR_TASK_INTAKE；尚未创建 construction task/worktree，尚未生成正式音频，尚未建设 R2 或播放器。
+当前阶段：Phase 1D CLOSED / Phase 2 in progress
+状态：Pilot 1 已完成真实 TTS、人工 QC、R2、Website Player、production 上线与 NAS archival lifecycle；Phase 2 还需把真实 Pilot 扩到总计 2–3 篇并完成计划内 multi-device/browser validation。
 
 ## 1. 目标与原则
 
@@ -232,15 +232,15 @@ NAS 保存 WAV archival master。
 逻辑结构：
 
 ```text
-网站有声阅读/
-└── <article-id-or-slug>/
+RonnieArchive/ReadAloud/articles/
+└── YYYY-MM-DD_<title>_<articleId>/
     ├── master/
-    │   └── article-master.wav
+    │   └── YYYY-MM-DD_<title>_master.wav
     └── metadata/
         └── audio-manifest.json
 ```
 
-正式 NAS mount/path 在对应媒体生命周期 stage fresh verify 后冻结，不在本计划中凭空指定未验证绝对路径。
+Phase 1D 已 fresh-verify 并冻结正式长期资产根为 `/Volumes/home/RonnieArchive/ReadAloud/articles`。目录采用人类友好的 `YYYY-MM-DD_<title>_<articleId>`；WAV 采用 `YYYY-MM-DD_<title>_master.wav`。`articleId` 仍作为稳定机器身份保留在目录名后缀及 manifest 中。
 
 ### Cloudflare R2
 
@@ -388,32 +388,34 @@ GET /ready
 | 项目归属 | 已决定 | Website Owner，不建立第四 Owner |
 | Construction isolation | 已决定 | bounded-stage worktree |
 | 启动前预盘点 | 已完成一次 | 2026-10-07 Website main clean/synced；正式 task 前须重跑 |
-| 正式 construction task | 未开始 | Phase 0 |
-| task branch/worktree | 未创建 | Phase 0 |
-| TTS Render View 详细规则 | 待做 | Phase 1A |
-| 第一篇 Pilot | 未选择 | Phase 1A |
-| 第一次真实 TTS | 未执行 | Phase 1B |
-| WAV master | 未生成 | Phase 1B |
-| 64k/96k MP3 | 未生成 | Phase 1C |
-| 人工 A/B | 未进行 | Phase 1C |
-| 正式 bitrate | 未决定 | A/B 后冻结 |
-| NAS/R2 lifecycle | 未实施 | Phase 1D |
-| Website audio schema/player | 未开发 | Phase 2 |
-| 正式上线 | 未开始 | Pilot 通过后 |
-| 自动化 | 暂缓 | Phase 4 |
+| 正式 construction task | 已完成 | Phase 0 已闭合 |
+| task branch/worktree | 已完成 | construction worktree 已实际使用 |
+| TTS Render View 详细规则 | 已完成 | Phase 1A 已闭合 |
+| 第一篇 Pilot | 已完成 | post-32d30724d859c99c |
+| 第一次真实 TTS | 已完成 | Phase 1B exactly-one real generation |
+| WAV master | 已完成 | final accepted repaired v2 WAV |
+| 64k/96k MP3 | 已完成 | Phase 1C |
+| 人工 A/B | 已完成 | 64k accepted，96k rejected as unnecessary |
+| 正式 bitrate | 已冻结 | 64 kbps |
+| NAS/R2 lifecycle | 已完成 | Phase 1D：NAS master+manifest / R2 delivery |
+| Website audio schema/player | 已完成 | optional audioUrl + native player |
+| 正式上线 | 已完成首篇 | Pilot 1 production + human verify PASS |
+| Phase 2 Pilot 数量 | 1/2–3 | 还需 1–2 篇真实文章 |
+| Phase 2 多端验证 | 部分完成 | 线上人工 PASS；正式 Desktop/iPhone/Safari/Chrome 矩阵待闭合 |
+| Phase 3 正式功能冻结 | 待做 | 等 Phase 2 真实重复验证后决定 |
+| 自动化 | 暂缓 | Phase 4，当前不得提前启动 |
 
 ## 16. 当前下一步
 
-正式开启任务前，再做一次 Website fresh preflight。若 canonical main clean/synced、无冲突 active task/worktree、lane gate PASS，则创建 Phase 0/1A 的 bounded construction task + worktree。
-
-第一个业务验证目标不是播放器，而是：
+Phase 0–1D 与首篇 Website Player production Pilot 已完成。当前按原计划继续 Phase 2，且保持 anti-overengineering：
 
 ```text
-1 篇真实文章
-→ 正确 TTS Render View
-→ VOICE_AI WAV
-→ 64/96 kbps MP3
-→ 人工 A/B
+已有 Pilot 1
+→ 再选择 1–2 篇正式文章
+→ 复用现有 Render View / VOICE_AI / WAV / 64k / NAS / R2 / player 路径
+→ 每篇人工 QC
+→ 达到总计 2–3 篇真实 Pilot
+→ 完成 Desktop / iPhone / Safari / Chrome 的播放、暂停、seek、加载与 Range 验证
 ```
 
-只有声音体验通过后，才进入 R2 与 Website Player MVP。
+Phase 2 证明可重复后才进入 Phase 3 正式功能冻结；Phase 4 自动化继续暂缓。

@@ -69,3 +69,12 @@ ChatGPT 更适合先规划、整理项目规则和生成高层文档；Codex 更
 - Runtime state stays outside Git worktrees so jobs/claims/locks/cache survive worktree changes and do not pollute version control.
 - Human-review Pilot audio belongs in the active worktree under `artifacts/read-aloud/`; it is local/untracked, not a production media publication location.
 - This is a storage-layout decision only; S4 exactly-once/request_id/UNKNOWN/reconcile/provider semantics are unchanged.
+
+## 2026-10-09 — Read-aloud media lifecycle storage freeze
+
+- NAS archival root is frozen as `/Volumes/home/RonnieArchive/ReadAloud/articles`.
+- Per-article NAS layout is human-readable: `/Volumes/home/RonnieArchive/ReadAloud/articles/YYYY-MM-DD_<title>_<articleId>/master/YYYY-MM-DD_<title>_master.wav` plus `metadata/audio-manifest.json`. The title/date lead for human browsing; `articleId` remains in the directory suffix and manifest as the stable machine identity.
+- The manifest schema for the Pilot is `ronniecross-readaloud-audio-manifest/v1`. The first accepted Pilot is archived under `2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c`.
+- R2 delivery remains bucket `ronniecross-audio`, object key pattern `audio/articles/<article-id>/article.mp3`, custom domain `audio.ronniecross.com`.
+- Storage roles are now proven in the real Pilot: NAS = WAV archival master + manifest; R2 = MP3 Website delivery; Git = code/article pointer/governance evidence only.
+- NAS archive is append-only for new article objects; existing archive contents are not silently overwritten. Chronology: an initial Pilot copy was mistakenly placed under `/Volumes/share/网站有声阅读`; after PROJECT_OWNER rejected that root and approved `/Volumes/home/RonnieArchive`, the final WAV was verified at the new human-readable path and the mistaken Pilot-only copy was removed.

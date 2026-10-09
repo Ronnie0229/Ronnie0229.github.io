@@ -285,3 +285,13 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - The corresponding governance changes in `AGENTS.md` and `docs/task-handoff-protocol.md` are now formally adopted.
 - This does not weaken authorization boundaries, independent Auditor/Reviewer separation, scope/Owner/write-set gates, or production side-effect controls.
 - Verdict: `PASS_USER_DIRECTED_TASK_ORCHESTRATION_GOVERNANCE_ADOPTION / READY_FOR_GIT_CLOSURE`.
+
+
+## 2026-10-09 — Article Read-Aloud Phase 1D media lifecycle closure
+
+- Verdict: `PASS_PHASE1D_MEDIA_LIFECYCLE_PILOT / NAS_R2_MANIFEST_PATHS_FROZEN`.
+- Final accepted WAV is archived at `/Volumes/home/RonnieArchive/ReadAloud/articles/2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c/master/2026-10-06_基督徒不应该做计划吗_master.wav`; NAS readback SHA/bytes exactly match the accepted local WAV.
+- `metadata/audio-manifest.json` was created under the same human-readable article archive using schema `ronniecross-readaloud-audio-manifest/v1`.
+- Final R2 MP3 delivery was fresh-read back and matched the accepted production SHA/bytes.
+- Frozen media lifecycle: `/Volumes/home/RonnieArchive` = long-term WAV archival master + manifest; R2 = MP3 Website delivery; Git = code/article pointer/governance evidence. The initial `/Volumes/share/网站有声阅读` Pilot-only copy was rejected by PROJECT_OWNER and removed only after the new archive copy passed exact verification.
+- Phase 1D is complete. Phase 2 remaining scope is 2–3 total real Pilot articles plus planned multi-device/browser validation; no automation/platform expansion yet.
