@@ -97,3 +97,13 @@ ChatGPT 更适合先规划、整理项目规则和生成高层文档；Codex 更
 - `CLEANUP_ELIGIBLE` permits deletion of the article's DevSSD WAV/MP3 copies from worktree/runtime caches, but never deletes durable JSON/evidence, Render View, NAS master/manifest, repair-support metadata, or R2 delivery.
 - Post-cleanup pronunciation repair restores the authoritative WAV from NAS, uses the acoustic chunk/time map to locate the target region, regenerates only the target fragment, splices/rebuilds, re-verifies, re-archives, replaces the same R2 object key, then becomes cleanup-eligible again.
 - Current repair-support v1 records acoustic chunk frame/time boundaries and generation identity. Current VOICE_AI public contract does not expose exact text-to-chunk alignment, so Website must not infer or fabricate phrase↔chunk mapping.
+
+## 2026-10-10 — Read-aloud first-stage formal closure
+
+- PROJECT_OWNER adopted the independent audit conclusion and authorized formal stage closure.
+- Formal verdict: `PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE`.
+- The first engineering stage is closed. Existing controller + 5-minute thin trigger + NAS/R2/site lifecycle are sufficient for current goals.
+- Default operating mode is now `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`.
+- Real iPhone/Safari/Chrome device acceptance and a future real targeted pronunciation repair remain non-blocking follow-up items; neither justifies continued framework expansion.
+- Do not add a new task platform, scheduler/monitor/watchdog layer, general Agent orchestration platform, second Hermes-specific Website runtime, generalized audio editor, historical batch backfill, or unattended publication unless a later explicit business goal or observed production defect requires it.
+- Pilot 2 keeps `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`; stage closure must not rewrite it as completed full listening.

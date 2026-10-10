@@ -331,3 +331,14 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Activation FAIL/PASS chronology is preserved: initial direct-Python/external WorkingDirectory/log-path form registered but exited `EX_CONFIG(78)` without workflow mutation; minimal shell-wrapper + user-Library log-path remediation then passed.
 - Current launchd readback: `run interval=300 seconds`; controlled kickstart `last exit code=0`; stdout=`[]`; stderr empty. `[]` is correct because Pilot 2 workflow is COMPLETE.
 - This completes the host-side periodic trigger needed for CodexPro/Hermes session-independent continuation. The trigger has no business logic and does not weaken human/operator gates.
+
+## 2026-10-10 — Read-aloud first-stage formal closure
+
+- PROJECT_OWNER authorized formal closure after the independent audit concluded the project is currently goal-aligned and not materially overbuilt.
+- Formal verdict: `PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE`.
+- First-stage engineering construction is closed. Current controller, 5-minute thin trigger, NAS WAV archive, R2 MP3 delivery, Website binding, cleanup gate and repair-restore path are sufficient for current goals.
+- Operating mode changes to `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`.
+- Pilot 2 remains `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`; this closure does not upgrade it to completed full-listening acceptance.
+- Real iPhone/Safari/Chrome playback/seek/long-play acceptance remains pending but non-blocking.
+- A real targeted fragment regeneration/splice will be performed only if a future actual pronunciation defect is discovered.
+- Engineering expansion is paused: no new task-management platform, scheduler/monitor/watchdog layer, general Agent orchestration, Hermes-specific second Website runtime, generalized audio-editing system, historical batch backfill or unattended publication without a new explicit business need.

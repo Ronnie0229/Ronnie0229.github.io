@@ -1,5 +1,15 @@
 # 当前任务
 
+## 2026-10-10｜Article Read-Aloud First Stage Closure
+
+- PROJECT_OWNER 已采纳独立审计并授权阶段收口。
+- 正式裁决：`PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE`。
+- 第一阶段工程建设正式停止，进入 `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`。
+- 当前已有两篇真实 Pilot；controller、5 分钟薄触发、NAS/R2/site lifecycle、cleanup gate、post-cleanup restore 已有真实证据。
+- Pilot 2 继续保持 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，不得改写为完整人工试听 PASS。
+- 非阻塞剩余项：真实 iPhone/Safari/Chrome 设备矩阵；未来真实发音问题触发时再做 targeted fragment regeneration + splice。
+- 明确暂停继续扩建任务平台、复杂 scheduler/monitor/watchdog、通用 Agent orchestration、Hermes 专用第二 runtime、通用音频编辑系统、全历史 backfill、无人审核发布。
+- 本轮只做 closure 文档与状态收敛；不修改 controller 代码、不改 LaunchAgent、不动 NAS/R2/生产内容。
 ## 2026-10-10｜Article Read-Aloud 5-minute Thin Tick Activation
 
 - 已启用 user LaunchAgent：`com.ronniecross.read-aloud.tick`。
@@ -20,7 +30,7 @@
 - PROJECT_OWNER 已明确允许在本轮未完成整篇试听的情况下暂按 PASS 推进，并以未来发现问题时走局部修复流程作为真实验证；该接受标记为 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，不伪称已完成整篇试听。
 - PROJECT_OWNER 本轮采用 provisional PASS，不声称已完成整篇试听。若以后发现读音问题，按已验证的 NAS restore + chunk/time map + targeted repair 路径处理。
 - post-cleanup repair restore drill 已 PASS：NAS master exact SHA 恢复，chunk 10 期望/提取时长均为 7.680s，decode PASS，临时恢复资产已再次清理。
-- 当前剩余：启用批准的 5 分钟 `tick-all` 薄触发；真实 iPhone/Safari/Chrome 设备矩阵仍待未来有空时验收。
+- 5 分钟 `tick-all` 薄触发已在后续 activation slice 启用并 PASS；真实 iPhone/Safari/Chrome 设备矩阵仍待未来有空时验收。
 ## 2026-10-10｜Article Read-Aloud Durable Workflow Controller + Pilot 2
 
 - 当前状态：`V0_PASS / CONTINUATION_IN_PROGRESS`。
@@ -35,8 +45,8 @@
 - 同一 controller 已继续自动完成 technical QC、WAV full decode、64 kbps MP3 encode、MP3 full decode 与 SHA 持久化。
 - Pilot 2 MP3：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/delivery-cache/2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523/article-64k.mp3`；duration=605.92s；bytes=4848045；SHA=`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`。
 - Pilot 2 已完成 NAS WAV + repair-support 归档、R2 full-SHA/Range 206、Website audioUrl、132/132 tests、345-page build、Git push、manual Pages fallback deploy 与 live verify；cleanup gate 达到 `CLEANUP_ELIGIBLE` 后已删除 Pilot 2 worktree/runtime 大媒体副本。
-- 5 分钟实际 scheduler 尚未安装/启用；等 controller 核心链路验证后再做薄触发 activation。
-- 本轮尚未 commit/push/deploy。
+- 5 分钟 thin trigger 已在后续 activation slice 正式启用；本条保留 controller foundation chronology，不再视为当前未完成项。
+- 该 controller foundation slice 当时尚未 commit/push/deploy；后续 Pilot 2 production closure 与 5-minute activation 已分别完成 commit/push。
 
 ## 2026-10-09｜Article Read-Aloud Phase 1D Media Lifecycle Closure
 

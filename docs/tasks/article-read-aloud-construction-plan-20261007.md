@@ -456,28 +456,30 @@ Phase 2/3 的 durable controller 只是可靠性基础，不等于自动批量�
 | Pilot 2 cleanup | PASS_COMPLETE | `CLEANUP_ELIGIBLE` 后已删除 DevSSD worktree/runtime 大媒体副本；NAS/R2/metadata 保留 |
 | Post-cleanup repair restore drill | PASS | NAS exact WAV restore + acoustic chunk 10 localization/decode；无已知缺陷所以未做真实 TTS/splice |
 | 5 分钟薄触发 cadence | PASS_ACTIVE | LaunchAgent `com.ronniecross.read-aloud.tick`；300s；launchd controlled run exit 0 |
-| Phase 2 多端验证 | 部分完成 | 线上人工 PASS；正式 Desktop/iPhone/Safari/Chrome 矩阵待闭合 |
-| Hermes 独立执行兼容 | 设计已冻结 | Hermes/CodexPro 都只做短调用；durable files 才是 current truth |
-| Phase 3 正式功能冻结 | 待做 | 等 Pilot 2 delivery + controller 后续链路 + 多端验证闭合 |
+| Phase 2 多端验证 | 保留项 / 非阻塞 | 机器/live HTTP 已通过；真实 iPhone/Safari/Chrome 设备矩阵未闭合，不伪造 PASS |
+| Hermes 独立执行兼容 | 已满足当前目标 | Hermes/CodexPro 都只做短调用；durable files 才是 current truth；不再建设专用第二 runtime |
+| 第一阶段工程建设 | FORMALLY_CLOSED | `PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE` |
+| Phase 3 进一步工程冻结/扩展 | 暂不启动 | 当前能力已足够真实使用；仅在真实问题或新业务目标出现时重开 |
 | Phase 4 Business Automation | 暂缓 | 自动触发/批量/backfill/无人审核发布继续禁止提前启动 |
 
 ## 16. 当前下一步
 
-Phase 0–1D 与首篇 Website Player production Pilot 已完成。Pilot 2 已完成真实 TTS 并证明 detached one-shot worker 可以跨越 CodexPro 单次命令生命周期自然到达 `TERMINAL_PASS`。当前 Phase 2 同时推进业务 repeatability 与最小 durable workflow foundation：
+第一阶段工程建设于 2026-10-10 正式收口：
+
+`PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE`
+
+当前默认模式不再是继续 construction，而是：
 
 ```text
-Pilot 2 TTS TERMINAL_PASS
-→ durable controller v0：start/status/tick
-→ 自动发现 terminal + WAV artifact SHA verify
-→ technical QC + 64k MP3
-→ WAIT_HUMAN_LISTENING
-→ PROJECT_OWNER provisional PASS（不声称完成整篇试听）
-→ NAS / repair-support archive / R2 / Website / live verify PASS
-→ CLEANUP_ELIGIBLE
-→ 删除 DevSSD 大媒体副本，仅保留 durable state/evidence
-→ NAS restore + chunk-time localization drill PASS
-→ 5 分钟薄触发层 PASS_ACTIVE（300s tick-all）
-→ 真实 iPhone / Safari / Chrome 设备矩阵（未来人工验收）
+REAL_USAGE
+→ MAINTENANCE
+→ ISSUE_DRIVEN_REPAIR（只有真实问题出现时）
 ```
 
-原则冻结：任何可能超过调用者生命周期的动作都必须 durable + resumable；CodexPro/Hermes 不保持长会话等待。真正的业务自动触发、批量生成和无人审核发布仍留在 Phase 4。
+现有能力保持运行：两篇真实 Pilot、durable workflow controller、300s `tick-all`、NAS WAV archive、R2 MP3 delivery、Website player、cleanup gate、repair restore path。
+
+非阻塞保留项只有：
+- 未来有时间时完成真实 iPhone / Safari / Chrome 播放/暂停/seek/长时间播放矩阵；
+- 以后若真实发现发音问题，再执行 targeted fragment regeneration + splice，以实际问题验证修复链最后一段。
+
+不得把上述保留项解释为继续建设通用平台的理由。任何可能超过调用者生命周期的动作继续遵守 durable + resumable 原则；CodexPro/Hermes 不保持长会话等待。自动触发、全历史 backfill、无人审核发布继续属于未授权 Phase 4。
