@@ -86,10 +86,12 @@ Pilot 2 real continuation：
 
 ## 5-minute trigger
 
-cadence 已冻结为每 5 分钟一次，但本轮没有安装/启用 scheduler。
+cadence 已冻结为每 5 分钟一次，并已在后续 activation slice 启用 LaunchAgent `com.ronniecross.read-aloud.tick`。
 
-后续 scheduler 只能是薄触发：
-`tick-all` → exit。
+当前正式行为仍然只是薄触发：
+`every 300s → tick-all → exit`。
+
+Activation chronology：初版 direct-Python + external-volume WorkingDirectory/log paths 被 launchd 以 `EX_CONFIG(78)` 拒绝；未执行 workflow mutation。改为 `/bin/zsh -lc` 负责 `cd/exec`、日志移至 `~/Library/Logs/RonnieCross/` 后，launchd readback=`run interval 300 seconds`，controlled kickstart=`last exit code 0`，stdout=`[]`，stderr empty。
 
 ## Hermes disposition
 
@@ -97,4 +99,4 @@ Hermes future operator 不需要保持长时间命令，也不需要从聊天记
 
 ## Next
 
-Pilot 2 controller core path is now proven through production/live closure and cleanup. The remaining reliability activation is the approved thin 5-minute `tick-all` trigger. Real-device iPhone/Safari/Chrome acceptance remains separate and must not be fabricated.
+Pilot 2 controller core path is proven through production/live closure and cleanup, and the approved thin 5-minute `tick-all` LaunchAgent is now active. Real-device iPhone/Safari/Chrome acceptance remains separate and must not be fabricated.

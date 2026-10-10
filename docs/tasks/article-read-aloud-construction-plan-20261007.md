@@ -455,7 +455,7 @@ Phase 2/3 的 durable controller 只是可靠性基础，不等于自动批量�
 | DevSSD Cleanup Gate | 已实现规则/机械 gate | human/NAS/R2/live/repair-support/no-open-repair 全部 PASS 才 CLEANUP_ELIGIBLE |
 | Pilot 2 cleanup | PASS_COMPLETE | `CLEANUP_ELIGIBLE` 后已删除 DevSSD worktree/runtime 大媒体副本；NAS/R2/metadata 保留 |
 | Post-cleanup repair restore drill | PASS | NAS exact WAV restore + acoustic chunk 10 localization/decode；无已知缺陷所以未做真实 TTS/splice |
-| 5 分钟薄触发 cadence | 已冻结 | controller PASS 后再单独启用实际 scheduler；不采用 1–2 分钟 |
+| 5 分钟薄触发 cadence | PASS_ACTIVE | LaunchAgent `com.ronniecross.read-aloud.tick`；300s；launchd controlled run exit 0 |
 | Phase 2 多端验证 | 部分完成 | 线上人工 PASS；正式 Desktop/iPhone/Safari/Chrome 矩阵待闭合 |
 | Hermes 独立执行兼容 | 设计已冻结 | Hermes/CodexPro 都只做短调用；durable files 才是 current truth |
 | Phase 3 正式功能冻结 | 待做 | 等 Pilot 2 delivery + controller 后续链路 + 多端验证闭合 |
@@ -476,7 +476,7 @@ Pilot 2 TTS TERMINAL_PASS
 → CLEANUP_ELIGIBLE
 → 删除 DevSSD 大媒体副本，仅保留 durable state/evidence
 → NAS restore + chunk-time localization drill PASS
-→ 5 分钟薄触发层（下一步）
+→ 5 分钟薄触发层 PASS_ACTIVE（300s tick-all）
 → 真实 iPhone / Safari / Chrome 设备矩阵（未来人工验收）
 ```
 

@@ -1,5 +1,14 @@
 # 当前任务
 
+## 2026-10-10｜Article Read-Aloud 5-minute Thin Tick Activation
+
+- 已启用 user LaunchAgent：`com.ronniecross.read-aloud.tick`。
+- cadence=`300 seconds`，动作仅为 canonical Website `scripts/read_aloud_workflow.py tick-all`，执行后退出。
+- 初版 direct-Python + external-volume WorkingDirectory/log paths 出现 `EX_CONFIG(78)`；该 FAIL chronology 保留，且未推进任何 workflow。
+- 最小整改后采用 `/bin/zsh -lc` 执行 `cd + exec`，日志移到 `~/Library/Logs/RonnieCross/`；`plutil` PASS，launchd readback interval=300s，controlled kickstart last exit=0，stdout=`[]`，stderr empty。
+- Pilot 2 已是 `COMPLETE`，所以当前 scheduler 空闲运行是预期行为。
+- 本 activation closure 仅新增/更新治理与状态文档；controller 业务代码未再修改，因此不重复 `npm run build`。前序功能 commit 已完成 132/132 tests + 345-page build + live verify。
+- 当前剩余人工项仅为未来真实 iPhone/Safari/Chrome 设备播放矩阵，以及以后若发现读音问题时执行真实 targeted repair。
 ## 2026-10-10｜Article Read-Aloud Cleanup Gate + Repair Support
 
 - PROJECT_OWNER 已批准：正式 NAS/R2/site closure 后删除 DevSSD WAV/MP3 大媒体副本；后续修音从 NAS authoritative WAV master 恢复。

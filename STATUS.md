@@ -323,3 +323,11 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Cleanup execution chronology preserved: the first cleanup command stopped before deletion because an operator-typed NAS path omitted `ea` in the articleId directory. The exact path was corrected; SHA/scope guards re-passed; only then were local media copies deleted.
 - Post-cleanup repair restore drill PASS: authoritative NAS WAV restored with exact SHA, archived acoustic `chunk_index=10` localized/extracted at 7.680s and decoded successfully, then temporary drill media was removed. This validates restore/localization readiness but does not claim a real TTS fragment/splice without a known audible defect.
 - Pilot 2 durable workflow current state=`COMPLETE`; real-device iPhone/Safari/Chrome acceptance remains pending and is not inferred from machine/live HTTP checks.
+
+## 2026-10-10 — Read-aloud 5-minute thin trigger activation
+
+- Canonical Website main was fast-forwarded cleanly to current origin/main before activation.
+- User LaunchAgent `com.ronniecross.read-aloud.tick` is installed with `StartInterval=300` and RunAtLoad, invoking canonical `read_aloud_workflow.py tick-all` as a short-lived process.
+- Activation FAIL/PASS chronology is preserved: initial direct-Python/external WorkingDirectory/log-path form registered but exited `EX_CONFIG(78)` without workflow mutation; minimal shell-wrapper + user-Library log-path remediation then passed.
+- Current launchd readback: `run interval=300 seconds`; controlled kickstart `last exit code=0`; stdout=`[]`; stderr empty. `[]` is correct because Pilot 2 workflow is COMPLETE.
+- This completes the host-side periodic trigger needed for CodexPro/Hermes session-independent continuation. The trigger has no business logic and does not weaken human/operator gates.
