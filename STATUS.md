@@ -1,5 +1,19 @@
 # 个人网页项目状态
 
+
+## 2026-10-10 — Read-aloud REAL_USAGE / MAINTENANCE readiness
+
+- First-stage closure Git disposition is complete: commit `e7ce0cb` was pushed to `origin/main`; fresh readback confirms `HEAD == origin/main` and clean canonical tree before this REAL_USAGE status update.
+- Current operating mode is `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`.
+- Existing Website player remains the native browser audio control (`controls`, `preload="metadata"`); both production articles currently render the expected audio URL live.
+- Both R2 MP3 objects fresh-return Range `206` with `Content-Type=audio/mpeg`; Pilot 1 size=`7337901`, Pilot 2 size=`4848045`.
+- Thin tick LaunchAgent fresh readback: `com.ronniecross.read-aloud.tick`, interval=`300s`, last exit=`0`; current not-running state is expected for the short one-shot trigger.
+- Durable workflow current truth is terminal/idle: one current workflow is `COMPLETE`, cleanup=`CLEANUP_ELIGIBLE`, open repairs=`0`, with NAS/R2/live verification true and no automatic or operator action pending.
+- No production compatibility defect was found in this read-only check, so no business code was changed.
+- Remaining acceptance is intentionally human/device-only: iPhone Safari, macOS Safari and Chrome playback/pause/seek plus >=10-minute continuous playback; Pilot 2 full listening remains provisional.
+- Minimal checklist: `docs/tasks/article-read-aloud-real-usage-acceptance-20261010.md`.
+- Do not reopen engineering expansion unless real usage produces a reproducible defect or a new explicit business goal.
+
 ## 2026-10-04 — Sermon presentation boundary hardening
 
 - 《前方弯道》paragraph-collapse 事故的系统整改已在 Owner-local construction worktree 完成并全量验证：fidelity candidate 与 presentation artifact 正式分层；new sermon publication 强制 `sermon-presentation/v1` binding / `--presentation-file`；Website structural Gate 升级为 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`。
@@ -342,3 +356,12 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Real iPhone/Safari/Chrome playback/seek/long-play acceptance remains pending but non-blocking.
 - A real targeted fragment regeneration/splice will be performed only if a future actual pronunciation defect is discovered.
 - Engineering expansion is paused: no new task-management platform, scheduler/monitor/watchdog layer, general Agent orchestration, Hermes-specific second Website runtime, generalized audio-editing system, historical batch backfill or unattended publication without a new explicit business need.
+
+## 2026-10-10 — Read-aloud real-device acceptance closure
+
+- PROJECT_OWNER explicitly confirmed the full minimal device acceptance matrix passed.
+- Formal verdict: `PASS_REAL_DEVICE_ACCEPTANCE`.
+- iPhone Safari, macOS Safari and Chrome playback/pause/seek/continuous-play checks all passed; no media/CORS/Range compatibility defect was reported.
+- This closes the previously non-blocking real-device acceptance item without requiring any business-code change.
+- Pilot 2 full-text/full-audio listening remains separately provisional as `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`; device compatibility PASS does not rewrite that quality chronology.
+- Current operating mode remains `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`; no renewed engineering expansion is justified.

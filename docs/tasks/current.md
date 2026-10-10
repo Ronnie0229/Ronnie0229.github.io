@@ -1,5 +1,31 @@
 # 当前任务
 
+## 2026-10-10｜Article Read-Aloud Real Device Acceptance Closure
+
+- PROJECT_OWNER 已明确确认最小实机验收矩阵全部通过。
+- 正式判定：`PASS_REAL_DEVICE_ACCEPTANCE`。
+- iPhone Safari：播放、暂停、前后 seek、锁屏/后台返回、至少连续播放 10 分钟均 PASS。
+- macOS Safari：播放、暂停、中段/接近结尾 seek、至少连续播放 10 分钟均 PASS。
+- Chrome：播放、暂停、seek、至少连续播放 10 分钟均 PASS；未发现媒体/CORS/Range 加载异常。
+- 本轮没有发现真实兼容性缺陷，因此不修改业务代码，不重新进入工程建设。
+- Pilot 2 完整人工整篇试听仍保持 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`；设备兼容性 PASS 不等于全文试听 PASS。
+- 当前继续保持 `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`。
+## 2026-10-10｜Article Read-Aloud REAL_USAGE / MAINTENANCE Readiness
+
+- 第一阶段 closure Git 已收口：commit=`e7ce0cb`（`docs: close read-aloud first stage`）已 push，fresh readback `main == origin/main == e7ce0cb`，closure write-set only。
+- 正式运行模式：`REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`；不继续工程扩建。
+- Website player current source：原生 `<audio controls preload="metadata">`，仅在文章存在 `audioUrl` 时渲染；本轮未发现需要业务代码修改的真实兼容性缺陷。
+- 两篇生产文章 live readback 均 HTTP 页面可读，实际包含 audio tag、controls、`preload="metadata"` 和正确 production audio URL。
+- Pilot 1 R2：Range `206`，`Content-Type=audio/mpeg`，`Content-Range=bytes 0-1023/7337901`。
+- Pilot 2 R2：Range `206`，`Content-Type=audio/mpeg`，`Content-Range=bytes 0-1023/4848045`。
+- 本机 Python urllib live probe 仍出现已知 local CA-chain `CERTIFICATE_VERIFY_FAILED`；随后用系统 curl 等价 readback PASS。该现象不作为生产兼容性缺陷。
+- 5 分钟 thin tick LaunchAgent fresh readback：label=`com.ronniecross.read-aloud.tick`，interval=`300s`，state=`not running`（one-shot idle expected），runs=`130`，last exit code=`0`。
+- 当前 durable workflow root存在；唯一 workflow readback：state=`COMPLETE`、automatic_action_available=false、operator_or_human_required=false、cleanup=`CLEANUP_ELIGIBLE`、open_repairs=0、NAS/R2/live verified=true。
+- 本轮只读核验未执行 `tick-all`，未推进 workflow，未修改 LaunchAgent、NAS、R2 或生产内容。
+- 最小真实设备验收清单：`docs/tasks/article-read-aloud-real-usage-acceptance-20261010.md`。
+- 当前剩余真实人工验收：iPhone Safari、macOS Safari、Chrome 的播放/暂停/seek/至少一次 >=10 分钟连续播放；Pilot 2 完整人工整篇试听继续保留 provisional，不伪造 PASS。
+- 只有真实设备验收发现可复现兼容性缺陷时，才进入最小 `ISSUE_DRIVEN_REPAIR`；不得扩建 scheduler/monitor/watchdog、通用 Agent orchestration、Hermes 专用 runtime、批量 backfill 或无人审核发布。
+
 ## 2026-10-10｜Article Read-Aloud First Stage Closure
 
 - PROJECT_OWNER 已采纳独立审计并授权阶段收口。
