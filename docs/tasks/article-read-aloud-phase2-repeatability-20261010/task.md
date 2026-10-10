@@ -108,10 +108,11 @@ Bounded to Pilot 2:
 - human listening disposition=`PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`；PROJECT_OWNER 允许先发布并以后续真实 repair path 验证可修复性
 - technical QC + 64 kbps MP3 continuation=`PASS`
 - Pilot 2 MP3 SHA=`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`
-- current real breakpoint=`HUMAN_LISTENING`
+- provisional human gate disposition=`PASS_FOR_PROGRESSION_WITHOUT_FULL_LISTENING`; not a claim of completed listening
 - 5-minute scheduler cadence frozen but not yet enabled.
 - repair-support v1 attached：75 acoustic chunks / 14542080 total frames；exact text↔chunk alignment NOT_AVAILABLE。
-- cleanup gate implemented；Pilot 2 current cleanup=`NOT_ELIGIBLE` until human/NAS/R2/live closure。
+- cleanup gate implemented；Pilot 2 final cleanup=`PASS_COMPLETE` after human/NAS/R2/live/repair-support/no-open-repair checks all passed.
+- post-cleanup NAS restore + chunk-map localization drill=`PASS`；real targeted TTS/splice waits for an actual later audible defect.
 
 ## Stop condition
 

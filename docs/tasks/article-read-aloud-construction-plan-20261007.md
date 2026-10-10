@@ -448,12 +448,13 @@ Phase 2/3 的 durable controller 只是可靠性基础，不等于自动批量�
 | NAS/R2 lifecycle | 已完成 | Phase 1D：NAS master+manifest / R2 delivery |
 | Website audio schema/player | 已完成 | optional audioUrl + native player |
 | 正式上线 | 已完成首篇 | Pilot 1 production + human verify PASS |
-| Phase 2 Pilot 数量 | 2/2–3 | Pilot 2 已完成真实 TTS TERMINAL_PASS；后续 delivery/site closure 仍在进行 |
+| Phase 2 Pilot 数量 | 2/2–3 | Pilot 2 production/archive/site/cleanup scope 已闭合；human listening 为 provisional PASS |
 | Phase 2 长 TTS session 解耦 | 已证明 | Pilot 2 detached worker 长运行后自然 TERMINAL_PASS；调用者不需保持长 shell session |
-| Durable workflow controller v0 | 已实现/验证 | `start/status/tick/attach-repair-support`；8/8 tests PASS；real Pilot 2 已推进到 WAIT_HUMAN_LISTENING |
+| Durable workflow controller v0 | 已实现/验证 | `start/status/tick/attach-repair-support`；8/8 tests PASS；Pilot 2 已完成到 production/live/cleanup |
 | Repair-support / chunk map | 已实现 Pilot 2 | 75 acoustic chunks；frame total=14542080；不伪造 text alignment |
 | DevSSD Cleanup Gate | 已实现规则/机械 gate | human/NAS/R2/live/repair-support/no-open-repair 全部 PASS 才 CLEANUP_ELIGIBLE |
-| Pilot 2 cleanup | NOT_ELIGIBLE | 当前仍 WAIT_HUMAN_LISTENING，不删除 WAV/MP3 |
+| Pilot 2 cleanup | PASS_COMPLETE | `CLEANUP_ELIGIBLE` 后已删除 DevSSD worktree/runtime 大媒体副本；NAS/R2/metadata 保留 |
+| Post-cleanup repair restore drill | PASS | NAS exact WAV restore + acoustic chunk 10 localization/decode；无已知缺陷所以未做真实 TTS/splice |
 | 5 分钟薄触发 cadence | 已冻结 | controller PASS 后再单独启用实际 scheduler；不采用 1–2 分钟 |
 | Phase 2 多端验证 | 部分完成 | 线上人工 PASS；正式 Desktop/iPhone/Safari/Chrome 矩阵待闭合 |
 | Hermes 独立执行兼容 | 设计已冻结 | Hermes/CodexPro 都只做短调用；durable files 才是 current truth |
@@ -469,13 +470,14 @@ Pilot 2 TTS TERMINAL_PASS
 → durable controller v0：start/status/tick
 → 自动发现 terminal + WAV artifact SHA verify
 → technical QC + 64k MP3
-→ WAIT_HUMAN_LISTENING（当前）
-→ 人工 PASS 后接 NAS / repair-support archive / R2 / Website
-→ 全部 readback/live closure 后评估 CLEANUP_ELIGIBLE
+→ WAIT_HUMAN_LISTENING
+→ PROJECT_OWNER provisional PASS（不声称完成整篇试听）
+→ NAS / repair-support archive / R2 / Website / live verify PASS
+→ CLEANUP_ELIGIBLE
 → 删除 DevSSD 大媒体副本，仅保留 durable state/evidence
-→ 5 分钟薄触发层（controller 核心链路稳定后启用）
-→ 完成 Pilot 2 delivery/site closure
-→ 完成 Desktop / iPhone / Safari / Chrome 验证
+→ NAS restore + chunk-time localization drill PASS
+→ 5 分钟薄触发层（下一步）
+→ 真实 iPhone / Safari / Chrome 设备矩阵（未来人工验收）
 ```
 
 原则冻结：任何可能超过调用者生命周期的动作都必须 durable + resumable；CodexPro/Hermes 不保持长会话等待。真正的业务自动触发、批量生成和无人审核发布仍留在 Phase 4。

@@ -80,13 +80,9 @@ Pilot 2 real continuation：
 - MP3 SHA-256：`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`
 - MP3 absolute path：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/delivery-cache/2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523/article-64k.mp3`
 
-当前 workflow：
-- state=`WAIT_HUMAN_LISTENING`
-- next_action=`HUMAN_LISTENING`
-- automatic_action_available=false
-- operator_or_human_required=true
+当时 workflow 首先正确停在 `WAIT_HUMAN_LISTENING`，证明 controller 能在 TTS 完成后的下一次短 tick 自动推进到真实人工断点。随后 PROJECT_OWNER 明确给出 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，允许本 Pilot 继续完成 archive/R2/Website/live closure，并保留以后发现问题时真实执行局部修复的权利。
 
-这证明 controller 已能在 TTS 完成后的下一次短 tick 自动推进到“可人工试听”的真实断点。
+最终 Pilot 2 durable workflow=`COMPLETE`；NAS/R2/live/repair-support 全部验证后 cleanup gate=`CLEANUP_ELIGIBLE`，对应 DevSSD 大媒体缓存已按 exact scope 删除。
 
 ## 5-minute trigger
 
@@ -101,9 +97,4 @@ Hermes future operator 不需要保持长时间命令，也不需要从聊天记
 
 ## Next
 
-当前真实 breakpoint 是 PROJECT_OWNER 对 Pilot 2 的人工试听。
-
-人工 PASS 后，再接同一个 controller 的：
-`NAS_ARCHIVED → R2_PUBLISHED → WEBSITE_BOUND → BUILD/DEPLOY/LIVE_VERIFY`。
-
-实际 5 分钟 scheduler enablement 放在 controller 核心状态机稳定之后。
+Pilot 2 controller core path is now proven through production/live closure and cleanup. The remaining reliability activation is the approved thin 5-minute `tick-all` trigger. Real-device iPhone/Safari/Chrome acceptance remains separate and must not be fabricated.
