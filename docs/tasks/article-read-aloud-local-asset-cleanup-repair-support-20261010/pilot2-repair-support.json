@@ -1,0 +1,1079 @@
+{
+  "schema": "ronniecross-readaloud-repair-support/v1",
+  "article_id": "post-fa05168ade9ea9b8",
+  "workflow_id": "2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523",
+  "request_id": "rc-readaloud-v1:2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523",
+  "generation_epoch": "phase2-pilot2-20261010-a1",
+  "provider_run_id": "n3v1-27db97d8a0f14cafafaa588857809bc8",
+  "render_sha256": "5c92d640795b98840c7bf62ee4e6c488727127997750da22caa28cb8988574b7",
+  "final_wav_sha256": "551db6adb34d478dd40d13cdd34fe826121d42523121a63a8f5c059b6b2a2ca6",
+  "sample_rate_hz": 24000,
+  "total_frames": 14542080,
+  "duration_sec": 605.92,
+  "model": "FunAudioLLM/Fun-CosyVoice3-0.5B-2512",
+  "model_revision": "29e01c4e8d000f4bcd70751be16fa94bf3d85a18",
+  "voice_reference_sha256": "7487492aa1ad4688a63051888e690edd1cc41cac4184b6113a8596c43e910349",
+  "speed": 1,
+  "chunk_map_source": "VOICE_AI current generation receipt output.machine_qc.chunk_qc (read-only capture)",
+  "chunk_map_semantics": "acoustic_concatenation_frame_map",
+  "exact_text_to_chunk_alignment": false,
+  "alignment_note": "Current VOICE_AI public consumer/HTTP contract does not expose exact phrase-to-chunk alignment. Do not infer it. Use audible time to locate the exact acoustic chunk; future exact text alignment requires provider-owned evidence.",
+  "provider_chunk_qc": {
+    "schema_id": "VOICE_AI_CHUNK_WAVEFORM_QC_V1",
+    "chunk_count": 75,
+    "repaired_chunk_count": 0,
+    "pass": true
+  },
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "start_frame": 0,
+      "end_frame_exclusive": 197760,
+      "frames": 197760,
+      "start_sec": 0,
+      "end_sec": 8.24,
+      "duration_sec": 8.24,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 1,
+      "start_frame": 197760,
+      "end_frame_exclusive": 365760,
+      "frames": 168000,
+      "start_sec": 8.24,
+      "end_sec": 15.24,
+      "duration_sec": 7,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 2,
+      "start_frame": 365760,
+      "end_frame_exclusive": 533760,
+      "frames": 168000,
+      "start_sec": 15.24,
+      "end_sec": 22.24,
+      "duration_sec": 7,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 3,
+      "start_frame": 533760,
+      "end_frame_exclusive": 640320,
+      "frames": 106560,
+      "start_sec": 22.24,
+      "end_sec": 26.68,
+      "duration_sec": 4.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 4,
+      "start_frame": 640320,
+      "end_frame_exclusive": 768960,
+      "frames": 128640,
+      "start_sec": 26.68,
+      "end_sec": 32.04,
+      "duration_sec": 5.36,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 5,
+      "start_frame": 768960,
+      "end_frame_exclusive": 1060800,
+      "frames": 291840,
+      "start_sec": 32.04,
+      "end_sec": 44.2,
+      "duration_sec": 12.16,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 6,
+      "start_frame": 1060800,
+      "end_frame_exclusive": 1180800,
+      "frames": 120000,
+      "start_sec": 44.2,
+      "end_sec": 49.2,
+      "duration_sec": 5,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 7,
+      "start_frame": 1180800,
+      "end_frame_exclusive": 1615680,
+      "frames": 434880,
+      "start_sec": 49.2,
+      "end_sec": 67.32,
+      "duration_sec": 18.12,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 8,
+      "start_frame": 1615680,
+      "end_frame_exclusive": 1779840,
+      "frames": 164160,
+      "start_sec": 67.32,
+      "end_sec": 74.16,
+      "duration_sec": 6.84,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 9,
+      "start_frame": 1779840,
+      "end_frame_exclusive": 2040960,
+      "frames": 261120,
+      "start_sec": 74.16,
+      "end_sec": 85.04,
+      "duration_sec": 10.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 10,
+      "start_frame": 2040960,
+      "end_frame_exclusive": 2225280,
+      "frames": 184320,
+      "start_sec": 85.04,
+      "end_sec": 92.72,
+      "duration_sec": 7.68,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 11,
+      "start_frame": 2225280,
+      "end_frame_exclusive": 2411520,
+      "frames": 186240,
+      "start_sec": 92.72,
+      "end_sec": 100.48,
+      "duration_sec": 7.76,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 12,
+      "start_frame": 2411520,
+      "end_frame_exclusive": 2637120,
+      "frames": 225600,
+      "start_sec": 100.48,
+      "end_sec": 109.88,
+      "duration_sec": 9.4,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 13,
+      "start_frame": 2637120,
+      "end_frame_exclusive": 2771520,
+      "frames": 134400,
+      "start_sec": 109.88,
+      "end_sec": 115.48,
+      "duration_sec": 5.6,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 14,
+      "start_frame": 2771520,
+      "end_frame_exclusive": 2928960,
+      "frames": 157440,
+      "start_sec": 115.48,
+      "end_sec": 122.04,
+      "duration_sec": 6.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 15,
+      "start_frame": 2928960,
+      "end_frame_exclusive": 3158400,
+      "frames": 229440,
+      "start_sec": 122.04,
+      "end_sec": 131.6,
+      "duration_sec": 9.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 16,
+      "start_frame": 3158400,
+      "end_frame_exclusive": 3371520,
+      "frames": 213120,
+      "start_sec": 131.6,
+      "end_sec": 140.48,
+      "duration_sec": 8.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 17,
+      "start_frame": 3371520,
+      "end_frame_exclusive": 3576960,
+      "frames": 205440,
+      "start_sec": 140.48,
+      "end_sec": 149.04,
+      "duration_sec": 8.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 18,
+      "start_frame": 3576960,
+      "end_frame_exclusive": 3679680,
+      "frames": 102720,
+      "start_sec": 149.04,
+      "end_sec": 153.32,
+      "duration_sec": 4.28,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 19,
+      "start_frame": 3679680,
+      "end_frame_exclusive": 3859200,
+      "frames": 179520,
+      "start_sec": 153.32,
+      "end_sec": 160.8,
+      "duration_sec": 7.48,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 20,
+      "start_frame": 3859200,
+      "end_frame_exclusive": 3968640,
+      "frames": 109440,
+      "start_sec": 160.8,
+      "end_sec": 165.36,
+      "duration_sec": 4.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 21,
+      "start_frame": 3968640,
+      "end_frame_exclusive": 4069440,
+      "frames": 100800,
+      "start_sec": 165.36,
+      "end_sec": 169.56,
+      "duration_sec": 4.2,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 22,
+      "start_frame": 4069440,
+      "end_frame_exclusive": 4307520,
+      "frames": 238080,
+      "start_sec": 169.56,
+      "end_sec": 179.48,
+      "duration_sec": 9.92,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 23,
+      "start_frame": 4307520,
+      "end_frame_exclusive": 4454400,
+      "frames": 146880,
+      "start_sec": 179.48,
+      "end_sec": 185.6,
+      "duration_sec": 6.12,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 24,
+      "start_frame": 4454400,
+      "end_frame_exclusive": 4669440,
+      "frames": 215040,
+      "start_sec": 185.6,
+      "end_sec": 194.56,
+      "duration_sec": 8.96,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 25,
+      "start_frame": 4669440,
+      "end_frame_exclusive": 4863360,
+      "frames": 193920,
+      "start_sec": 194.56,
+      "end_sec": 202.64,
+      "duration_sec": 8.08,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 26,
+      "start_frame": 4863360,
+      "end_frame_exclusive": 4956480,
+      "frames": 93120,
+      "start_sec": 202.64,
+      "end_sec": 206.52,
+      "duration_sec": 3.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 27,
+      "start_frame": 4956480,
+      "end_frame_exclusive": 5293440,
+      "frames": 336960,
+      "start_sec": 206.52,
+      "end_sec": 220.56,
+      "duration_sec": 14.04,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 28,
+      "start_frame": 5293440,
+      "end_frame_exclusive": 5483520,
+      "frames": 190080,
+      "start_sec": 220.56,
+      "end_sec": 228.48,
+      "duration_sec": 7.92,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 29,
+      "start_frame": 5483520,
+      "end_frame_exclusive": 5676480,
+      "frames": 192960,
+      "start_sec": 228.48,
+      "end_sec": 236.52,
+      "duration_sec": 8.04,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 30,
+      "start_frame": 5676480,
+      "end_frame_exclusive": 5784000,
+      "frames": 107520,
+      "start_sec": 236.52,
+      "end_sec": 241,
+      "duration_sec": 4.48,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 31,
+      "start_frame": 5784000,
+      "end_frame_exclusive": 6017280,
+      "frames": 233280,
+      "start_sec": 241,
+      "end_sec": 250.72,
+      "duration_sec": 9.72,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 32,
+      "start_frame": 6017280,
+      "end_frame_exclusive": 6182400,
+      "frames": 165120,
+      "start_sec": 250.72,
+      "end_sec": 257.6,
+      "duration_sec": 6.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 33,
+      "start_frame": 6182400,
+      "end_frame_exclusive": 6307200,
+      "frames": 124800,
+      "start_sec": 257.6,
+      "end_sec": 262.8,
+      "duration_sec": 5.2,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 34,
+      "start_frame": 6307200,
+      "end_frame_exclusive": 6474240,
+      "frames": 167040,
+      "start_sec": 262.8,
+      "end_sec": 269.76,
+      "duration_sec": 6.96,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 35,
+      "start_frame": 6474240,
+      "end_frame_exclusive": 6684480,
+      "frames": 210240,
+      "start_sec": 269.76,
+      "end_sec": 278.52,
+      "duration_sec": 8.76,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 36,
+      "start_frame": 6684480,
+      "end_frame_exclusive": 6865920,
+      "frames": 181440,
+      "start_sec": 278.52,
+      "end_sec": 286.08,
+      "duration_sec": 7.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 37,
+      "start_frame": 6865920,
+      "end_frame_exclusive": 6983040,
+      "frames": 117120,
+      "start_sec": 286.08,
+      "end_sec": 290.96,
+      "duration_sec": 4.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 38,
+      "start_frame": 6983040,
+      "end_frame_exclusive": 7194240,
+      "frames": 211200,
+      "start_sec": 290.96,
+      "end_sec": 299.76,
+      "duration_sec": 8.8,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 39,
+      "start_frame": 7194240,
+      "end_frame_exclusive": 7407360,
+      "frames": 213120,
+      "start_sec": 299.76,
+      "end_sec": 308.64,
+      "duration_sec": 8.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 40,
+      "start_frame": 7407360,
+      "end_frame_exclusive": 7534080,
+      "frames": 126720,
+      "start_sec": 308.64,
+      "end_sec": 313.92,
+      "duration_sec": 5.28,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 41,
+      "start_frame": 7534080,
+      "end_frame_exclusive": 7712640,
+      "frames": 178560,
+      "start_sec": 313.92,
+      "end_sec": 321.36,
+      "duration_sec": 7.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 42,
+      "start_frame": 7712640,
+      "end_frame_exclusive": 7929600,
+      "frames": 216960,
+      "start_sec": 321.36,
+      "end_sec": 330.4,
+      "duration_sec": 9.04,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 43,
+      "start_frame": 7929600,
+      "end_frame_exclusive": 8208960,
+      "frames": 279360,
+      "start_sec": 330.4,
+      "end_sec": 342.04,
+      "duration_sec": 11.64,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 44,
+      "start_frame": 8208960,
+      "end_frame_exclusive": 8418240,
+      "frames": 209280,
+      "start_sec": 342.04,
+      "end_sec": 350.76,
+      "duration_sec": 8.72,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 45,
+      "start_frame": 8418240,
+      "end_frame_exclusive": 8572800,
+      "frames": 154560,
+      "start_sec": 350.76,
+      "end_sec": 357.2,
+      "duration_sec": 6.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 46,
+      "start_frame": 8572800,
+      "end_frame_exclusive": 8854080,
+      "frames": 281280,
+      "start_sec": 357.2,
+      "end_sec": 368.92,
+      "duration_sec": 11.72,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 47,
+      "start_frame": 8854080,
+      "end_frame_exclusive": 8966400,
+      "frames": 112320,
+      "start_sec": 368.92,
+      "end_sec": 373.6,
+      "duration_sec": 4.68,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 48,
+      "start_frame": 8966400,
+      "end_frame_exclusive": 9252480,
+      "frames": 286080,
+      "start_sec": 373.6,
+      "end_sec": 385.52,
+      "duration_sec": 11.92,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 49,
+      "start_frame": 9252480,
+      "end_frame_exclusive": 9375360,
+      "frames": 122880,
+      "start_sec": 385.52,
+      "end_sec": 390.64,
+      "duration_sec": 5.12,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 50,
+      "start_frame": 9375360,
+      "end_frame_exclusive": 9509760,
+      "frames": 134400,
+      "start_sec": 390.64,
+      "end_sec": 396.24,
+      "duration_sec": 5.6,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 51,
+      "start_frame": 9509760,
+      "end_frame_exclusive": 9624000,
+      "frames": 114240,
+      "start_sec": 396.24,
+      "end_sec": 401,
+      "duration_sec": 4.76,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 52,
+      "start_frame": 9624000,
+      "end_frame_exclusive": 9876480,
+      "frames": 252480,
+      "start_sec": 401,
+      "end_sec": 411.52,
+      "duration_sec": 10.52,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 53,
+      "start_frame": 9876480,
+      "end_frame_exclusive": 10090560,
+      "frames": 214080,
+      "start_sec": 411.52,
+      "end_sec": 420.44,
+      "duration_sec": 8.92,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 54,
+      "start_frame": 10090560,
+      "end_frame_exclusive": 10199040,
+      "frames": 108480,
+      "start_sec": 420.44,
+      "end_sec": 424.96,
+      "duration_sec": 4.52,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 55,
+      "start_frame": 10199040,
+      "end_frame_exclusive": 10359360,
+      "frames": 160320,
+      "start_sec": 424.96,
+      "end_sec": 431.64,
+      "duration_sec": 6.68,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 56,
+      "start_frame": 10359360,
+      "end_frame_exclusive": 10452480,
+      "frames": 93120,
+      "start_sec": 431.64,
+      "end_sec": 435.52,
+      "duration_sec": 3.88,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 57,
+      "start_frame": 10452480,
+      "end_frame_exclusive": 10562880,
+      "frames": 110400,
+      "start_sec": 435.52,
+      "end_sec": 440.12,
+      "duration_sec": 4.6,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 58,
+      "start_frame": 10562880,
+      "end_frame_exclusive": 10797120,
+      "frames": 234240,
+      "start_sec": 440.12,
+      "end_sec": 449.88,
+      "duration_sec": 9.76,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 59,
+      "start_frame": 10797120,
+      "end_frame_exclusive": 10952640,
+      "frames": 155520,
+      "start_sec": 449.88,
+      "end_sec": 456.36,
+      "duration_sec": 6.48,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 60,
+      "start_frame": 10952640,
+      "end_frame_exclusive": 11136960,
+      "frames": 184320,
+      "start_sec": 456.36,
+      "end_sec": 464.04,
+      "duration_sec": 7.68,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 61,
+      "start_frame": 11136960,
+      "end_frame_exclusive": 11380800,
+      "frames": 243840,
+      "start_sec": 464.04,
+      "end_sec": 474.2,
+      "duration_sec": 10.16,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 62,
+      "start_frame": 11380800,
+      "end_frame_exclusive": 11605440,
+      "frames": 224640,
+      "start_sec": 474.2,
+      "end_sec": 483.56,
+      "duration_sec": 9.36,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 63,
+      "start_frame": 11605440,
+      "end_frame_exclusive": 11779200,
+      "frames": 173760,
+      "start_sec": 483.56,
+      "end_sec": 490.8,
+      "duration_sec": 7.24,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 64,
+      "start_frame": 11779200,
+      "end_frame_exclusive": 11909760,
+      "frames": 130560,
+      "start_sec": 490.8,
+      "end_sec": 496.24,
+      "duration_sec": 5.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 65,
+      "start_frame": 11909760,
+      "end_frame_exclusive": 12448320,
+      "frames": 538560,
+      "start_sec": 496.24,
+      "end_sec": 518.68,
+      "duration_sec": 22.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 66,
+      "start_frame": 12448320,
+      "end_frame_exclusive": 12616320,
+      "frames": 168000,
+      "start_sec": 518.68,
+      "end_sec": 525.68,
+      "duration_sec": 7,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 67,
+      "start_frame": 12616320,
+      "end_frame_exclusive": 12768960,
+      "frames": 152640,
+      "start_sec": 525.68,
+      "end_sec": 532.04,
+      "duration_sec": 6.36,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 68,
+      "start_frame": 12768960,
+      "end_frame_exclusive": 13027200,
+      "frames": 258240,
+      "start_sec": 532.04,
+      "end_sec": 542.8,
+      "duration_sec": 10.76,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 69,
+      "start_frame": 13027200,
+      "end_frame_exclusive": 13160640,
+      "frames": 133440,
+      "start_sec": 542.8,
+      "end_sec": 548.36,
+      "duration_sec": 5.56,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 70,
+      "start_frame": 13160640,
+      "end_frame_exclusive": 13340160,
+      "frames": 179520,
+      "start_sec": 548.36,
+      "end_sec": 555.84,
+      "duration_sec": 7.48,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 71,
+      "start_frame": 13340160,
+      "end_frame_exclusive": 13743360,
+      "frames": 403200,
+      "start_sec": 555.84,
+      "end_sec": 572.64,
+      "duration_sec": 16.8,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 72,
+      "start_frame": 13743360,
+      "end_frame_exclusive": 13875840,
+      "frames": 132480,
+      "start_sec": 572.64,
+      "end_sec": 578.16,
+      "duration_sec": 5.52,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 73,
+      "start_frame": 13875840,
+      "end_frame_exclusive": 14246400,
+      "frames": 370560,
+      "start_sec": 578.16,
+      "end_sec": 593.6,
+      "duration_sec": 15.44,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    },
+    {
+      "chunk_index": 74,
+      "start_frame": 14246400,
+      "end_frame_exclusive": 14542080,
+      "frames": 295680,
+      "start_sec": 593.6,
+      "end_sec": 605.92,
+      "duration_sec": 12.32,
+      "provider_qc": {
+        "audio_limit_hit_count": 0,
+        "true_clip_count": 0,
+        "auto_repaired": false
+      }
+    }
+  ]
+}

@@ -295,3 +295,26 @@ Status: `PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKT
 - Final R2 MP3 delivery was fresh-read back and matched the accepted production SHA/bytes.
 - Frozen media lifecycle: `/Volumes/home/RonnieArchive` = long-term WAV archival master + manifest; R2 = MP3 Website delivery; Git = code/article pointer/governance evidence. The initial `/Volumes/share/网站有声阅读` Pilot-only copy was rejected by PROJECT_OWNER and removed only after the new archive copy passed exact verification.
 - Phase 1D is complete. Phase 2 remaining scope is 2–3 total real Pilot articles plus planned multi-device/browser validation; no automation/platform expansion yet.
+
+## 2026-10-10 — Article Read-Aloud durable workflow controller foundation
+
+- PROJECT_OWNER directed the project to decouple long TTS execution from CodexPro command/session lifetime and to make the final workflow operable by Hermes local model without relying on chat memory.
+- Architecture correction: durable workflow control is now Phase 2/3 reliability foundation; Phase 4 remains reserved for business automation such as auto-trigger, batch/backfill, and unattended production publication.
+- Future thin trigger cadence is frozen at once every 5 minutes.
+- Implemented `scripts/read_aloud_workflow.py` with `start/status/tick/tick-all`; durable workflow state lives under `/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/workflows` outside Git worktrees.
+- workflow tests current 8/8 PASS (earlier controller slices passed 6/6 then 7/7); existing S4/S5/player regression 63/63 PASS; py_compile PASS.
+- Pilot 2 independently proved long-run execution: detached S4 worker completed and exited naturally, S4 job reached `TERMINAL_PASS`, provider returned READY, execution owner absent.
+- Real controller verification reused the exact existing Pilot 2 identity and caused no second generation. One tick consumed the terminal S4 job, re-read the cached WAV, and verified SHA=`551db6adb34d478dd40d13cdd34fe826121d42523121a63a8f5c059b6b2a2ca6`, bytes=58168400.
+- Same-scope continuation then mechanically ran WAV technical QC/full decode, encoded the frozen 64 kbps MP3, full-decoded it, and persisted delivery metadata. Pilot 2 MP3 SHA=`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`, bytes=4848045, duration=605.92s.
+- PROJECT_OWNER explicitly granted a provisional PASS without full listening for this Pilot so the project can validate the later repair path; this is recorded as `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`, not as completed full-listening acceptance.
+- No scheduler/daemon was installed; no commit/push/deploy occurred in this foundation slice.
+
+## 2026-10-10 — Read-aloud local asset cleanup gate + repair support
+
+- PROJECT_OWNER approved deletion of DevSSD WAV/MP3 after complete publication/archive closure, while preserving easy later targeted pronunciation repair.
+- Worktree audio is now formally temporary human-review/repair material; NAS is authoritative WAV master and R2 is authoritative Website MP3 delivery.
+- Controller now computes a mechanical cleanup gate. Required checks: human listening PASS, NAS verified, R2 verified, Website live verified, repair-support complete, and zero open repairs. Only then is status `CLEANUP_ELIGIBLE`.
+- Controller tests are now 8/8 PASS; existing S4/S5/player regression remains 63/63 PASS.
+- Pilot 2 repair-support v1 was attached successfully: 75 acoustic chunks, total frames=14542080, sample_rate=24000, support SHA=`07ffa4ebd0b0fd67546e8a17c0ee0fa92ef756e5de7d7fac3ad59fb055640650`.
+- Pilot 2 NAS archive + repair-support readback PASS; R2 upload/full SHA/Range 206/Content-Type PASS; Website audioUrl binding PASS; full Python suite 132/132 PASS; Astro 345-page build PASS. Cleanup remains `NOT_ELIGIBLE` until Git/deploy/live verification is complete.
+- Exact text↔chunk alignment is explicitly `NOT_AVAILABLE` under the current VOICE_AI public contract. The saved map is acoustic frame/time mapping only and must not be represented as text alignment.

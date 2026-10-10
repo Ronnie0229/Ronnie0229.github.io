@@ -223,6 +223,8 @@ tmp/
 
 `tmp/` 仍是可清理、不提交 Git 的本地作业区；真正需要长期保留的治理证据应进入 task/evidence 文档，而不是依赖 tmp。
 
+工作树 `artifacts/read-aloud/` 的职责冻结为**当前人工试听与局部修复工作区**，不是长期媒体库。正式 closure 后，满足 Cleanup Gate 的 WAV/MP3 应从 DevSSD 删除，避免长期占用 SSD 空间；需要后续修音时从 NAS authoritative WAV master 临时恢复。
+
 ## 11. 长期媒体生命周期
 
 ### NAS
@@ -237,10 +239,34 @@ RonnieArchive/ReadAloud/articles/
     ├── master/
     │   └── YYYY-MM-DD_<title>_master.wav
     └── metadata/
-        └── audio-manifest.json
+        ├── audio-manifest.json
+        └── repair-support.json
 ```
 
 Phase 1D 已 fresh-verify 并冻结正式长期资产根为 `/Volumes/home/RonnieArchive/ReadAloud/articles`。目录采用人类友好的 `YYYY-MM-DD_<title>_<articleId>`；WAV 采用 `YYYY-MM-DD_<title>_master.wav`。`articleId` 仍作为稳定机器身份保留在目录名后缀及 manifest 中。
+
+每篇正式 archive 还必须长期保留 `metadata/repair-support.json`。第一版至少记录 generation/request/render/WAV identity、voice/model/speed，以及 acoustic chunk 的 `chunk_index + start/end frame + start/end time`。current VOICE_AI public contract 不提供 exact phrase↔chunk alignment，因此 Website 不得猜测或伪造；实际修复采用“听到的时间点 → acoustic chunk”定位。未来若要按文本自动定位，必须由 VOICE_AI 正式接口提供 provider-owned alignment evidence。
+
+
+## 11.1 DevSSD Cleanup Gate 与后续局部修复
+
+正式媒体生命周期完成后，DevSSD 不承担长期 WAV/MP3 保存职责。只有以下条件全部满足，workflow 才能标记 `CLEANUP_ELIGIBLE`：
+
+- 人工整篇试听 PASS；
+- NAS final WAV 写入并 readback SHA/bytes exact PASS；
+- R2 final MP3 full readback SHA/bytes exact PASS；
+- R2 Content-Type/Range PASS；
+- Website binding/build/deploy/live verify PASS；
+- repair-support metadata complete 且已进入长期归档；
+- 无开放 pronunciation/chunk repair。
+
+进入 `CLEANUP_ELIGIBLE` 后，允许删除：
+- worktree `artifacts/read-aloud/` 中该文章 WAV/MP3；
+- runtime `artifact-cache` / `delivery-cache` 中该 workflow 的大媒体缓存。
+
+不得删除：jobs/claims/workflows JSON、Render View、task/evidence、repair-support metadata、NAS master/manifest、R2 delivery。
+
+清理后若发现一句发音错误：从 NAS master 恢复 → 用 chunk map 定位 → 只重新生成目标片段 → splice/rebuild → 人工试听目标片段及接缝 → 新 WAV 归档 → MP3 重编码并原 R2 key 替换 → remote verify → 再次 cleanup。不得因为本地缓存已删除而默认整篇重生成。
 
 ### Cloudflare R2
 
@@ -339,20 +365,40 @@ GET /ready
 
 验证 WAV → NAS、MP3 → R2、metadata → Git；冻结命名、manifest、NAS archive path 与 R2 object path。
 
-### Phase 2 — Website MVP
+### Phase 2 — Website MVP + Durable Workflow Foundation
 
 实现 optional audio schema、ArticleAudioPlayer、`[slug].astro` conditional render 与基本 CSS，只给 2–3 篇 Pilot 文章启用。验证 Desktop/iPhone/Safari/Chrome、播放/暂停/seek、加载和 R2 Range Request。
 
-### Phase 3 — 正式功能
+Phase 2 同时加入一个最小可靠性基础：**durable workflow controller**。原因不是提前做业务自动化，而是长时间 TTS 已证明会超过 CodexPro / Hermes 单次调用生命周期。任何可能超过调用者生命周期的步骤，都不得把“调用者仍然在线”作为正确性前提。
 
-冻结 TTS Render View rules、媒体 lifecycle、R2 bucket/custom domain、音频命名、QC gate、文章/audio 状态模型。音频始终 optional。
+最小接口冻结为：
 
-### Phase 4 — 自动化
+```text
+start
+status
+tick
+```
 
-成熟后再考虑：
+workflow current truth 存在 RonnieCross runtime，而不是聊天上下文。长 TTS 由现有 S4 durable job + detached one-shot worker 执行；后续 controller 通过 job terminal state 自动识别完成并继续。未来薄触发层固定为每 5 分钟调用一次 `tick`，每次调用完成一次当前合法推进后立即退出，不建设常驻业务 daemon。
+
+### Phase 3 — 正式功能与 Workflow Freeze
+
+冻结 TTS Render View rules、媒体 lifecycle、R2 bucket/custom domain、音频命名、QC gate、文章/audio 状态模型，以及 durable workflow state/next-action contract。音频始终 optional。
+
+Phase 3 前必须证明：
+- CodexPro/Hermes session 可在 TTS 运行期间退出，不影响 job 完成；
+- 下一次 `tick` 可仅凭 durable state 继续；
+- human QC / device QC / authorization Gate 机械可停；
+- UNKNOWN 不会被误判为成功或触发第二 generation；
+- Hermes 不需要依赖聊天记忆判断 workflow 进度。
+
+### Phase 4 — Business Automation
+
+Phase 4 保留真正的业务自动化，仍不得提前扩大：
 
 ```text
 文章定稿
+→ 自动创建有声阅读 workflow
 → TTS Render View
 → VOICE_AI
 → WAV
@@ -364,6 +410,8 @@ GET /ready
 → audio metadata
 → Website
 ```
+
+Phase 2/3 的 durable controller 只是可靠性基础，不等于自动批量生成、历史 backfill 或无人审核自动发布。
 
 始终保持 `TTS failure != article publication failure`。
 
@@ -400,22 +448,34 @@ GET /ready
 | NAS/R2 lifecycle | 已完成 | Phase 1D：NAS master+manifest / R2 delivery |
 | Website audio schema/player | 已完成 | optional audioUrl + native player |
 | 正式上线 | 已完成首篇 | Pilot 1 production + human verify PASS |
-| Phase 2 Pilot 数量 | 1/2–3 | 还需 1–2 篇真实文章 |
+| Phase 2 Pilot 数量 | 2/2–3 | Pilot 2 已完成真实 TTS TERMINAL_PASS；后续 delivery/site closure 仍在进行 |
+| Phase 2 长 TTS session 解耦 | 已证明 | Pilot 2 detached worker 长运行后自然 TERMINAL_PASS；调用者不需保持长 shell session |
+| Durable workflow controller v0 | 已实现/验证 | `start/status/tick/attach-repair-support`；8/8 tests PASS；real Pilot 2 已推进到 WAIT_HUMAN_LISTENING |
+| Repair-support / chunk map | 已实现 Pilot 2 | 75 acoustic chunks；frame total=14542080；不伪造 text alignment |
+| DevSSD Cleanup Gate | 已实现规则/机械 gate | human/NAS/R2/live/repair-support/no-open-repair 全部 PASS 才 CLEANUP_ELIGIBLE |
+| Pilot 2 cleanup | NOT_ELIGIBLE | 当前仍 WAIT_HUMAN_LISTENING，不删除 WAV/MP3 |
+| 5 分钟薄触发 cadence | 已冻结 | controller PASS 后再单独启用实际 scheduler；不采用 1–2 分钟 |
 | Phase 2 多端验证 | 部分完成 | 线上人工 PASS；正式 Desktop/iPhone/Safari/Chrome 矩阵待闭合 |
-| Phase 3 正式功能冻结 | 待做 | 等 Phase 2 真实重复验证后决定 |
-| 自动化 | 暂缓 | Phase 4，当前不得提前启动 |
+| Hermes 独立执行兼容 | 设计已冻结 | Hermes/CodexPro 都只做短调用；durable files 才是 current truth |
+| Phase 3 正式功能冻结 | 待做 | 等 Pilot 2 delivery + controller 后续链路 + 多端验证闭合 |
+| Phase 4 Business Automation | 暂缓 | 自动触发/批量/backfill/无人审核发布继续禁止提前启动 |
 
 ## 16. 当前下一步
 
-Phase 0–1D 与首篇 Website Player production Pilot 已完成。当前按原计划继续 Phase 2，且保持 anti-overengineering：
+Phase 0–1D 与首篇 Website Player production Pilot 已完成。Pilot 2 已完成真实 TTS 并证明 detached one-shot worker 可以跨越 CodexPro 单次命令生命周期自然到达 `TERMINAL_PASS`。当前 Phase 2 同时推进业务 repeatability 与最小 durable workflow foundation：
 
 ```text
-已有 Pilot 1
-→ 再选择 1–2 篇正式文章
-→ 复用现有 Render View / VOICE_AI / WAV / 64k / NAS / R2 / player 路径
-→ 每篇人工 QC
-→ 达到总计 2–3 篇真实 Pilot
-→ 完成 Desktop / iPhone / Safari / Chrome 的播放、暂停、seek、加载与 Range 验证
+Pilot 2 TTS TERMINAL_PASS
+→ durable controller v0：start/status/tick
+→ 自动发现 terminal + WAV artifact SHA verify
+→ technical QC + 64k MP3
+→ WAIT_HUMAN_LISTENING（当前）
+→ 人工 PASS 后接 NAS / repair-support archive / R2 / Website
+→ 全部 readback/live closure 后评估 CLEANUP_ELIGIBLE
+→ 删除 DevSSD 大媒体副本，仅保留 durable state/evidence
+→ 5 分钟薄触发层（controller 核心链路稳定后启用）
+→ 完成 Pilot 2 delivery/site closure
+→ 完成 Desktop / iPhone / Safari / Chrome 验证
 ```
 
-Phase 2 证明可重复后才进入 Phase 3 正式功能冻结；Phase 4 自动化继续暂缓。
+原则冻结：任何可能超过调用者生命周期的动作都必须 durable + resumable；CodexPro/Hermes 不保持长会话等待。真正的业务自动触发、批量生成和无人审核发布仍留在 Phase 4。

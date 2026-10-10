@@ -1,5 +1,32 @@
 # 当前任务
 
+## 2026-10-10｜Article Read-Aloud Cleanup Gate + Repair Support
+
+- PROJECT_OWNER 已批准：正式 NAS/R2/site closure 后删除 DevSSD WAV/MP3 大媒体副本；后续修音从 NAS authoritative WAV master 恢复。
+- worktree `artifacts/read-aloud/` 正式定位为临时试听/局部修复工作区，不作为长期资产库。
+- controller cleanup gate 已实现；仅当 human listening / NAS / R2 / Website live / repair-support / no-open-repair 全部 PASS 时才 `CLEANUP_ELIGIBLE`。
+- repair-support v1 已接入 controller；Pilot 2 已形成 75 个 acoustic chunk 的 frame/time map，total_frames=14542080，SHA=`07ffa4ebd0b0fd67546e8a17c0ee0fa92ef756e5de7d7fac3ad59fb055640650`。
+- current VOICE_AI public contract 不提供 exact text↔chunk alignment；Website 明确禁止猜测，只保存 acoustic map。
+- workflow tests：8/8 PASS；既有 S4/S5/player regression：63/63 PASS。
+- PROJECT_OWNER 已明确允许在本轮未完成整篇试听的情况下暂按 PASS 推进，并以未来发现问题时走局部修复流程作为真实验证；该接受标记为 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，不伪称已完成整篇试听。
+- 下一真实 breakpoint 仍是 PROJECT_OWNER 对 Pilot 2 整篇试听。通过后继续 NAS/repair-support archive/R2/Website closure，再评估 cleanup。
+## 2026-10-10｜Article Read-Aloud Durable Workflow Controller + Pilot 2
+
+- 当前状态：`V0_PASS / CONTINUATION_IN_PROGRESS`。
+- PROJECT_OWNER 已明确要求解决超长 TTS 自动完成识别、CodexPro 单次命令时限，以及未来 Hermes 本地模型独立执行问题。
+- 总体架构修正已落盘：durable workflow control 归入 Phase 2/3 reliability foundation；真正自动触发/批量/backfill/无人审核发布仍留在 Phase 4。
+- 薄触发 cadence 冻结为每 5 分钟一次；不采用 1–2 分钟。
+- 新增 `scripts/read_aloud_workflow.py`，接口=`start/status/tick/tick-all`；不建设 daemon/Redis/Celery/database。
+- workflow current truth 位于 `/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/workflows`；CodexPro/Hermes 只作为可替换 operator。
+- controller tests current 8/8 PASS（前序 slice 为 6/6、7/7，chronology 保留）；S4/S5/player regression 63/63 PASS；py_compile PASS。
+- Pilot 2 TTS 已自然完成：S4 job=`2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523`，status=`TERMINAL_PASS`。
+- real controller readback 已 PASS：未触发第二 generation，直接消费既有 terminal job 并验证 WAV artifact SHA=`551db6adb34d478dd40d13cdd34fe826121d42523121a63a8f5c059b6b2a2ca6`，bytes=58168400。
+- 同一 controller 已继续自动完成 technical QC、WAV full decode、64 kbps MP3 encode、MP3 full decode 与 SHA 持久化。
+- Pilot 2 MP3：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/delivery-cache/2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523/article-64k.mp3`；duration=605.92s；bytes=4848045；SHA=`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`。
+- Pilot 2 已完成 NAS WAV + repair-support 归档 readback PASS，R2 MP3 上传/full-SHA/Range 206/Content-Type PASS，Website `audioUrl` 已绑定，本地 132/132 tests + 345-page build PASS；当前仅剩 Git/deploy/live verify 后才能进入 `CLEANUP_ELIGIBLE`。
+- 5 分钟实际 scheduler 尚未安装/启用；等 controller 核心链路验证后再做薄触发 activation。
+- 本轮尚未 commit/push/deploy。
+
 ## 2026-10-09｜Article Read-Aloud Phase 1D Media Lifecycle Closure
 
 - 状态：`PASS_PHASE1D_MEDIA_LIFECYCLE_PILOT / NAS_R2_MANIFEST_PATHS_FROZEN`。

@@ -78,3 +78,22 @@ ChatGPT 更适合先规划、整理项目规则和生成高层文档；Codex 更
 - R2 delivery remains bucket `ronniecross-audio`, object key pattern `audio/articles/<article-id>/article.mp3`, custom domain `audio.ronniecross.com`.
 - Storage roles are now proven in the real Pilot: NAS = WAV archival master + manifest; R2 = MP3 Website delivery; Git = code/article pointer/governance evidence only.
 - NAS archive is append-only for new article objects; existing archive contents are not silently overwritten. Chronology: an initial Pilot copy was mistakenly placed under `/Volumes/share/网站有声阅读`; after PROJECT_OWNER rejected that root and approved `/Volumes/home/RonnieArchive`, the final WAV was verified at the new human-readable path and the mistaken Pilot-only copy was removed.
+
+## 2026-10-10 — Read-aloud durable workflow control / Hermes-ready execution
+
+- Long-running TTS must not depend on CodexPro, ChatGPT, Hermes, or any shell session remaining alive.
+- The existing S4 durable job remains the TTS execution truth; a new Website-owned durable workflow controller provides short `start / status / tick` operations around it.
+- Future local trigger cadence is frozen at once every 5 minutes. The trigger is intentionally thin: invoke `tick`, then exit. It must not contain business logic or become a second workflow authority.
+- Workflow current truth lives under `/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/workflows`, outside Git worktrees. Models/tools are interchangeable operators, not state authorities.
+- Durable workflow control is reclassified as Phase 2/3 reliability foundation, not Phase 4 business automation. Phase 4 still owns automatic article triggering, historical batch/backfill, and unattended production publication.
+- Human listening/device acceptance and explicit authorization boundaries remain hard stops. UNKNOWN/stale-owner states cannot be guessed or converted into a new generation.
+- Initial v0 first proved automatic continuation through verified WAV. In the same bounded task it was then extended, after mechanical tests, through technical QC and 64 kbps MP3 encoding to the hard `WAIT_HUMAN_LISTENING` gate. NAS/R2/Website transitions remain after human acceptance. No daemon/Redis/Celery/database is introduced.
+
+## 2026-10-10 — Read-aloud DevSSD cleanup + repair-support policy
+
+- Active worktree `artifacts/read-aloud/` is a temporary human-listening/repair workspace, not a long-term media store.
+- Runtime `artifact-cache` / `delivery-cache` are temporary media caches; jobs/claims/workflows/logs remain durable small-state evidence.
+- After human listening PASS + NAS exact archive verification + R2 exact/read-range verification + Website live verification + complete repair-support metadata + no open repair, workflow becomes `CLEANUP_ELIGIBLE`.
+- `CLEANUP_ELIGIBLE` permits deletion of the article's DevSSD WAV/MP3 copies from worktree/runtime caches, but never deletes durable JSON/evidence, Render View, NAS master/manifest, repair-support metadata, or R2 delivery.
+- Post-cleanup pronunciation repair restores the authoritative WAV from NAS, uses the acoustic chunk/time map to locate the target region, regenerates only the target fragment, splices/rebuilds, re-verifies, re-archives, replaces the same R2 object key, then becomes cleanup-eligible again.
+- Current repair-support v1 records acoustic chunk frame/time boundaries and generation identity. Current VOICE_AI public contract does not expose exact text-to-chunk alignment, so Website must not infer or fabricate phrase↔chunk mapping.
