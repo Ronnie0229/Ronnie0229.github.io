@@ -1,0 +1,164 @@
+{
+  "stage": "P1",
+  "changes": [
+    {
+      "file": "2024-08-11-雅各书-3-13-18｜智慧.md",
+      "before_sha": "9be679ad1ed15ce7a1bde588dd51f77925def49cca79816b8a7a723a289eb706",
+      "after_sha": "a12fd29d01554f469d23b1280151dd8c186f4858180d23b85c1f1f8bb2b2ffec",
+      "rules": [
+        "production_residue"
+      ]
+    },
+    {
+      "file": "2024-09-08-马太福音-16-13-18｜在耶稣里的身份.md",
+      "before_sha": "9c22e8a083ea46e5673cd8f2b381f1650674860f030fb15ad2251dcce167db9f",
+      "after_sha": "f03ca5946024c58e15cd95bcfc496fee085b5ec7ac2349c789b80866404fbb77",
+      "rules": [
+        "production_residue"
+      ]
+    },
+    {
+      "file": "2024-11-24-提多书-1-4-9｜长老职分.md",
+      "before_sha": "baae44c50b74e6602169810af812d6b0f54ec9136f716c383b529df14399a399",
+      "after_sha": "eebadaef69faddde1957c2fae21f0d39d5613dcda31a74f1c15c81d537f43fcd",
+      "rules": [
+        "production_residue",
+        "toc_heading_duplicate_numbering_risk"
+      ]
+    },
+    {
+      "file": "2025-02-09-使徒行传-9-1-11-17-19｜圣灵的改变.md",
+      "before_sha": "d4437c9cb300c04047d76caceaa4a7ca4381f442cb1dedca7949fc662337b987",
+      "after_sha": "80cd20d155704ba656e426ff0bea93bc9febf599558e681c7424b9f7da8c8dbf",
+      "rules": [
+        "production_residue"
+      ]
+    },
+    {
+      "file": "2026-05-17-罗马书-11｜恩典拣选.md",
+      "before_sha": "e4224df473eedc50f928092496e5b9df5f1d11f74e67e30ede50d03ed9bd59e6",
+      "after_sha": "1b0908f84ea6bc3b9cc54ceac90172b58bfcf9db55379751e8fbd2514b51ea7d",
+      "rules": [
+        "production_residue",
+        "scripture_label_fullwidth_colon"
+      ]
+    },
+    {
+      "file": "2026-06-07-罗马书-13-1-14｜社会中的福音.md",
+      "before_sha": "a79dc01d56013ae3936a64f467856e08e1953a41fd66c608c15c82364c8461d9",
+      "after_sha": "b51d0aec916bc0d7e575b4751e6b4bffe02851c876800e0e227a532979691ce8",
+      "rules": [
+        "production_residue"
+      ]
+    },
+    {
+      "file": "2026-07-08-加拉太书-5-16-26｜靠圣灵而行.md",
+      "before_sha": "4f5b871d5e4d1c61e319e2f883cb16b8093344077e61caf76b98dda048a83a3a",
+      "after_sha": "b25229d96cf02ebfdb790fda369ba85bf1547f10b098f79bb9473140c1695fbe",
+      "rules": [
+        "scripture_label_fullwidth_colon",
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-09-马太福音-5-13-16｜盐和光.md",
+      "before_sha": "c05ce4650f61905378d2ab5bbb542e005ae38fc804797f0ecda1ac67eb0eb116",
+      "after_sha": "4957f4c8e0441494c974a490bca2822737748741dc792cf3040a6bf60b8fa21d",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-09-马太福音-5-17-20｜耶稣成全律法.md",
+      "before_sha": "63af96d6e46bbefe40ec512f67fca915c763826bfe0dba3c3587358b061f8560",
+      "after_sha": "d385d99b7025215d6830d4359f882f3c27133635f9be5835253a929ccca0511b",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-09-马太福音-5-27-30｜情欲.md",
+      "before_sha": "273fb4b4d3b639a8a8df1a508460f5619c9d9a7bceee09c2a450101d6d153310",
+      "after_sha": "32b92d689fb1c92f0027b1cd07e024a363f80a7579bbea4f5baed9cdac9a9629",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-09-马太福音-5-31-37｜持守承诺.md",
+      "before_sha": "99b01ce399261fc36fc3b6a640bca85c0a1128ede91255aaa932ac97b91a38e5",
+      "after_sha": "5bf7a5c2ba2f36c0627c6325149a0960f1fa50cb17f4989a11504de96b788f5c",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-09-马太福音-5-43-48｜爱你的仇敌.md",
+      "before_sha": "d74cfc9ac4755ead41e3f4503a195dfba81514abad177e6d3daf254d097cc32f",
+      "after_sha": "83381ec76c9206edb3b590d7bfb99efebe7cb88c90bdc334f3337d12364fd602",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-10-启示录-7-9-12｜基督无限的价值.md",
+      "before_sha": "c7869d3c84567e4a5d7eefc17af3c72a0e56f344acf65863be62b6f6d9688b00",
+      "after_sha": "81a98dc1fad760b73e1c40ffefa8c7d467d5fa514a3530deadfbe0fca2f46b29",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-10-提摩太前书-6-3-10｜金钱遇见福音.md",
+      "before_sha": "111aa1a29dd37b53b8982935116aca6d2188d172d02314ec31f611380710e686",
+      "after_sha": "0bf643ed48f4b794930ef95c5b3e8ce5caffbe32d1a7bd81c1cc85976e24d878",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-10-提摩太后书-2-1-7｜门徒造就门徒.md",
+      "before_sha": "228d9d4e39a4e6bacddde8536e475f95004e16ba3b90105c790d1fd3539f3a5b",
+      "after_sha": "f17c1c7b7a577c347a3b5715aa7bb3be62ba04549b2caea63da823ddf5e447c0",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-10-约珥书-2-1-17｜耶和华的日子.md",
+      "before_sha": "83b78df36c0f45c4ca9df9751506cd25a3c5a89f0eed376808db6b5623d90b8e",
+      "after_sha": "6747edfbcc341f878146e7951798650f46f1cb27af7ecbb908486fc1a0f40805",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-07-12-希伯来书-11-1-4｜像亚伯一样的信心.md",
+      "before_sha": "9dc6660bf135a7c47a157280ac08907aefeeea8d78e1138da9686710ffe197da",
+      "after_sha": "7a065102bdca5ac6b8886856a194163e1e0c8ed9b23bc0c12f6c5a9464de8a62",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-08-02-希伯来书-11-21-39-40｜信仰的殿堂-雅各.md",
+      "before_sha": "8bfbe31dced6584b0e328928792873edf06ebaf6d5e02d356c41ca9036a4e9d3",
+      "after_sha": "8f2dec5b4e1e68986b3a2924a2a340de644a750a7c4ab2953752f5d825d9214f",
+      "rules": [
+        "chinese_parallel_outline_structure"
+      ]
+    },
+    {
+      "file": "2026-08-30-希伯来书-11-30-31｜像喇合一样的信心.md",
+      "before_sha": "ecc93e4db8088254d03efc44a990cf2d41db050d3d93794ea73258bd3aca4302",
+      "after_sha": "bdef0b55ec41d17ddcccdb6a851d1e47246fa4d66500da340c910ed64ce60ab3",
+      "rules": [
+        "production_residue",
+        "toc_heading_duplicate_numbering_risk",
+        "pseudo_ordered_list_requires_markdown_list",
+        "itemized_section_source_structure"
+      ]
+    }
+  ],
+  "issues": []
+}

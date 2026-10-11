@@ -1,0 +1,282 @@
+{
+  "stage": "P2",
+  "changes": [
+    {
+      "file": "2024-10-13-使徒行传-1-1-8｜被圣灵感动.md",
+      "before_sha": "2cc113aed27a9c3a17e050fa23e5070a4a4285a8e67e0bbec72365ad0165981d",
+      "after_sha": "096eac94b03f73923b04f13b0063e6c8a3373711fd7afd7e7ad8620549eddea5",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2024-11-03-使徒行传-3-1-26｜被圣灵恢复.md",
+      "before_sha": "cfb9e8131cd0a3403041b780dd26340fd25e9807ae66132399ea117fb53a43c5",
+      "after_sha": "831f41377240354469adb9cd95cf4db40d8205555d1b71be6ebe37577319914c",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2024-12-08-约翰福音-1-4-13｜耶稣是光.md",
+      "before_sha": "d9c623d1c73cd585ac3e32f286324d8a5d4df0af8eef861c93ce6cdf8f0d7cdd",
+      "after_sha": "47ce1ad01735b636c0e4c16bee9b356ed97ddc04e11d7a08732a890ae2aeae11",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2024-12-22-马太福音-1-18-25｜耶稣-救主.md",
+      "before_sha": "e0bfbd38cd9d04ddb53d10ccb520b013f9d0e351a863429e2b1e960714b83352",
+      "after_sha": "3919f1cc1fc3a53e096f64a47755d947825af161830384bbac71d55528d76c6b",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-03-16-使徒行传-13-1-29｜圣灵引导的宣教.md",
+      "before_sha": "e08fd8ceafd40f4c5a407833888924acf5f753ac777762aae0506dbda12e8a16",
+      "after_sha": "c8dd8d2cf8a2f50eeb448dd9c0e5b700f097e42dfa88dcf83e3217924708e4db",
+      "rules": [
+        "toc_heading_duplicate_numbering_risk"
+      ]
+    },
+    {
+      "file": "2025-05-04-使徒行传-17-16-24｜未知之神.md",
+      "before_sha": "30664c15d953c3ac5521c10f7b487dae9b3e99722b0cd7975f2fdd2850831878",
+      "after_sha": "736666ba4ef3d93975723dd87bc87f10205908305f984370d3d70433e86ec01c",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-05-25-使徒行传-19｜保罗在以弗所.md",
+      "before_sha": "9b1041659f41e367ee8e17b40976ddc0fe3ecc8492b5f71183ee1327d8aa8758",
+      "after_sha": "ab9aa420a99ef61eaf5fa69b039b3b7d8388892352d5691cd667c18fed9cc78d",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-08-10-使徒行传-2-42-47｜与我们同在的福音.md",
+      "before_sha": "94429c61fd41b766cb1c7b88663c3b6c5568a8d3adb7654d01c63b18212b5daa",
+      "after_sha": "03d34acef18b33521952c8bb063cd2c292d349a433e5c28a6626b73d3cb8a5df",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-08-31-约翰福音-13-31-35｜教会的身份证明.md",
+      "before_sha": "9a70d3bf0c622d2348413759bfa008fddb1569a1ab284b1cf83b2f3048b21a1a",
+      "after_sha": "07f7e64ed8e1b72b4eaf37cc4b322a0ad6841cb4271a2de43f3de863c3a32a85",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-09-28-路加福音-10-25-37｜好撒玛利亚人.md",
+      "before_sha": "8f1ef415b59020fa8a9c16030c69aef676f64cd59392d7c3673e274c289ef7af",
+      "after_sha": "4c8411512fe958df0d52a817bdc5248ffb78b899697aacdbcf057af8badf594d",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-10-05-马太福音-18-21-35｜不饶恕人的仆人.md",
+      "before_sha": "bb930caa99808ae88ba23efac2bedb03944047309a159f3887e0d6b10859c538",
+      "after_sha": "0c82a9f618ca07d266293e00a00e7ffc1c289b4fa56f04bdfeefaa2c274b2b6f",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-10-12-路加福音-15-11-32｜迷失的两个儿子.md",
+      "before_sha": "2e86eefbbe5dc810d7b97cb301adf61070a83f49472f8e0e941f3e931a291ac5",
+      "after_sha": "2dbe3d2e07a825e1f35382d9ddb0856e97cb0be8459ba7378b8c28cf212520a3",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-11-02-马太福音-21-33-45｜恶农夫的比喻.md",
+      "before_sha": "fe38b8b5b4cc00e5383188645a960b68f49c0a0667fdee3c1e29d4cfc227b17f",
+      "after_sha": "cd05a036955a8c5d588dec32778704de6144f026f3e09a8fac6988549de554b7",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-11-23-哥林多后书-8-7-9｜慷慨.md",
+      "before_sha": "d961f269499685078c34d7d678ab2039062b4f44f440eb4e4e4aef7b8d178584",
+      "after_sha": "31eff45125daa641fe5b2e51696cd4f4bf32baaf70e5cba389281c6d85b3939f",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-12-14-路加福音-2-8-20｜礼物的宣告.md",
+      "before_sha": "83495e9920f37089f405956ec95cff1a9af0cf96127887d85ba9674cc445caad",
+      "after_sha": "2ab34ff68352d7dccf30b3add5d743bb045f7da1283ab1f3264d03796b995938",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2025-12-21-以弗所书-5-1-2｜最伟大的礼物.md",
+      "before_sha": "2314a73d0230124ea2de48e34db93292009e74c713c0c4d7bfbafe42f2b9353c",
+      "after_sha": "3389a322af94b4bf081991bbc47a2deb3cf0f885baace847e48795bdb8bb5f95",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-01-04-约翰福音-8-31-36｜真正的自由.md",
+      "before_sha": "b539eb228da70ca0b405499e95afe4d0a6db4e5e71590914c6048d9b35080030",
+      "after_sha": "ee82b0e80399f6d3d03d24ced1d5040d4873b384b69e1b886a0ee598c5b9adff",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-01-11-罗马书-1-1-7｜罗马书导论.md",
+      "before_sha": "5a48791b0cb2943c51ff609290cd5c441af1640a41c0f5772ea18123c6106701",
+      "after_sha": "1009e23dfbc7884fa09602a78a6eb27b34a3596f542b4f4be833d1cdd6809448",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-01-25-罗马书-2｜自以为义的人被定罪.md",
+      "before_sha": "08f1918c686899685d08eb3778eb526538af7f008ee652fdcde0f7ea56e4ae01",
+      "after_sha": "a07693be6f8edb4168aff251a0894f8cb91279090d34319166bb8e0a81457870",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-02-01-罗马书-3-1-20｜经文讲解.md",
+      "before_sha": "a77bbdb4fd3f34111d6bfdbedb257fb7e5cda46dc0d5f51f91792990d89c9ea4",
+      "after_sha": "f45e069db50e1e7aed1c3d5be9b4fd496782e27b566b18411589d27767eaec5a",
+      "rules": [
+        "scripture_label_fullwidth_colon",
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-02-08-罗马书-3-21-31｜因信称义.md",
+      "before_sha": "9c668a53243f9ce4d77ff642aa1191a21ed525500eeb5faf6814921d52c0093f",
+      "after_sha": "c94bfd77c4c6315d4683101743b700a6d92c6f1037f1b7bf7cda87a88a1cc109",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-02-15-罗马书-4｜像亚伯拉罕一样的信心.md",
+      "before_sha": "81bbc2f91cc900fea028071fc529352abe8496dc4f35c621d43fab38ebcd1ae3",
+      "after_sha": "cd9ad83706001be733546e51c12c8eed9012fc0f24927a7df94a86fcbdc6ca1b",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-02-22-罗马书-5-1-11｜在基督里得以和好.md",
+      "before_sha": "6f9c176277f784a8e514b60da92dc6a2357db80a2f06af973c6dccee803d7e88",
+      "after_sha": "b47ba9bcc5dc6644c3727d1b5a7cdc0c75c534076dd4b0b5a675a588535e904d",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-03-01-罗马书-5-12-21｜恩典掌权.md",
+      "before_sha": "ed69771d892d84d6045db6e695f926bec691d5ba89292188e7569e5ac6af0bce",
+      "after_sha": "ba756e782ebd4aa759d04bff0f08021d0c2198f96a0197699856a710868007c2",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-03-15-罗马书-6-15-23｜在恩典之下.md",
+      "before_sha": "4a0f52b971e83657de5da3bce51aec6571f0107c53e5e3085d345f0fc51dedc5",
+      "after_sha": "e61a4aca6fa2267ae749b765e1715ff6f56e125c938f2ef8ba021dac149aab6e",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-03-29-马太福音-27-15-26｜伟大的交换.md",
+      "before_sha": "c008c4e0ae62c30c414a3deb5d129b8c15668f2379cbe634c8625d1decb3f428",
+      "after_sha": "92ebefd2079ac2240ad2f78769bbf3462313767c1e08b7d9dfb9ae8f4d42cbe3",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-04-05-约翰福音-11-25-26｜耶稣是我们的盼望.md",
+      "before_sha": "0027c851ecedefd6692c51fd80c07b4316b01b0c2e76963fbab3be97f7a66bbd",
+      "after_sha": "3939e640ab3d87511c49187ed11c65483d127994185a2827405ca5f60ce4443f",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-04-12-罗马书-8-1-4-12-17｜被圣灵收养.md",
+      "before_sha": "b898958d9501ef2228e5f4e84174a922dc375642ae3c0769cccb2c5c26dd11c2",
+      "after_sha": "9b71f5fb4ad55ba20ba9445f42db871bd700704558a8eb25cf6229e0c45d9a41",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-04-19-罗马书-8-18-28｜在苦难中的盼望.md",
+      "before_sha": "5adfcba54665270f02f18023da8209d491d6fc794a1dd2337adce6724631a47c",
+      "after_sha": "34bdb264b7ba51629b49c1fb5f7dcfc5e89b971c4769e01dd2590b959ca7f747",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-04-26-罗马书-8-31-39｜那位不可忘记的神.md",
+      "before_sha": "5218540ee8f00dca36bb3afde1ebb6106d25808b62a9cfd54b5db3b3765b9db1",
+      "after_sha": "e0d6cc45aef49d8b921bee6881fbe8fe21cd0b4728550e2fe3f83aaf2279473a",
+      "rules": [
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-05-24-罗马书-12-1-8｜活出福音.md",
+      "before_sha": "df226815f0e682498a1c970cdcde74b699e562e1b0e061b2c0466702d29a6e47",
+      "after_sha": "2a4fa7033785074df394f7c5b6f7bf97970d53c8a215bd0c455a412dcfcd75a2",
+      "rules": [
+        "toc_heading_duplicate_numbering_risk"
+      ]
+    },
+    {
+      "file": "2026-06-14-罗马书-14-1-23｜你属于哪个国度？.md",
+      "before_sha": "4255b3b3a8fdddc1ff10b927d30a2e4f37479936a5fa7529eeb7e3c518b37cdf",
+      "after_sha": "707e26ce937e9920f9b0d6ddddb2a30f830ba33b76e6d6f21ac2928e4846a38a",
+      "rules": [
+        "scripture_label_fullwidth_colon",
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-08-23-希伯来书-11-23-29｜摩西的信心之旅.md",
+      "before_sha": "cc94079e23d12fceebe77a2f7d69c175ed4a829ab8d5445e06f150702cba71fc",
+      "after_sha": "4e2b2474cb5b13128dad484139758f9087f58e82e0f9d43b2feb27457226cd58",
+      "rules": [
+        "scripture_label_fullwidth_colon",
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    },
+    {
+      "file": "2026-09-06-腓立比书-1-1-7｜属于基督.md",
+      "before_sha": "b3ed876dfb15a60ce7c10fa9d545d489bd11869ca04b73bd60c3f062c8783d83",
+      "after_sha": "10df3a1aa2bb956cecd5ded9af9f07c075147cddb705e27e5bb2917e74d56840",
+      "rules": [
+        "toc_heading_duplicate_numbering_risk",
+        "pseudo_ordered_list_requires_markdown_list"
+      ]
+    }
+  ],
+  "issues": []
+}

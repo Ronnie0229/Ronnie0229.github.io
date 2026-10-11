@@ -1,6 +1,13 @@
 # 个人网页项目状态
 
 
+## 2026-10-11 — 历史81篇讲道排版修复 P1→P2→P3
+
+- 本轮据 81 篇旧 FAIL 发现清单定向修复，先 P1=19/19，再 P2=34/34，最后 P3=28/28，全部获得当前结构 Gate PASS；其他 139 篇旧 PASS 未改。旧 FAIL 与新 PASS chronology 均保留。
+- 81 篇 `posts/processed` 双副本各自 frontmatter（包含 articleId、发布日期、作者、经文）严格保留；正文原语义词序不变，仅调整视觉编号、Markdown 并列结构、标签标点和清理幻灯片标记；不改 raw/NAS/E1/Project Bible。
+- 604/604 mirrors、346 Astro pages、presentation fixtures 20/20、tags 27/27、Knowledge 302/0/0 PASS；P1/P2 典型页面 Chrome 390px 真实独立 `li`、无 overflow，截图与 DOM JSON 留存在本地 `logs/sermon-historical81-repair-20261011/`。
+- 精确范围与每篇旧/新 SHA、81篇具体发现见 `docs/tasks/sermon-historical-presentation-triage-20261011/REPAIR_RESULT.md`；不声称已完成81篇逐篇 iPhone Safari 验收或生产网站异步最终 readback。
+
 ## 2026-10-11 — 讲道排版质量门专项整改
 
 - 对 Patrick《活着就是基督》手机截图事故进行现有 Website presentation Gate 修复：新增中文并列要点结构检查（含“三个要点”数量一致性），canonical sermon importer prewrite 强制执行 fail-closed；不修改已通过 E1 的正文候选或任何历史文章。

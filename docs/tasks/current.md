@@ -6,6 +6,13 @@
 - 20/20 presentation fixtures PASS，实际新稿校验 PASS，受控故障样本的 `publish --dry-run` 返回 `SERMON_PRESENTATION_STRUCTURE_FAIL` 且未写入；构建 346 pages PASS。Chrome 窄屏 360px/390px DOM 无横向溢出，提纲 3 项独立 `li`；截图留在本地证据目录，不能以截图存在代替以后每篇的人工阅读验收。
 - 正式说明及剩余范围 `docs/tasks/sermon-presentation-quality-gate-20261011.md`。
 
+## 2026-10-11｜历史81篇讲道排版修复（P1 → P2 → P3）
+
+- P1 19 篇、P2 34 篇、P3 28 篇，全部完成受控 Markdown presentation 修复，当前 81/81 结构校验 PASS；另外 139 篇原先已 PASS 且未修改，当前合计 220/220。
+- 162 份 `post/processed` frontmatter 原样保留；原文中文、英文词序和信息没有删减（仅清理制作标记及允许的展示符号）；镜像 604/604、Astro 346 页、回归测试 20/20、Tag 27/27、知识层 302/0/0 PASS。
+- P1/P2 样例经真实 Chrome 390px 独立列表和无横向溢出核对，其他文章尚未逐篇实际 iPhone 人工视觉验收。无新 post，不触发新文章邮件发送；网站原 raw、NAS、E1 和 Project Bible 均未改。
+- 详细逐篇报告、审计时间线和旧/新 SHA：`docs/tasks/sermon-historical-presentation-triage-20261011/REPAIR_RESULT.md`。
+
 ## 2026-10-11｜Patrick《活着就是基督》讲道发布
 
 - Sermon Owner 当前受控任务：`20261011-sermon-philippians-1-20-30-to-live-is-christ`。v3 E1 91/91 PASS，主流程 accepted/release_ready；旧 BLOCKED、v2 FAIL 未抹除。
