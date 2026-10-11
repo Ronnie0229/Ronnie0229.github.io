@@ -181,3 +181,35 @@ test("PASS structural fixture keeps long-form content as multiple rendered block
   assert.equal(result.output.rendered_structure_metrics.source_heading_count, 3);
   assert.equal(result.output.rendered_structure_metrics.rendered_heading_count, 3);
 });
+
+test("FAIL regression: Patrick three-point outline must not mix H2 with plain-text siblings", () => {
+  const result = runFixture("fail-chinese-outline-heading-mix.md");
+  assert.equal(result.status, 1);
+  assert.ok(failedCheckIds(result.output).includes("chinese_parallel_outline_structure"));
+});
+test("FAIL regression: Chinese parenthesized parallel points must not become one paragraph", () => {
+  const result = runFixture("fail-chinese-outline-parentheses.md");
+  assert.equal(result.status, 1);
+  assert.ok(failedCheckIds(result.output).includes("chinese_parallel_outline_structure"));
+});
+test("FAIL regression: 第一第二第三 plain text needs real Markdown list structure", () => {
+  const result = runFixture("fail-chinese-outline-first-second.md");
+  assert.equal(result.status, 1);
+  assert.ok(failedCheckIds(result.output).includes("chinese_parallel_outline_structure"));
+});
+test("PASS regression: Patrick corrected outline renders exactly three list items", () => {
+  const result = runFixture("pass-chinese-outline-list.md");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(result.output.rendered_structure_metrics.rendered_list_item_count, 3);
+});
+test("PASS separate Chinese section headings are not mistaken for one outline", () => {
+  const result = runFixture("pass-chinese-isolated-headings.md");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("FAIL regression: three declared points must not render as just two structured list items", () => {
+  const result = runFixture("fail-chinese-declared-count.md");
+  assert.equal(result.status, 1);
+  const check = result.output.checks.find((c) => c.id === "chinese_parallel_outline_structure");
+  assert.ok(check.failures.some((f) => f.kind === "declared_outline_count_mismatch"));
+});

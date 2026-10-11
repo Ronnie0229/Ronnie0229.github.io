@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-10-11｜讲道排版质量门专项整改
+
+- 已针对 Patrick《活着就是基督》反复排版事故升级现有 Website validator，增加中文数字并列提纲一致性与预先宣告条目数核验；在 canonical importer 中直接执行，错误将 prewrite fail-closed。新增回归测试不修改历史正文。
+- 20/20 presentation fixtures PASS，实际新稿校验 PASS，受控故障样本的 `publish --dry-run` 返回 `SERMON_PRESENTATION_STRUCTURE_FAIL` 且未写入；构建 346 pages PASS。Chrome 窄屏 360px/390px DOM 无横向溢出，提纲 3 项独立 `li`；截图留在本地证据目录，不能以截图存在代替以后每篇的人工阅读验收。
+- 正式说明及剩余范围 `docs/tasks/sermon-presentation-quality-gate-20261011.md`。
+
 ## 2026-10-11｜Patrick《活着就是基督》讲道发布
 
 - Sermon Owner 当前受控任务：`20261011-sermon-philippians-1-20-30-to-live-is-christ`。v3 E1 91/91 PASS，主流程 accepted/release_ready；旧 BLOCKED、v2 FAIL 未抹除。

@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 import textwrap
 import csv
 from datetime import datetime
@@ -673,6 +674,26 @@ def main() -> None:
     presentation_file = Path(args.presentation_file).expanduser().resolve(strict=True)
     if not presentation_file.is_file():
         raise SystemExit(f"presentation artifact not found: {presentation_file}")
+    # Mandatory website-owned HTML structure gate before any importer write.
+    # This applies equally to dry-run and production; direct importer calls cannot bypass it.
+    structure_gate = ROOT / "scripts" / "validate_sermon_presentation.mjs"
+    structure_check = subprocess.run(
+        ["node", str(structure_gate), "--source", str(presentation_file),
+         "--candidate-id", f"sermon-import:{target_folder.name}"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    if structure_check.returncode != 0:
+        raise SystemExit(
+            "SERMON_PRESENTATION_STRUCTURE_FAIL: publication blocked before write.\n"
+            + structure_check.stdout + structure_check.stderr
+        )
+    try:
+        structure_report = json.loads(structure_check.stdout)
+    except (ValueError, TypeError) as exc:
+        raise SystemExit(f"SERMON_PRESENTATION_RESULT_INVALID: {exc}")
+    if (structure_report.get("status") != "SERMON_PRESENTATION_STRUCTURE_PASS"
+            or structure_report.get("completion_ceiling") != "publication_structure_ready"):
+        raise SystemExit("SERMON_PRESENTATION_STRUCTURE_NOT_READY: publication blocked before write")
 
     if not args.dry_run:
         ORGANIZED_DIR.mkdir(exist_ok=True)

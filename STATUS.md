@@ -1,6 +1,13 @@
 # 个人网页项目状态
 
 
+## 2026-10-11 — 讲道排版质量门专项整改
+
+- 对 Patrick《活着就是基督》手机截图事故进行现有 Website presentation Gate 修复：新增中文并列要点结构检查（含“三个要点”数量一致性），canonical sermon importer prewrite 强制执行 fail-closed；不修改已通过 E1 的正文候选或任何历史文章。
+- 新增真实事故/正常结构回归样本，20/20 tests PASS；先前其他旧文可能存在独立排版问题，本次未批量修复。
+- 实际 Astro 346 pages build PASS；390/360px Chrome headless 真实页面 DOM：3 个 `li`、相同 `ul` 父节点、无横向溢出；390px 截图已目视核对，证据在 `logs/sermon-presentation-hardening-20261011/`。后续每篇首次发布仍必须留存可视化验收，不能仅靠测试数量。
+- 详细专项结果 `docs/tasks/sermon-presentation-quality-gate-20261011.md`；此前 E1 / NAS / Website 发布 chronology 未改变。
+
 ## 2026-10-11 — Patrick《活着就是基督》讲道发布事务
 
 - 本文独立 E1 91/91 零阻断，Sermon Owner 已正式 accept 为 `independently_verified / release_ready`，历史 BLOCKED 与 v2 FAIL 保留。

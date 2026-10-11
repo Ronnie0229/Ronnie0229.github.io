@@ -115,6 +115,51 @@ function collectPseudoOrderedListFailures(lines) {
   return failures;
 }
 
+// Fail closed on Chinese outline siblings split between headings/plain lines,
+// or presented as visual-only lines. Scope to contiguous sequential markers,
+// not isolated section headings in the body.
+const chineseOutlineNumbers = "一二三四五六七八九十";
+function chineseOutlineOrdinal(line) {
+  const trimmed = line.trim();
+  const m = trimmed.match(/^(?:(#{2,3})\s+)?(?:(?:[-+*]|\d+[.)])\s+)?(?:([一二三四五六七八九十])\s*[、．.]|[（(]([一二三四五六七八九十])[）)]|第([一二三四五六七八九十])(?:个|项|点|部分|方面)[：:]\s*)\S/);
+  if (!m) return null;
+  return { number: chineseOutlineNumbers.indexOf(m[2] || m[3] || m[4]) + 1,
+    structured: Boolean(m[0].match(/^\s*(?:[-+*]|\d+[.)])\s+/)),
+    heading: Boolean(m[1]), text: trimmed };
+}
+function collectChineseOutlineFailures(lines) {
+  const failures = [];
+  let index = 0;
+  while (index < lines.length) {
+    const first = chineseOutlineOrdinal(lines[index]);
+    if (!first || first.number !== 1) { index++; continue; }
+    const run = [{ ...first, line: index + 1 }];
+    let cursor = index + 1;
+    while (cursor < lines.length) {
+      if (!lines[cursor].trim()) { cursor++; continue; }
+      const next = chineseOutlineOrdinal(lines[cursor]);
+      if (!next || next.number !== run.length + 1) break;
+      run.push({ ...next, line: cursor + 1 });
+      cursor++;
+    }
+    if (run.length >= 2 && !run.every(item => item.structured)) {
+      failures.push({kind:"chinese_outline_not_uniform_markdown_list",
+        items:run, expected:"every parallel point must be a standard Markdown list item"});
+    }
+    // When an immediately preceding introduction explicitly promises N points,
+    // the number of sibling records must match. Do not infer a number from unrelated prose.
+    const introduction = lines.slice(Math.max(0, index - 4), index).join(" ");
+    const declared = introduction.match(/(?:今天有|下面有|共有|分为|以下有).{0,24}?([两二三四五六七八九十])(?:个)?(?:要点|重点|方面|问题|部分)/);
+    const expectedCount = declared ? chineseOutlineNumbers.indexOf(declared[1]) + 1 : null;
+    if (expectedCount && run.length !== expectedCount) {
+      failures.push({ kind: "declared_outline_count_mismatch", declared_count: expectedCount,
+        actual_count: run.length, items: run });
+    }
+    index = Math.max(index + 1, cursor);
+  }
+  return failures;
+}
+
 function collectItemizedSections(lines) {
   const sections = [];
   for (let index = 0; index < lines.length; index += 1) {
@@ -277,6 +322,7 @@ async function main() {
   }
 
   const pseudoOrderedListFailures = collectPseudoOrderedListFailures(lines);
+  const chineseOutlineFailures = collectChineseOutlineFailures(lines);
   const itemizedSections = collectItemizedSections(lines);
   const sourceStructureFailures = itemizedSections
     .filter(
@@ -373,6 +419,11 @@ async function main() {
       "pseudo_ordered_list_requires_markdown_list",
       pseudoOrderedListFailures,
       "Two or more ordered items written as Chinese visual markers such as 1）/2） are not stable Markdown list blocks and must be normalized to standard Markdown list syntax before publication."
+    ),
+    makeCheck(
+      "chinese_parallel_outline_structure",
+      chineseOutlineFailures,
+      "Chinese parallel outline items (一、二、三、 / （一）（二） / 第一、第二) must use uniform Markdown list syntax; mixed H2 and plain-line siblings are forbidden."
     ),
     makeCheck(
       "small_group_heading_public_label",

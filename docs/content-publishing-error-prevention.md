@@ -213,6 +213,17 @@
 - 该 normalization 只属于 Website presentation/display，不重开 sermon translation fidelity，不修改 Project Bible、经文正文或讲道 Owner 正式稿。
 - 对相关事故修复，除 source 检查外还必须用实际 Astro Markdown processor 或最终构建 HTML 证明独立 `<li>` 与目标 heading 已正确渲染。
 
+## 17. 中文并列要点结构不能只凭标题与段落总量判定（2026-10-11）
+
+事故：Patrick《活着就是基督》开头“今天有三个要点”后，第一项被当作 H2，第二、三项只是相邻普通行；此前结构 Gate 只检查一般标题数量和段落密度，虽然结果 PASS，手机实际却将其渲染为一个巨大标题加一个混合段落。旧 PASS、后续正文修复均保留独立事实。
+
+整改（网站 presentation Owner，不修改已经通过 E1 的中文候选）：
+
+- 在现有 `scripts/validate_sermon_presentation.mjs` 中执行 `chinese_parallel_outline_structure`：连续的 `一、二、三、`、`（一）（二）（三）`、`第一点：第二点：第三点：` 等中文并列提纲必须都采用同级标准 Markdown 列表项，不可混合 H2、普通行；近邻文字若明确称“三个要点”，实际条目数必须一致。正常相隔正文的章节 H2 不算同一提纲。
+- 在 `scripts/import_sermons.py` 的 canonical 导入入口，在**任何业务写入前**强制调用该结构 Gate；必须同时得到 `SERMON_PRESENTATION_STRUCTURE_PASS` 和 `publication_structure_ready`，否则 dry-run 与 publish 都 fail-closed。不能使用翻译审核或 build 结果替代。
+- 正式发布提交前仍需执行手机浏览器窄屏视觉验收。必须实际查看 360/390px 视口的标题、提纲、并列条目、长经文和 TOC；保存可追溯的截图/DOM 几何证据并记录审阅者与检查结论。`build PASS`、正文源 Markdown 或机械 HTML `<li>` 数量均不能单独冒充人工视觉 PASS。视觉结果为 FAIL 或无证据时，不得将发布任务标记为全部视觉验收完成，也不能正常执行首次正式 Git 发布。
+- 用本篇事故的 FAIL/修复 PASS 样本与《为爱心祷告》既有列表事故一起运行回归测试；新增检测不得误杀相隔正文的独立章节标题。只做 website presentation 规则，不重开翻译 E1，不批量重写现有网站文章。
+
 ## 文章移动端视觉检查清单
 
 文章发布、文章模板/CSS/TOC 修改或移动端导航修改后，至少执行以下人工或浏览器 smoke check。该检查不能只由 `npm run build` 代替：

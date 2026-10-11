@@ -162,9 +162,9 @@ npm run sync
 9. 归档：`python scripts/content_workflow.py archive-sermon --folder "data/raw/教会讲道/<folder>"`。
 10. 预览发布：`python scripts/content_workflow.py publish sermon --folder "data/raw/教会讲道/<folder>" --presentation-file "<presentation-prepared.md>" --dry-run --description "人工概括型摘要。"`。
 11. 正式发布：同上移除 `--dry-run`；canonical importer 直接消费已验证 presentation Markdown，不再对 plain TXT 执行 paragraph guessing/`normalize_body()`。
-12. 正式写入前必须运行 `scripts/validate_sermon_presentation.mjs`；唯一可作为结构准入的 terminal 是 `SERMON_PRESENTATION_STRUCTURE_PASS` 且 `completion_ceiling=publication_structure_ready`。`MECHANICAL_PRESENTATION_PASS` 仅保留为 legacy compatibility 字段，不得再解释为完整排版验收。
+12. 正式写入前必须运行 `scripts/validate_sermon_presentation.mjs`；唯一可作为结构准入的 terminal 是 `SERMON_PRESENTATION_STRUCTURE_PASS` 且 `completion_ceiling=publication_structure_ready`。`MECHANICAL_PRESENTATION_PASS` 仅保留为 legacy compatibility 字段，不得再解释为完整排版验收。 canonical `import_sermons.py` 已内嵌此 Gate，直接导入也不允许跳过；中文并列提纲要在渲染后呈现相同层级的独立条目，不能把 H2/普通行混在一组。
 13. 如需更新同一 source folder 对应的既有文章，必须显式加 `--update-existing`，且只能复用 registry 中的既有 slug/path。
-14. 检查文章、报告、Git 差异并运行构建。
+14. 检查文章、报告、Git 差异并运行构建；在**首次 Git 发布前**实际查看手机 360/390px 视觉效果并记录截图/DOM 结构、审阅结果。缺视觉证据或出现并列项合并/横向溢出等问题，停留在发布前，不得以 build PASS 代替。
 15. 当前 frozen publication object 一旦获得一次 `授权发布`，该授权覆盖标准 Publication Fast Lane 的 Website write → build → commit → push → deployment trigger → notification trigger → NAS append-only archive → registry/status/Git closure。除真实 blocker 外，不再为 commit、push、deploy、email、NAS 分别暂停并重复索权。
 16. 本轮不等待本次 deployment/live/email 终态；记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 后结束。下一次发布从第 0 步核验本次结果。
 
