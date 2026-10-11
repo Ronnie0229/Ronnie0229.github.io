@@ -1,5 +1,12 @@
 # 当前任务
 
+## 2026-10-11｜Patrick《活着就是基督》讲道发布
+
+- Sermon Owner 当前受控任务：`20261011-sermon-philippians-1-20-30-to-live-is-christ`。v3 E1 91/91 PASS，主流程 accepted/release_ready；旧 BLOCKED、v2 FAIL 未抹除。
+- 上次发布 preflight 已核实；本文原件 manifest intake closure PASS、NAS 受保护归档 3/3 SHA exact、受控中文稿与 v1.2 package 的 presentation binding PASS。
+- Website scoped import 已生成 `data/processed` 和 `src/content/posts/2026-10-11-腓立比书-1-20-30｜活着就是基督.md`，articleId `post-072eda6a5bfbe1f9`；镜像 604/604、Knowledge 302/0/0、rendered structure PASS（3 个 H2、89 段）、build 346 pages PASS。
+- 网站 dry-run v1 路径错误、v2 raw folder 缺失均为 FAIL / zero side effects，v3/v4 PASS。Git commit/push 与 notification trigger 只能由最终 readback 确认，本轮线上终态留待下一次 publication preflight。
+
 ## 2026-10-10｜Article Read-Aloud Real Device Acceptance Closure
 
 - PROJECT_OWNER 已明确确认最小实机验收矩阵全部通过。
