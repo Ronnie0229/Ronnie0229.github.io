@@ -1,5 +1,13 @@
 # 当前任务
 
+## 2026-10-13｜分享《如何荣耀神并永远以祂为乐？》发布与 TTS Telegram 交接
+
+- 用户授权从 NAS 分享收件完整运行文章整理、正式发布到有声阅读流程。唯一源 PDF：`How Do We Glorify God and Enjoy Him Forever.pdf`，4 页，SHA-256=`02bfc20c28bab941c77b8abeb3da2f6f70414b67cf3ef3199f6e93388ad1bf8a`；正式文章 ID=`post-c313198e37dddf21`，日期 2026-10-13。
+- 完整中文整理稿已保存在 `data/raw/分享/How Do We Glorify God and Enjoy Him Forever_中文.txt`，源 PDF 保存在 `data/raw/分享/`；文章与 processed 双份已生成，dry-run PASS，镜像 606/606 PASS，Knowledge Layer 303/0/0 PASS，Astro 347 页 PASS；上一轮 Patrick 音频发布 receipt VERIFIED 且 SHA 与 prepublish HEAD 一致。
+- 本轮文章发布按 Publication Fast Lane 精确提交和 push 后记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`，不等待本轮 Cloudflare/邮件异步结果；实际 Git SHA 及下一次发布前核验须在真实执行后回读。新文章长时间 TTS 使用未来的单篇 Hermes Telegram `/expy` Python 脚本执行，用户回报脚本 terminal receipt 后，RonnieCross 才继续 NAS/R2/音频网站发布，不得擅自启动或重复 TTS。
+- 收件脚本本轮错误将 NAS `.DS_Store` 也导入 raw（隐藏元数据，不得纳入发布 Git write-set）；发现的过程缺陷保留独立 chronology，不因此扩大本轮代码整改。保留源与译文全文，后续音质仍须独立判断，技术 QC 不代表真人试听。
+
+
 ## 2026-10-13｜Patrick 单篇代码交付与发布前次核验策略收口
 
 - 精确 28 文件网站代码已提交并 push：`4ab066223c9ecb5a09258aebb99d256d0f17e5b6`；canonical/remote Git 一致且 Cloudflare 后续版本已现场核验。真实 Patrick TTS/NAS/R2/音频发布尚未执行；未来自动选择器未启用。
