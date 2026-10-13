@@ -1,5 +1,14 @@
 # 当前任务
 
+## 2026-10-11｜新文章发布后自动有声阅读规划与启动检查
+
+- 正式完整计划：`docs/tasks/article-read-aloud-new-post-automation-plan-20261011.md`；只启动新文章自动化建设，历史文章批量 backfill 继续暂停。
+- 冻结业务方向：新文章正式 push 后异步生成，不等待本次 Cloudflare；文章/音频网站发布共用上次发布前核验及互斥；自动 QC 可取代逐篇人工试听，但不能冒称人耳验证；`AUDIO_ONLY_UPDATE` 零邮件通知。
+- 今日 exact-one 候选：Patrick《活着就是基督》，articleId=`post-072eda6a5bfbe1f9`。当前文件确认文章质量门和本地 build PASS，但线上实际部署及通知终态尚未 fresh 验证；不能认定音频自动发布已就绪。
+- 后续建设已在独立 worktree `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-new-post-automation-20261011` 进行：旧人工试听保持兼容，新增 opt-in 自动技术 QC 停在独立发布 Gate；只读新增文章 Git 差异检测及音频更新零邮件测试通过。集中测试 15/15 PASS，Astro 构建 346 页 PASS。未实现完整触发与 NAS/R2/网站自动发布，状态为 PARTIAL_IMPLEMENTATION / BLOCKED_FULL_AUTOMATION；详见该 worktree 的 `docs/tasks/article-read-aloud-new-post-automation-20261011/RESULT.md`。
+- 今天 Patrick《活着就是基督》生产站点 deployment.json commit=`14db307fd326207edd812a71a05d2b7ae1c706bc`；目标线上 URL HTTP 200/标题 PASS；原文章 GitHub 邮件运行 `38106268052` PASS（收件人2、成功2、失败0），后续排版修复运行 `38110403194` success，无新增邮件摘要。本轮没有真实 TTS、NAS/R2 写入、Git commit/push、音频部署或生产自动化启用。
+
+
 ## 2026-10-11｜讲道排版质量门专项整改
 
 - 已针对 Patrick《活着就是基督》反复排版事故升级现有 Website validator，增加中文数字并列提纲一致性与预先宣告条目数核验；在 canonical importer 中直接执行，错误将 prewrite fail-closed。新增回归测试不修改历史正文。
