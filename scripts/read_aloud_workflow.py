@@ -34,6 +34,7 @@ HUMAN_OR_OPERATOR_STATES = {
     "RESULT_UNKNOWN_OPERATOR_REQUIRED",
     "WAIT_HUMAN_LISTENING",
     "WAIT_HUMAN_DEVICE_ACCEPTANCE",
+    "AUDIO_READY_PENDING_PUBLICATION_GATE",
 }
 
 
@@ -70,15 +71,19 @@ def _cleanup_gate(workflow: dict[str, Any]) -> dict[str, Any]:
     r2 = workflow.get("r2_delivery")
     live = workflow.get("website_live")
     repair = workflow.get("repair_support")
+    human_pass = isinstance(human, dict) and human.get("status") == "PASS"
+    auto_pass = (workflow.get("review_policy") == "AUTO_TECHNICAL_QC" and isinstance(workflow.get("auto_technical_qc"), dict) and workflow["auto_technical_qc"].get("status") == "PASS")
     checks = {
-        "human_listening_pass": isinstance(human, dict) and human.get("status") == "PASS",
+        "human_listening_pass": human_pass,
+        "auto_technical_qc_pass": auto_pass,
         "nas_archive_verified": isinstance(nas, dict) and nas.get("verified") is True,
         "r2_delivery_verified": isinstance(r2, dict) and r2.get("verified") is True,
         "website_live_verified": isinstance(live, dict) and live.get("verified") is True,
         "repair_support_complete": isinstance(repair, dict) and repair.get("complete") is True,
         "no_open_repairs": workflow.get("open_repairs") == 0,
     }
-    eligible = all(checks.values())
+    review_gate_pass = auto_pass if workflow.get("review_policy") == "AUTO_TECHNICAL_QC" else human_pass
+    eligible = review_gate_pass and all(value for key, value in checks.items() if key not in {"human_listening_pass", "auto_technical_qc_pass"})
     return {
         "status": "CLEANUP_ELIGIBLE" if eligible else "NOT_ELIGIBLE",
         "eligible": eligible,
@@ -135,7 +140,10 @@ def start_workflow(
     article_id: str,
     render_sha256: str,
     render_ref: str,
+    review_policy: str = "HUMAN_LISTENING",
 ) -> dict[str, Any]:
+    if review_policy not in {"HUMAN_LISTENING", "AUTO_TECHNICAL_QC"}:
+        raise WorkflowError("REVIEW_POLICY_INVALID")
     descriptor = _descriptor(
         authorization_ref=authorization_ref,
         generation_epoch=generation_epoch,
@@ -149,11 +157,13 @@ def start_workflow(
         "descriptor": descriptor,
         "render_ref": render_ref,
         "workflow_id": workflow_id,
+        "review_policy": review_policy,
     }
     if path.exists():
         existing = _load_json(path)
         for key, value in expected_identity.items():
-            if existing.get(key) != value:
+            actual = existing.get(key, "HUMAN_LISTENING") if key == "review_policy" else existing.get(key)
+            if actual != value:
                 raise WorkflowError("WORKFLOW_IDENTITY_CONFLICT")
         return existing
 
@@ -162,6 +172,7 @@ def start_workflow(
         "workflow_id": workflow_id,
         "descriptor": descriptor,
         "render_ref": render_ref,
+        "review_policy": review_policy,
         "state": "RENDER_READY",
         "s4_job_id": None,
         "request_id": None,
@@ -406,9 +417,14 @@ def _technical_qc_and_encode(root: Path, workflow: dict[str, Any]) -> dict[str, 
         "channels": 1,
         "duration_sec": round(mp3_duration, 3),
     }
-    workflow["state"] = "WAIT_HUMAN_LISTENING"
+    if workflow.get("review_policy") == "AUTO_TECHNICAL_QC":
+        workflow["auto_technical_qc"] = {"status": "PASS", "basis": "WAV_MP3_DECODE_AND_DURATION_ONLY"}
+        workflow["state"] = "AUDIO_READY_PENDING_PUBLICATION_GATE"
+        workflow["next_action"] = "EXPLICIT_PUBLICATION_GATE_REQUIRED"
+    else:
+        workflow["state"] = "WAIT_HUMAN_LISTENING"
+        workflow["next_action"] = "HUMAN_LISTENING"
     workflow["last_error"] = None
-    workflow["next_action"] = "HUMAN_LISTENING"
     return _persist(root, workflow)
 
 
@@ -602,6 +618,15 @@ def tick_all(
     *,
     spawn_worker: Callable[[], int] = _default_spawn_worker,
 ) -> list[dict[str, Any]]:
+    # Strictly opt-in: the selector does not exist until an authorized production activation.
+    # No historical backfill: selector baseline is frozen at activation time.
+    from read_aloud_new_post_reconcile import SelectorError, reconcile
+    try:
+        reconcile(s4.PROJECT_ROOT, root)
+        from read_aloud_new_post_executor import IntakeExecutionError, execute_one
+        execute_one(s4.PROJECT_ROOT, root)
+    except (SelectorError, IntakeExecutionError, OSError, s4.RunnerError) as exc:
+        raise WorkflowError("NEW_POST_RECONCILE_OR_ACTIVATION_BLOCKED") from exc
     directory = _workflow_dir(root)
     results: list[dict[str, Any]] = []
     for path in sorted(directory.glob("*.json")):
@@ -609,6 +634,22 @@ def tick_all(
         if workflow.get("state") in TERMINAL_WORKFLOW_STATES:
             continue
         results.append(tick_workflow(root, workflow["workflow_id"], spawn_worker=spawn_worker))
+    from read_aloud_new_post_delivery import ReadyDeliveryError, deliver_one
+    from read_aloud_media_delivery import DeliveryError
+    try:
+        deliver_one(s4.PROJECT_ROOT, root)
+    except (ReadyDeliveryError, DeliveryError, OSError, s4.RunnerError) as exc:
+        raise WorkflowError("AUTOMATIC_MEDIA_DELIVERY_BLOCKED") from exc
+    from read_aloud_audio_site_publisher import AudioPublicationError, publish_one
+    from read_aloud_audio_release_verifier import AudioVerificationError, verify_one
+    from read_aloud_article_release_verifier import ArticleReleaseVerificationError, verify_previous_article
+    from read_aloud_previous_release_gate import PreflightError
+    try:
+        verify_previous_article(root)
+        publish_one(s4.PROJECT_ROOT, root)
+        verify_one(root)
+    except (AudioPublicationError, AudioVerificationError, ArticleReleaseVerificationError, PreflightError, DeliveryError, OSError) as exc:
+        raise WorkflowError("AUTOMATIC_AUDIO_WEBSITE_PUBLICATION_BLOCKED") from exc
     return results
 
 
@@ -628,6 +669,7 @@ def main() -> int:
     p_start.add_argument("--article-id", required=True)
     p_start.add_argument("--render-sha256", required=True)
     p_start.add_argument("--render-ref", required=True)
+    p_start.add_argument("--review-policy", choices=["HUMAN_LISTENING", "AUTO_TECHNICAL_QC"], default="HUMAN_LISTENING")
 
     for name in ("status", "tick"):
         p = sub.add_parser(name)
@@ -651,6 +693,7 @@ def main() -> int:
                 article_id=args.article_id,
                 render_sha256=args.render_sha256,
                 render_ref=args.render_ref,
+                review_policy=args.review_policy,
             )
         elif args.command == "status":
             value = workflow_status(root, args.workflow_id)

@@ -136,6 +136,40 @@ class DurableWorkflowTests(unittest.TestCase):
         self.assertTrue(mp3.is_file())
         self.assertEqual(hashlib.sha256(mp3.read_bytes()).hexdigest(), result["delivery"]["sha256"])
 
+    def test_auto_qc_policy_is_opt_in_and_gated(self):
+        self.kw["review_policy"] = "AUTO_TECHNICAL_QC"
+        started = self.start()
+        self.assertEqual(started["review_policy"], "AUTO_TECHNICAL_QC")
+        self.assertEqual(started["state"], "RENDER_READY")
+        with self.assertRaises(wf.WorkflowError):
+            wf.start_workflow(self.root, **{**self.kw, "review_policy": "HUMAN_LISTENING"})
+        current = wf.tick_workflow(self.root, started["workflow_id"], spawn_worker=lambda: 4242)
+        job_path = self.root / "jobs" / f"{current['s4_job_id']}.json"
+        job = json.loads(job_path.read_text())
+        wav = self.root / "artifact-cache" / f"{current['s4_job_id']}.bin"
+        wav.parent.mkdir(parents=True, exist_ok=True)
+        import subprocess
+        subprocess.run([
+            "ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "sine=frequency=440:duration=0.5",
+            "-ac", "1", "-ar", "24000", "-c:a", "pcm_f32le", "-f", "wav", str(wav),
+        ], check=True)
+        job["status"] = "TERMINAL_PASS"
+        job["artifact"] = {
+            "artifact_ref": "voice-ai-artifact:test",
+            "artifact_sha256": hashlib.sha256(wav.read_bytes()).hexdigest(),
+            "cache_name": wav.name,
+            "verified": True,
+        }
+        job_path.write_text(json.dumps(job), encoding="utf-8")
+        wf.tick_workflow(self.root, started["workflow_id"], spawn_worker=lambda: 9999)
+        result = wf.tick_workflow(self.root, started["workflow_id"], spawn_worker=lambda: 9999)
+        self.assertEqual(result["state"], "AUDIO_READY_PENDING_PUBLICATION_GATE")
+        self.assertEqual(result["auto_technical_qc"]["status"], "PASS")
+        self.assertNotIn("human_listening", result)
+        self.assertFalse(result["automatic_action_available"])
+        self.assertTrue(result["operator_or_human_required"])
+        self.assertEqual(wf.tick_workflow(self.root, started["workflow_id"]), result)
+
     def test_cleanup_gate_requires_all_closure_checks_and_repair_support(self):
         started = self.start()
         self.assertEqual(started["cleanup"]["status"], "NOT_ELIGIBLE")
