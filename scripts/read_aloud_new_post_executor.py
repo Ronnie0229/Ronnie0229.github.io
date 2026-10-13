@@ -67,8 +67,14 @@ def execute_one(project_root: Path, runtime_root: Path, *, pilot_grant_path: Pat
                               capture_output=True, check=False)
         if blob.returncode or hashlib.sha256(blob.stdout).hexdigest() != sha:
             raise IntakeExecutionError("FROZEN_POST_NOT_AVAILABLE_OR_SHA_MISMATCH")
-        rendered = subprocess.run(["node", str(project_root / "scripts/read_aloud_render_view.mjs"), "-"],
-                                  input=blob.stdout, capture_output=True, check=False)
+        # Node 26 may raise EAGAIN while reading stdin from a subprocess pipe.
+        # Feed the already-verified immutable Git blob through a private temporary file.
+        import tempfile
+        with tempfile.TemporaryDirectory(prefix="ronnie-render-") as scratch:
+            frozen_file = Path(scratch) / "frozen-post.md"
+            frozen_file.write_bytes(blob.stdout)
+            rendered = subprocess.run(["node", str(project_root / "scripts/read_aloud_render_view.mjs"),
+                                       str(frozen_file)], capture_output=True, check=False)
         if rendered.returncode:
             raise IntakeExecutionError("RENDER_VIEW_FAILED")
         try:
