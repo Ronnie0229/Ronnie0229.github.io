@@ -101,6 +101,40 @@ class SitePublisherIntegrationTests(unittest.TestCase):
             return publisher.publish_one(self.repo, self.runtime,
                                          allow_test_repo=True, build=False, push=True)
 
+    def test_previous_article_pending_blocks_audio_release_without_git_write(self):
+        receipt_path = self.runtime / 'website-publication/last_website_release.json'
+        receipt = last_receipt(self.runtime)
+        receipt['publication_state'] = 'PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY'
+        receipt_path.write_text(json.dumps(receipt))
+        before = self.git('rev-parse', 'HEAD')
+        self.assertIsNone(self._publish())
+        self.assertEqual(self.git('rev-parse', 'HEAD'), before)
+        self.assertEqual(self.git('status', '--porcelain'), '')
+
+    def test_unverified_previous_receipt_fails_closed(self):
+        receipt_path = self.runtime / 'website-publication/last_website_release.json'
+        receipt = last_receipt(self.runtime)
+        receipt['publication_state'] = 'UNKNOWN'
+        receipt_path.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(publisher.AudioPublicationError, 'PREVIOUS_RELEASE_RECEIPT_UNVERIFIED'):
+            self._publish()
+        self.assertEqual(self.git('rev-parse', 'HEAD'), self.original_commit)
+
+    def test_missing_previous_receipt_blocks_audio_release(self):
+        (self.runtime / 'website-publication/last_website_release.json').unlink()
+        with self.assertRaisesRegex(publisher.AudioPublicationError, 'PREVIOUS_RELEASE_RECEIPT_UNVERIFIED'):
+            self._publish()
+        self.assertEqual(self.git('rev-parse', 'HEAD'), self.original_commit)
+
+    def test_stale_previous_receipt_blocks_audio_release(self):
+        receipt_path = self.runtime / 'website-publication/last_website_release.json'
+        receipt = last_receipt(self.runtime)
+        receipt['commit'] = 'f' * 40
+        receipt_path.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(publisher.AudioPublicationError, 'PREVIOUS_RELEASE_RECEIPT_STALE'):
+            self._publish()
+        self.assertEqual(self.git('rev-parse', 'HEAD'), self.original_commit)
+
     def test_exact_audio_only_commit_and_async_readback(self):
         result = self._publish()
         self.assertEqual(result["status"], "AUDIO_RELEASE_PENDING_VERIFY")
@@ -138,7 +172,7 @@ class SitePublisherIntegrationTests(unittest.TestCase):
              patch.object(publisher, 'verify_r2', return_value=True):
             with self.assertRaises(publisher.AudioPublicationError) as blocked:
                 publisher.publish_one(self.repo, self.runtime, allow_test_repo=True, build=False, push=True)
-        self.assertIn('SOURCE_POST_SHA_DRIFT', str(blocked.exception))
+        self.assertIn('PREVIOUS_RELEASE_RECEIPT_STALE', str(blocked.exception))
         self.assertEqual(self.git('rev-parse', 'HEAD'), post_commit)
         self.assertEqual(last_receipt(self.runtime)['commit'], self.original_commit)
 

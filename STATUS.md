@@ -1,5 +1,13 @@
 # 个人网页项目状态
 
+## 2026-10-13 — Patrick 有声阅读代码及统一上次发布核验
+
+- Patrick exact-one 必要代码 28/28 已经单独 commit/push (`4ab066223c9ecb5a09258aebb99d256d0f17e5b6`)，生产站点 deployment.json 已 fresh readback 对应版本。
+- 此前两个 canonical 规划 dirty 文件已独立纳入文档 commit `c562ef8f28dc0a8089dea01ac2e89f2efd93fed6`，与业务代码提交隔离。
+- 最新 Owner 策略：文章或音频本次网站 Git push 后不等待 Cloudflare 终态；下一次网站文章/音频发布必须先核实上一轮相应发布结果。音频入口拒绝 missing、pending、unknown、stale receipt，只有与 HEAD/origin/main 匹配的 VERIFIED receipt 允许发布；普通文章仍保留既有 Publication Fast Lane 人工 preflight，不宣称已接入通用机器事务平台。
+- 本次局部回归 Python 175/175、Node 2/2、Astro 346 页 PASS；无真实 Patrick TTS/NAS/R2/upload 执行，也未启用 future automatic selector。各轮 FAIL/BLOCKED/PASS chronology 不互相覆盖。
+
+
 
 ## 2026-10-11 — 历史81篇讲道排版修复 P1→P2→P3
 

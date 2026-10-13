@@ -1,5 +1,13 @@
 # 当前任务
 
+## 2026-10-13｜Patrick 单篇代码交付与发布前次核验策略收口
+
+- 精确 28 文件网站代码已提交并 push：`4ab066223c9ecb5a09258aebb99d256d0f17e5b6`；canonical/remote Git 一致且 Cloudflare 后续版本已现场核验。真实 Patrick TTS/NAS/R2/音频发布尚未执行；未来自动选择器未启用。
+- 原来占用 canonical working tree 的本任务两项规划资产已单独 commit：`c562ef8f28dc0a8089dea01ac2e89f2efd93fed6`；无关文件未混入。
+- Owner 统一业务规则：文章/音频本轮 push 后不等待本次 Cloudflare 终态；下一次发布之前核验上次 Website release 结果。既有文章 Publication Fast Lane 人工核验保留；音频入口只接受与当前最新 Git 身份一致的 VERIFIED receipt；PENDING/UNKNOWN/missing/stale 均 fail-closed。无需新增全局发布锁。
+- 当前精确增量实现测试 Python 175/175、Node 2/2、Astro 346 页 PASS；代码差异仍需独立最终复核，当前不等于已批准真实音频 Pilot。规划文档 local commit 是否已 push 以本轮 Git readback 为准，不得预设。
+
+
 ## 2026-10-11｜新文章发布后自动有声阅读规划与启动检查
 
 - 正式完整计划：`docs/tasks/article-read-aloud-new-post-automation-plan-20261011.md`；只启动新文章自动化建设，历史文章批量 backfill 继续暂停。

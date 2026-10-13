@@ -22,6 +22,13 @@ B. 同一 Executor 在限定 write-set 下连续完成：push-after-new-post bou
 C. 独立 Auditor：验证新增文章/旧文更新/audioUrl 更新分母、重复触发、push/部署交错、TTS UNKNOWN、崩溃恢复、Git 冲突、NAS 未挂载、R2 失败、no-notification、旧 Pilot 兼容、无过度工程；审计不自行授权生产。
 D. Fresh production gate：以 post-072eda6a5bfbe1f9 一次显式 opt-in 验证，先确认其网站 push、线上 deployment、正文身份、RSS/Sitemap、原文章 notification，随后明确授权恰好一次 TTS 真实生成与有界音频发布；现场核验 NAS/R2/site/无邮件；达到 PASS 才考虑未来持续自动触发授权。
 
+## 2026-10-13 Owner 最新发布策略补充（保留历史 chronology）
+
+- 本段为后续 Owner 决定；早期计划中的“所有出版入口全局强制锁”不再作为验收要求。文章和音频按业务错峰操作，不新增全局强制互斥平台。
+- 不论本次是新文章还是音频，完成 Git push、触发部署后即可记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 并结束；**不等待本次 Cloudflare 终态**。下一次不论发布文章还是音频，均先按上一轮具体类型核验部署 SHA、线上身份、文章邮件或音频 R2/零邮件；未确认则不继续网站写入。
+- 现有文章流程保留 Publication Fast Lane 人工 previous-release preflight；音频执行入口消费结构化 verified receipt，缺失、落后或状态不明则 fail-closed。跨入口完全自动登记文章 receipt 尚未证明，不得声称通用机器平台已完成。
+- Patrick 单篇真实 TTS/NAS/R2 生产执行与未来新文章无人值守自动化授权仍分开；前者待精确授权，后者关闭。
+
 ## 启动检查结论与停止点
 2026-10-11 本轮读到 canonical main...origin/main（仅为当前连接反馈；未等同于 live deployment）。
 当前文档：2026-10-11 Patrick 新稿已通过 E1 91/91、网站结构验收、346 页构建；但同轮 STATUS/current 均写明 GitHub push 结果和 Cloudflare / 邮件异步终态须 fresh readback，不能预设成功。当前现存控制器 scripts/read_aloud_workflow.py 在技术 QC 后写 state=WAIT_HUMAN_LISTENING, next_action=HUMAN_LISTENING，尚无批准的 unattended release transition。

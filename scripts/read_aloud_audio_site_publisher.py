@@ -176,8 +176,8 @@ def publish_one(project_root: Path, runtime_root: Path, *, allow_test_repo: bool
             raise AudioPublicationError("MEDIA_READBACK_UNAVAILABLE") from exc
         with publication_lock(runtime_root):
             prev = last_receipt(runtime_root)
-            # Owner-approved operating model: article and audio releases are scheduled separately.
-            # A shared article-release receipt is NOT a production admission condition.
+            # Business operations remain staggered, not globally locked.
+            # The previous website release of ANY kind must have a verified receipt.
             operator_separated = selector.get("article_audio_publish_nonoverlap") is True
             if not operator_separated:
                 raise AudioPublicationError("NONOVERLAP_POLICY_NOT_ENABLED")
@@ -191,11 +191,15 @@ def publish_one(project_root: Path, runtime_root: Path, *, allow_test_repo: bool
                     entry["website_commit"] = local
                     s4.atomic_write_json(entry_path, entry)
                     return entry
-                return None  # Still verifying the last audio-only transaction.
+                return None  # Previous article/audio/site release must be verified first.
+            if not isinstance(prev, dict) or prev.get('publication_state') != 'VERIFIED':
+                raise AudioPublicationError('PREVIOUS_RELEASE_RECEIPT_UNVERIFIED')
+            if prev.get('commit') != remote:
+                raise AudioPublicationError('PREVIOUS_RELEASE_RECEIPT_STALE')
             if local != remote:
                 raise AudioPublicationError("MAIN_REMOTE_DRIFT_STOP_MANUAL_REVIEW")
-            # Current Git state is the authority; normal article release has its own workflow.
-            # No strict previous ARTICLE receipt or Cloudflare prerequisite.
+            # Current Git state and verified last-release receipt are required; this
+            # publication records PENDING after push, without waiting for deployment.
             if run_git(project_root, "status", "--porcelain"):
                 raise AudioPublicationError("CANONICAL_GIT_DIRTY")
             full_path = project_root / post_path
