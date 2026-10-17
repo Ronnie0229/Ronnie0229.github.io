@@ -1,0 +1,143 @@
+{
+  "schema": "ronniecross-historical-tts-pilot-qualification/v1",
+  "date": "2026-10-14",
+  "pilot_size": 5,
+  "entries": [
+    {
+      "article_id": "post-d6033867e9b33cc1",
+      "file": "2026-07-12-列王纪上-17-1-24-以利亚与撒勒法寡妇-信靠神的供应.md",
+      "title": "列王纪上 17:1-24｜以利亚与撒勒法寡妇：信靠神的供应",
+      "author": "Ronnie",
+      "category": "灵命成长",
+      "reviewed": "false",
+      "source_path": "data/raw/分享/列王纪上17_以利亚与撒勒法寡妇_信靠神的供应.txt",
+      "source_sha256": "d736091f42749fd37c5563f9163895e60934819e22d4d01aa41915fff0a5f144",
+      "post_sha256": "3e89df59c2812ccc129c3954b2ed6fa802083b722a60e6c315279ad4df977c73",
+      "source_chinese_chars": 2160,
+      "site_body_chars": 2161,
+      "source_body_exact_after_trim": true,
+      "original_assets": [],
+      "english_transcript_chars": null,
+      "render_view_identity_pass": true,
+      "render_text_chars": 2160,
+      "render_sha256": "d736091f42749fd37c5563f9163895e60934819e22d4d01aa41915fff0a5f144",
+      "final_content_gate": "BLOCKED_PENDING_FIDELITY_AND_BIBLE_PROOF",
+      "blockers": [
+        "FRONTMATTER_REVIEWED_FALSE_AND_NO_FORMAL_FIDELITY_REPORT",
+        "BASIC_COPYEDIT_IS_NOT_FULL_ORIGINAL_TO_TRANSLATION_FIDELITY_PROOF"
+      ]
+    },
+    {
+      "article_id": "post-356554ade21996bd",
+      "file": "2026-07-19-希伯来书-11-1-7｜信仰的殿堂-挪亚.md",
+      "title": "希伯来书 11:1-7｜信仰的殿堂：挪亚",
+      "author": "Akira",
+      "category": "教会讲道",
+      "reviewed": "true",
+      "source_path": "data/raw/教会讲道/20260719_希伯来书11:1-7_信仰的殿堂：挪亚_Akira/20260719_希伯来书11:1-7_信仰的殿堂：挪亚_Akira_中文.txt",
+      "source_sha256": "d7e3918bfdc32761cd5b9805d576d17ede8274ceb0022e81d3c81ed7d4d87cb5",
+      "post_sha256": "e97d9c31e0ee2ab1123b460a3854a3314d349e08ce71c31c6dd613bb397106ad",
+      "source_chinese_chars": 5204,
+      "site_body_chars": 5205,
+      "source_body_exact_after_trim": false,
+      "original_assets": [
+        {
+          "filename": "The Hall of Faith Noah.docx",
+          "bytes": 42175,
+          "sha256": "40492673ac38dfcdfebdbd8dd57bdfb70311569c35132c06528fec4d7c2df5aa"
+        }
+      ],
+      "english_transcript_chars": 15036,
+      "render_view_identity_pass": true,
+      "render_text_chars": 5198,
+      "render_sha256": "9595d571c66d539d4619c9806e6da5a986e13c3eee2661f9ad132fc9e8e2184c",
+      "final_content_gate": "BLOCKED_PENDING_FIDELITY_AND_BIBLE_PROOF",
+      "blockers": [
+        "NO_EXACT_ARTICLE_INDEPENDENT_SOURCE_TO_CHINESE_FIDELITY_AUDIT_FOUND"
+      ]
+    },
+    {
+      "article_id": "post-0d153ce310d0eebd",
+      "file": "2026-07-21-帖撒罗尼迦前书-4-16-在基督里死了的人必先复活是什么意思.md",
+      "title": "帖撒罗尼迦前书 4:16｜在基督里死了的人必先复活是什么意思",
+      "author": "Ronnie",
+      "category": "灵命成长",
+      "reviewed": "false",
+      "source_path": "data/raw/分享/20260721_帖撒罗尼迦前书4章16节_在基督里死了的人必先复活_Ronnie_中文.txt",
+      "source_sha256": "ab5b444ba6338031dc85e165a5c2e36476bfa255095b106ba91544fae5d53026",
+      "post_sha256": "4f4648104cf7faecb2e9984d01a734176df90eaa44dfb16a488c89d2fa974a57",
+      "source_chinese_chars": 2202,
+      "site_body_chars": 2203,
+      "source_body_exact_after_trim": true,
+      "original_assets": [],
+      "english_transcript_chars": null,
+      "render_view_identity_pass": true,
+      "render_text_chars": 2178,
+      "render_sha256": "46523a1a5027e4b7a7792b20b30bf37d44b697ecd050464e6eeedb7074a1ab6c",
+      "final_content_gate": "BLOCKED_PENDING_FIDELITY_AND_BIBLE_PROOF",
+      "blockers": [
+        "FRONTMATTER_REVIEWED_FALSE_AND_NO_FORMAL_FIDELITY_REPORT",
+        "BASIC_COPYEDIT_IS_NOT_FULL_ORIGINAL_TO_TRANSLATION_FIDELITY_PROOF"
+      ]
+    },
+    {
+      "article_id": "post-dd39d23b9402289a",
+      "file": "2026-07-26-希伯来书-11-8-11-17-19｜没有道路时的信心.md",
+      "title": "希伯来书 11:8-11;17-19｜没有道路时的信心",
+      "author": "Nathan",
+      "category": "教会讲道",
+      "reviewed": "true",
+      "source_path": "data/raw/教会讲道/20260726_希伯来书11:8-11,17-19_没有道路时的信心_Nathan/20260726_希伯来书11:8-11,17-19_没有道路时的信心_Nathan_中文.txt",
+      "source_sha256": "5e534b6ae40633cc0ad816f589ae88b784fafef263ecc4200060b7e2c6236a3d",
+      "post_sha256": "aac488706f1a90dcb2ad18d3bee8d025f4b07a9fb9a25a06b52e042677526340",
+      "source_chinese_chars": 6387,
+      "site_body_chars": 6388,
+      "source_body_exact_after_trim": true,
+      "original_assets": [
+        {
+          "filename": "Heb. 11 Abraham 26-07-26 (side-by-side).pdf",
+          "bytes": 245455,
+          "sha256": "1e5eaab685193b9bbd83e4f41828f009ff797414cbb15ba4b1dc6b3aec7b0d16"
+        }
+      ],
+      "english_transcript_chars": 3848,
+      "render_view_identity_pass": true,
+      "render_text_chars": 6387,
+      "render_sha256": "5e534b6ae40633cc0ad816f589ae88b784fafef263ecc4200060b7e2c6236a3d",
+      "final_content_gate": "BLOCKED_PENDING_FIDELITY_AND_BIBLE_PROOF",
+      "blockers": [
+        "ENGLISH_SOURCE_SHORTER_THAN_CHINESE_NEEDS_PDF_COMPLETENESS_REVIEW",
+        "NO_EXACT_ARTICLE_INDEPENDENT_SOURCE_TO_CHINESE_FIDELITY_AUDIT_FOUND"
+      ]
+    },
+    {
+      "article_id": "post-ab016b16139b1d4c",
+      "file": "2026-08-02-希伯来书-11-21-39-40｜信仰的殿堂-雅各.md",
+      "title": "希伯来书 11:21、39-40｜信仰的殿堂：雅各",
+      "author": "Grayson",
+      "category": "教会讲道",
+      "reviewed": "true",
+      "source_path": "data/raw/教会讲道/20260802_希伯来书11:21,39-40_信仰的殿堂：雅各_Grayson/20260802_希伯来书11:21,39-40_信仰的殿堂：雅各_Grayson_中文.txt",
+      "source_sha256": "5c70f08e0441bcbe0256a152498df4c41317929dcc85e8d581c8e04288ecb182",
+      "post_sha256": "8f2dec5b4e1e68986b3a2924a2a340de644a750a7c4ab2953752f5d825d9214f",
+      "source_chinese_chars": 5622,
+      "site_body_chars": 5631,
+      "source_body_exact_after_trim": false,
+      "original_assets": [
+        {
+          "filename": "Final - Hebrews 11_21 JACOB-2.pdf",
+          "bytes": 241856,
+          "sha256": "5bfae7681c9164e392ea39f5637de3c3511560939c2e0205f976ac3564707b91"
+        }
+      ],
+      "english_transcript_chars": 22480,
+      "render_view_identity_pass": true,
+      "render_text_chars": 5616,
+      "render_sha256": "412426de240144567e52de996c2c22563cc18d50750208003313b24f45260bec",
+      "final_content_gate": "BLOCKED_PENDING_FIDELITY_AND_BIBLE_PROOF",
+      "blockers": [
+        "NO_EXACT_ARTICLE_INDEPENDENT_SOURCE_TO_CHINESE_FIDELITY_AUDIT_FOUND"
+      ]
+    }
+  ]
+}
