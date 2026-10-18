@@ -1,5 +1,12 @@
 # 当前任务
 
+## 2026-10-14｜分享文章至 TTS 音频发布全流程复盘文档落盘
+
+- 已根据正式 Git、runtime S4 workflow/intake、NAS/R2 交付凭据、Telegram machine/result、website-publication receipt 完成只读 fresh-read，并保存本次真实执行复盘：`docs/tasks/share-article-tts-end-to-end-20261013/WORKFLOW_EXECUTION_REVIEW.md`。
+- 本篇文章 `post-c313198e37dddf21`：正文发布 commit `f19503d6164b039826b3dc80285d2727b93cf6e5`，音频绑定 commit `67a68298a21c05ab27befd2b39c2a722a67bd851`；当前 workflow/intake `COMPLETE`，最后发布 receipt `VERIFIED`。完整 chronology、R2 旧 404 后只读恢复、邮件公开证据限制、Telegram 一次性脚本合同和 Publication Fast Lane 规则见上述复盘。
+- 本轮 **仅更新文档**，无业务代码、TTS、NAS/R2、邮件、构建、commit/push；不将复盘建议解释为新的自动发布许可。
+
+
 ## 2026-10-13｜分享《如何荣耀神并永远以祂为乐？》发布与 TTS Telegram 交接
 
 - 用户授权从 NAS 分享收件完整运行文章整理、正式发布到有声阅读流程。唯一源 PDF：`How Do We Glorify God and Enjoy Him Forever.pdf`，4 页，SHA-256=`02bfc20c28bab941c77b8abeb3da2f6f70414b67cf3ef3199f6e93388ad1bf8a`；正式文章 ID=`post-c313198e37dddf21`，日期 2026-10-13。
