@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import shutil
 import subprocess
@@ -187,6 +188,23 @@ def publish(
             raise SystemExit("Sermon publish requires --folder to avoid importing all sermon folders.")
         if not presentation_file:
             raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: sermon publish requires --presentation-file")
+        # Protect the direct workflow entrypoint as well as package consumption.
+        gate = subprocess.run(
+            ["node", str(ROOT / "scripts/validate_sermon_presentation.mjs"),
+             "--source", str(Path(presentation_file).resolve()),
+             "--candidate-id", Path(folder).name],
+            cwd=ROOT, capture_output=True, text=True, check=False,
+        )
+        try:
+            evidence = json.loads(gate.stdout)
+        except json.JSONDecodeError:
+            raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: invalid rendered gate evidence")
+        if (gate.returncode != 0
+            or evidence.get("status") != "SERMON_PRESENTATION_STRUCTURE_PASS"
+            or evidence.get("completion_ceiling") != "publication_structure_ready"
+            or not evidence.get("rendered_html", {}).get("sha256")):
+            print(json.dumps(evidence, ensure_ascii=False, indent=2))
+            raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: direct workflow gate FAIL")
         command.extend(["--folder", folder, "--presentation-file", presentation_file])
     elif kind == "share":
         if not source_file:

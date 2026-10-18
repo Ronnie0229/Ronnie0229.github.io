@@ -102,6 +102,18 @@ Gate 除既有 production residue / scripture label / TOC / list / small-group c
 
 该结构 PASS 仍不能替代 fidelity/semantic PASS、Project Bible/CUV exactness、完整 reader-quality/aesthetic 判断、build/deploy/live technical PASS；但它是 sermon Website publish 前不可缺少的结构硬门。
 
+## 7.1 正式强制执行位置（2026-10-18）
+
+**先检查、再发布；不得依赖发布后的网页试听或人工发现问题代替发布前检查。**
+
+1. Sermon Owner 在发布前生成 Markdown，完成独立 fidelity + Project Bible Gate，并产出 sermon-presentation/v1 的 frozen-text 顺序与 SHA 身份 PASS。此后 Website 只能检查呈现结构，不能改写或重新判断 E1。
+2. Website `scripts/consume_publication_package.py` 的 sermon `dry-run` 和 `publish` 调用现有 `scripts/validate_sermon_presentation.mjs`；绑定 `prepublish.path + prepublish.sha256 + metadata.batch_id`，必须收到 `SERMON_PRESENTATION_STRUCTURE_PASS`、`publication_structure_ready` 和当前 Markdown/rendered HTML SHA 证据，才允许进入导入流程。命中缺证据、SHA drift、validator/renderer failure、标题/列表/段落 FAIL 均 fail-closed，`plan` 只可用于只读计划，不代表发布准入。
+3. `scripts/content_workflow.py publish sermon` 直接入口也执行同一来源的结构校验，禁止绕过 package consumer 直接写入。结构检查在任何 Website post 写入、Astro build、Git commit/push 或部署触发**之前**。
+4. 结构专项必检查：三并列要点的编号、层级、来源段落与经文范围和显式答案不能消失；多个并列要点必须采用统一 Markdown heading/list/block，不能以混合 H2/普通文本或中文视觉编号伪装；四项理由、小组分享要按语义正确列表化；经文出处、引语、结束语及荣耀颂不能因渲染折叠丢失。**内容语义一致性的人工判定及 frozen fidelity 记录仍归 Sermon Owner**，Website 机械 Gate 不可声称已代替语义审查。
+5. 只采信与**本次正式候选 SHA** 绑定的 gate terminal；任何旧稿、旧 HTML、旧截图、历史 PASS 或仅仅 build PASS 都不能代替。发布后仍做 live/手机端/RSS/Sitemap/notification 验证，但这些是额外验收，不是允许先发布的理由。
+6. 记录 PASS/FAIL/BLOCKED chronology。发现排版 FAIL，先最小修改 presentation 层，重新验证受控正文 exact identity 和整个 rendered gate；未达 PASS 不得继续正式发布，不引入新服务、平台或后台任务。
+
+
 ## 8. Current implementation anchors
 
 本 binding 的 current facts 来自：

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -11,6 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_VALIDATOR = ROOT / "scripts" / "validate_publication_package.py"
 DEFAULT_WORKFLOW = ROOT / "scripts" / "content_workflow.py"
+SERMON_STRUCTURE_VALIDATOR = ROOT / "scripts" / "validate_sermon_presentation.mjs"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -44,6 +46,42 @@ def run_validator(validator: Path, contract: Path, schema: Path, content_root: P
         print(json.dumps(report, ensure_ascii=False, indent=2))
         raise SystemExit(2)
     return report
+
+
+def enforce_sermon_prepublication_structure(package: dict[str, Any]) -> dict[str, Any] | None:
+    """Fail closed before any sermon dry-run/publish website import side effect."""
+    if package.get("content_type") != "sermon":
+        return None
+    prepublish = package.get("prepublish")
+    source = prepublish.get("path") if isinstance(prepublish, dict) else None
+    expected_sha = prepublish.get("sha256") if isinstance(prepublish, dict) else None
+    if not isinstance(source, str) or not isinstance(expected_sha, str):
+        raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: missing bound prepublish identity")
+    candidate = Path(source).resolve(strict=True)
+    if hashlib.sha256(candidate.read_bytes()).hexdigest() != expected_sha:
+        raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: prepublish SHA mismatch")
+    batch = package.get("metadata", {}).get("batch_id")
+    if not isinstance(batch, str) or not batch:
+        raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: missing batch identity")
+    result = subprocess.run(
+        ["node", str(SERMON_STRUCTURE_VALIDATOR), "--source", str(candidate),
+         "--candidate-id", batch],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    try:
+        evidence = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: renderer produced no valid evidence")
+    if (
+        result.returncode != 0
+        or evidence.get("status") != "SERMON_PRESENTATION_STRUCTURE_PASS"
+        or evidence.get("completion_ceiling") != "publication_structure_ready"
+        or evidence.get("source", {}).get("sha256") != expected_sha
+        or not isinstance(evidence.get("rendered_html", {}).get("sha256"), str)
+    ):
+        print(json.dumps(evidence, ensure_ascii=False, indent=2))
+        raise SystemExit("SERMON_PREPUBLICATION_STRUCTURE_BLOCKED: source/rendered hard gate FAIL")
+    return evidence
 
 
 def import_command(package: dict[str, Any], workflow: Path, mode: str, allow_write: bool) -> list[str]:
@@ -128,7 +166,9 @@ def main() -> int:
     package = load_json(args.contract)
 
     command: list[str] | None = None
+    structure_evidence: dict[str, Any] | None = None
     if args.mode != "plan":
+        structure_evidence = enforce_sermon_prepublication_structure(package)
         command = import_command(package, args.workflow_script, args.mode, args.allow_write)
 
     plan = {
@@ -143,6 +183,7 @@ def main() -> int:
         "notification_policy": package.get("notification_policy"),
         "archive_status": package.get("archive_status"),
         "validator_report": report,
+        "prepublication_structure_gate": structure_evidence,
     }
 
     if args.plan_output:
