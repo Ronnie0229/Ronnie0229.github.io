@@ -600,6 +600,29 @@ def resolve_folder(value: str) -> Path:
     return candidate
 
 
+def bind_article_id(markdown: str, slug: str) -> str:
+    """Bind deterministic articleId before source mirrors are written."""
+    article_id = "post-" + hashlib.sha256(slug.encode("utf-8")).hexdigest()[:16]
+    if not markdown.startswith("---\n"):
+        raise SystemExit("ARTICLE_ID_FRONTMATTER_REQUIRED")
+    first, sep, rest = markdown[4:].partition("\n---\n")
+    if not sep:
+        raise SystemExit("ARTICLE_ID_FRONTMATTER_UNCLOSED")
+    lines = first.split("\n")
+    positions = [i for i, line in enumerate(lines) if line.startswith("articleId:")]
+    if len(positions) > 1:
+        raise SystemExit("ARTICLE_ID_DUPLICATE")
+    if positions:
+        index = positions[0]
+        found = lines[index].partition(":")[2].strip().strip('"')
+        if found and found != article_id:
+            raise SystemExit("ARTICLE_ID_IDENTITY_MISMATCH")
+        lines[index] = f'articleId: "{article_id}"'
+    else:
+        lines.insert(0, f'articleId: "{article_id}"')
+    return "---\n" + "\n".join(lines) + "\n---\n" + rest
+
+
 def target_paths_for(source_date: str, publish_title: str) -> tuple[str, Path, Path]:
     slug = f"{source_date}-{slugify(publish_title)}"
     return slug, ORGANIZED_DIR / f"{slug}.md", POSTS_DIR / f"{slug}.md"
@@ -753,6 +776,7 @@ def main() -> None:
         if any(row.get("slug") == slug and row.get("source_folder") != folder.name for row in registry_rows.values()):
             raise SystemExit(f"Slug already belongs to another source folder: {slug}")
         ensure_safe_targets(organized_path, post_path, update_existing=bool(existing_registry and args.update_existing))
+        markdown = bind_article_id(markdown, slug)
         print(f"Folder: {folder.name}")
         print(f"Source file: {source_file.name}")
         print(f"Title: {publish_title}")

@@ -160,6 +160,26 @@ function collectChineseOutlineFailures(lines) {
   return failures;
 }
 
+function collectThreePointHeadingFailures(lines) {
+  const failures = [];
+  for (let i = 0; i < lines.length - 2; i += 1) {
+    const a = lines[i].match(/^1\.\s+(.+)/);
+    const b = lines[i + 1].match(/^2\.\s+(.+)/);
+    const c = lines[i + 2].match(/^3\.\s+(.+)/);
+    if (!a || !b || !c) continue;
+    const intro = lines.slice(Math.max(0, i - 5), i).join(" ");
+    const scriptureOutline = [a[1], b[1], c[1]].every(x => /第.{1,12}节/.test(x));
+    if (!/(?:今天|下面|以下|全文|本篇).{0,20}(?:有|分为|包括)(?:三个|三项|三点)|(?:共有|分为)(?:三个|三项|三点)/.test(intro) && !scriptureOutline) continue;
+    const normalize = x => x.replace(/\*\*/g, "").trim();
+    const titles = [a[1], b[1], c[1]].map(normalize);
+    const headings = lines.filter(line => /^##\s+/.test(line)).map(line => normalize(line.replace(/^##\s+/, "")));
+    for (const title of titles) {
+      if (!headings.includes(title)) failures.push({kind:"missing_three_point_h2", title, outline_line:i+1});
+    }
+  }
+  return failures;
+}
+
 function collectItemizedSections(lines) {
   const sections = [];
   for (let index = 0; index < lines.length; index += 1) {
@@ -323,6 +343,7 @@ async function main() {
 
   const pseudoOrderedListFailures = collectPseudoOrderedListFailures(lines);
   const chineseOutlineFailures = collectChineseOutlineFailures(lines);
+  const threePointHeadingFailures = collectThreePointHeadingFailures(lines);
   const itemizedSections = collectItemizedSections(lines);
   const sourceStructureFailures = itemizedSections
     .filter(
@@ -425,6 +446,8 @@ async function main() {
       chineseOutlineFailures,
       "Chinese parallel outline items (一、二、三、 / （一）（二） / 第一、第二) must use uniform Markdown list syntax; mixed H2 and plain-line siblings are forbidden."
     ),
+    makeCheck("three_point_outline_h2_presence", threePointHeadingFailures,
+      "An explicit three-part sermon outline must have exactly corresponding visible H2 chapter boundaries."),
     makeCheck(
       "small_group_heading_public_label",
       smallGroupHeadingFailures,

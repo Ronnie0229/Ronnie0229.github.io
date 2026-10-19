@@ -55,6 +55,35 @@ test("PASS fixture binds source to rendered independent list blocks and mechanic
   }
 });
 
+
+test("three-point outline requires matching visible H2 headings before publication", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ronnie-outline-h2-"));
+  const outline = "今天有三个值得注意的方面：\n\n1. 思考为什么（第1至2节）：为什么？\n2. 思考怎样做（第2至4节）：怎样做？\n3. 思考合一出于谁（第5节）：是谁？\n\n";
+  try {
+    const source = path.join(dir, "candidate.md");
+    fs.writeFileSync(source, outline + "正文段落。\n", "utf8");
+    const run = () => {
+      const p = spawnSync(process.execPath,
+        [gate, "--source", source, "--candidate-id", "outline-check"],
+        {cwd: projectRoot, encoding: "utf8"});
+      return {code:p.status, report:JSON.parse(p.stdout)};
+    };
+    const missing = run();
+    assert.equal(missing.code, 1);
+    assert.ok(failedCheckIds(missing.report).includes("three_point_outline_h2_presence"));
+    assert.equal(missing.report.checks.find(x => x.id === "three_point_outline_h2_presence").failures.length, 3);
+    fs.writeFileSync(source, outline +
+      "## 思考为什么（第1至2节）：为什么？\n\n正文一。\n\n" +
+      "## 思考怎样做（第2至4节）：怎样做？\n\n正文二。\n\n" +
+      "## 思考合一出于谁（第5节）：是谁？\n\n正文三。\n", "utf8");
+    const pass = run();
+    assert.equal(pass.code, 0);
+    assert.equal(pass.report.checks.find(x => x.id === "three_point_outline_h2_presence").status, "PASS");
+  } finally {
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
 test("FAIL fixture blocks slide/page production residue", () => {
   const result = runFixture("fail-production-residue.md");
   assert.equal(result.status, 1);
