@@ -28,6 +28,14 @@ class SermonPrepublicationStructureGateTest(unittest.TestCase):
         self.assertEqual(result["status"], "SERMON_PRESENTATION_STRUCTURE_PASS")
         self.assertEqual(result["completion_ceiling"], "publication_structure_ready")
 
+    def test_internal_metadata_note_fails_closed(self):
+        with self.assertRaisesRegex(SystemExit, "STRUCTURE_BLOCKED"):
+            self.check("大家早上好。\n\n讲员：Patrick（默认规则，待元数据最终确认）\n")
+
+    def test_duplicate_sermon_title_speaker_event_fails_closed(self):
+        with self.assertRaisesRegex(SystemExit, "STRUCTURE_BLOCKED"):
+            self.check("腓立比书2章5节到11节｜基督的道路\n讲员：Patrick\n场合：家庭主日（FAMILY SUNDAY）\n\n大家早上好。\n")
+
     def test_sha_drift_fails_closed(self):
         with self.assertRaisesRegex(SystemExit, "SHA mismatch"):
             self.check("## 标题\n\n正文\n", mismatch=True)

@@ -64,6 +64,10 @@ const productionResiduePatterns = [
   /^\s*(?:Page\s+\d+|第\s*\d+\s*页)\s*$/i
 ];
 
+// Public-content hygiene: publishing metadata belongs in frontmatter, not the sermon body.
+const internalWorkflowNotePattern = /(?:默认规则.{0,16}待元数据(?:最终)?确认|待元数据(?:最终)?确认|NEEDS_METADATA|PENDING_METADATA)/i;
+const duplicateSermonLeadPattern = /^(?:#{1,3}\s*)?(?:《?[^\n]{0,45}》?\s*)?(?:腓立比书|罗马书|希伯来书|雅各书|哥林多前书|哥林多后书|诗篇|马太福音|约翰福音)\s*\d{1,3}\s*章[^\n]{0,90}$/;
+
 const itemizedSectionPattern =
   /(重点|要点|主要论点|提纲|小组讨论|讨论问题|反思问题|key\s*points?|reflection\s*questions?|discussion(?:\s*questions?)?|wakachiai)/i;
 const listItemPattern = /^\s*(?:[-+*]|\d+[.)])\s+\S/;
@@ -322,6 +326,23 @@ async function main() {
     }
   }
 
+  const internalNoteFailures = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (internalWorkflowNotePattern.test(lines[index])) {
+      internalNoteFailures.push({ line: index + 1, text: lines[index].trim() });
+    }
+  }
+  // Narrowly detect the incident shape: duplicate title followed by speaker/event labels.
+  const lead = lines.filter((line) => line.trim()).slice(0, 4);
+  const duplicateLeadFailures = [];
+  if (lead.length >= 2 && duplicateSermonLeadPattern.test(lead[0].trim()) &&
+      /^讲员\s*[：:]/.test(lead[1].trim())) {
+    duplicateLeadFailures.push({ kind: "body_title_and_speaker_duplicate", text: lead.slice(0, 3).join(" | ") });
+  }
+  if (lead.some((line) => /^场合\s*[：:]/.test(line.trim()))) {
+    duplicateLeadFailures.push({ kind: "internal_event_label_in_body", text: lead.slice(0, 4).join(" | ") });
+  }
+
   const scriptureFailures = [];
   for (let index = 0; index < lines.length; index += 1) {
     const trimmed = lines[index].trim();
@@ -426,6 +447,10 @@ async function main() {
       residueFailures,
       "Blocks incident-proven PDF/page/slide production residue patterns only."
     ),
+    makeCheck("internal_workflow_note_in_public_body", internalNoteFailures,
+      "Rejects recognized internal metadata-confirmation and staging markers in public sermon body."),
+    makeCheck("duplicate_sermon_body_metadata_header", duplicateLeadFailures,
+      "Blocks duplicated sermon title/speaker or event labels at the start of public article body; website frontmatter owns title and speaker."),
     makeCheck(
       "scripture_label_fullwidth_colon",
       scriptureFailures,
