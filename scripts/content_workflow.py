@@ -43,15 +43,18 @@ def configured_path(explicit: str | None, env_name: str) -> Path:
     return Path(value).expanduser()
 
 
-def list_files(path: Path) -> list[Path]:
+def list_files(path: Path, *, skip_ds_store: bool = False) -> list[Path]:
     if not path.is_dir():
         raise SystemExit(f"找不到目录: {path}")
-    return sorted(item for item in path.iterdir() if item.is_file())
+    return sorted(
+        item for item in path.iterdir()
+        if item.is_file() and (not skip_ds_store or item.name != ".DS_Store")
+    )
 
 
 def inspect(kind: str, inbox_value: str | None) -> None:
     inbox = configured_path(inbox_value, INBOX_ENV[kind])
-    files = list_files(inbox)
+    files = list_files(inbox, skip_ds_store=(kind == "share"))
     print(f"Type: {kind}")
     print(f"Inbox: {inbox}")
     print(f"Files: {len(files)}")
@@ -82,7 +85,7 @@ def extract_pdf(source: Path, destination: Path) -> None:
 
 
 def ingest_share(inbox: Path) -> None:
-    files = list_files(inbox)
+    files = list_files(inbox, skip_ds_store=True)
     if not files:
         raise SystemExit("分享收件目录没有文件。")
     RAW_DIRS["share"].mkdir(parents=True, exist_ok=True)

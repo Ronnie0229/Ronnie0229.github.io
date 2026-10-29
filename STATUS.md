@@ -1,5 +1,11 @@
 # 个人网页项目状态
 
+## 2026-10-29 — 分享收件系统元数据过滤（代码已验证，未发布）
+
+- 依 Owner 批量收件决策，`inspect share` 与 `ingest share` 只忽略 `.DS_Store`；不增加单篇入口、不修改讲道扫描/校验移动，现有 Finder 元数据保留在 NAS。定向回归 3/3 PASS，完整 Python 回归 187 项中 1 个旧讲道 Tag Pipeline mock ERROR（未在本轮扩大修复），真实分享收件只读检查业务 PDF 1 篇及 SHA PASS。
+- 后续修复旧讲道 Tag Pipeline 测试替身：补齐 presentation Gate 的 JSON 证据及两次 subprocess 调用断言，生产发布路径未改；完整 Python 回归已重跑 **187/187 PASS**，此前 1 ERROR 作为历史记录保留。
+- 本轮未执行真实 Ingest、Git sync/commit/push、部署、通知或 TTS。网站 Git 原有历史音频修复任务目录未追踪且保留；本次代码与文档改动待后续精确 Git 收口。正式发布前仍须执行上次发布 preflight 及同步 Gate。
+
 ## 2026-10-13 — Patrick 有声阅读代码及统一上次发布核验
 
 - Patrick exact-one 必要代码 28/28 已经单独 commit/push (`4ab066223c9ecb5a09258aebb99d256d0f17e5b6`)，生产站点 deployment.json 已 fresh readback 对应版本。

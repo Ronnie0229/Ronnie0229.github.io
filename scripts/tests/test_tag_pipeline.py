@@ -138,8 +138,16 @@ class TagPipelineTests(unittest.TestCase):
         self.assertNotIn('"Grayson"', tags_line)
 
     def test_content_workflow_forwards_manual_tags_to_sermon(self) -> None:
+        gate_evidence = {
+            "status": "SERMON_PRESENTATION_STRUCTURE_PASS",
+            "completion_ceiling": "publication_structure_ready",
+            "rendered_html": {"sha256": "test-rendered-sha"},
+        }
         with patch("scripts.content_workflow.subprocess.run") as run:
-            run.return_value.returncode = 0
+            run.side_effect = [
+                subprocess.CompletedProcess([], 0, stdout=json.dumps(gate_evidence)),
+                subprocess.CompletedProcess([], 0),
+            ]
             publish(
                 "sermon",
                 folder="data/raw/教会讲道/sample",
@@ -147,7 +155,10 @@ class TagPipelineTests(unittest.TestCase):
                 dry_run=True,
                 presentation_file="/tmp/presentation.md",
             )
-        command = run.call_args.args[0]
+        self.assertEqual(run.call_count, 2)
+        gate_command = run.call_args_list[0].args[0]
+        self.assertIn("validate_sermon_presentation.mjs", gate_command[1])
+        command = run.call_args_list[1].args[0]
         self.assertIn("--tags", command)
         self.assertIn("Faith,Jacob", command)
 

@@ -1,5 +1,12 @@
 # 当前任务
 
+## 2026-10-29｜分享收件 `.DS_Store` 批量入库最小修复（待 Git 收口）
+
+- Owner 确认分享收件长期保持批量 Ingest，不需要单篇 `--source-file`。修复 `scripts/content_workflow.py` 的 `inspect share` / `ingest share`：仅忽略 `.DS_Store`，不计数、不移动、不删除；讲道扫描及 `verified_move` 合同不变。同步 `docs/统一内容整理与发布流程.md`，新增 `scripts/tests/test_content_workflow_share_ingest.py`。
+- 本轮针对性临时目录测试 3/3 PASS；完整 Python 回归 187 项出现 1 个 ERROR（`test_tag_pipeline.TagPipelineTests.test_content_workflow_forwards_manual_tags_to_sermon`，旧讲道模拟 `subprocess.run` 的 `gate.stdout` 为 MagicMock，`json.loads` 抛 TypeError）；本轮不掩盖失败，也不扩大到讲道流程整改。真实 NAS 分享收件仅执行只读 `inspect share`，得到业务文件 1 篇，PDF SHA=`7e98a87c3a359ec4abb4f270b93ed669c692ae4582d3a57e7fd4c590cd94c0ab`，未执行 Ingest、归档、翻译、发布、TTS、部署或邮件。
+- 2026-10-29 后续定点整改：`test_tag_pipeline.py::test_content_workflow_forwards_manual_tags_to_sermon` 原测试只 mock 单次 importer 调用，未模拟已存在的 sermon presentation Gate 返回 JSON；已将测试替身改成先返回合法 Gate evidence、再返回 importer 结果，并明确核验两次调用以及标签传递。不修改 `publish()` 生产逻辑。完整 Python 回归重新执行 **187/187 PASS**（此前 187 项 1 ERROR chronology 保留）。
+- Website 工作树原有未追踪 `docs/tasks/historical-read-aloud-listening-repairs-20261019/`（4 个历史音频修复文件）仍完整保留，未清理、忽略或暂存。正式 `npm run sync`、Git commit/push、上一轮 publication preflight 及本篇业务 Ingest 均未执行；这些 Gate 在后续真实写入前仍须独立核对，不能把本次局部代码 PASS 当作发布授权。
+
 ## 2026-10-14｜分享文章至 TTS 音频发布全流程复盘文档落盘
 
 - 已根据正式 Git、runtime S4 workflow/intake、NAS/R2 交付凭据、Telegram machine/result、website-publication receipt 完成只读 fresh-read，并保存本次真实执行复盘：`docs/tasks/share-article-tts-end-to-end-20261013/WORKFLOW_EXECUTION_REVIEW.md`。
