@@ -1,0 +1,23 @@
+{
+  "gate": "PREVIOUS_PUBLICATION_PREFLIGHT",
+  "result": "PASS",
+  "previous_article": "腓立比书 2:5-11｜基督的道路",
+  "previous_article_url": "https://ronniecross.com/posts/2026-10-25-%E8%85%93%E7%AB%8B%E6%AF%94%E4%B9%A6-2-5-11%E5%9F%BA%E7%9D%A3%E7%9A%84%E9%81%93%E8%B7%AF/",
+  "article_id": "post-e6cc3489e406b568",
+  "html_checks": {
+    "title": true,
+    "body_sentence": true,
+    "additional_body": true
+  },
+  "rss_matches": 1,
+  "sitemap_matches": [
+    "https://ronniecross.com/posts/2026-10-25-%E8%85%93%E7%AB%8B%E6%AF%94%E4%B9%A6-2-5-11%E5%9F%BA%E7%9D%A3%E7%9A%84%E9%81%93%E8%B7%AF/"
+  ],
+  "github_notification_workflow": {
+    "conclusion": "success",
+    "headSha": "799a905139057d52a8a64be2e0a879143d53e28e",
+    "status": "completed",
+    "workflowName": "Email published posts"
+  },
+  "tls": "curl default validated HTTPS; no insecure fallback"
+}

@@ -220,6 +220,17 @@ def same_chapter_scripture_contains(container: str, candidate: str) -> bool:
     return container_start <= candidate_start and candidate_end <= container_end
 
 
+def same_chapter_context_does_not_conflict(container: str, candidate: str) -> bool:
+    """A prose chapter-only mention cannot narrow an exact, agreeing folder+file verse range."""
+    full = re.fullmatch(r"(?P<book>.+?)\s+(?P<chapter>\d+):(?P<start>\d+)(?:-(?P<end>\d+))?", container)
+    chapter_only = re.fullmatch(r"(?P<book>.+?)\s+(?P<chapter>\d+)", candidate)
+    return bool(
+        full and chapter_only
+        and full.group("book") == chapter_only.group("book")
+        and full.group("chapter") == chapter_only.group("chapter")
+    )
+
+
 def resolve_scripture(raw_title: str, source_file: Path, body: str) -> tuple[str, str]:
     candidates: dict[str, str] = {}
     folder_scripture, _summary = title_parts(raw_title)
@@ -242,7 +253,8 @@ def resolve_scripture(raw_title: str, source_file: Path, body: str) -> tuple[str
             and file_scripture
             and folder_scripture == file_scripture
             and body_scripture
-            and same_chapter_scripture_contains(folder_scripture, body_scripture)
+            and (same_chapter_scripture_contains(folder_scripture, body_scripture)
+                 or same_chapter_context_does_not_conflict(folder_scripture, body_scripture))
         ):
             return folder_scripture, "high"
         details = "; ".join(f"{source}={scripture}" for source, scripture in candidates.items())
