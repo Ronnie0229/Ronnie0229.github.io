@@ -1,5 +1,13 @@
 # 当前任务
 
+## 2026-11-08｜Patrick《腓立比书 2:19-30｜真正的成功》新讲道发布（进行中）
+
+- 目标：整理并发布讲道收件中的 `Philippians 2_19-30 True Success - Google Docs.pdf`。本篇按用户明确授权暂不进行翻译独立审核；状态记录为 `authorized_exception`，不宣称 E1 或独立审核通过。讲道整理侧 Project Bible、逐段自查和排版身份/网站渲染硬门已通过。
+- 网站文章 `src/content/posts/2026-11-08-腓立比书-2-19-30｜真正的成功.md`，文章 ID=`post-3ca70af48cbc6392`，规范 URL=`https://ronniecross.com/posts/2026-11-08-腓立比书-2-19-30真正的成功/`。Website B-min 与 Project Bible Gate PASS；390px 手机预览中标题、经文摘要、长段落与两道编号讨论题均清楚显示、无可见横向溢出。本地 Astro 构建 351 页 PASS，articleId 检查 307 篇/0 缺失，`git diff --check` PASS。
+- Website exact repository=`https://github.com/Ronnie0229/Ronnie0229.github.io.git`，branch=`main`，起始 HEAD=`55764f91ef275314cbd8db0f8bb7b17cc988ffdb`。当前仅本篇文章、processed 镜像与两份讲道登记 CSV 是发布写集。
+- 已按用户授权完成本篇 NAS 新增归档：`/Volumes/share/教会讲道/20261108_腓立比书2章19节到30节_真正的成功_Patrick`，仅原 PDF、英文源和中文译稿 3 件；3/3 SHA 与交付源匹配，不覆盖旧目录。
+- 下一步：只提交本篇文件后推送 `main`。新增文章推送会自动启动 Email published posts 工作流；核验部署、线上 URL/RSS/Sitemap 与邮件运行结果后更新终态。
+
 ## 2026-11-08｜Patrick《从抱怨到发光》已发布稿措辞修正（发布进行中）
 
 - 目标：按讲道整理 Owner 已接受的 GPT-6 语义审核结论与本篇一次性发布例外，更新既有文章的两处措辞；保留原 articleId、slug、标题、作者、经文与发布日期，不重复发送邮件。
