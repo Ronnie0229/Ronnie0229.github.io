@@ -8,7 +8,7 @@
 - 既有 Website dirty 状态已安全隔离到本机两个独立本地 worktree：`task/read-aloud-listening-repairs-isolation-20261108` 保存 `docs/tasks/historical-read-aloud-listening-repairs-20261019/`；`task/realtime-staging-test-isolation-20261108` 保存 `docs/tasks/realtime-staging-test-20261029/` 和原修改版 `docs/tasks/current.md`。均未合入 main、未推送；main 已 clean sync 后才开始本篇发布。
 - 上一篇发布前核验 PASS：本篇当时线上页面可读且仍为旧措辞、RSS/Sitemap 各一条、首次通知 run `41256583551` 已完成 success。package v1.2 当前 `authorized_exception / archived / suppress`；前置渲染硬门 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`（3 H2、96 段、5 列表项、104 content blocks）通过。
 - 明确预览保护先阻止重复导入；随后使用 `--update-existing` dry-run PASS、正式更新 PASS，仅影响本篇 processed/posts 与 import registry。保留原发布日期；Astro build `350 page(s)` PASS，生成 RSS/Sitemap 各仅含一个本篇条目，生成页面含两处新措辞。构建有一条 Astro duplicate-id warning，目标输出检查正确；记为待观察的非阻断提示，不扩大为本轮工程整改。
-- Website commit=`d89b4bc0d6c0a2bfcf1024e3e36ee8c38812ec39` 已推送，local HEAD=origin/main exact；build 350 pages PASS。自动通知 run=`42434912573` completed/success，日志确认没有新增文章目标、未发邮件。当前 Cloudflare `deployment.json` 仍报告旧 commit `92832dd47466a05205c9c941b3c1d0687d15d939`，新正文线上核验尚待下一次 publication preflight；本记录不宣称新版本已上线。
+- Website commit=`d89b4bc0d6c0a2bfcf1024e3e36ee8c38812ec39` 已推送，local HEAD=origin/main exact；build 350 pages PASS。Cloudflare `deployment.json` 已确认部署该 commit；规范页面 HTTP 200、标题/经文与两处修订正文均正确，RSS/Sitemap 各一条。自动通知 run=`42434912573` completed/success，日志确认没有新增文章目标、未发邮件。项目 Python 上线核验器受本机 CA chain 限制，已用默认 TLS 校验的系统 curl 完成等价检查。下一次发布仍须按 Publication Fast Lane fresh-read 本篇线上状态。
 
 ## 2026-10-29｜分享收件 `.DS_Store` 批量入库最小修复（待 Git 收口）
 
