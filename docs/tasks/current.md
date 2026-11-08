@@ -1,5 +1,15 @@
 # 当前任务
 
+## 2026-11-08｜Patrick《从抱怨到发光》已发布稿措辞修正（发布进行中）
+
+- 目标：按讲道整理 Owner 已接受的 GPT-6 语义审核结论与本篇一次性发布例外，更新既有文章的两处措辞；保留原 articleId、slug、标题、作者、经文与发布日期，不重复发送邮件。
+- 中文正式稿、Website raw、processed、posts 当前正文身份 SHA=`8d4b09d9997ec016d74f5cc709b03193aa18fb079c21b65a3ca853ae81db2750`；英文源 SHA=`c4748280a08540452f9576f4b8cd3905151d42f306339e52267fbd276a77a61d`。只修订“我上大学时最早做过的工作之一”及删除“首先”；原发布日期仍为 `2026-11-01`，slug=`2026-11-01-腓立比书-2-12-18｜从抱怨到发光`，articleId=`post-fe2bdabc59f84b5e`。
+- Owner 授权后，NAS 精确目录 `/Volumes/share/教会讲道/20261101_腓立比书2章12节到18节_从抱怨到发光_Patrick` 中仅替换中文 `.txt`：旧 SHA=`5aea5effc632268503dd3f0805306be6cb5f41b65fd0d6f8b4bd3a02fc9723b6`，新 SHA 与正式稿一致；目录仍只有原 PDF、英文源、中文稿三项，PDF/英文 SHA 未变。用户提供的 `/Volumes/share/教会讲道归档/...` 不存在；Owner 确认按项目登记入口解析后的实际路径操作。
+- 既有 Website dirty 状态已安全隔离到本机两个独立本地 worktree：`task/read-aloud-listening-repairs-isolation-20261108` 保存 `docs/tasks/historical-read-aloud-listening-repairs-20261019/`；`task/realtime-staging-test-isolation-20261108` 保存 `docs/tasks/realtime-staging-test-20261029/` 和原修改版 `docs/tasks/current.md`。均未合入 main、未推送；main 已 clean sync 后才开始本篇发布。
+- 上一篇发布前核验 PASS：本篇当时线上页面可读且仍为旧措辞、RSS/Sitemap 各一条、首次通知 run `41256583551` 已完成 success。package v1.2 当前 `authorized_exception / archived / suppress`；前置渲染硬门 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`（3 H2、96 段、5 列表项、104 content blocks）通过。
+- 明确预览保护先阻止重复导入；随后使用 `--update-existing` dry-run PASS、正式更新 PASS，仅影响本篇 processed/posts 与 import registry。保留原发布日期；Astro build `350 page(s)` PASS，生成 RSS/Sitemap 各仅含一个本篇条目，生成页面含两处新措辞。构建有一条 Astro duplicate-id warning，目标输出检查正确；记为待观察的非阻断提示，不扩大为本轮工程整改。
+- 当前状态：文章已更新且构建通过；Website commit/push、Cloudflare deployment trigger 尚待完成。`Email published posts` 对 push 触发，但脚本只选择新增文章（`--diff-filter=A`），本次修改旧文章不会形成通知目标；不手动触发邮件。
+
 ## 2026-10-29｜分享收件 `.DS_Store` 批量入库最小修复（待 Git 收口）
 
 - Owner 确认分享收件长期保持批量 Ingest，不需要单篇 `--source-file`。修复 `scripts/content_workflow.py` 的 `inspect share` / `ingest share`：仅忽略 `.DS_Store`，不计数、不移动、不删除；讲道扫描及 `verified_move` 合同不变。同步 `docs/统一内容整理与发布流程.md`，新增 `scripts/tests/test_content_workflow_share_ingest.py`。
