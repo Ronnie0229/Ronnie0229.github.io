@@ -1,5 +1,15 @@
 # 个人网页项目状态
 
+## 2026-11-15 — 分享文章《我们如何在基督的恩典和知识上长进？》发布
+
+- Hermes Telegram 三段实战训练已按 Owner 决定终止；不再派发 CHUNK 02/03、不重试 Provider、不启动 Hermes、不向 Telegram 重发。保留 CHUNK 01 PASS / T1 provenance PARTIAL、CHUNK 02 WRITE_STATUS_UNKNOWN、CHUNK 03 未验收等历史状态，详见 `docs/tasks/realtime-staging-test-20261029/TRAINING_TERMINATION_AND_OWNER_TAKEOVER_20261115.md`。
+- ChatGPT 按冻结英文源稿接管全文翻译，直接经文引用按 CUVMPS Rv2 Project Bible 核对。整篇没有独立 Auditor 忠实度审核，frontmatter `reviewed: false`。
+- articleId=`post-6bd262ae025f7fdd`；slug=`2026-11-15-grow-in-grace-and-knowledge-of-christ`；canonical URL=`https://ronniecross.com/posts/2026-11-15-grow-in-grace-and-knowledge-of-christ/`。raw SHA=`c2bd8e31790a9fae08003c8faf0768a71a7e6be77e8c92a720c599477fbc992c`；processed/post mirror SHA=`14b7b3a0cae8a9e661eac85be261aa1a7946c2c56bfa8d8bca06e2155d165a4d`。
+- Tag Pipeline 27/27、Knowledge Layer 309/0/0、Astro 353 pages、RSS/Sitemap each one item 均 PASS；最终 build 无 Duplicate id warning。
+- 原有三份治理 dirty changes 原样保存在本地分支 `task/preserve-governance-dirty-20261115`，commit=`fde9ebed8db69fb3970d8ac6318674685821d8ec`，未 push；canonical main 已成功 sync 后发布。
+- 本篇 publication commit 与本条记录同一提交；push 自动触发 Cloudflare deployment 与邮件通知 workflow。本轮不等待异步终态，状态=`PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`。下一次 Website 发布前须核验本篇 deployment、canonical 正文身份、RSS/Sitemap 与自动通知终态。
+- 分享文章不适用讲道 NAS 归档；未执行 NAS/TTS/R2。完整记录：`docs/tasks/share-article-grow-in-grace-knowledge-20261115/RESULT.md`。
+
 ## 2026-10-29 — 分享收件系统元数据过滤（代码已验证，未发布）
 
 - 依 Owner 批量收件决策，`inspect share` 与 `ingest share` 只忽略 `.DS_Store`；不增加单篇入口、不修改讲道扫描/校验移动，现有 Finder 元数据保留在 NAS。定向回归 3/3 PASS，完整 Python 回归 187 项中 1 个旧讲道 Tag Pipeline mock ERROR（未在本轮扩大修复），真实分享收件只读检查业务 PDF 1 篇及 SHA PASS。

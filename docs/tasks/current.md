@@ -1,5 +1,15 @@
 # 当前任务
 
+## 2026-11-15｜分享文章《我们如何在基督的恩典和知识上长进？》发布（本轮已完成，待下次 preflight）
+
+- Owner 已明确终止 Hermes Telegram 三段原样写入训练；不再派发 CHUNK 02 / CHUNK 03、不重试 Provider、不启动 Hermes、不向 Telegram 重发。CHUNK 01 字节身份独立 PASS、原始 T1 provenance PARTIAL；CHUNK 02 Provider failure 后写入状态 UNKNOWN；CHUNK 03 未通过本轮受信写入验收。完整 chronology 见 `docs/tasks/realtime-staging-test-20261029/TRAINING_TERMINATION_AND_OWNER_TAKEOVER_20261115.md`。
+- ChatGPT 按冻结英文源稿及 CUVMPS Rv2 Project Bible 接管全文翻译。raw 中文 SHA=`c2bd8e31790a9fae08003c8faf0768a71a7e6be77e8c92a720c599477fbc992c`；processed/post mirror SHA=`14b7b3a0cae8a9e661eac85be261aa1a7946c2c56bfa8d8bca06e2155d165a4d`。整篇没有独立 Auditor 忠实度审核，frontmatter `reviewed: false`。
+- Website articleId=`post-6bd262ae025f7fdd`，slug=`2026-11-15-grow-in-grace-and-knowledge-of-christ`，canonical URL=`https://ronniecross.com/posts/2026-11-15-grow-in-grace-and-knowledge-of-christ/`；category=`灵命成长`，scripture=`彼得后书 3:18`，tags=`彼得后书 / 耶稣基督 / 恩典 / 福音 / 顺服`。
+- dirty governance changes 已原样保存在本地分支 `task/preserve-governance-dirty-20261115`，commit=`fde9ebed8db69fb3970d8ac6318674685821d8ec`，未 push。canonical `main` 发布前 sync 成功，起始 HEAD=origin/main=`7d32ac160e36e61ed0ea827932748f47501c2143`。
+- Share importer dry-run / publish PASS；Tag Pipeline 27/27 PASS；Knowledge Layer 309/0/0 PASS；Astro 353 pages PASS（最终 build 无 Duplicate id warning）；RSS/Sitemap build output 各仅一条本篇记录。分享文章不适用讲道 NAS 归档；未执行 NAS/TTS/R2。
+- 本篇 publication commit 与本条记录同一提交；push 自动触发 Cloudflare deployment 与 `.github/workflows/email-published-posts.yml`。本轮按 Publication Fast Lane 不等待异步终态，状态=`PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`。下一次 Website 内容发布前必须核验 deployment、canonical 正文身份、RSS/Sitemap 与自动邮件终态。
+- 完整发布记录：`docs/tasks/share-article-grow-in-grace-knowledge-20261115/RESULT.md`。
+
 ## 2026-11-08｜Patrick《腓立比书 2:19-30｜真正的成功》新讲道发布（进行中）
 
 - 目标：整理并发布讲道收件中的 `Philippians 2_19-30 True Success - Google Docs.pdf`。本篇按用户明确授权暂不进行翻译独立审核；状态记录为 `authorized_exception`，不宣称 E1 或独立审核通过。讲道整理侧 Project Bible、逐段自查和排版身份/网站渲染硬门已通过。
