@@ -2,7 +2,7 @@
 
 日期：2026-11-15
 
-状态：`PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`
+状态：`PUBLISHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS / RELEASE_CLOSED`
 
 ## Owner 决策与 Hermes 训练终止
 
@@ -84,3 +84,23 @@ SHA-256：`c2bd8e31790a9fae08003c8faf0768a71a7e6be77e8c92a720c599477fbc992c`
 - 本轮不等待 Cloudflare 终态或通知终态；记录为 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`。
 - 分享文章流程没有讲道 NAS 归档步骤；本篇不创建讲道 NAS 归档，也不触碰 TTS / R2。
 - 下一次 Website 内容发布开始前，必须 fresh-read 本篇 publication commit、production deployment、canonical URL（正文身份）、RSS / Sitemap 与自动邮件通知终态；全部 PASS 后方可开始下一篇发布。
+
+## 发布后核验与收口（2026-11-15）
+
+首次发布时按 Publication Fast Lane 记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`；本节是后续 preflight 的追加证据，不覆盖首次发布时的真实状态。
+
+| 核验项 | 结果 |
+|---|---|
+| Canonical worktree | PASS；branch=`main`，`HEAD == origin/main == 1b6983e3944c8d2b7c0eab34ae35250ec93834e6`，工作区 clean |
+| Cloudflare production deployment | PASS；`/deployment.json` 返回 commit=`1b6983e3944c8d2b7c0eab34ae35250ec93834e6`，builtAt=`2026-11-15T13:28:30.721Z` |
+| Canonical article | PASS；HTTP 200；页面 title、canonical URL、彼得后书 3:18、作者 Ronnie 与正文均现场存在 |
+| RSS | PASS；HTTP 200；共 309 个 item，本篇标题命中 1 次；slug 在 link 与 guid 中各出现一次（共 2 次） |
+| Sitemap | PASS；`/sitemap.xml` HTTP 200；共 348 个 URL，本篇 slug 命中 1 次 |
+| Email workflow | PASS；run `43719100999` / job `132826982997` completed/success，head SHA 与 publication commit 一致；1 post、2 recipients、2 success、0 failed、无 skipped slug |
+| Git closure baseline | PASS；本次核验开始时 canonical `main` clean，HEAD 与 origin/main exact |
+
+证据链接：<https://github.com/Ronnie0229/Ronnie0229.github.io/actions/runs/43719100999>。
+
+本机 `scripts/verify_publication_release.py` 因 Python 3.13 本地 CA issuer chain 无法验证而未能运行（SSL_CERTIFICATE_VERIFY_FAILED）；没有关闭 TLS 验证。随后使用系统 `curl` 默认 TLS 校验完成等价线上核验，canonical / RSS / sitemap 均 HTTP 200，正文及收录身份检查通过。该工具环境限制作为 chronology 保留，不影响 curl 的线上 PASS。
+
+收口结论：`RELEASE_CLOSED`。无需重建、重推、重发邮件；本篇下一篇发布 preflight 已通过。

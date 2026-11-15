@@ -7,7 +7,7 @@
 - articleId=`post-6bd262ae025f7fdd`；slug=`2026-11-15-grow-in-grace-and-knowledge-of-christ`；canonical URL=`https://ronniecross.com/posts/2026-11-15-grow-in-grace-and-knowledge-of-christ/`。raw SHA=`c2bd8e31790a9fae08003c8faf0768a71a7e6be77e8c92a720c599477fbc992c`；processed/post mirror SHA=`14b7b3a0cae8a9e661eac85be261aa1a7946c2c56bfa8d8bca06e2155d165a4d`。
 - Tag Pipeline 27/27、Knowledge Layer 309/0/0、Astro 353 pages、RSS/Sitemap each one item 均 PASS；最终 build 无 Duplicate id warning。
 - 原有三份治理 dirty changes 原样保存在本地分支 `task/preserve-governance-dirty-20261115`，commit=`fde9ebed8db69fb3970d8ac6318674685821d8ec`，未 push；canonical main 已成功 sync 后发布。
-- 本篇 publication commit 与本条记录同一提交；push 自动触发 Cloudflare deployment 与邮件通知 workflow。本轮不等待异步终态，状态=`PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`。下一次 Website 发布前须核验本篇 deployment、canonical 正文身份、RSS/Sitemap 与自动通知终态。
+- 本篇 publication commit 与本条记录同一提交；push 自动触发 Cloudflare deployment 与邮件通知 workflow。首次发布时记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`；2026-11-15 后续 preflight 已全部 PASS：线上 `/deployment.json` commit 与本篇一致；canonical 页面 HTTP 200 且正文身份正确；RSS HTTP 200（309 items，本篇标题 1 次）；`/sitemap.xml` HTTP 200（348 URLs，本篇 slug 1 次）；邮件 run `43719100999` completed/success，1 post、2 recipients、2 success、0 failed。当前 `RELEASE_CLOSED / LIVE_VERIFY_PASS`，详见 `docs/tasks/share-article-grow-in-grace-knowledge-20261115/RESULT.md`。
 - 分享文章不适用讲道 NAS 归档；未执行 NAS/TTS/R2。完整记录：`docs/tasks/share-article-grow-in-grace-knowledge-20261115/RESULT.md`。
 
 ## 2026-10-29 — 分享收件系统元数据过滤（代码已验证，未发布）
