@@ -29,6 +29,11 @@
 - Independent Re-Audit 02 请求已建立：`INDEPENDENT_AUDIT_REQUEST_STAGE_D_REAUDIT_02.md`，SHA-256=`2ddb1dbd30cd8bc8a153d1dd4e638e810506af61eb1516b3d37d5686f0c9055b`；唯一 Auditor 报告路径为 `independent-audit/STAGE_D_REAUDIT_02_REPORT.md`。
 - 以上为 Re-Audit 02 回交前的历史状态记录。2026-11-19 Auditor Re-Audit 02 正式 **PASS_WITH_FINDINGS**，Master 已独立核验并接受 Stage D：D-01..D-11 PASS，D-12 PASS_WITH_FINDINGS；D07-F01-R01 已关闭。报告 `tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_D_REAUDIT_02_REPORT.md`，SHA-256=`771cc20c2fba9eab9447db606a90d26f04feeff86bef50fca59aaa000cca5812`。非阻断发现：路径式文件操作仍有 TOCTOU residual，仅在当前 trusted raw-intake threat model 下接受；若未来允许不可信并发写入者，须另行授权 descriptor-based/no-follow 设计。Sermon construction `STATUS.md` / `tasks/current/index.md` 的 Remediation 01 历史 SHA 指针不一致已记录，未在本次擅自修改，留待独立状态对账。当时 Stage E 为 **Master synthetic execution complete / independent audit pending**；其后于 2026-11-20 经独立审核并由 Master 接受为 **PASS_WITH_FINDINGS**。Stage F **DISABLED**；v1.3 non-dry-run 继续 fail-closed，现行生产入口/default 不变。原始 Stage D FAIL 与 Re-Audit 01 FAIL chronology 均保留。
 - Stage E 冻结验收计划 SHA-256=`172b33f4fdc514731ec45fcf8a2c5e63d3bf4307dd6901bfa505b48c6d3d5beb`；执行报告 SHA-256=`a9467b64570c1be2e5bab51f1bbed20782419db851d0cffdaf65ba635dc39ff9`；独立审核请求 SHA-256=`b78b25afa0b3febe691ab89a60b4628b3e6538e1a181a3e75beb1e1c8509679e`；Auditor 正式报告 `tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_E_AUDIT_REPORT.md` SHA-256=`6121e3b95145f93c79792a2f411fbc7d63b4f06ed8a4b3d589afea952b7131d3`。Master 于 2026-11-20 正式接受 Stage E：E-01..E-08 PASS，E-09 PASS_WITH_FINDINGS；E-F01 CLOSED。非阻断 finding E-AUDIT-01：synthetic E2E 最终 workflow dispatch 使用 stub，不冒充真实 importer；独立 importer/workflow 回归证据满足冻结 E-08，不构成阶段阻断。初始 E-F01 FAIL chronology 保留。该句记录 Stage E closure 时 Stage F 尚未获授权的历史状态；Owner 随后于 2026-11-20 授权 Stage F，当前 implementation 已开始。canonical production routes/defaults 仍未切换。
+## 2026-11-18 — Codex 任务提示词长度治理规则落盘
+
+- 已在 `AGENTS.md` 明确：提示词不膨胀，完整任务写入正式 task/handoff，提示词只写任务概要、角色、必要工作区、交接文档路径和关键权限/停止边界。
+- 已在 `docs/task-handoff-protocol.md` 补充具体分工：任务背景、范围、合同、验收、测试、证据、写集、禁止事项和实施步骤归正式交接文档；短提示词负责定位任务并指向交接文档。
+- 本轮仅文档修改；未运行构建，未执行 Git staging/commit/push、部署或其他生产副作用。
 
 
 ## 2026-11-15 — 分享文章《我们如何在基督的恩典和知识上长进？》发布

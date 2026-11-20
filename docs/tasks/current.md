@@ -22,6 +22,12 @@
 - 上述 FAIL / NOT ACCEPTED 是 Re-Audit 02 回交前的历史状态。2026-11-19 Stage D Remediation 02 独立复审正式 **PASS_WITH_FINDINGS**，Master 已接受 Stage D：D-01..D-11 PASS，D-12 PASS_WITH_FINDINGS；D07-F01-R01 已关闭。报告：`tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_D_REAUDIT_02_REPORT.md`；SHA-256=`771cc20c2fba9eab9447db606a90d26f04feeff86bef50fca59aaa000cca5812`。非阻断 TOCTOU residual 仅在当前 trusted raw-intake threat model 下接受；若引入不可信并发写入者，须另行授权 descriptor-based/no-follow 设计。Sermon construction 历史 Remediation 01 SHA 指针不一致已记录，未在本轮跨项目修改，需单独状态对账。Stage E **Master synthetic execution complete / independent audit pending**；Stage F **DISABLED**；v1.3 non-dry-run 继续 fail-closed，现行生产入口/default 不变。原始 Stage D FAIL 与 Re-Audit 01 FAIL chronology 均保留。
 - Stage E 冻结验收计划 SHA-256=`172b33f4fdc514731ec45fcf8a2c5e63d3bf4307dd6901bfa505b48c6d3d5beb`；执行报告 SHA-256=`a9467b64570c1be2e5bab51f1bbed20782419db851d0cffdaf65ba635dc39ff9`；独立审核请求 SHA-256=`b78b25afa0b3febe691ab89a60b4628b3e6538e1a181a3e75beb1e1c8509679e`；Auditor 报告 `tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_E_AUDIT_REPORT.md` SHA-256=`6121e3b95145f93c79792a2f411fbc7d63b4f06ed8a4b3d589afea952b7131d3`。Master 于 2026-11-20 正式接受 Stage E：E-01..E-08 PASS，E-09 PASS_WITH_FINDINGS；E-F01 CLOSED。E-AUDIT-01 为非阻断 finding：合成 E2E 最终 dispatch 使用 synthetic stub，不声称真实 importer 执行；44/44 Website importer/workflow focused 回归覆盖直接边界及 dry-run/bypass，满足冻结 E-08。首次 E-F01 FAIL chronology 保留。Stage F 仍 DISABLED，v1.3 non-dry-run 仍 BLOCKED，现行生产入口/default 不变。
 
+## 2026-11-18｜Codex 任务提示词长度治理规则落盘（已完成）
+
+- Owner 决定：提示词不膨胀，任务细节写入正式交接文档，提示词只写任务概要。
+- 已将规则写入 `AGENTS.md` 通用项目规则，并在 `docs/task-handoff-protocol.md` 增加正式任务文档与短提示词的职责分工。
+- 后续执行/审核提示词只保留角色、目标概要、必要的 exact workspace、正式交接文档路径及关键权限/停止边界；完整合同、测试矩阵、证据要求、写集、禁止事项和历史 chronology 放在正式交接文档。
+- 本轮仅修改治理文档；未运行构建，未执行 Git staging/commit/push、部署或其他生产副作用。
 
 ## 2026-11-15｜分享文章《我们如何在基督的恩典和知识上长进？》发布（发布后核验 PASS，已收口）
 
