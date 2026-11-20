@@ -1,8 +1,8 @@
 # 当前任务
 
-## 2026-11-20｜分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；Stage F production release in progress）
+## 2026-11-20｜分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；repository release merged；production cutover BLOCKED）
 
-- Stage F：Owner 明确授权；Master 于 2026-11-20 接受 `PASS_WITH_FINDINGS`。固定分母 F-01..F-11 未变；F-08 的 mocked subprocess dispatch limitation 作为非阻断 finding 保留。独立报告 SHA-256 `27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。Website Python 305/305、focused 94/94；Sermon Python 60/60、producer focused 28/28；Node 21/21、Tag 27/27；compile/help/diff-check PASS。现进入冻结计划第 9 步 bounded repository release / production capability cutover；不发布真实文章，不执行 NAS/email/notification。
+- Stage F：Owner 授权后 Master 接受 `PASS_WITH_FINDINGS`。固定分母 F-01..F-11 不变；F-08 mocked subprocess dispatch limitation 保留为非阻断 finding。独立报告 SHA-256 `27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。Website PR #3 已 merge，commit `79e5be408b1830d14afe555dbef852a3828e3e8a`；Sermon PR #3 已 merge，commit `ab88dc629bd3391507f10a5e3c8b3be85018c0fa`。Website build 353 pages PASS；Sermon Python 60/60、producer focused 28/28 PASS。Release report `tasks/current/20261115-unified-share-sermon-publication-governance/STAGE_F_RELEASE_REPORT.md` SHA-256=`784eed5aa9678d0069d6864403deae80e4d1bd10d9402ea5753493255cdb334d`。Cloudflare live deployment identity 仍为旧 commit `09ce7eb588a21745d0286d3eec6a890c16a26aea`；无 Wrangler、Cloudflare token/account ID 或 Cloudflare plugin 可触发部署，production cutover 因此 BLOCKED / NOT DEPLOYED。未发布真实文章、未访问 NAS、未执行 email/notification。
 - Stage F implementation report SHA-256=`3e6a8c5e838dfd66ae1eb47768e4860e7c4cbb202accf8adb571d507ee9cf5dd`；audit request SHA-256=`fb838b25812c3a9fd6d6c424f8ef53b3b6fceb3f7dfcd5c356b517cc6413ead0`；Auditor report SHA-256=`27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。
 
 - Stage B Remediation 01 独立复审 PASS 已由 Master 接受；正式报告 SHA-256=`9a4616989cd8cbdd390158dca14b40cd27f6ccff885a4b0c164604c0bbaed0ea`。Stage B 首轮 FAIL 与 Stage A chronology 均保留。
