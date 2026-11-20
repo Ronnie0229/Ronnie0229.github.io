@@ -6,6 +6,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import textwrap
 import csv
 from datetime import datetime
@@ -583,6 +584,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Import one sermon folder safely.")
     parser.add_argument("--folder", help="Single sermon folder to import.")
     parser.add_argument("--presentation-file", help="Verified presentation-prepared body-only Markdown artifact.")
+    parser.add_argument("--expected-source-folder", help=argparse.SUPPRESS)
+    parser.add_argument("--publication-package", help=argparse.SUPPRESS)
+    parser.add_argument("--content-root", help=argparse.SUPPRESS)
+    parser.add_argument("--allow-write", action="store_true", help="Explicitly authorize package-bound v1.3 Sermon writes.")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing files.")
     parser.add_argument("--description", help="Manual frontmatter summary. Do not pass body excerpts or templates.")
     parser.add_argument(
@@ -593,7 +598,34 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def resolve_folder(value: str) -> Path:
+def resolve_folder(value: str, expected_source_folder: str | None = None) -> Path:
+    if expected_source_folder is not None:
+        requested = Path(value).expanduser()
+        if not requested.is_absolute():
+            direct = ROOT / requested
+            candidate = direct if direct.exists() or direct.is_symlink() else SOURCE_DIR / requested
+        else:
+            candidate = requested
+        if candidate.is_symlink():
+            raise SystemExit(f"SERMON_SOURCE_IDENTITY_MISMATCH: symlink folder aliases are not permitted: {candidate}")
+        try:
+            canonical_root = SOURCE_DIR.resolve(strict=True)
+            canonical_candidate = candidate.resolve(strict=True)
+            expected_path = Path(expected_source_folder).expanduser()
+            if expected_path.is_symlink():
+                raise SystemExit("SERMON_SOURCE_IDENTITY_MISMATCH: expected source folder must not be a symlink")
+            canonical_expected = expected_path.resolve(strict=True)
+        except OSError as exc:
+            raise SystemExit(f"SERMON_SOURCE_IDENTITY_MISMATCH: source folder cannot be resolved: {exc}") from exc
+        if (canonical_candidate.parent != canonical_root
+                or canonical_expected.parent != canonical_root
+                or canonical_candidate != canonical_expected
+                or not canonical_candidate.is_dir()):
+            raise SystemExit(
+                "SERMON_SOURCE_IDENTITY_MISMATCH: importer-resolved folder does not match package-bound canonical source folder"
+            )
+        return canonical_candidate
+
     candidate = Path(value).expanduser()
     if not candidate.is_absolute():
         direct = (ROOT / candidate).resolve()
@@ -610,6 +642,86 @@ def resolve_folder(value: str) -> Path:
     if not candidate.is_dir():
         raise SystemExit(f"Sermon folder not found: {candidate}")
     return candidate
+
+
+def validate_v13_import_identity(
+    args: argparse.Namespace,
+    target_folder: Path,
+    presentation_file: Path,
+) -> None:
+    """Independently revalidate v1.3 package identity at the direct importer boundary."""
+    if not args.publication_package or not args.content_root or not args.expected_source_folder:
+        raise SystemExit(
+            "V13_PACKAGE_REQUIRED: package-aware Sermon import requires --publication-package, "
+            "--content-root and --expected-source-folder"
+        )
+
+    package_path = Path(args.publication_package).expanduser().resolve(strict=True)
+    content_root = Path(args.content_root).expanduser().resolve(strict=True)
+    try:
+        package = json.loads(package_path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"V13_PACKAGE_REQUIRED: unable to read publication package: {exc}") from exc
+    if (not isinstance(package, dict) or package.get("version") != "1.3"
+            or package.get("content_type") != "sermon"):
+        raise SystemExit("V13_PACKAGE_REQUIRED: expected a Sermon website-publication-package/v1.3")
+
+    validation = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/validate_publication_package_v13.py"),
+         "--contract", str(package_path),
+         "--schema", str(ROOT / "contracts/website-publication-package-v1.3.schema.json"),
+         "--content-root", str(content_root)],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    try:
+        evidence = json.loads(validation.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package validator returned invalid evidence") from exc
+    if validation.returncode != 0 or evidence.get("pass") is not True:
+        raise SystemExit("V13_PACKAGE_REQUIRED: Sermon publication package validation FAIL")
+
+    try:
+        from consume_publication_package import parse_prepublication_frontmatter, v13_source_selector
+    except ModuleNotFoundError:
+        from scripts.consume_publication_package import parse_prepublication_frontmatter, v13_source_selector
+
+    prepublish_ref = package.get("prepublish", {}).get("path")
+    if not isinstance(prepublish_ref, str) or not prepublish_ref:
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: package-bound prepublish path is missing")
+    prepublish_path = Path(prepublish_ref).expanduser()
+    if not prepublish_path.is_absolute():
+        prepublish_path = content_root / prepublish_path
+    prepublish_path = prepublish_path.resolve(strict=True)
+    frontmatter = parse_prepublication_frontmatter(prepublish_path)
+    metadata = package.get("metadata", {})
+    if (frontmatter.get("author") != metadata.get("speaker")
+            or frontmatter.get("date") != metadata.get("publish_date")
+            or frontmatter.get("category") != metadata.get("category")
+            or frontmatter.get("contentType") != "sermon"):
+        raise SystemExit(
+            "V13_PACKAGE_IDENTITY_MISMATCH: prepublish speaker/date/category/contentType "
+            "does not match package metadata"
+        )
+
+    package_folder = v13_source_selector(package, frontmatter, raw_sermon_root=SOURCE_DIR)
+    if target_folder.is_symlink():
+        raise SystemExit("SERMON_SOURCE_IDENTITY_MISMATCH: importer source folder must not be a symlink")
+    canonical_target = target_folder.resolve(strict=True)
+    expected_folder = Path(args.expected_source_folder).expanduser().resolve(strict=True)
+    canonical_root = SOURCE_DIR.resolve(strict=True)
+    if (package_folder != canonical_target.name
+            or expected_folder != canonical_target
+            or canonical_target.parent != canonical_root):
+        raise SystemExit("SERMON_SOURCE_IDENTITY_MISMATCH: importer source does not match package-bound canonical folder")
+
+    artifact_ref = package.get("presentation", {}).get("artifact")
+    if not isinstance(artifact_ref, str) or not artifact_ref:
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: package-bound presentation artifact is missing")
+    artifact_path = Path(artifact_ref).expanduser()
+    if not artifact_path.is_absolute():
+        artifact_path = content_root / artifact_path
+    if presentation_file.resolve(strict=True) != artifact_path.resolve(strict=True):
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: presentation artifact does not match package binding")
 
 
 def bind_article_id(markdown: str, slug: str) -> str:
@@ -703,12 +815,18 @@ def main() -> None:
     if not SOURCE_DIR.exists():
         raise SystemExit(f"找不到源目录: {SOURCE_DIR}")
 
-    target_folder = resolve_folder(args.folder)
+    target_folder = resolve_folder(args.folder, expected_source_folder=args.expected_source_folder)
     if not args.presentation_file:
         raise SystemExit("PRESENTATION_ARTIFACT_REQUIRED: canonical sermon import requires --presentation-file")
     presentation_file = Path(args.presentation_file).expanduser().resolve(strict=True)
     if not presentation_file.is_file():
         raise SystemExit(f"presentation artifact not found: {presentation_file}")
+    if args.expected_source_folder is not None:
+        validate_v13_import_identity(args, target_folder, presentation_file)
+        if not args.dry_run and not args.allow_write:
+            raise SystemExit("V13_WRITE_AUTHORIZATION_REQUIRED: direct v1.3 Sermon import requires --allow-write")
+    elif args.publication_package or args.content_root:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package-bound Sermon import requires --expected-source-folder")
     # Mandatory website-owned HTML structure gate before any importer write.
     # This applies equally to dry-run and production; direct importer calls cannot bypass it.
     structure_gate = ROOT / "scripts" / "validate_sermon_presentation.mjs"
@@ -750,6 +868,8 @@ def main() -> None:
     imported = 0
     skipped: list[str] = []
     for folder in sorted(p for p in SOURCE_DIR.iterdir() if p.is_dir()):
+        if args.expected_source_folder is not None and folder.is_symlink():
+            continue
         if folder.resolve() != target_folder:
             continue
         source_file = choose_source_file(folder)

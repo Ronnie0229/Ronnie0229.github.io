@@ -1,0 +1,39 @@
+{
+  "interface": "content-presentation",
+  "version": "1.0",
+  "content_type": "sermon",
+  "profile": "sermon",
+  "candidate": {
+    "path": "fixtures/official.zh.txt",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "artifact": {
+    "path": "fixtures/presentation.md",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "record_identity": {
+    "record_count": 3,
+    "record_ids": [
+      "r-001",
+      "r-002",
+      "r-003"
+    ],
+    "record_order_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "pair_set_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "presentation_status": "mechanically_verified",
+  "text_identity_status": "exact_record_order_preserved",
+  "allowed_transformations": [
+    "blank_line_boundaries",
+    "h2_h3_headings",
+    "standard_markdown_lists",
+    "blockquote"
+  ],
+  "validator": {
+    "name": "content-presentation-validator",
+    "version": "1.0.0",
+    "executed_at": "2026-11-17T00:00:00+09:00",
+    "report_path": "fixtures/validation-report.json",
+    "report_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  }
+}

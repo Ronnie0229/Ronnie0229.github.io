@@ -8,6 +8,22 @@
 
 本项目不依赖任何单个账号的聊天记忆。项目事实、当前状态、设计规范、内容流程、部署流程和交接记录，都以仓库内文档为准。
 
+
+## 统一分享与讲道发布治理（Stage D）
+
+新内容统一遵循 `content-presentation/v1` 与 `website-publication-package/v1.3` 治理合同。统一的是 source/fidelity（发生翻译时）/Project Bible/presentation identity/package/Website rendered-structure/import safety gates，不统一两类内容的正文结构。
+
+- Share：保留原文章标题、段落、列表、引文、对话、祷告、问题和结尾（原文存在时）；不得强加讲道三点大纲或 Full Sermon Mode。默认作者 Ronnie 仅作 fallback，明确来源/Owner 作者优先；分类「灵命成长」；`archive_status=not_applicable`，终态 `SHARE_ARCHIVE_NOT_APPLICABLE`，严禁访问 NAS archive path。
+- Sermon：保留 Full Sermon Mode 与现有讲道专属结构 Gate。默认讲员 Patrick 仅作 fallback，明确来源/Owner speaker 优先；分类「教会讲道」；继续执行受保护 NAS append-only archive。
+- 两类内容的收件入口分别为 `NAS/分享收件` 与 `NAS/讲道收件`。除入口、默认人员和归档外，不另设较弱的 Share 发布质量路径。
+- 任何源语言→中文翻译均使用讲道整理 Owner 的现有通用 fidelity state machine；Website 不重新裁决 fidelity 或 Project Bible。正文经文 TTS 显示规范化必须在 candidate SHA freeze 前完成；不连续/歧义/未受控英文书卷引用 fail-closed，机器 metadata 可保留紧凑格式。
+- 正式链路顺序：source extraction → TTS scripture normalization → frozen Chinese candidate SHA + structured/paired records →（发生翻译时）通用 fidelity loop 与独立审核/修复 release gate → Project Bible/CUVMPS gate → body-only presentation artifact + `content-presentation/v1` identity → v1.3 package → Website package consumer / profile-aware rendered structure gate → controlled import。
+- v1.0/v1.1/v1.2 与历史 `sermon-presentation/v1` 保持原有兼容；不迁移/重写历史文章、package、URL、articleId 或历史审核 chronology。
+- Stage D 仅完成文档与入口对齐。Stage F 前，现行生产入口/default 不变；v1.3 只允许显式 plan/dry-run/受控验收，non-dry-run 必须 fail-closed。Stage E 合成端到端验收和 Stage F 生产启用是独立阶段。
+
+详见本任务 `STAGE_D_IMPLEMENTATION_PLAN.md` 与 Sermon Owner canonical `DESIGN.md`。
+
+
 ## Project Standard governance locator / read-only consumption
 
 Website future governance cold-start 必须能够稳定定位 current Project Standard：

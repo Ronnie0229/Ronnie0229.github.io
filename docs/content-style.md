@@ -1,5 +1,9 @@
 ﻿# Content Style
 
+## Unified Share / Sermon publication boundary
+
+Share 保留来源文章自己的 proposition、段落、列表、引文、对话、祷告、问题和结束语；仅在来源存在时保留对应结构，不为了统一而套用讲道大纲。Sermon 继续保留 Full Sermon Mode 和现有讲道专属结构。两类内容的翻译完整性由 Sermon Owner 的通用 fidelity 流程约束；排版标记和 Markdown 结构调整不得删改实质内容。
+
 ## Core Writing Principles
 
 - Keep the original meaning.

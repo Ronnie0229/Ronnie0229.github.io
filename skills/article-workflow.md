@@ -7,7 +7,13 @@ This document is the operating workflow for another Codex account handling Ronni
 1. Publishing content to the RonnieCross website.
 2. Rewriting or adapting source material into Chinese faith articles suitable for public reading.
 
-When the user says “分享”, “讲道”, “整理发布”, or asks to publish material already placed in the intake folders, follow the website publishing workflow first. When the user asks for公众号版本 or article variants, follow the article adaptation workflow.
+When the user says “分享”, “讲道”, “整理发布”, or asks to publish material already placed in the intake folders, follow the unified Share/Sermon governance below. When the user asks for公众号版本 or article variants, follow the article adaptation workflow.
+
+## Unified Share / Sermon governance
+
+Use the same source/fidelity (when translation occurs)/Project Bible/presentation identity/package/Website rendering and import-safety gates for both content types. Share keeps its source article structure and does not inherit sermon-only outline or ending requirements. Sermon keeps Full Sermon Mode and its existing sermon-specific gates. The only business differences are intake path, fallback person (Ronnie author / Patrick speaker; explicit identity wins), and archive (Share `not_applicable` with no NAS archive access; Sermon protected append-only NAS archive).
+
+The new controlled contract is `content-presentation/v1` + `website-publication-package/v1.3`. Until Stage F is separately enabled, production routes/defaults remain unchanged and v1.3 non-dry-run remains blocked. Never treat legacy Share import as a bypass or let the legacy Ronnie fallback override package-bound v1.3 metadata.
 
 ## Required Reading
 
@@ -21,11 +27,12 @@ Before doing any content task, read these files in this repository:
 
 ## Sermon Owner Reference And Website Consumption
 
+- `docs/codex-handoff-memory.md` is historical handoff context only; when it differs from current workflow docs, frozen contracts, or actual CLI behavior, it must not override them.
 - Sermon fidelity truth is owned by `讲道整理`, not by this website skill. Full Sermon Mode, E1, scripture/ending fidelity, audit/repair rounds, Attempt 3 final repair, and max-audit release semantics must be fresh-read from `../../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`, `../../讲道整理/docs/translation-fidelity-quality-control.md`, and `../../讲道整理/docs/sermon-independent-audit-orchestration.md`.
-- The website consumes new sermon Owner facts through the current default `website-publication-package/v1.2`: official Chinese/English identity and SHA, publication-facing fidelity status/evidence, prepublish Markdown, and publication metadata. `website-publication-package/v1.1` remains contract-stable compatibility for historical, already-generated, in-flight, and explicitly versioned packages. Do not re-evaluate sermon fidelity inside the website workflow.
+- Until Stage F is separately authorized and enabled, the current production sermon route consumes `website-publication-package/v1.2`: official Chinese/English identity and SHA, publication-facing fidelity status/evidence, prepublish Markdown, and publication metadata. v1.1 remains contract-stable compatibility for historical, already-generated, in-flight, and explicitly versioned packages. The v1.3 `content-presentation/v1` + `website-publication-package/v1.3` path is an explicit controlled candidate only (plan/dry-run) before Stage F. Do not re-evaluate sermon fidelity inside the website workflow.
 - Website-owned checks remain local: package/identity/metadata validation, raw/processed/posts consistency, Markdown/rendering, TTS-friendly scripture display, frontmatter/SEO metadata, slug/articleId, build, Git, deploy, SEO, notification, and online verification.
 - A website build, mirror check, SHA match, JSON validity, or display check is not a sermon fidelity verdict.
-- When sermon Owner rules change, do not copy the new business rules here. Re-check the canonical reference and current default `website-publication-package/v1.2` compatibility, plus v1.1 compatibility when historical or explicitly versioned packages are involved, then update only website-owned consumer/display/publishing rules if required.
+- When sermon Owner rules change, do not copy the new business rules here. Re-check the canonical reference and, before Stage F, the current production `website-publication-package/v1.2` route plus v1.1 historical compatibility; separately preserve v1.3 controlled-candidate compatibility. Update only website-owned consumer/display/publishing rules if required.
 
 ## Source Of Truth
 
@@ -106,7 +113,7 @@ Rules:
 
 ### Step 5: Publish
 
-Use the import script through the unified entry point. Never run publish without selecting one source object.
+Until Stage F is separately enabled, the commands below describe only the current legacy production routes (Share legacy importer; Sermon v1.2 / `sermon-presentation/v1`). They are not the v1.3 unified contract path. For v1.3 package validation use `content_workflow.py publish-contract --mode plan|dry-run`; `--mode publish` remains fail-closed before Stage F. Never run publish without selecting one source object.
 
 For a share article:
 
