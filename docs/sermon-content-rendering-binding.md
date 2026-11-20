@@ -10,7 +10,7 @@ Owner：`个人网页项目`
 
 通用正文身份合同为 `content-presentation/v1`，由 Share `share_article` 与 Sermon `sermon` 两个 profile 使用。两者共用 exact-record identity、candidate/artifact SHA binding、允许的 presentation-only transformation 清单及 rendered HTML 基础设施。Share 只验证其自身原文存在的标题层级、段落、列表、引文、对话、祷告/问题/结尾，不要求 sermon 三点大纲、Full Sermon Mode 或 sermon-only 结束结构；Sermon 继续执行本文件后续既有 sermon 专项结构 Gate，不得因泛化共同基础设施而降低。Website 只负责 package/file identity、rendered structure 和导入安全，不重新裁决 fidelity、Project Bible 或神学内容。
 
-Stage F 前 v1.3 仍是显式 controlled plan/dry-run contract；生产 default 与当前 routes 不切换。
+Stage F 已启用：新 Share / Sermon 使用 v1.3 `publish-contract` package-bound production route；本文件继续定义 Website rendered-structure hard gates，不改变 Sermon Owner 的 fidelity / Project Bible authority。
 
 ## 1. 当前 TOC policy / behavior
 

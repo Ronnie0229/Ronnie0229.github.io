@@ -3,7 +3,7 @@
 本文件是 RonnieCross 内容整理与发布的项目级入口。详细脚本步骤见 `docs/统一内容整理与发布流程.md`，风格规则见 `docs/content-style.md`，Codex 专项流程见 `skills/article-workflow.md`。
 
 
-## 统一分享与讲道发布治理（Stage D）
+## 统一分享与讲道发布治理（Stage F 当前生产路径）
 
 新内容统一遵循 `content-presentation/v1` 与 `website-publication-package/v1.3` 治理合同。统一的是 source/fidelity（发生翻译时）/Project Bible/presentation identity/package/Website rendered-structure/import safety gates，不统一两类内容的正文结构。
 
@@ -13,23 +13,31 @@
 - 任何源语言→中文翻译均使用讲道整理 Owner 的现有通用 fidelity state machine；Website 不重新裁决 fidelity 或 Project Bible。正文经文 TTS 显示规范化必须在 candidate SHA freeze 前完成；随后冻结 candidate SHA 与 structured/paired records，再进行独立 fidelity 审核/修复 release gate，之后才进入 Project Bible/CUVMPS gate。不连续/歧义/未受控英文书卷引用 fail-closed，机器 metadata 可保留紧凑格式。
 - 正式链路顺序：source extraction → TTS scripture normalization → frozen Chinese candidate SHA + structured/paired records →（发生翻译时）通用 fidelity loop 与独立审核/修复 release gate → Project Bible/CUVMPS gate → body-only presentation artifact + `content-presentation/v1` identity → v1.3 package → Website package consumer / profile-aware rendered structure gate → controlled import。
 - v1.0/v1.1/v1.2 与历史 `sermon-presentation/v1` 保持原有兼容；不迁移/重写历史文章、package、URL、articleId 或历史审核 chronology。
-- Stage D 仅完成文档与入口对齐。Stage F 前，现行生产入口/default 不变；v1.3 只允许显式 plan/dry-run/受控验收，non-dry-run 必须 fail-closed。Stage E 合成端到端验收和 Stage F 生产启用是独立阶段。
+- Stage F 已于 2026-11-20 完成并由 Master 接受 `PASS_WITH_FINDINGS`；Website/Sermon repository release 已合并，Website capability 已部署并完成线上身份核验。新内容统一使用 v1.3 `publish-contract` package-bound 路径；正式写入要求 exact publication object 已获 Owner 授权，并显式提供 `--allow-write`。Stage F 不代表任何具体文章已获发布授权。
 
 详见本任务 `STAGE_D_IMPLEMENTATION_PLAN.md` 与 Sermon Owner canonical `DESIGN.md`。
 
 
-## v1.3 统一 package consumer 入口（Stage D）
+## v1.3 统一 package consumer 入口（Stage F 当前生产路径）
 
-对新 Share / Sermon 的统一合同验证，使用 Website 的 `publish-contract` 入口：
+新 Share / Sermon 内容统一使用 `content-presentation/v1` + `website-publication-package/v1.3`。Producer 端完成 source/fidelity（发生翻译时）/Project Bible/presentation identity/package 生成后，Website 只通过 `publish-contract` 入口消费 package；不得把 legacy `publish share|sermon` 或 direct importer 当作新内容旁路。
+
+先执行只读计划与预览：
 
 ```shell
 python3 scripts/content_workflow.py publish-contract --contract <website-publication-package-v1.3.json> --schema contracts/website-publication-package-v1.3.schema.json --content-root <package-content-root> --mode plan
 python3 scripts/content_workflow.py publish-contract --contract <website-publication-package-v1.3.json> --schema contracts/website-publication-package-v1.3.schema.json --content-root <package-content-root> --mode dry-run
 ```
 
-`plan` / `dry-run` 只验证并预览 SHA-bound package、presentation identity、profile、archive semantics 与 Website import/render gates。Stage F 前不得执行 `--mode publish`；consumer 必须 fail-closed。现有 `publish share|sermon` 是迁移期间保持现行生产路径的版本绑定兼容入口，不代表 v1.3 已成为生产默认，也不得用它绕过 package-bound v1.3 gates。底层 direct importer 的 package/source/metadata 验证继续独立生效。
+确认当前 exact publication object 已获 Owner 发布授权、plan/dry-run 与全部 Gate 通过后，才可执行：
 
-Sermon producer 端通过 `generate_prepublish_md.py --contract-version 1.3`、`build_website_publication_package.py --contract-version 1.3 --content-presentation-manifest ...` 与 `export_to_website_project.py --publication-package ...` 生成/验证/导出 package；export 默认 dry-run。Share 与 Sermon 必须分别使用 `share_article` / `sermon` profile，不能互换。
+```shell
+python3 scripts/content_workflow.py publish-contract --contract <website-publication-package-v1.3.json> --schema contracts/website-publication-package-v1.3.schema.json --content-root <package-content-root> --mode publish --allow-write
+```
+
+`--allow-write` 是显式写入授权开关，不能替代 exact publication object 的 Owner 授权或任何质量 Gate。Consumer、workflow、Share importer、Sermon importer 均独立执行 package/source/metadata/presentation/profile/rendered-structure/archive 检查；任一不匹配必须 fail-closed。Share 的 archive 状态必须为 `not_applicable`，严禁访问 NAS sermon archive；Sermon 继续遵守受保护 append-only NAS archive 规则。v1.0/v1.1/v1.2 仅用于历史或明确识别的在途兼容对象，不作为新内容默认。
+
+Sermon producer 端的新内容默认生成 v1.3；只有明确识别的历史/在途对象才显式选择 v1.2。Share 与 Sermon 必须分别使用 `share_article` / `sermon` profile，不能互换。
 
 ## 内容类型
 
@@ -77,7 +85,7 @@ Sermon producer 端通过 `generate_prepublish_md.py --contract-version 1.3`、`
 
 讲道翻译、Full Sermon Mode、E1、经文/ending fidelity、审核/修复轮次、Attempt 3 final repair 和 max-audit release semantics 不由网站项目定义。当前 sermon canonical authority 统一引用：`../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../讲道整理/docs/translation-fidelity-quality-control.md`、`../讲道整理/docs/sermon-independent-audit-orchestration.md`。
 
-Stage F 启用统一流程前，现行生产入口保持不变：讲道继续通过 `website-publication-package/v1.2` 接收讲道 Owner 已成立的正式中文稿/英文源 identity 与 SHA、publication-facing fidelity status/evidence、发布前 Markdown 和发布元数据；分享继续使用既有批准的 Share 路径。v1.1 继续用于历史、已生成、在途 package 与显式兼容。Stage C 新增的 `website-publication-package/v1.3` consumer 仅供显式 plan/dry-run/受控验收，publish 模式在 Stage F 前强制禁用。v1.3 Share presentation import 的 package 安全边界同时强制于 `content_workflow.py` 与底层 `import_shares.py`：底层 importer 必须独立校验 package、presentation artifact、source 和 metadata 身份；直接调用不能绕过 package，也不能在 Stage F 前写入。source selector 必须是 Share raw root 下的单一文件名，并与 package 中唯一规范相对路径 `data/raw/分享/<filename>` 精确绑定；workflow 与 direct importer 都必须确认目标是实际存在的普通文件，missing file、directory、broken symlink、nested path、绝对路径、路径穿越及任何 symlink alias 均 fail closed，workflow 必须在 renderer/importer 前拒绝。初始路径解析与 package-bound identity 校验使用 Website-local `scripts/share_source_identity.py` 的不同函数；严格 package-bound helper 必须显式提供有效 `expected_source`，不得省略或传入 `None`。`scripts/publication_contract_invariants.py` 仅保留与 Sermon Owner byte-identical 的跨文档合同不变量。不得用 build、mirror、SHA、JSON 计数或网站自身判断替代 sermon fidelity approval。
+当前新内容生产默认已切换为 `website-publication-package/v1.3` + `content-presentation/v1`。Website 消费讲道 Owner 已成立的正式中文稿/英文源 identity 与 SHA、publication-facing fidelity status/evidence、发布前 presentation artifact 和发布元数据；v1.1/v1.2 仅保留历史、已生成或明确识别的在途兼容。v1.3 Share package 安全边界同时强制于 `content_workflow.py` 与底层 `import_shares.py`：底层 importer 必须独立校验 package、presentation artifact、source 和 metadata 身份；直接调用不能绕过 package 或 `--allow-write`。source selector 必须是 Share raw root 下的单一文件名，并与 package 中唯一规范相对路径 `data/raw/分享/<filename>` 精确绑定；workflow 与 direct importer 都必须确认目标是实际存在的普通文件，missing file、directory、broken symlink、nested path、绝对路径、路径穿越及任何 symlink alias 均 fail closed。严格 package-bound helper 必须显式提供有效 `expected_source`，不得省略或传入 `None`。不得用 build、mirror、SHA、JSON 计数或网站自身判断替代 sermon fidelity approval。
 
 网站自己的消费与显示 Gate 继续生效：
 
@@ -86,7 +94,7 @@ Stage F 启用统一流程前，现行生产入口保持不变：讲道继续通
 - 网站正文经文显示继续执行受控书卷全名 + `章/节/到` 的 TTS-friendly rendering；frontmatter、SEO 和 `scripture` metadata 继续允许紧凑机器格式。该项是网站 display/import 责任，不构成网站对 sermon scripture fidelity 的重新判断。
 - raw/processed/posts、metadata、slug/articleId、build、Git、deploy、SEO、notification 与线上发布事实继续归网站 Owner。
 
-若讲道 Owner 的 fidelity 规则发生变化，网站不复制新的规则正文；只检查 canonical reference 与当前生产 `website-publication-package/v1.2`、Stage C 的受控 v1.3 候选 consumer（以及需要时的 v1.1 compatibility）contract compatibility，并在确有网站侧兼容需求时调整消费或显示 Gate。v1.3 只有在 Stage C/D/E 独立验收通过、Owner 接受后由 Stage F 明确启用，才可替代现行生产入口。
+若讲道 Owner 的 fidelity 规则发生变化，网站不复制新的规则正文；只检查 canonical reference 与当前生产 `website-publication-package/v1.3` / `content-presentation/v1` consumer contract compatibility，以及需要时的 v1.0/v1.1/v1.2 历史兼容，并在确有网站侧兼容需求时调整消费或显示 Gate。
 
 ### 已发布讲道正文修正模式
 
@@ -163,11 +171,11 @@ npm run sync
 
 `npm run sync` 必须等价于 `git pull --rebase origin main`。如果本地已有未提交改动、同步失败或发生 rebase 冲突，必须暂停并与用户确认，不能跳过同步继续发布。
 
-## Stage F 前现行生产兼容流程（Share / Sermon）
+## Stage F 前历史兼容流程（仅供识别旧对象，不用于新内容）
 
-以下 Share / Sermon 操作步骤描述的是 Stage F 前必须保持不变的现行生产兼容路径：Share 仍走已批准的 legacy `publish share` 路径；Sermon 仍走现行 v1.2 / `sermon-presentation/v1` 路径。它们不是 v1.3 统一合同入口，也不得被用于绕过 package-bound v1.3 gates。新 v1.3 package 的唯一 Website 受控消费入口是上文 `publish-contract`，Stage F 前只允许 `plan` / `dry-run`，不执行生产写入。
+以下 Share / Sermon 命令仅保留为 Stage F 启用前的历史兼容说明，用于识别既有 legacy/in-flight 对象；不得用于新 Share / Sermon 内容。新内容唯一生产入口是上文 v1.3 `publish-contract`，正式写入必须经 Owner 对 exact publication object 授权，并通过 `--mode publish --allow-write` 与全部独立 Gate。
 
-## 分享流程摘要（Stage F 前 legacy production path）
+## 分享旧版兼容命令（历史，不用于新内容）
 
 0. 同步远端：`npm run sync`
 1. 只读检查：`python scripts/content_workflow.py inspect share`
@@ -181,9 +189,9 @@ npm run sync
 
 分享发布必须指定单个 `--source-file`，不得无参数全量扫描 `data/raw/分享/`。`description` 必须是人工概括型摘要，不能使用正文截取、模板句或占位符。统一 Tag Pipeline 会从 scripture 补入所有明确书卷，并按标题确定性规则推断人物、地点、事件和主题；`--tags` 保留为人工补充入口。人工标签与自动标签统一经过别名规范化、去重、generic 拒绝和最终 2–6 Gate。无法得到足够精准标签时必须 fail closed 并要求补充 `--tags`；不得使用 `分享`、`灵命成长` 等内容类型或分类词凑数。旧版 Share workflow/importer 在未提供作者时默认使用 `Ronnie`；显式 `--author` 仍优先。该默认只适用于 legacy 路径，v1.3 必须继续以 publication package 绑定的作者为准，不得让 legacy fallback 覆盖 package metadata。`--dry-run` 不写入 processed、posts、CSV 报告或审计摘录。
 
-## 讲道流程摘要（Stage F 前 v1.2 legacy production path）
+## 讲道旧版兼容命令（历史，不用于新内容）
 
-本节保留当前正式讲道生产路径；v1.3 producer/exporter/consumer 只用于显式受控 plan/dry-run/验收，Stage F 前不得替代本路径或执行 v1.3 production write。
+本节仅保留 Stage F 前的 v1.2 legacy 命令作为历史兼容说明；新讲道不得走本节命令，必须由 Sermon producer 生成 v1.3 package，再经 Website `publish-contract` 入口完成 plan/dry-run 与经授权的 publish。
 
 0. **先核验上一次发布**：确认上一轮 production commit/deployment、公开 canonical URL、RSS/Sitemap 与 notification result 已 PASS；上一轮仍 pending/FAIL 时先闭合上一轮，不开始本轮发布写动作。
 1. 同步远端：`npm run sync`。
@@ -267,7 +275,7 @@ docs/内容整理报告/source-path-check.csv
 - 导入脚本不得清空 `src/content/posts/`。
 - 不得因为整理某一类文章而删除另一类文章。
 - 目标文件已存在时，停止并核对，不要自动覆盖。
-- Stage F 前现行兼容生产路径：分享使用 `publish share --source-file ...`；讲道使用 `publish sermon --folder ... --presentation-file ...`。这些 legacy 路径不代表 v1.3 已启用，也不得作为 v1.3 package consumer 的旁路。Stage F 前 v1.3 只能通过 `publish-contract --mode plan|dry-run` 受控验证，`publish` 模式 fail-closed。无参数全量导入和 sermon plain-TXT presentation guessing 均已禁用。
+- 历史兼容路径：旧 Share 使用 `publish share --source-file ...`，旧 Sermon 使用 `publish sermon --folder ... --presentation-file ...`；这些命令不用于新内容，也不得作为 v1.3 package consumer 的旁路。新 Share / Sermon 一律通过 `publish-contract` 消费 v1.3 package；plan/dry-run 只读，正式写入要求 exact object Owner 授权及 `--mode publish --allow-write`。无参数全量导入和 sermon plain-TXT presentation guessing 均已禁用。
 - 正式发布前优先运行 `--dry-run`，确认目标路径、标题、经文、摘要和 Git diff 范围。
 - `description` 必须由整理者人工概括正文主旨；脚本不得用正文前部、模板句或占位符代替。
 - 讲道 `slug` 由 source folder 日期稳定生成，正式发布记录在 `sermon-import-registry.csv`；更新旧文必须显式使用 `--update-existing`。

@@ -1,5 +1,12 @@
 # 个人网页项目状态
 
+## 2026-11-20 — Website canonical 同步 Stage F 与 v1.3 操作指引对齐
+
+- canonical workspace `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目` 已 fast-forward 同步至 `origin/main`；当前 `main` / `origin/main` 同为 `60e48148f1546477a1e990e199123b40e0477727`。
+- 同步前先将原有 4 个本地文档修改保存到 `stash@{0}`，同步后恢复；`STATUS.md` 与 `docs/tasks/current.md` 的冲突已保留远端 Stage F 记录和本地 2026-11-18 提示词治理记录。原 stash 保留作为额外恢复点；提示词长度治理的 4 个文件差异已通过独立 checkpoint `e48d39b` 提交。
+- 发现 canonical 操作指引仍把 Stage F 写成未启用，已将 `AGENTS.md`、`CONTENT_WORKFLOW.md`、`docs/统一内容整理与发布流程.md`、`docs/content-publishing-error-prevention.md`、`skills/article-workflow.md`、`docs/sermon-content-rendering-binding.md` 对齐到 v1.3 当前生产入口；旧 v1.0/v1.1/v1.2 与 legacy 命令保留为历史/在途兼容，不再作为新内容流程。
+- canonical 现场验证：Python 全量 `305/305 PASS`；Stage F focused `94/94 PASS`；Node sermon rendered-structure `21/21 PASS`；Tag Pipeline `27/27 PASS`；Astro build `353 pages PASS`；5 个相关 CLI help、`git diff --check` 均 PASS。
+- 本次仅做本地同步、文档对齐与验证；未导入/发布真实文章，未访问 NAS，未执行 TTS/email/notification/deploy。两条文档任务线已拆分为独立 Git checkpoint；Stage F 操作指引 checkpoint 随本次提交收口。未执行 push。
 ## 2026-11-20 — 分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；repository release merged；production cutover DEPLOYED / LIVE VERIFIED）
 
 - Stage F 已获 Owner 于 2026-11-20 明确授权，并由 Master 于 2026-11-20 接受 `PASS_WITH_FINDINGS`。冻结计划 Revision 01 SHA-256=`46fb82aabb7f2e248b946e010d757e1b5bfc01aa42338af4d751c9e4bf4e9b3f`；固定分母 F-01..F-11 未调整。F-01..F-07、F-09..F-11 PASS；F-08 PASS_WITH_FINDINGS，唯一非阻断 finding 为部分 Workflow→Importer 测试使用 mocked subprocess dispatch。独立报告 `tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_F_AUDIT_REPORT.md` SHA-256=`27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。
@@ -303,8 +310,8 @@
 ## 当前发布与接口边界
 
 - 正式内容位于 `src/content/posts/`，网站 raw 与 processed 镜像分别位于 `data/raw/` 和 `data/processed/`。
-- 网站拥有 current default `website-publication-package/v1.2` 的消费、v1.1 compatibility 消费，以及 `website-publication-result/v1.1` 的生成职责。
-- v1.2 当前 adoption candidate=`contract_stable / default write`；v1.1=`contract_stable / non_default / compatibility-preserved`。这些接口状态不等于自动发布，也不等于 `production_acceptance_passed`。
+- 网站当前默认消费 `website-publication-package/v1.3` + `content-presentation/v1`，并继续保留 v1.0/v1.1/v1.2 历史/在途兼容；`website-publication-result/v1.1` 继续负责结果记录。
+- v1.3 当前状态=`contract_stable / default write`；v1.0/v1.1/v1.2 保持历史/明确识别的在途兼容。接口状态不等于自动发布；任何真实文章仍须 exact publication object 的 Owner 授权并通过完整发布 Gate。
 - 网站写入、构建、push、Cloudflare 部署和邮件发送必须按任务授权和发布流程执行。
 - 已发布讲道正文修正不得改变 slug、articleId、日期、作者、分类、经文等锁定身份字段，除非任务明确授权。
 

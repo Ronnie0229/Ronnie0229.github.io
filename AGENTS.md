@@ -9,7 +9,7 @@
 本项目不依赖任何单个账号的聊天记忆。项目事实、当前状态、设计规范、内容流程、部署流程和交接记录，都以仓库内文档为准。
 
 
-## 统一分享与讲道发布治理（Stage D）
+## 统一分享与讲道发布治理（Stage F 当前生产路径）
 
 新内容统一遵循 `content-presentation/v1` 与 `website-publication-package/v1.3` 治理合同。统一的是 source/fidelity（发生翻译时）/Project Bible/presentation identity/package/Website rendered-structure/import safety gates，不统一两类内容的正文结构。
 
@@ -19,7 +19,7 @@
 - 任何源语言→中文翻译均使用讲道整理 Owner 的现有通用 fidelity state machine；Website 不重新裁决 fidelity 或 Project Bible。正文经文 TTS 显示规范化必须在 candidate SHA freeze 前完成；不连续/歧义/未受控英文书卷引用 fail-closed，机器 metadata 可保留紧凑格式。
 - 正式链路顺序：source extraction → TTS scripture normalization → frozen Chinese candidate SHA + structured/paired records →（发生翻译时）通用 fidelity loop 与独立审核/修复 release gate → Project Bible/CUVMPS gate → body-only presentation artifact + `content-presentation/v1` identity → v1.3 package → Website package consumer / profile-aware rendered structure gate → controlled import。
 - v1.0/v1.1/v1.2 与历史 `sermon-presentation/v1` 保持原有兼容；不迁移/重写历史文章、package、URL、articleId 或历史审核 chronology。
-- Stage D 仅完成文档与入口对齐。Stage F 前，现行生产入口/default 不变；v1.3 只允许显式 plan/dry-run/受控验收，non-dry-run 必须 fail-closed。Stage E 合成端到端验收和 Stage F 生产启用是独立阶段。
+- Stage F 已于 2026-11-20 完成并由 Master 接受 `PASS_WITH_FINDINGS`；Website/Sermon bounded repository release 已合并，Website 生产 capability 已部署并核验。新 Share / Sermon 必须使用 `content-presentation/v1` + `website-publication-package/v1.3` package-bound `publish-contract` 路径；`plan` / `dry-run` 只读，正式写入必须显式 `--mode publish --allow-write` 并通过所有 package/source/metadata/presentation/rendered-structure/profile/archive Gate。v1.0/v1.1/v1.2 仅保留历史或明确识别的在途兼容用途。Stage F 只启用能力，不代表任何具体文章已获发布授权。
 
 详见本任务 `STAGE_D_IMPLEMENTATION_PLAN.md` 与 Sermon Owner canonical `DESIGN.md`。
 
@@ -89,9 +89,9 @@ Website future governance cold-start 必须能够稳定定位 current Project St
 
 讲道 fidelity、Full Sermon Mode、E1、经文/ending 完整性、审核/修复轮次、Attempt 3 final repair 与 max-audit release semantics 只由 `讲道整理` Owner 的 current canonical authority 定义。网站不得复制、重新定义或自行判定这些业务规则。当前 canonical reference：`../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../讲道整理/docs/translation-fidelity-quality-control.md`、`../讲道整理/docs/sermon-independent-audit-orchestration.md`。
 
-网站通过已登记、`contract_stable / default write` 的 `website-publication-package/v1.2` 消费讲道 Owner 已成立的正式稿 identity/SHA、publication-facing fidelity status/evidence、发布元数据，以及新 sermon publication 必需的 `sermon-presentation/v1` binding。**Frozen fidelity candidate 不是 presentation artifact**：Website 不得把 plain TXT 的 record/newline boundary 当作 Markdown paragraph boundary，也不得再用 importer heuristic 猜正式讲道正文结构。历史、已生成、在途且没有 presentation binding 的 v1.1/v1.2 package 继续允许 read-only validate/plan；新的 sermon dry-run/publish 必须具备 `presentation_status=mechanically_verified` 与 `text_identity_status=exact_record_order_preserved`，并绑定已验证 presentation artifact。网站继续拥有 rendered structural hard gate、raw/processed/posts、display/metadata/scripture rendering、import fail-closed、build、Git、deploy、SEO、notification 与线上发布事实；这些网站职责不得反向推给讲道 Owner。
+网站通过当前默认 `website-publication-package/v1.3` + `content-presentation/v1` 消费讲道 Owner 已成立的正式稿 identity/SHA、publication-facing fidelity status/evidence、发布元数据与 body-only presentation artifact。**Frozen fidelity candidate 不是 presentation artifact**：Website 不得把 plain TXT 的 record/newline boundary 当作 Markdown paragraph boundary，也不得再用 importer heuristic 猜正式讲道正文结构。v1.1/v1.2 与历史 `sermon-presentation/v1` 仅保留历史、已生成或明确识别的在途兼容行为；新内容必须通过 v1.3 package-bound consumer，并由 workflow/importer 独立核验 package/schema、source folder、metadata、presentation artifact、archive/profile 与 rendered structure。网站继续拥有 rendered structural hard gate、raw/processed/posts、display/metadata/scripture rendering、import fail-closed、build、Git、deploy、SEO、notification 与线上发布事实；这些网站职责不得反向推给讲道 Owner。
 
-以后讲道 Owner 规则变化时，不再双边复制 sermon 业务规则正文；网站只需检查上述 canonical reference 与 current default `website-publication-package/v1.2`（以及需要时的 v1.1 compatibility）consumer/contract compatibility，并仅在网站自己的消费、显示或发布 Gate 需要调整时修改网站文档/实现。
+以后讲道 Owner 规则变化时，不再双边复制 sermon 业务规则正文；网站只需检查上述 canonical reference 与 current default `website-publication-package/v1.3` / `content-presentation/v1` consumer/contract compatibility（以及需要时的 v1.0/v1.1/v1.2 历史兼容），并仅在网站自己的消费、显示或发布 Gate 需要调整时修改网站文档/实现。
 
 已发布讲道的批量复核属于网站正文修正流程时，仍须锁定 slug、标题、日期、articleId、作者、分类、经文和 source，禁止误触发邮件、补发、订阅通知或 `workflow_dispatch`；frontmatter 的 GEO/tag 规则继续由网站 Owner 维护。
 

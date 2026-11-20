@@ -1,5 +1,11 @@
 # 当前任务
 
+## 2026-11-20｜Website canonical 同步 Stage F 与 v1.3 操作指引对齐
+
+- canonical `main` 已 fast-forward 至 `origin/main` 的 `60e48148f1546477a1e990e199123b40e0477727`。同步前 4 个本地文档修改已保存到 `stash@{0}`，同步后恢复；`STATUS.md` / `docs/tasks/current.md` 冲突已保留两侧内容，原 stash 继续保留。
+- 已把当前操作指引从 Stage F 前状态更新为 v1.3 当前生产路径；6 个操作文档对齐，legacy 流程仍保留为历史兼容，不用于新内容。
+- canonical 验证：Python `305/305`、Stage F focused `94/94`、Node structure `21/21`、Tag Pipeline `27/27`、Astro build `353 pages`、CLI help 与 diff-check 全部 PASS。
+- 未执行真实文章导入/发布、NAS、TTS、邮件/通知或部署。提示词长度治理的 4 个文件差异已独立提交为 `e48d39b`；Stage F 操作指引差异由本次第二个 checkpoint 收口。未执行 push。
 ## 2026-11-20｜分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；repository release merged；production cutover DEPLOYED / LIVE VERIFIED）
 
 - Stage F：Owner 授权后 Master 接受 `PASS_WITH_FINDINGS`。固定分母 F-01..F-11 不变；F-08 mocked subprocess dispatch limitation 保留为非阻断 finding。独立报告 SHA-256 `27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。Website PR #3 已 merge，commit `79e5be408b1830d14afe555dbef852a3828e3e8a`；Sermon PR #3 已 merge，commit `ab88dc629bd3391507f10a5e3c8b3be85018c0fa`。Website build 353 pages PASS；Sermon Python 60/60、producer focused 28/28 PASS。Release report `tasks/current/20261115-unified-share-sermon-publication-governance/STAGE_F_RELEASE_REPORT.md` SHA-256=`28163875ee15ae63fdb2207ece2d3ab3fae37e77253f98fb8f201374648a0a83`。Live `/deployment.json` exactly matches Website merge commit, builtAt `2026-11-20T08:38:07.471Z`; root/RSS/sitemap/search-index return HTTP 200; `/about` canonical redirect ends at HTTP 200. Production capability release/deployment complete。未发布真实文章、未访问 NAS、未执行 email/notification。

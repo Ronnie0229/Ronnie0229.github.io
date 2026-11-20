@@ -113,7 +113,7 @@ Rules:
 
 ### Step 5: Publish
 
-Until Stage F is separately enabled, the commands below describe only the current legacy production routes (Share legacy importer; Sermon v1.2 / `sermon-presentation/v1`). They are not the v1.3 unified contract path. For v1.3 package validation use `content_workflow.py publish-contract --mode plan|dry-run`; `--mode publish` remains fail-closed before Stage F. Never run publish without selecting one source object.
+Stage F is enabled. New Share and Sermon content must use the v1.3 `content_workflow.py publish-contract` package-bound route with the `content-presentation/v1` artifact. Run `--mode plan` and `--mode dry-run` first. Only after the exact publication object has Owner authorization and all gates pass may the command use `--mode publish --allow-write`. The legacy commands below are retained for identified historical/in-flight compatibility only; do not use them for new content. Never publish without selecting one exact source object.
 
 For a share article:
 

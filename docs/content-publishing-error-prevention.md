@@ -4,7 +4,7 @@
 
 ## Share / Sermon 共用发布防错 Gate
 
-- 不得把旧 Share direct importer 当作新统一发布链的绕行入口；Stage F 前生产路径保持冻结，v1.3 只走显式 package-bound plan/dry-run/受控验收。
+- 不得把旧 Share direct importer 或 legacy `publish share|sermon` 当作新统一发布链的绕行入口；新内容统一走 v1.3 package-bound `publish-contract`。正式写入要求 exact publication object 的 Owner 授权、`--allow-write` 和全部独立 Gate。
 - Share 不能被误套 sermon-only 三点大纲、Full Sermon Mode 或讲员结尾规则；Sermon 不得因 Share profile 而降低现有结构 Gate。
 - Share 必须 `archive_status=not_applicable`，不访问 NAS archive；Sermon 仍需受保护 append-only archive。
 - legacy Ronnie fallback 不得覆盖 v1.3 package-bound author；显式 source/Owner identity 优先于 Ronnie/Patrick fallback。
@@ -33,7 +33,7 @@
 整改：
 
 - sermon fidelity 的业务真值不再由本网站文档定义。Full Sermon Mode、E1、经文/ending fidelity、审核/修复轮次、Attempt 3 final repair 与 max-audit release semantics 一律引用 `../../讲道整理/docs/end-to-end-content-publishing-workflow.md §4.4.1/§4.4.2/§4.4.3`、`../../讲道整理/docs/translation-fidelity-quality-control.md`、`../../讲道整理/docs/sermon-independent-audit-orchestration.md`。
-- Stage F 前网站当前生产讲道路径接受 `website-publication-package/v1.2` 交付的讲道 Owner 已成立正式稿 identity/SHA、publication-facing fidelity status/evidence 与发布元数据；v1.1 继续用于历史、已生成、在途 package 与显式兼容。v1.3 仅作为显式 plan/dry-run/受控验收候选，不能提前替代生产路径。不得用网站 build、mirror、SHA 或 JSON 检查替代 fidelity approval。
+- 当前新讲道生产路径接受 `website-publication-package/v1.3` + `content-presentation/v1`，绑定讲道 Owner 已成立的正式稿 identity/SHA、publication-facing fidelity status/evidence、presentation artifact 与发布元数据；v1.1/v1.2 仅用于历史或明确识别的在途兼容。不得用网站 build、mirror、SHA 或 JSON 检查替代 fidelity approval。
 - 网站继续负责自身的 Markdown/rendering 可读性、正文经文 TTS-friendly display normalization、frontmatter/SEO/scripture metadata 机器格式、import fail-closed、raw/processed/posts 一致性以及后续 build/deploy/SEO/Git/notification Gate。
 - 如果 package、identity/SHA、metadata 或网站显示/导入 Gate 不满足要求，网站应 fail-closed；但不得因此自行发明或重判 sermon fidelity verdict。
 
@@ -43,7 +43,7 @@
 
 整改：
 
-- 讲道 Owner 的 fidelity 规则变化时，不再要求两个项目同步复制相同业务规则正文。Stage F 前网站侧只检查 sermon canonical reference、现行生产 `website-publication-package/v1.2` 与 v1.1 历史兼容，以及 v1.3 受控候选 consumer/contract compatibility。
+- 讲道 Owner 的 fidelity 规则变化时，不再要求两个项目同步复制相同业务规则正文。网站侧只检查 sermon canonical reference、当前生产 `website-publication-package/v1.3` / `content-presentation/v1` 与 v1.0/v1.1/v1.2 历史兼容 consumer/contract compatibility。
 - 只有网站自己的消费、display/metadata、import、raw/processed/posts、build、Git、deploy、SEO、notification Gate 受影响时，才更新对应网站文档或实现；讲道 fidelity truth 始终回到讲道 Owner canonical authority fresh-read。
 - 新开对话或切换新账号处理讲道发布时，网站应先读本项目 `AGENTS.md`、`CONTENT_WORKFLOW.md` 与相关发布文档，并按其中 canonical reference fresh-read 讲道 Owner authority；不得把网站旧规则副本当作 sermon truth。
 
