@@ -36,22 +36,28 @@ Authority: Owner's explicit Stage F authorization; Master acceptance PASS_WITH_F
 - Construction full Python suite: 60/60 PASS; py_compile, CLI help and scoped diff-check PASS. One historical trailing-whitespace line in Stage A Remediation 01 evidence was excluded from the scoped whitespace check and left unchanged.
 - Canonical Sermon local dirty files and historical content artifacts were not staged, modified, reset or included.
 
-## 3. Production deployment identity check
+## 3. Production deployment identity and live verification
 
-- `https://ronniecross.com/`: HTTP 200.
-- `https://ronniecross.com/deployment.json` returned the old deployment identity:
-  - commit: `09ce7eb588a21745d0286d3eec6a890c16a26aea`
-  - builtAt: `2026-11-15T13:35:39.860Z`
-- The Website repository's remote `main` is now `79e5be408b1830d14afe555dbef852a3828e3e8a`. Therefore the live deployment identity does not match the released main commit.
-- The construction environment has no local Wrangler executable and no `CLOUDFLARE_API_TOKEN`, `CF_API_TOKEN`, or `CLOUDFLARE_ACCOUNT_ID` environment variable. Plugin discovery found no Cloudflare integration.
-- No Cloudflare deployment trigger could be executed or independently verified in this environment.
+- Website repository remote `main`: `79e5be408b1830d14afe555dbef852a3828e3e8a`.
+- Live `https://ronniecross.com/deployment.json`: HTTP 200; exact deployment identity:
+  - commit: `79e5be408b1830d14afe555dbef852a3828e3e8a`
+  - builtAt: `2026-11-20T08:38:07.471Z`
+- Deployment identity exactly matches the Website release merge commit.
+- Live HTTP checks:
+  - `/`: 200
+  - `/deployment.json`: 200
+  - `/rss.xml`: 200
+  - `/sitemap.xml`: 200
+  - `/search-index.json`: 200
+  - `/about`: 308 canonical redirect; final `/about/`: 200
+- Website local Astro production build: PASS, 353 pages.
 
 ## 4. Final disposition
 
 - Stage F implementation: **MASTER ACCEPTED · PASS_WITH_FINDINGS**.
 - Website and Sermon repository release: **MERGED**.
-- Production capability cutover: **BLOCKED / NOT DEPLOYED** pending an authorized Cloudflare Pages deployment path and live deployment identity matching the Website merge commit.
+- Production capability cutover: **DEPLOYED · LIVE IDENTITY VERIFIED**. The deployed Website commit exactly matches the Website PR #3 merge commit.
 - No real article import/publication; no NAS access; no TTS, email, notification, subscription action or GitHub workflow dispatch.
 - Canonical local worktrees were not synced or otherwise modified; their pre-existing dirty state is preserved.
 
-The production cutover must remain BLOCKED until `/deployment.json` reports the Website release commit (or a verified descendant containing it) and the required live checks pass.
+Stage F bounded capability release and production cutover are complete. This does not authorize or claim publication of any real Share or Sermon article.
