@@ -1,12 +1,12 @@
 # 个人网页项目状态
 
-## 2026-11-20 — 分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；Stage F production release in progress）
+## 2026-11-20 — 分享与讲道统一发布治理（Stage A/B PASS；Stage C/D/E/F Master accepted PASS_WITH_FINDINGS；repository release merged；production cutover BLOCKED）
 
 - Stage F 已获 Owner 于 2026-11-20 明确授权，并由 Master 于 2026-11-20 接受 `PASS_WITH_FINDINGS`。冻结计划 Revision 01 SHA-256=`46fb82aabb7f2e248b946e010d757e1b5bfc01aa42338af4d751c9e4bf4e9b3f`；固定分母 F-01..F-11 未调整。F-01..F-07、F-09..F-11 PASS；F-08 PASS_WITH_FINDINGS，唯一非阻断 finding 为部分 Workflow→Importer 测试使用 mocked subprocess dispatch。独立报告 `tasks/current/20261115-unified-share-sermon-publication-governance/independent-audit/STAGE_F_AUDIT_REPORT.md` SHA-256=`27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。
 - Stage F implementation report SHA-256=`3e6a8c5e838dfd66ae1eb47768e4860e7c4cbb202accf8adb571d507ee9cf5dd`；独立审核请求 SHA-256=`fb838b25812c3a9fd6d6c424f8ef53b3b6fceb3f7dfcd5c356b517cc6413ead0`；独立审核报告 SHA-256=`27700237647643af609c5c3102ed13a6422cc9453997cbb577ea3c0f325bebe41`。
 - Producer construction worktree 的 `generate_prepublish_md.py` 与 `build_website_publication_package.py` 新内容默认已改为 v1.3，显式 v1.2 legacy compatibility 保留。Website construction worktree v1.3 写入授权已从 consumer 传递并在 workflow、Share importer、Sermon importer 各层独立强制；Sermon direct importer 额外复核 package/schema、source folder、speaker/date/category、presentation artifact。
 - 最新验证：Website Python `305/305`；Stage F focused `94/94`；Sermon Python `60/60`；Sermon producer focused `28/28`；Website Node `21/21`；Tag fixtures `27/27`；Python compile、CLI help、`git diff --check` PASS。
-- Stage F 实施及独立审核已完成并由 Master 接受；当前进入冻结计划第 9 步的 bounded repository release / production capability cutover。此阶段仅部署 v1.3 能力，不发布真实文章，不执行 NAS/email/notification。任何 Git commit/push 与部署严格限制在 Stage F bounded write-set；canonical 既有 dirty 文件不得混入。
+- Stage F bounded repository release 已完成：Website PR #3 merge commit=`79e5be408b1830d14afe555dbef852a3828e3e8a`；Sermon PR #3 merge commit=`ab88dc629bd3391507f10a5e3c8b3be85018c0fa`。Website local build 353 pages PASS。Release report `tasks/current/20261115-unified-share-sermon-publication-governance/STAGE_F_RELEASE_REPORT.md` SHA-256=`784eed5aa9678d0069d6864403deae80e4d1bd10d9402ea5753493255cdb334d`。但 Cloudflare live `/deployment.json` 仍报告旧 commit `09ce7eb588a21745d0286d3eec6a890c16a26aea`；当前无 Wrangler / Cloudflare API token / account ID / Cloudflare plugin 可触发部署，故 production capability cutover 明确保持 BLOCKED / NOT DEPLOYED。不得宣称线上已启用 v1.3。canonical local worktrees 的既有 dirty 文件未触碰；未导入真实文章、未访问 NAS、未执行 TTS/email/notification。
 
 - Stage B Remediation 01 独立复审 PASS 已由 Master 接受；正式报告 SHA-256=`9a4616989cd8cbdd390158dca14b40cd27f6ccff885a4b0c164604c0bbaed0ea`。Stage B 首轮 FAIL 与 Stage A chronology 保持原样。
 - Stage C 首轮独立审核正式 FAIL：F-01（P1）直接 Share importer 可绕过 package 并写入；F-02（P2）底层 workflow 未绑定调用者 source/metadata。原报告 SHA-256=`967cc403d54d27efedc02dc8b50870aedcb5ec1a597178ff4fd77ac2e41e8d47`。
