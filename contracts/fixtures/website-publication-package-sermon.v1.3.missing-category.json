@@ -1,0 +1,35 @@
+{
+  "interface": "website-publication-package",
+  "version": "1.3",
+  "content_type": "sermon",
+  "prepublish": {"path": "fixtures/prepublish.md", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+  "official_chinese": {"path": "fixtures/official.zh.txt", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "english_source": {"path": "fixtures/source.en.txt", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+  "fidelity_status": "independently_verified",
+  "translation_status": "translated",
+  "metadata": {
+    "slug": "synthetic-sermon",
+    "publish_date": "2026-11-17",
+    "batch_id": "stage-a-sermon",
+    "content_type": "sermon",
+    "speaker": "Patrick"
+  },
+  "notification_policy": "suppress",
+  "archive_status": "archived",
+  "presentation": {
+    "manifest": "fixtures/presentation-manifest.json",
+    "artifact": "fixtures/presentation.md",
+    "manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "content_type": "sermon",
+    "profile": "sermon",
+    "presentation_status": "mechanically_verified",
+    "text_identity_status": "exact_record_order_preserved",
+    "candidate_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "record_identity": {
+      "record_count": 3,
+      "record_order_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "pair_set_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  }
+}

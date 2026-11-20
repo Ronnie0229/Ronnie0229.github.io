@@ -3,7 +3,10 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import json
 import re
+import subprocess
+import sys
 import shutil
 import unicodedata
 from datetime import datetime
@@ -236,6 +239,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scripture", help="Manual scripture frontmatter value.")
     parser.add_argument("--slug", help="Full output slug, without .md.")
     parser.add_argument("--slug-topic", help="English topic slug; final slug becomes <date>-<slug-topic>.")
+    parser.add_argument("--presentation-file", help="Verified body-only content-presentation artifact for v1.3 package consumption.")
+    parser.add_argument("--allow-write", action="store_true", help="Explicitly authorize direct v1.3 Share writes.")
+    parser.add_argument("--publication-package", help="Required v1.3 package for every presentation import.")
+    parser.add_argument("--content-root", help="Root containing package-bound files; required with --publication-package.")
+    parser.add_argument("--author", help="Publication author; defaults to Ronnie for legacy Share imports; v1.3 value must match package-bound prepublish metadata.")
+    parser.add_argument("--publish-date", help="Frozen publication date in YYYY-MM-DD format.")
     return parser.parse_args()
 
 
@@ -254,6 +263,20 @@ def resolve_source_file(value: str) -> Path:
     except ValueError:
         raise SystemExit(f"Share source file must be under {SOURCE_DIR}: {candidate}")
     if not candidate.is_file() or candidate.suffix.lower() not in {".docx", ".txt"}:
+        raise SystemExit(f"Share source file not found or unsupported: {candidate}")
+    return candidate
+
+
+def resolve_v13_source_file(value: str) -> Path:
+    try:
+        from share_source_identity import resolve_share_source_path
+    except ModuleNotFoundError:
+        from scripts.share_source_identity import resolve_share_source_path
+    try:
+        candidate = resolve_share_source_path(value, SOURCE_DIR)
+    except (ValueError, OSError) as exc:
+        raise SystemExit(f"V13_PACKAGE_IDENTITY_MISMATCH: {exc}") from exc
+    if candidate.suffix.lower() not in {".docx", ".txt"}:
         raise SystemExit(f"Share source file not found or unsupported: {candidate}")
     return candidate
 
@@ -378,14 +401,14 @@ def validate_manual_description(description: str, body: str) -> None:
         raise SystemExit("Description appears copied from the body opening; write a manual summary instead.")
 
 
-def build_share_tags(title: str, scripture: str, raw_tags: str | None) -> list[str]:
+def build_share_tags(title: str, scripture: str, raw_tags: str | None, author: str = "Ronnie") -> list[str]:
     try:
         return build_tags(
             title=title,
             scripture=scripture,
             manual_tags=parse_manual_tags(raw_tags),
             category="灵命成长",
-            author="Ronnie",
+            author=author,
         ).tags
     except TagPipelineError as exc:
         raise SystemExit(f"Tag Pipeline [{exc.code}]: {exc.message}") from exc
@@ -431,6 +454,93 @@ def format_body(text: str) -> str:
     return "\n\n".join(blocks)
 
 
+def validate_v13_import_identity(args: argparse.Namespace, source: Path) -> dict:
+    if not args.publication_package or not args.content_root:
+        raise SystemExit("V13_PACKAGE_REQUIRED: direct Share presentation import requires --publication-package and --content-root")
+    package_path = Path(args.publication_package).expanduser().resolve(strict=True)
+    content_root = Path(args.content_root).expanduser().resolve(strict=True)
+    package = json.loads(package_path.read_text(encoding="utf-8-sig"))
+    if not isinstance(package, dict) or package.get("version") != "1.3" or package.get("content_type") != "share":
+        raise SystemExit("V13_PACKAGE_REQUIRED: expected a Share website-publication-package/v1.3")
+    validation = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/validate_publication_package_v13.py"),
+         "--contract", str(package_path),
+         "--schema", str(ROOT / "contracts/website-publication-package-v1.3.schema.json"),
+         "--content-root", str(content_root)],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    try:
+        evidence = json.loads(validation.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package validator returned invalid evidence") from exc
+    if validation.returncode != 0 or evidence.get("pass") is not True:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package validation FAIL")
+
+    try:
+        from consume_publication_package import parse_prepublication_frontmatter
+    except ModuleNotFoundError:
+        from scripts.consume_publication_package import parse_prepublication_frontmatter
+    prepublish_ref = package.get("prepublish", {}).get("path")
+    prepublish_path = Path(prepublish_ref).expanduser()
+    if not prepublish_path.is_absolute():
+        prepublish_path = content_root / prepublish_path
+    prepublish_path = prepublish_path.resolve(strict=True)
+    frontmatter = parse_prepublication_frontmatter(prepublish_path)
+    metadata = package.get("metadata", {})
+    if (frontmatter.get("author") != metadata.get("author")
+        or frontmatter.get("date") != metadata.get("publish_date")
+        or frontmatter.get("category") != metadata.get("category")
+        or frontmatter.get("contentType") != "share"):
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: prepublish author/date/category/contentType do not match package metadata")
+    package_artifact = package.get("presentation", {}).get("artifact")
+    artifact_path = Path(package_artifact).expanduser()
+    if not artifact_path.is_absolute():
+        artifact_path = content_root / artifact_path
+    if Path(args.presentation_file).expanduser().resolve(strict=True) != artifact_path.resolve(strict=True):
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: presentation artifact does not match package binding")
+    expected_source = frontmatter.get("source")
+    if not isinstance(expected_source, str) or not expected_source:
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: package-bound source path is missing or invalid")
+    try:
+        from share_source_identity import resolve_package_bound_share_source
+    except ModuleNotFoundError:
+        from scripts.share_source_identity import resolve_package_bound_share_source
+    try:
+        bound_source = resolve_package_bound_share_source(
+            args.source_file, SOURCE_DIR, expected_source=expected_source
+        )
+    except (ValueError, OSError) as exc:
+        raise SystemExit(f"V13_PACKAGE_IDENTITY_MISMATCH: {exc}") from exc
+    if source != bound_source:
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: resolved source does not match package-bound source identity")
+    expected_values = {
+        "title": frontmatter.get("title"),
+        "description": frontmatter.get("description"),
+        "scripture": frontmatter.get("scripture", ""),
+        "author": metadata.get("author"),
+        "publish_date": metadata.get("publish_date"),
+        "slug": metadata.get("slug"),
+        "tags": frontmatter.get("tags"),
+    }
+    supplied = {
+        "title": args.title,
+        "description": args.description,
+        "scripture": args.scripture,
+        "author": args.author,
+        "publish_date": args.publish_date,
+        "slug": args.slug,
+        "tags": [item.strip() for item in args.tags.split(",")] if args.tags is not None else None,
+    }
+    for key, actual in supplied.items():
+        if actual is not None and actual != expected_values[key]:
+            raise SystemExit(f"V13_PACKAGE_IDENTITY_MISMATCH: {key} does not match package-bound prepublish metadata")
+    if not isinstance(expected_values["tags"], list) or not all(isinstance(item, str) for item in expected_values["tags"]):
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: package-bound tags must be a string array")
+    if args.slug_topic:
+        raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: v1.3 Share requires the package-bound full slug")
+    return {**expected_values, "category": metadata.get("category")}
+
+
 def main() -> None:
     args = parse_args()
     if not args.source_file:
@@ -438,7 +548,24 @@ def main() -> None:
             "import_shares.py no longer imports all share files by default. "
             "Use --source-file to select one file; add --dry-run to preview."
         )
-    target_source = resolve_source_file(args.source_file)
+    target_source = resolve_v13_source_file(args.source_file) if args.presentation_file else resolve_source_file(args.source_file)
+    package_metadata = None
+    if (args.publication_package or args.content_root) and not args.presentation_file:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package-bound Share import requires --presentation-file")
+    if args.presentation_file:
+        package_metadata = validate_v13_import_identity(args, target_source)
+        if not args.dry_run and not args.allow_write:
+            raise SystemExit("V13_WRITE_AUTHORIZATION_REQUIRED: direct v1.3 Share import requires --allow-write")
+        args.title = args.title if args.title is not None else package_metadata["title"]
+        args.description = args.description if args.description is not None else package_metadata["description"]
+        args.scripture = args.scripture if args.scripture is not None else package_metadata["scripture"]
+        args.author = args.author if args.author is not None else package_metadata["author"]
+        args.publish_date = args.publish_date if args.publish_date is not None else package_metadata["publish_date"]
+        args.slug = args.slug if args.slug is not None else package_metadata["slug"]
+        if args.tags is None:
+            args.tags = ",".join(package_metadata["tags"])
+    elif args.publication_package or args.content_root:
+        raise SystemExit("V13_PACKAGE_REQUIRED: package arguments are only valid with --presentation-file")
     if not args.dry_run:
         ORGANIZED_DIR.mkdir(exist_ok=True)
         POSTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -458,10 +585,20 @@ def main() -> None:
             copyright_rows[(source.name,)] = (source.name, "来源或版权需要确认，暂不发布")
             continue
 
-        body = strip_leading_title(normalize_text(read_source(source)), source)
+        if args.presentation_file:
+            presentation_path = Path(args.presentation_file).expanduser().resolve(strict=True)
+            body = presentation_path.read_text(encoding="utf-8-sig")
+            if body.startswith("---\n") or body.startswith("---\r\n"):
+                raise SystemExit("v1.3 Share presentation artifact must be body-only; frontmatter is not allowed.")
+            if not body.endswith("\n"):
+                raise SystemExit("v1.3 Share presentation artifact must preserve its terminal newline.")
+        else:
+            body = strip_leading_title(normalize_text(read_source(source)), source)
         summary = clean_summary_title(source)
         override = OVERRIDES.get(source.stem)
-        if args.scripture:
+        if package_metadata is not None:
+            scripture = package_metadata["scripture"]
+        elif args.scripture:
             scripture = args.scripture.strip()
         elif override:
             scripture, summary, _previous_category = override
@@ -469,8 +606,15 @@ def main() -> None:
             scripture = find_scripture(summary, body)
         if args.title:
             summary = args.title.strip()
-        category = "灵命成长"
-        date = source_date(source)
+        category = package_metadata["category"] if package_metadata else "灵命成长"
+        date = args.publish_date or source_date(source)
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            raise SystemExit("--publish-date must use YYYY-MM-DD format.")
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+        except ValueError as exc:
+            raise SystemExit("--publish-date is not a valid calendar date.") from exc
+        author = (args.author or "").strip() or "Ronnie"
         published_at = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds")
         title = summary if args.title else (f"{scripture}｜{summary}" if scripture else summary)
         reviewed = False
@@ -479,7 +623,7 @@ def main() -> None:
             "NEEDS_METADATA：请人工阅读文章后补充大意摘要。",
         )
         validate_manual_description(description, body)
-        tags = build_share_tags(title, scripture, args.tags)
+        tags = build_share_tags(title, scripture, args.tags, author)
         if args.slug:
             slug = args.slug.strip().removesuffix(".md")
         elif args.slug_topic:
@@ -487,6 +631,9 @@ def main() -> None:
         else:
             slug = f"{date}-{slugify(title)}"
         article_id = article_id_for_slug(slug)
+        rendered_body = body if args.presentation_file else format_body(body)
+        if not args.presentation_file and not rendered_body.endswith("\n"):
+            rendered_body += "\n"
 
         markdown = (
             "---\n"
@@ -498,12 +645,11 @@ def main() -> None:
             "tags: [" + ", ".join(f'"{yaml_escape(tag)}"' for tag in tags) + "]\n"
             f'category: "{yaml_escape(category)}"\n'
             f'scripture: "{yaml_escape(scripture)}"\n'
-            'author: "Ronnie"\n'
+            f'author: "{yaml_escape(author)}"\n'
             f"reviewed: {str(reviewed).lower()}\n"
             f'source: "data/raw/分享/{yaml_escape(source.name)}"\n'
             "---\n\n"
-            + format_body(body)
-            + "\n"
+            + rendered_body
         )
         output = ORGANIZED_DIR / f"{slug}.md"
         post_output = POSTS_DIR / output.name
