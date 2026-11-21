@@ -40,6 +40,7 @@ class PublicationPackageV13ConsumerValidationTests(unittest.TestCase):
             f'category: "{category}"\n'
             'scripture: ""\n'
             f'author: "{ "Ronnie" if content_type == "share" else "Patrick" }"\n'
+            'metadataStatus: "confirmed"\n'
             "reviewed: false\n"
             f'source: "{source}"\n'
             f'contentType: "{content_type}"\n'

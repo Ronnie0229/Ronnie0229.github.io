@@ -1,5 +1,13 @@
 # 个人网页项目状态
 
+## 2026-11-21 — 分享文章《神如何看待我们的善行？》发布进行中
+
+- Bible-v2 中文候选已独立忠实度审核并由通用状态机正式接收：39/39 Complete、0 material finding；Project Bible CUVMPS Rv2 gate 25/25 引用、15/15 直接引语匹配。
+- Website 已按 v1.3 package-bound 路径完成本篇正式导入：articleId=`post-8db3e78d383a8c06`，slug=`2026-11-21-how-does-god-view-our-good-deeds`；无单一主经文按已确认 metadata 处理，不人为指定主经文；Share archive=`not_applicable`。
+- 为支持 metadata 已确认的非单一主经文 Share，最小修复 Share importer：仅 v1.3 package-bound 且 `metadataStatus=confirmed` 时允许空 scripture 发布；新增未确认 metadata 仍 fail-closed 的回归测试。Python 306/306、Tag 27/27、Knowledge Layer 310/0/0、Astro build PASS。
+- 当前 Website staged write-set 包含本篇 post/processed、分享登记与审计摘录、importer 修复及测试；commit/push/deployment/live verification/email notification 尚待完成。原始 PDF 未移动或修改；未访问 NAS，未执行 TTS/R2。
+- 任务结果：`docs/tasks/share-article-how-does-god-view-good-deeds-20261121/RESULT.md`。当前状态 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`。
+
 ## 2026-11-20 — Website canonical 同步 Stage F 与 v1.3 操作指引对齐
 
 - canonical workspace `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目` 已 fast-forward 同步至 `origin/main`；当前 `main` / `origin/main` 同为 `60e48148f1546477a1e990e199123b40e0477727`。

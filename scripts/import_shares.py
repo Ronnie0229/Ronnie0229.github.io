@@ -538,7 +538,15 @@ def validate_v13_import_identity(args: argparse.Namespace, source: Path) -> dict
         raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: package-bound tags must be a string array")
     if args.slug_topic:
         raise SystemExit("V13_PACKAGE_IDENTITY_MISMATCH: v1.3 Share requires the package-bound full slug")
-    return {**expected_values, "category": metadata.get("category")}
+    scripture_not_applicable = (
+        not expected_values["scripture"]
+        and frontmatter.get("metadataStatus") == "confirmed"
+    )
+    return {
+        **expected_values,
+        "category": metadata.get("category"),
+        "scripture_not_applicable": scripture_not_applicable,
+    }
 
 
 def main() -> None:
@@ -596,8 +604,10 @@ def main() -> None:
             body = strip_leading_title(normalize_text(read_source(source)), source)
         summary = clean_summary_title(source)
         override = OVERRIDES.get(source.stem)
+        scripture_not_applicable = False
         if package_metadata is not None:
             scripture = package_metadata["scripture"]
+            scripture_not_applicable = package_metadata["scripture_not_applicable"]
         elif args.scripture:
             scripture = args.scripture.strip()
         elif override:
@@ -678,13 +688,15 @@ def main() -> None:
             any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_REVIEW)
             and not any(keyword.lower() in source.name.lower() for keyword in THEOLOGY_APPROVED)
         )
-        publishable = bool(scripture) and not requires_theology_review
+        publishable = (bool(scripture) or scripture_not_applicable) and not requires_theology_review
         if publishable and not args.dry_run:
             shutil.copyfile(output, post_output)
-        status = "待神学复核" if requires_theology_review else ("待补经文" if not scripture else "已完成基础校订")
+        status = "待神学复核" if requires_theology_review else (
+            "无单一主经文（已确认）" if scripture_not_applicable else ("待补经文" if not scripture else "已完成基础校订")
+        )
         row = (source.name, date, scripture, category, title, status)
         catalog_rows[(source.name,)] = row
-        if scripture:
+        if scripture or scripture_not_applicable:
             missing_rows.pop((source.name,), None)
         else:
             missing_rows[(source.name,)] = (source.name, date, category, title)

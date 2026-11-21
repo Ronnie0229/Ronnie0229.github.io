@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -231,7 +233,36 @@ class SharePresentationImportTests(unittest.TestCase):
                 raw, organized, posts, reports)
             self.assertTrue(organized.exists())
             self.assertTrue(posts.exists())
+            self.assertTrue((posts / "2026-11-17-sample-article.md").is_file())
             self.assertTrue(reports.exists())
+            self.assertNotIn("sample.txt", (reports / "待补经文.csv").read_text(encoding="utf-8-sig"))
+
+    def test_v13_share_without_scripture_requires_confirmed_metadata_to_create_post(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            raw, organized, posts, reports = (root / name for name in ("raw", "organized", "posts", "reports"))
+            raw.mkdir()
+            source = raw / "sample.txt"
+            source.write_text("Source attribution.", encoding="utf-8")
+            package_path, package = PublicationPackageV13ConsumerValidationTests().build_fixture(root, "share")
+            prepublish = Path(package["prepublish"]["path"])
+            prepublish.write_text(
+                prepublish.read_text(encoding="utf-8").replace(
+                    'metadataStatus: "confirmed"', 'metadataStatus: "needs_review"'
+                ),
+                encoding="utf-8",
+            )
+            package["prepublish"]["sha256"] = hashlib.sha256(prepublish.read_bytes()).hexdigest()
+            package_path.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")
+
+            self._run_import(root, ["import_shares.py", "--source-file", source.name,
+                "--presentation-file", package["presentation"]["artifact"],
+                "--publication-package", str(package_path), "--content-root", str(root), "--allow-write"],
+                raw, organized, posts, reports)
+
+            self.assertTrue((organized / "2026-11-17-sample-article.md").is_file())
+            self.assertFalse((posts / "2026-11-17-sample-article.md").exists())
+            self.assertIn("sample.txt", (reports / "待补经文.csv").read_text(encoding="utf-8-sig"))
 
     def test_v13_direct_import_rejects_spoofed_metadata_before_writes(self):
         with tempfile.TemporaryDirectory() as temp:
