@@ -1,7 +1,7 @@
 # 分享文章发布结果｜《神如何看待我们的善行？》
 
 - 任务日期：2026-11-21
-- 当前状态：`PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`
+- 当前状态：`PUBLISHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS / RELEASE_CLOSED`
 - 内容类型：Share
 - 发布日期：2026-11-21
 - 作者：Ronnie（Share 默认作者规则；原文未声明其他作者）
@@ -51,13 +51,15 @@
 
 ## Git / production closure
 
-- 发布前 Website canonical `main` 与 `origin/main` 同为 `6880e55b227717b54b7ceeed9fa090bde2958843`。
-- 当前精确暂存范围：本篇 post、processed 镜像、分享文章登记与审计摘录、Share importer 修复及对应测试。
-- Commit：PENDING。
-- Push：PENDING。
-- Cloudflare deployment / live readback：PENDING。
-- 首次发布邮件通知：PENDING；由包含本篇 post 的 main push 自动触发，后续 docs-only closure 不会触发邮件 workflow。
-- 原始 PDF 未移动或修改；未执行 NAS、TTS、R2。
+- 发布前 Website canonical `main` 与 `origin/main` 同为 `6880e55b227717b54b7ceeed9fa090bde2958843`；本篇发布 commit：`9e6aa22d963f3b4c269ea6d237a401d386571647`。
+- 发布 commit 已 push 至 `origin/main`；push 后 canonical `HEAD == origin/main`，工作区 clean。
+- Cloudflare production `/deployment.json`：commit=`9e6aa22d963f3b4c269ea6d237a401d386571647`，builtAt=`2026-11-21T11:25:03.153Z`。
+- Canonical article：HTTP 200；标题、正文代表句与 canonical URL 均现场命中。
+- RSS：HTTP 200；标题命中 1 次，slug 在 link / guid 中共命中 2 次。
+- Sitemap：HTTP 200；本篇 slug 命中 1 次。
+- Email workflow：run `44898944204` / job `136830503860` completed/success；1 post、2 recipients、2 success、0 failed、无 skipped slug。
+- 没有手动 dispatch 或重复发送通知；Share archive=`not_applicable`，未访问 NAS；原始 PDF 未移动或修改；未执行 TTS / R2。
+- 本次闭环后的 docs-only 状态记录不会改变文章正文，也不会再次触发邮件发送。
 
 ## Source review limitation
 

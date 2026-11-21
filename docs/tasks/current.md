@@ -1,12 +1,12 @@
 # 当前任务
 
-## 2026-11-21｜分享文章《神如何看待我们的善行？》发布进行中
+## 2026-11-21｜分享文章《神如何看待我们的善行？》已发布并完成通知（RELEASE_CLOSED）
 
 - Bible-v2 独立忠实度审核 39/39 Complete、0 material finding，状态机正式接收；CUVMPS Rv2 Project Bible gate 25/25 引用、15/15 直接引语匹配。
-- Website v1.3 package-bound import 已正式写入本篇文章：articleId=`post-8db3e78d383a8c06`，slug=`2026-11-21-how-does-god-view-our-good-deeds`；无单一主经文按 metadata confirmed 发布，不人为指定主经文；Share archive not_applicable。
-- 最小修复 Share importer，使 package-bound v1.3 且 metadataStatus confirmed 的非单一主经文 Share 可发布；未确认 metadata 仍 fail-closed。Python 306/306、Tag 27/27、Knowledge Layer 310/0/0、Astro build PASS。
-- 当前 staged write-set 已精确限定；commit/push/deployment/live verification/email notification 待完成。原始 PDF 保持不动，未访问 NAS、未执行 TTS/R2。
-- 完整证据：`docs/tasks/share-article-how-does-god-view-good-deeds-20261121/RESULT.md`。
+- Website v1.3 package-bound import 已完成；articleId=`post-8db3e78d383a8c06`，slug=`2026-11-21-how-does-god-view-our-good-deeds`。无单一主经文按 metadata confirmed 发布，不人为指定主经文；Share archive not_applicable。
+- Share importer 已最小修复：仅 package-bound v1.3 且 metadataStatus confirmed 的非单一主经文 Share 可发布；未确认 metadata 仍 fail-closed。Python 306/306、Tag 27/27、Knowledge Layer 310/0/0、Astro build 354 pages PASS。
+- 发布 commit `9e6aa22d963f3b4c269ea6d237a401d386571647` 已 push；Cloudflare deployment 精确匹配，文章页/RSS/Sitemap HTTP 200；Email run `44898944204`：1 post、2 recipients、2 success、0 failed。
+- 原始 PDF 保持不动，未访问 NAS、未执行 TTS/R2。完整证据：`docs/tasks/share-article-how-does-god-view-good-deeds-20261121/RESULT.md`。
 
 ## 2026-11-20｜Website canonical 同步 Stage F 与 v1.3 操作指引对齐
 
