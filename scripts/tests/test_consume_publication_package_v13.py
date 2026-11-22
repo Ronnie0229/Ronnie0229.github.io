@@ -47,6 +47,13 @@ class V13PackageImportCommandTests(unittest.TestCase):
             "---\n\n正文。\n",
             encoding="utf-8",
         )
+        if content_type == "sermon":
+            prepublish.write_text(
+                prepublish.read_text(encoding="utf-8").replace(
+                    'contentType: "sermon"\n', 'contentType: "sermon"\nupdateExisting: true\n'
+                ),
+                encoding="utf-8",
+            )
         artifact = root / "presentation.md"
         artifact.write_text("正文。\n", encoding="utf-8")
         metadata = {
@@ -98,6 +105,9 @@ class V13PackageImportCommandTests(unittest.TestCase):
             self.assertIn("--folder", command)
             self.assertIn("sample-sermon", command)
             self.assertIn("--presentation-file", command)
+            self.assertIn("--tags", command)
+            self.assertIn("恩典,信心", command)
+            self.assertIn("--update-existing", command)
 
     def test_v13_publish_requires_explicit_allow_write_and_builds_command(self):
         with tempfile.TemporaryDirectory() as temp:

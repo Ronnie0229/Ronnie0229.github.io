@@ -104,7 +104,7 @@ def parse_prepublication_frontmatter(path: Path) -> dict[str, Any]:
             raise SystemExit(f"invalid prepublish frontmatter line: {line}")
         raw = raw.strip()
         try:
-            value = json.loads(raw) if raw.startswith(('"', "[", "{")) else raw
+            value = json.loads(raw) if raw.startswith(('"', "[", "{")) or raw in {"true", "false", "null"} else raw
         except json.JSONDecodeError as exc:
             raise SystemExit(f"invalid prepublish frontmatter value for {key}: {exc}") from exc
         values[key.strip()] = value
@@ -281,6 +281,15 @@ def import_command(
             command.extend(["--tags", ",".join(tags)])
         elif content_type == "sermon":
             command.extend(["--folder", source_name])
+            tags = frontmatter.get("tags")
+            if not isinstance(tags, list) or not all(isinstance(item, str) for item in tags):
+                raise SystemExit("v1.3 Sermon prepublish tags must be a string array")
+            command.extend(["--tags", ",".join(tags)])
+            update_existing = frontmatter.get("updateExisting", False)
+            if type(update_existing) is not bool:
+                raise SystemExit("v1.3 Sermon updateExisting must be a boolean")
+            if update_existing:
+                command.append("--update-existing")
         else:
             raise SystemExit(f"unsupported content_type: {content_type!r}")
         if mode == "dry-run":
