@@ -1,10 +1,10 @@
 # 当前任务
 
-## 2026-11-24｜Worktree hygiene closure（ARCHIVE_COMPLETE，待本地 checkpoint 与 retirement）
+## 2026-11-24｜Worktree hygiene closure（CLOSED；49 个文件已归档；2 个工作树已退休；分支保留；未 push）
 
 - 已归档 realtime-staging-test 与 read-aloud-listening-repairs 两个工作树的 49 个文件；SHA-256 回读全部 PASS。
 - 任务记录：`docs/tasks/20261124-worktree-hygiene-closure/`。
-- 用户已授权本地 checkpoint 与退休这两个 exact worktree；保留新文章自动化工作树及所有本地分支；禁止 push。
+- 本地 checkpoint `ff4b845a40e3ecd615215cce24f985e981f65d25` 已提交；两个 exact worktree 已退休，分支保留；新文章自动化工作树继续保留；未 push。
 
 
 ## 2026-11-21｜分享文章《神如何看待我们的善行？》已发布并完成通知（RELEASE_CLOSED）

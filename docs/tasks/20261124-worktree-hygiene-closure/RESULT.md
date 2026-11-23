@@ -1,7 +1,7 @@
 # Result — Website Worktree Hygiene Closure
 
 Date: 2026-11-24
-Status: ARCHIVE_COMPLETE / READY_FOR_LOCAL_CHECKPOINT_AND_RETIREMENT
+Status: CLOSED / ARCHIVED / LOCAL_CHECKPOINTED / WORKTREES_RETIRED / BRANCHES_RETAINED / NO_PUSH
 
 ## Archived source snapshots
 
