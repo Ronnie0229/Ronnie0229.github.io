@@ -1,0 +1,729 @@
+# 当前任务
+
+## 2026-11-15｜REALTIME_STAGING_TEST_20261029 终止 Hermes 训练并由 Owner 接管文章
+
+- Owner 已明确终止 Hermes Telegram 三段原样写入实战训练，后续不再派发 CHUNK 02 / CHUNK 03，不重试 Provider、不启动 Hermes、不改 Gateway。
+- 训练历史不追溯改写：CHUNK 01 payload→disk 字节身份 PASS，但原始 T1 provenance PARTIAL；CHUNK 02 Provider retries failure 后写入状态 UNKNOWN；CHUNK 03 只有旧候选/旧文件，未通过本轮受信写入验收。
+- 新建 Owner 接管中文候选：`docs/tasks/realtime-staging-test-20261029/OWNER_TAKEOVER_TRANSLATION_CANDIDATE_20261115.md`，SHA-256=`13e5d918e7f1fcba2aa4a0f0c2b9486c84fa6cb2d674b5295bf545b5382b51e2`；以冻结英文源稿和 CUVMPS Rv2 Project Bible 直接引用为依据。
+- 终止与接管记录：`docs/tasks/realtime-staging-test-20261029/TRAINING_TERMINATION_AND_OWNER_TAKEOVER_20261115.md`。
+- 当前阶段：`OWNER_TERMINATED_HERMES_TRAINING / OWNER_TAKEOVER_TRANSLATION_CANDIDATE_READY / WEBSITE_PUBLICATION_BLOCKED_CANONICAL_DIRTY_SYNC_GATE`。Website canonical main 有三份既有治理文档未提交修改，`npm run sync` 会 fail-closed；尚未写入正式 raw/processed/posts，未 build、commit/push、deploy、邮件或 NAS。保留全部历史 chronology。
+
+## 2026-11-07｜REALTIME_STAGING_TEST_20261029 CHUNK 01 独立字节验收
+
+- Owner 已批准对既有 CHUNK 01 受信 Telegram 写入文件进行独立验收；本轮只读复核，没有重发 Telegram、运行 Hermes 或覆盖文件。
+- 独立复算确认 `chunk_01_zh_trusted_01.json` 中 `payload_T1` 与 `chunk_01_zh_trusted_01.txt` 的 SHA-256、UTF-8 bytes、Unicode chars、LF 数及首尾换行状态全部一致：SHA=`39d5031423cc490710a1d2d10e322d65414ff5a34203e2d9c9c6977a51bc6a28`，2204 bytes、803 chars、20 LF。固定工具/目标/fixture 字段与 Owner 授权匹配。
+- CHUNK 01 裁决：`PASS_CHUNK01_RECEIPT_PAYLOAD_TO_DISK_BYTE_IDENTITY`；但原始 Telegram T1 完整正文与宿主 tool-call trace 未独立留存，故上游消息→payload 解析溯源为 `PARTIAL`。原回执的 `independent_auditor=NOT_RUN` 原样保留；本次独立复核另存于 `docs/tasks/realtime-staging-test-20261029/CHUNK01_INDEPENDENT_AUDIT_20261107.md`。
+- 当前状态：`CHUNK01_PAYLOAD_TO_DISK_BYTE_PASS / CHUNK01_RAW_T1_PROVENANCE_PARTIAL / CHUNK02_PENDING / CHUNK03_PENDING / MERGE_PENDING / FIDELITY_PENDING / PROJECT_BIBLE_PENDING`。CHUNK 01 不需重写；下一步按 Owner 冻结的串行流程准备 CHUNK 02。保留此前所有错误文件、重复写入和错误回执；禁止合并、发布、NAS、Git push 或邮件。
+
+## 2026-10-29｜分享收件 `.DS_Store` 批量入库最小修复（待 Git 收口）
+
+- Owner 确认分享收件长期保持批量 Ingest，不需要单篇 `--source-file`。修复 `scripts/content_workflow.py` 的 `inspect share` / `ingest share`：仅忽略 `.DS_Store`，不计数、不移动、不删除；讲道扫描及 `verified_move` 合同不变。同步 `docs/统一内容整理与发布流程.md`，新增 `scripts/tests/test_content_workflow_share_ingest.py`。
+- 本轮针对性临时目录测试 3/3 PASS；完整 Python 回归 187 项出现 1 个 ERROR（`test_tag_pipeline.TagPipelineTests.test_content_workflow_forwards_manual_tags_to_sermon`，旧讲道模拟 `subprocess.run` 的 `gate.stdout` 为 MagicMock，`json.loads` 抛 TypeError）；本轮不掩盖失败，也不扩大到讲道流程整改。真实 NAS 分享收件仅执行只读 `inspect share`，得到业务文件 1 篇，PDF SHA=`7e98a87c3a359ec4abb4f270b93ed669c692ae4582d3a57e7fd4c590cd94c0ab`，未执行 Ingest、归档、翻译、发布、TTS、部署或邮件。
+- 2026-10-29 后续定点整改：`test_tag_pipeline.py::test_content_workflow_forwards_manual_tags_to_sermon` 原测试只 mock 单次 importer 调用，未模拟已存在的 sermon presentation Gate 返回 JSON；已将测试替身改成先返回合法 Gate evidence、再返回 importer 结果，并明确核验两次调用以及标签传递。不修改 `publish()` 生产逻辑。完整 Python 回归重新执行 **187/187 PASS**（此前 187 项 1 ERROR chronology 保留）。
+- Website 工作树原有未追踪 `docs/tasks/historical-read-aloud-listening-repairs-20261019/`（4 个历史音频修复文件）仍完整保留，未清理、忽略或暂存。正式 `npm run sync`、Git commit/push、上一轮 publication preflight 及本篇业务 Ingest 均未执行；这些 Gate 在后续真实写入前仍须独立核对，不能把本次局部代码 PASS 当作发布授权。
+
+## 2026-10-14｜分享文章至 TTS 音频发布全流程复盘文档落盘
+
+- 已根据正式 Git、runtime S4 workflow/intake、NAS/R2 交付凭据、Telegram machine/result、website-publication receipt 完成只读 fresh-read，并保存本次真实执行复盘：`docs/tasks/share-article-tts-end-to-end-20261013/WORKFLOW_EXECUTION_REVIEW.md`。
+- 本篇文章 `post-c313198e37dddf21`：正文发布 commit `f19503d6164b039826b3dc80285d2727b93cf6e5`，音频绑定 commit `67a68298a21c05ab27befd2b39c2a722a67bd851`；当前 workflow/intake `COMPLETE`，最后发布 receipt `VERIFIED`。完整 chronology、R2 旧 404 后只读恢复、邮件公开证据限制、Telegram 一次性脚本合同和 Publication Fast Lane 规则见上述复盘。
+- 本轮 **仅更新文档**，无业务代码、TTS、NAS/R2、邮件、构建、commit/push；不将复盘建议解释为新的自动发布许可。
+
+
+## 2026-10-13｜分享《如何荣耀神并永远以祂为乐？》发布与 TTS Telegram 交接
+
+- 用户授权从 NAS 分享收件完整运行文章整理、正式发布到有声阅读流程。唯一源 PDF：`How Do We Glorify God and Enjoy Him Forever.pdf`，4 页，SHA-256=`02bfc20c28bab941c77b8abeb3da2f6f70414b67cf3ef3199f6e93388ad1bf8a`；正式文章 ID=`post-c313198e37dddf21`，日期 2026-10-13。
+- 完整中文整理稿已保存在 `data/raw/分享/How Do We Glorify God and Enjoy Him Forever_中文.txt`，源 PDF 保存在 `data/raw/分享/`；文章与 processed 双份已生成，dry-run PASS，镜像 606/606 PASS，Knowledge Layer 303/0/0 PASS，Astro 347 页 PASS；上一轮 Patrick 音频发布 receipt VERIFIED 且 SHA 与 prepublish HEAD 一致。
+- 本轮文章发布按 Publication Fast Lane 精确提交和 push 后记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY`，不等待本轮 Cloudflare/邮件异步结果；实际 Git SHA 及下一次发布前核验须在真实执行后回读。新文章长时间 TTS 使用未来的单篇 Hermes Telegram `/expy` Python 脚本执行，用户回报脚本 terminal receipt 后，RonnieCross 才继续 NAS/R2/音频网站发布，不得擅自启动或重复 TTS。
+- 收件脚本本轮错误将 NAS `.DS_Store` 也导入 raw（隐藏元数据，不得纳入发布 Git write-set）；发现的过程缺陷保留独立 chronology，不因此扩大本轮代码整改。保留源与译文全文，后续音质仍须独立判断，技术 QC 不代表真人试听。
+
+
+## 2026-10-13｜Patrick 单篇代码交付与发布前次核验策略收口
+
+- 精确 28 文件网站代码已提交并 push：`4ab066223c9ecb5a09258aebb99d256d0f17e5b6`；canonical/remote Git 一致且 Cloudflare 后续版本已现场核验。真实 Patrick TTS/NAS/R2/音频发布尚未执行；未来自动选择器未启用。
+- 原来占用 canonical working tree 的本任务两项规划资产已单独 commit：`c562ef8f28dc0a8089dea01ac2e89f2efd93fed6`；无关文件未混入。
+- Owner 统一业务规则：文章/音频本轮 push 后不等待本次 Cloudflare 终态；下一次发布之前核验上次 Website release 结果。既有文章 Publication Fast Lane 人工核验保留；音频入口只接受与当前最新 Git 身份一致的 VERIFIED receipt；PENDING/UNKNOWN/missing/stale 均 fail-closed。无需新增全局发布锁。
+- 当前精确增量实现测试 Python 175/175、Node 2/2、Astro 346 页 PASS；代码差异仍需独立最终复核，当前不等于已批准真实音频 Pilot。规划文档 local commit 是否已 push 以本轮 Git readback 为准，不得预设。
+
+
+## 2026-10-11｜新文章发布后自动有声阅读规划与启动检查
+
+- 正式完整计划：`docs/tasks/article-read-aloud-new-post-automation-plan-20261011.md`；只启动新文章自动化建设，历史文章批量 backfill 继续暂停。
+- 冻结业务方向：新文章正式 push 后异步生成，不等待本次 Cloudflare；文章/音频网站发布共用上次发布前核验及互斥；自动 QC 可取代逐篇人工试听，但不能冒称人耳验证；`AUDIO_ONLY_UPDATE` 零邮件通知。
+- 今日 exact-one 候选：Patrick《活着就是基督》，articleId=`post-072eda6a5bfbe1f9`。当前文件确认文章质量门和本地 build PASS，但线上实际部署及通知终态尚未 fresh 验证；不能认定音频自动发布已就绪。
+- 后续建设已在独立 worktree `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-new-post-automation-20261011` 进行：旧人工试听保持兼容，新增 opt-in 自动技术 QC 停在独立发布 Gate；只读新增文章 Git 差异检测及音频更新零邮件测试通过。集中测试 15/15 PASS，Astro 构建 346 页 PASS。未实现完整触发与 NAS/R2/网站自动发布，状态为 PARTIAL_IMPLEMENTATION / BLOCKED_FULL_AUTOMATION；详见该 worktree 的 `docs/tasks/article-read-aloud-new-post-automation-20261011/RESULT.md`。
+- 今天 Patrick《活着就是基督》生产站点 deployment.json commit=`14db307fd326207edd812a71a05d2b7ae1c706bc`；目标线上 URL HTTP 200/标题 PASS；原文章 GitHub 邮件运行 `38106268052` PASS（收件人2、成功2、失败0），后续排版修复运行 `38110403194` success，无新增邮件摘要。本轮没有真实 TTS、NAS/R2 写入、Git commit/push、音频部署或生产自动化启用。
+
+
+## 2026-10-11｜讲道排版质量门专项整改
+
+- 已针对 Patrick《活着就是基督》反复排版事故升级现有 Website validator，增加中文数字并列提纲一致性与预先宣告条目数核验；在 canonical importer 中直接执行，错误将 prewrite fail-closed。新增回归测试不修改历史正文。
+- 20/20 presentation fixtures PASS，实际新稿校验 PASS，受控故障样本的 `publish --dry-run` 返回 `SERMON_PRESENTATION_STRUCTURE_FAIL` 且未写入；构建 346 pages PASS。Chrome 窄屏 360px/390px DOM 无横向溢出，提纲 3 项独立 `li`；截图留在本地证据目录，不能以截图存在代替以后每篇的人工阅读验收。
+- 正式说明及剩余范围 `docs/tasks/sermon-presentation-quality-gate-20261011.md`。
+
+## 2026-10-11｜历史81篇讲道排版修复（P1 → P2 → P3）
+
+- P1 19 篇、P2 34 篇、P3 28 篇，全部完成受控 Markdown presentation 修复，当前 81/81 结构校验 PASS；另外 139 篇原先已 PASS 且未修改，当前合计 220/220。
+- 162 份 `post/processed` frontmatter 原样保留；原文中文、英文词序和信息没有删减（仅清理制作标记及允许的展示符号）；镜像 604/604、Astro 346 页、回归测试 20/20、Tag 27/27、知识层 302/0/0 PASS。
+- P1/P2 样例经真实 Chrome 390px 独立列表和无横向溢出核对，其他文章尚未逐篇实际 iPhone 人工视觉验收。无新 post，不触发新文章邮件发送；网站原 raw、NAS、E1 和 Project Bible 均未改。
+- 详细逐篇报告、审计时间线和旧/新 SHA：`docs/tasks/sermon-historical-presentation-triage-20261011/REPAIR_RESULT.md`。
+
+## 2026-10-11｜Patrick《活着就是基督》讲道发布
+
+- Sermon Owner 当前受控任务：`20261011-sermon-philippians-1-20-30-to-live-is-christ`。v3 E1 91/91 PASS，主流程 accepted/release_ready；旧 BLOCKED、v2 FAIL 未抹除。
+- 上次发布 preflight 已核实；本文原件 manifest intake closure PASS、NAS 受保护归档 3/3 SHA exact、受控中文稿与 v1.2 package 的 presentation binding PASS。
+- Website scoped import 已生成 `data/processed` 和 `src/content/posts/2026-10-11-腓立比书-1-20-30｜活着就是基督.md`，articleId `post-072eda6a5bfbe1f9`；镜像 604/604、Knowledge 302/0/0、rendered structure PASS（3 个 H2、89 段）、build 346 pages PASS。
+- 网站 dry-run v1 路径错误、v2 raw folder 缺失均为 FAIL / zero side effects，v3/v4 PASS。Git commit/push 与 notification trigger 只能由最终 readback 确认，本轮线上终态留待下一次 publication preflight。
+
+## 2026-10-10｜Article Read-Aloud Real Device Acceptance Closure
+
+- PROJECT_OWNER 已明确确认最小实机验收矩阵全部通过。
+- 正式判定：`PASS_REAL_DEVICE_ACCEPTANCE`。
+- iPhone Safari：播放、暂停、前后 seek、锁屏/后台返回、至少连续播放 10 分钟均 PASS。
+- macOS Safari：播放、暂停、中段/接近结尾 seek、至少连续播放 10 分钟均 PASS。
+- Chrome：播放、暂停、seek、至少连续播放 10 分钟均 PASS；未发现媒体/CORS/Range 加载异常。
+- 本轮没有发现真实兼容性缺陷，因此不修改业务代码，不重新进入工程建设。
+- Pilot 2 完整人工整篇试听仍保持 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`；设备兼容性 PASS 不等于全文试听 PASS。
+- 当前继续保持 `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`。
+## 2026-10-10｜Article Read-Aloud REAL_USAGE / MAINTENANCE Readiness
+
+- 第一阶段 closure Git 已收口：commit=`e7ce0cb`（`docs: close read-aloud first stage`）已 push，fresh readback `main == origin/main == e7ce0cb`，closure write-set only。
+- 正式运行模式：`REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`；不继续工程扩建。
+- Website player current source：原生 `<audio controls preload="metadata">`，仅在文章存在 `audioUrl` 时渲染；本轮未发现需要业务代码修改的真实兼容性缺陷。
+- 两篇生产文章 live readback 均 HTTP 页面可读，实际包含 audio tag、controls、`preload="metadata"` 和正确 production audio URL。
+- Pilot 1 R2：Range `206`，`Content-Type=audio/mpeg`，`Content-Range=bytes 0-1023/7337901`。
+- Pilot 2 R2：Range `206`，`Content-Type=audio/mpeg`，`Content-Range=bytes 0-1023/4848045`。
+- 本机 Python urllib live probe 仍出现已知 local CA-chain `CERTIFICATE_VERIFY_FAILED`；随后用系统 curl 等价 readback PASS。该现象不作为生产兼容性缺陷。
+- 5 分钟 thin tick LaunchAgent fresh readback：label=`com.ronniecross.read-aloud.tick`，interval=`300s`，state=`not running`（one-shot idle expected），runs=`130`，last exit code=`0`。
+- 当前 durable workflow root存在；唯一 workflow readback：state=`COMPLETE`、automatic_action_available=false、operator_or_human_required=false、cleanup=`CLEANUP_ELIGIBLE`、open_repairs=0、NAS/R2/live verified=true。
+- 本轮只读核验未执行 `tick-all`，未推进 workflow，未修改 LaunchAgent、NAS、R2 或生产内容。
+- 最小真实设备验收清单：`docs/tasks/article-read-aloud-real-usage-acceptance-20261010.md`。
+- 当前剩余真实人工验收：iPhone Safari、macOS Safari、Chrome 的播放/暂停/seek/至少一次 >=10 分钟连续播放；Pilot 2 完整人工整篇试听继续保留 provisional，不伪造 PASS。
+- 只有真实设备验收发现可复现兼容性缺陷时，才进入最小 `ISSUE_DRIVEN_REPAIR`；不得扩建 scheduler/monitor/watchdog、通用 Agent orchestration、Hermes 专用 runtime、批量 backfill 或无人审核发布。
+
+## 2026-10-10｜Article Read-Aloud First Stage Closure
+
+- PROJECT_OWNER 已采纳独立审计并授权阶段收口。
+- 正式裁决：`PASS_FIRST_STAGE_GOAL_ACHIEVED / STOP_ENGINEERING_EXPANSION / SHIFT_TO_REAL_USAGE`。
+- 第一阶段工程建设正式停止，进入 `REAL_USAGE / MAINTENANCE / ISSUE_DRIVEN_REPAIR`。
+- 当前已有两篇真实 Pilot；controller、5 分钟薄触发、NAS/R2/site lifecycle、cleanup gate、post-cleanup restore 已有真实证据。
+- Pilot 2 继续保持 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，不得改写为完整人工试听 PASS。
+- 非阻塞剩余项：真实 iPhone/Safari/Chrome 设备矩阵；未来真实发音问题触发时再做 targeted fragment regeneration + splice。
+- 明确暂停继续扩建任务平台、复杂 scheduler/monitor/watchdog、通用 Agent orchestration、Hermes 专用第二 runtime、通用音频编辑系统、全历史 backfill、无人审核发布。
+- 本轮只做 closure 文档与状态收敛；不修改 controller 代码、不改 LaunchAgent、不动 NAS/R2/生产内容。
+## 2026-10-10｜Article Read-Aloud 5-minute Thin Tick Activation
+
+- 已启用 user LaunchAgent：`com.ronniecross.read-aloud.tick`。
+- cadence=`300 seconds`，动作仅为 canonical Website `scripts/read_aloud_workflow.py tick-all`，执行后退出。
+- 初版 direct-Python + external-volume WorkingDirectory/log paths 出现 `EX_CONFIG(78)`；该 FAIL chronology 保留，且未推进任何 workflow。
+- 最小整改后采用 `/bin/zsh -lc` 执行 `cd + exec`，日志移到 `~/Library/Logs/RonnieCross/`；`plutil` PASS，launchd readback interval=300s，controlled kickstart last exit=0，stdout=`[]`，stderr empty。
+- Pilot 2 已是 `COMPLETE`，所以当前 scheduler 空闲运行是预期行为。
+- 本 activation closure 仅新增/更新治理与状态文档；controller 业务代码未再修改，因此不重复 `npm run build`。前序功能 commit 已完成 132/132 tests + 345-page build + live verify。
+- 当前剩余人工项仅为未来真实 iPhone/Safari/Chrome 设备播放矩阵，以及以后若发现读音问题时执行真实 targeted repair。
+## 2026-10-10｜Article Read-Aloud Cleanup Gate + Repair Support
+
+- PROJECT_OWNER 已批准：正式 NAS/R2/site closure 后删除 DevSSD WAV/MP3 大媒体副本；后续修音从 NAS authoritative WAV master 恢复。
+- worktree `artifacts/read-aloud/` 正式定位为临时试听/局部修复工作区，不作为长期资产库。
+- controller cleanup gate 已实现；仅当 human listening / NAS / R2 / Website live / repair-support / no-open-repair 全部 PASS 时才 `CLEANUP_ELIGIBLE`。
+- repair-support v1 已接入 controller；Pilot 2 已形成 75 个 acoustic chunk 的 frame/time map，total_frames=14542080，SHA=`07ffa4ebd0b0fd67546e8a17c0ee0fa92ef756e5de7d7fac3ad59fb055640650`。
+- current VOICE_AI public contract 不提供 exact text↔chunk alignment；Website 明确禁止猜测，只保存 acoustic map。
+- workflow tests：8/8 PASS；既有 S4/S5/player regression：63/63 PASS。
+- PROJECT_OWNER 已明确允许在本轮未完成整篇试听的情况下暂按 PASS 推进，并以未来发现问题时走局部修复流程作为真实验证；该接受标记为 `PROVISIONAL_PROJECT_OWNER_PASS_NO_FULL_LISTENING`，不伪称已完成整篇试听。
+- PROJECT_OWNER 本轮采用 provisional PASS，不声称已完成整篇试听。若以后发现读音问题，按已验证的 NAS restore + chunk/time map + targeted repair 路径处理。
+- post-cleanup repair restore drill 已 PASS：NAS master exact SHA 恢复，chunk 10 期望/提取时长均为 7.680s，decode PASS，临时恢复资产已再次清理。
+- 5 分钟 `tick-all` 薄触发已在后续 activation slice 启用并 PASS；真实 iPhone/Safari/Chrome 设备矩阵仍待未来有空时验收。
+## 2026-10-10｜Article Read-Aloud Durable Workflow Controller + Pilot 2
+
+- 当前状态：`V0_PASS / CONTINUATION_IN_PROGRESS`。
+- PROJECT_OWNER 已明确要求解决超长 TTS 自动完成识别、CodexPro 单次命令时限，以及未来 Hermes 本地模型独立执行问题。
+- 总体架构修正已落盘：durable workflow control 归入 Phase 2/3 reliability foundation；真正自动触发/批量/backfill/无人审核发布仍留在 Phase 4。
+- 薄触发 cadence 冻结为每 5 分钟一次；不采用 1–2 分钟。
+- 新增 `scripts/read_aloud_workflow.py`，接口=`start/status/tick/tick-all`；不建设 daemon/Redis/Celery/database。
+- workflow current truth 位于 `/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/workflows`；CodexPro/Hermes 只作为可替换 operator。
+- controller tests current 8/8 PASS（前序 slice 为 6/6、7/7，chronology 保留）；S4/S5/player regression 63/63 PASS；py_compile PASS。
+- Pilot 2 TTS 已自然完成：S4 job=`2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523`，status=`TERMINAL_PASS`。
+- real controller readback 已 PASS：未触发第二 generation，直接消费既有 terminal job 并验证 WAV artifact SHA=`551db6adb34d478dd40d13cdd34fe826121d42523121a63a8f5c059b6b2a2ca6`，bytes=58168400。
+- 同一 controller 已继续自动完成 technical QC、WAV full decode、64 kbps MP3 encode、MP3 full decode 与 SHA 持久化。
+- Pilot 2 MP3：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud/delivery-cache/2acf76da2669d766c4d8fb651533267af7dc7e3876be0e2c9f053194557eb523/article-64k.mp3`；duration=605.92s；bytes=4848045；SHA=`386ebaba9d467e3c9c15a7ce361e394a79809b96f3fcb67940c94cc02e22ff3c`。
+- Pilot 2 已完成 NAS WAV + repair-support 归档、R2 full-SHA/Range 206、Website audioUrl、132/132 tests、345-page build、Git push、manual Pages fallback deploy 与 live verify；cleanup gate 达到 `CLEANUP_ELIGIBLE` 后已删除 Pilot 2 worktree/runtime 大媒体副本。
+- 5 分钟 thin trigger 已在后续 activation slice 正式启用；本条保留 controller foundation chronology，不再视为当前未完成项。
+- 该 controller foundation slice 当时尚未 commit/push/deploy；后续 Pilot 2 production closure 与 5-minute activation 已分别完成 commit/push。
+
+## 2026-10-09｜Article Read-Aloud Phase 1D Media Lifecycle Closure
+
+- 状态：`PASS_PHASE1D_MEDIA_LIFECYCLE_PILOT / NAS_R2_MANIFEST_PATHS_FROZEN`。
+- NAS archive mount fresh-verified：`/Volumes/home` -> `RonnieNAS.local/home`；PROJECT_OWNER 已确认 `/Volumes/home/RonnieArchive` 为正式长期资产根。
+- frozen archive root：`/Volumes/home/RonnieArchive/ReadAloud/articles`。
+- Pilot archival master：`/Volumes/home/RonnieArchive/ReadAloud/articles/2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c/master/2026-10-06_基督徒不应该做计划吗_master.wav`。
+- NAS WAV readback SHA=`bf26a7cddd1900bbe4abe00ce835611de5ada45204832ba0a01403ab7167a245`，bytes=88047440，exact PASS。
+- manifest：`/Volumes/home/RonnieArchive/ReadAloud/articles/2026-10-06_基督徒不应该做计划吗_post-32d30724d859c99c/metadata/audio-manifest.json`；schema=`ronniecross-readaloud-audio-manifest/v1`；JSON validate PASS。
+- R2 final delivery fresh readback SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`，bytes=7337901，exact PASS。
+- 正式职责冻结：RonnieArchive=WAV master + manifest；R2=MP3 delivery；Git=code/article pointer/governance evidence。归档命名冻结为 `YYYY-MM-DD_<title>_<articleId>`，WAV 文件名为 `YYYY-MM-DD_<title>_master.wav`。
+- chronology：首次误放到 `/Volumes/share/网站有声阅读` 的 Pilot-only 副本在 PROJECT_OWNER 否决该 root 后保留至新 Archive 路径完成 SHA/bytes/R2 readback 验证；验证通过后已删除误放副本。
+- Phase 1D 已闭合；下一阶段回到原总计划 Phase 2 剩余工作：总共 2–3 篇真实 Pilot + multi-device/browser validation，不扩建通用平台。
+
+## 2026-10-09｜Task Orchestration Governance Adoption
+
+- 起因：Article Read-Aloud Pilot 的 exactly-one-article 试读阶段曾因 implementation / remediation / re-audit / handoff 切分过细，造成建设周期被流程拉长。
+- PROJECT_OWNER 明确要求减少无意义碎片化：同一 Owner / authority / bounded write-set 内，由一个 Executor 连续推进 implementation → test → local remediation → regression → evidence closure，直到真正 authority breakpoint。
+- 正式采用现有两处治理改动：`AGENTS.md` 的 single-executor 规则，以及 `docs/task-handoff-protocol.md` 的长生命周期 Executor / authority-breakpoint 规则。
+- 边界保持不变：真实副作用仍需授权；独立 Auditor/Reviewer 仍保持独立；scope/Owner/write-set 扩大仍必须停；不得以本规则绕过 commit/push/deploy/TTS/production Gate。
+- 本轮仅治理文档 adoption，无业务代码、音频、运行时或部署变更。
+- verdict：`PASS_USER_DIRECTED_TASK_ORCHESTRATION_GOVERNANCE_ADOPTION / READY_FOR_GIT_CLOSURE`。
+
+## 2026-10-09｜Pilot Chunk-57 Production Replacement Closure
+
+- PROJECT_OWNER integrated listening：`PASS`。
+- approved fidelity exception：正文仍为 `著名教师`；音频该处读为 `著名的教师`。
+- accepted final 64K：`pilot-repaired-v2-64k.mp3`，SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`，bytes=7337901。
+- 原 R2 object key 原地覆盖：`audio/articles/post-32d30724d859c99c/article.mp3`；URL 不变。
+- remote full download SHA exact match；`Content-Type=audio/mpeg`；Range 206；`Content-Range=bytes 0-1023/7337901`。
+- live article 仍引用同一正式 URL，native player markup PASS；无需重新部署 Website。
+- final：`PASS_TARGETED_CHUNK57_PRODUCTION_REPLACEMENT / INTEGRATED_LISTENING_AND_REMOTE_VERIFY_PASS`。
+
+## 2026-10-09｜Pilot Targeted Chunk-57 Fidelity-Exception Repair
+
+- 状态：`PASS_TARGETED_CHUNK57_REPAIR / READY_FOR_INTEGRATED_LISTENING`。
+- PROJECT_OWNER 已明确批准 audio-only fidelity 例外：原文 `著名教师`，音频允许读为 `著名的教师`；Website 正文不修改。
+- replacement：VOICE_AI `candidate-2.wav`，人工确认“著名”发音正确；SHA=`bf23d2ad2cf307948d4699437992edb64021d1af05d4faa98fd7a249729cfecc`。
+- repair：仅替换当前 `pilot-repaired.wav` 的 chunk 57 [10308480,10702080)；replacement=411840 frames，较旧 chunk +18240 frames / +0.76s。
+- sample identity：chunk57 前缀 exact PASS；chunk57 后缀 shift 后 exact PASS；此前 chunk0 “基督徒”修复 exact PASS。
+- new WAV：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-v2.wav`，917.16s，SHA=`bf26a7cddd1900bbe4abe00ce835611de5ada45204832ba0a01403ab7167a245`。
+- new 64K：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-v2-64k.mp3`，7337901 bytes，SHA=`d5f465053f9a217a35a917c8a616d460a315883fc2774abb311fa27c8f4f466b`。
+- WAV/MP3 full decode PASS；没有新增 TTS generation。
+- 当前线上 R2 object 暂未替换，等待整篇拼接版本人工试听，重点检查约 7:09.5–7:26.7 的 chunk57 以及前后接缝。
+- next breakpoint：PROJECT_OWNER integrated listening PASS 后，原 URL 下原子替换 R2 object + remote SHA/Range 验证；无需改文章 URL。
+
+## 2026-10-09｜Article Read-Aloud Pilot Production Launch Closure
+
+- 正式状态：`PASS_ARTICLE_READ_ALOUD_PILOT_PRODUCTION_LAUNCH / LIVE_PLAYER_AND_R2_AUDIO_VERIFIED`。
+- feature commit：`415f94f2483f206cc6c4ee710f926c18e279d2bc`（`feat: publish article read-aloud pilot`）。
+- push：construction branch 与 `origin/main` 均正常 fast-forward 到 `415f94f...`；无 force push。
+- Cloudflare R2：bucket=`ronniecross-audio`；custom domain=`audio.ronniecross.com`；object=`audio/articles/post-32d30724d859c99c/article.mp3`；远端 SHA=`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`，与本地 accepted 64K exact match。
+- Website：Pilot frontmatter 已绑定正式 `audioUrl`；native `<audio controls preload="metadata">` 已上线。
+- deployment chronology：Git push 后 Cloudflare Pages 控制面创建 `415f94f` Production/Preview deployment，但初始 deployment-specific URL 返回 `Deployment Not Found`，且 `ronniecross.com/deployment.json` 仍为旧 `029419a`；短时轮询未 ready，保留 FAIL chronology。
+- manual fallback attempt 1：在真正上传前被 identity gate 拦下，因为普通本地 build 的 `dist/deployment.json` 为 `commit=local`；未上传该错误 identity build。
+- manual fallback attempt 2：fresh-read `src/pages/deployment.json.ts` 后，用 `CF_PAGES_COMMIT_SHA=415f94f2483f206cc6c4ee710f926c18e279d2bc` 重新 build；dist identity exact PASS；Wrangler Pages production deploy success。
+- production readback：`https://ronniecross.com/deployment.json` exact commit=`415f94f2483f206cc6c4ee710f926c18e279d2bc`。
+- live article：HTTP 200；标题、`雅各书 4:13-17`、exact R2 URL、native audio markup 全部存在。
+- live audio：Range `bytes=0-1023` 返回 HTTP 206；`Content-Type: audio/mpeg`；`Content-Range: bytes 0-1023/7331949`；Cloudflare cache HIT。
+- 本地验证：player tests 4/4 PASS；full Website Python 124/124 PASS；Astro 345 pages PASS。
+- 已知且接受的 Pilot 限制：`著名` 读音仍错误；PROJECT_OWNER 已明确停止本 Pilot 继续 TTS 改善，不阻塞上线。
+- unrelated dirty 明确保留在 feature/closure commit 外：`AGENTS.md`、`docs/task-handoff-protocol.md`。
+- PROJECT_OWNER 线上人工验证：`PASS`；实际页面播放器与音频播放体验已人工确认通过。
+- 最终人工+机械验收：`PASS_ARTICLE_READ_ALOUD_PILOT_FINAL_ACCEPTANCE / PRODUCTION_HUMAN_VERIFIED`。
+- 下一步：Pilot 已正式闭合；后续只在需要扩大更多文章有声阅读时另开下一业务阶段，不自动批量生成。
+
+## 2026-10-08｜R2 Pilot Delivery + Real URL Binding
+
+- 状态：`PASS_R2_PILOT_DELIVERY_AND_REAL_URL_BINDING / READY_FOR_GIT_AND_PRODUCTION_DEPLOY_AUTHORIZATION`。
+- Cloudflare R2 bucket：`ronniecross-audio`。
+- custom domain：`audio.ronniecross.com`，Active/Access enabled；public development URL 保持 disabled。
+- exactly one Pilot object uploaded：`audio/articles/post-32d30724d859c99c/article.mp3`。
+- production URL：`https://audio.ronniecross.com/audio/articles/post-32d30724d859c99c/article.mp3`。
+- remote verification：HTTP 200；Content-Type `audio/mpeg`；Content-Length 7331949；Accept-Ranges bytes；Range request 206；远端完整下载 SHA 与本地 exact match：`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- Pilot article 已绑定 exact production `audioUrl`。
+- generated HTML 已验证 exact R2 URL + native `<audio controls preload="metadata">`。
+- chronology：绑定真实 URL 后，旧测试仍要求 Pilot 无 audioUrl，产生 1 次 expected stage-transition FAIL；测试随后更新为 exact production URL assertion，最终 4/4 PASS。
+- chronology：一次 build 出现 Astro Duplicate id warning；fresh read-only search 证明只有一个同名文件/一个 articleId；清除当前 worktree ignored `.astro` cache 后重新 build，warning 消失。
+- final verification：player tests 4/4 PASS；full Website Python 124/124 PASS；Astro 345 pages PASS；git diff --check PASS。
+- 未执行：新 TTS、NAS、commit、push、Pages deploy。
+- next breakpoint：Git disposition + production deploy authorization。
+
+## 2026-10-08｜R2 Delivery Authorization — Awaiting Cloudflare Authentication
+
+- PROJECT_OWNER 已授权最小 R2 delivery：fresh-check Cloudflare/R2、必要时创建 `ronniecross-audio`、上传 exactly one accepted 64K Pilot MP3、连接 production custom domain、bind real `audioUrl`、rebuild；暂不 commit/push/deploy。
+- exact worktree 临时 materialized Wrangler via `npx --yes wrangler@4.148.0`；未修改 package.json/package-lock.json。
+- Wrangler version：4.148.0。
+- `wrangler whoami`：`You are not authenticated. Please run wrangler login.`
+- non-interactive `r2 bucket list` 无法执行；Wrangler要求当前环境提供 Cloudflare authenticated session/API token。
+- 当前没有创建 bucket、没有启用 public access/custom domain、没有上传 MP3、没有 frontmatter binding。
+- human breakpoint：使用现有 RonnieCross Cloudflare account 完成 R2 subscription activation（若尚未启用）并在本机授权 Wrangler login；之后继续原 bounded task。
+## 2026-10-08｜Pilot Second Listening + Minimal Player Prep
+
+- PROJECT_OWNER second listening：`PASS`；`pilot-repaired-64k.mp3` 作为当前 Pilot 正式本地交付候选。
+- accepted delivery SHA：`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- known accepted limitation：`著名` 仍读音错误；本 Pilot 明确停止继续 TTS 改善，不阻塞继续发布准备。
+- Website player prep：`PASS_MINIMAL_ARTICLE_AUDIO_PLAYER_PREP / READY_FOR_AUDIO_UPLOAD_AND_REAL_URL_BINDING_AUTHORIZATION`。
+- implementation：posts schema 新增 optional `audioUrl`；文章详情页仅在字段存在时渲染 native `<audio controls preload="metadata">`；位置在 article header/tags 后、正文前；无 autoplay、无 custom JS runtime。
+- Pilot 正式文章当前仍无 `audioUrl`，没有写 placeholder/fake production URL。
+- chronology：首次 Astro build 因 exact worktree 缺 `node_modules/astro/astro.js` 而在 build 前 FAIL；按仓库既有规则用本 worktree 自身 lockfile `npm ci` materialize dependencies 后 closure。
+- final verification：player tests `4/4 PASS`；full Website Python `124/124 PASS`；Astro `345 pages PASS`；`git diff --check PASS`；node_modules real local dir / not symlink / no Git changed-path contamination。
+- npm audit output报告 11 项 dependency vulnerabilities（1 low / 9 high / 1 critical）；本任务未运行 audit fix、未升级依赖，避免 scope expansion。
+- frozen R2 object-path design：`audio/articles/<article-id-or-slug>/article.mp3`；Pilot proposed object key=`audio/articles/post-32d30724d859c99c/article.mp3`。
+- current authority gap：仓库尚无实际 R2 bucket binding/name/custom audio domain，不能凭空构造 production URL。
+- 未执行：R2 create/upload、article audioUrl binding、NAS、commit/push/deploy。
+- next authority breakpoint：明确授权最小 R2 delivery + exactly one Pilot MP3 upload + real URL binding；之后再决定 Git/Pages上线。
+
+## 2026-10-08｜Pilot Targeted Chunk-0 Repair
+
+- 状态：`PASS_TARGETED_CHUNK0_REPAIR / READY_FOR_SECOND_LISTENING`
+- PROJECT_OWNER manual selection：`chunk-000-sample-2.wav` 发音正确且语气符合整体风格；sample-3 也读对但情绪略强，因此不采用。
+- `著名` diagnostic samples 1/2/3 均未读对，本轮明确停止继续改善；保留为 VOICE_AI 多音字/发音问题候选，不阻塞本次 chunk-0 修复。
+- repair：仅替换原 chunk 0 [0,78720)；replacement=109440 frames，+1.28s。原 frame 78720 之后全部 sample-identical PASS。
+- chunk 57（含“著名”）未修改；原 [10277760,10671360) 与修复后平移边界 [10308480,10702080) sample identity exact PASS。
+- repaired WAV：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired.wav`，duration=916.40s，SHA=`ac2bc2d78cb4c87303653e0d727a6cce1054e83a77ccdfe2fc01a981c283a6a1`。
+- repaired 64K：`artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-repaired-64k.mp3`，bytes=7331949，SHA=`67e0286b29312f24bfc6c5aa9e6cdcd3cdee1a3d15612d3c2e9518c1634e8a47`。
+- WAV/MP3 full decode PASS；原始 Pilot 文件保留。
+- 本轮未执行新的 TTS generation、R2/NAS/deploy/player/commit/push。
+- next breakpoint：PROJECT_OWNER 二次试听 repaired 64K；若通过，再决定播放器/发布。
+
+## 2026-10-08｜Pilot Manual Listening Decision
+
+- manual listening completed by PROJECT_OWNER.
+- delivery choice：`64K MP3` accepted；96K candidate rejected as unnecessary.
+- accepted local delivery file：
+  `/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007/artifacts/read-aloud/pilot/post-32d30724d859c99c/pilot-64k.mp3`
+- pronunciation defect observed at opening sentence：expected `基督徒`，audio sounded like `真督徒`.
+- source attribution check：Website frozen TTS Render View line 1 is exactly `基督徒不应该做计划吗？`.
+- source/render SHA：`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`，bytes=10658.
+- VOICE_AI N6 state and N3 receipt input record the exact same `text_sha256` and byte count.
+- conclusion：`NOT_A_WEBSITE_RENDER_TEXT_ERROR`；the mispronunciation occurred inside the voice-generation side after receipt of the correct text (frontend normalization/pronunciation or model synthesis). Current evidence does not distinguish those two internal provider sub-stages.
+- no regeneration performed. Any corrective re-generation requires a separate explicit generation authorization.
+- next publication decision must not silently ship the known mispronunciation unless PROJECT_OWNER explicitly accepts it or authorizes targeted regeneration/remediation.
+
+## 2026-10-08｜有声阅读 Runtime Workspace Relocation
+
+- 状态：`PASS_READ_ALOUD_RUNTIME_WORKSPACE_RELOCATION / PILOT_ARTIFACTS_IN_WORKTREE`
+- 用户授权：批准有声阅读作业区目录整改；既有试听文件不得重新生成，整改后移动到当前工作区；不含 commit/push/deploy/R2/NAS/第二次 TTS generation。
+- 新 runtime authority：`/Volumes/DevSSD/RonnieWork/RonnieCross/runtime/read-aloud`。该目录属于 RonnieCross DevSSD 项目域，但位于 Git worktree 外，用于 jobs/claims/tmp/artifact-cache/logs 等持久运行状态。
+- 旧 runtime：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud` 已在完整复制 + relative-path/size/SHA manifest exact verify 后删除；以后新 Website read-aloud 作业不得再使用该路径。
+- runner：`scripts/read_aloud_s4_runner.py` 的默认 `PRODUCTION_ROOT` 已切换到新 runtime；S4/S5 tests 改为断言 runtime 位于 Git worktree 外，而不是要求 production root 永远不存在。
+- Pilot job/claim/verified cache 已迁移；Website Pilot 仍为 `TERMINAL_PASS`，execution owner absent，未重新生成音频。
+- 试听交付物已原样移动到：`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-phase0-20261007/artifacts/read-aloud/pilot/post-32d30724d859c99c/`。
+- SHA 保持不变：WAV=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`；64k=`71af88368246bfc1bb85d6752f0f1e89ac982602964ca57ffa03e9cfa22db585`；96k=`824f607267234f4dc6e3cbdc8ed04ca9d083f6f8d7720093133f661a37922fe4`。
+- `artifacts/read-aloud/` 已加入 repository-local `.git/info/exclude`，不进入版本控制；没有修改仓库 `.gitignore`。
+- 验证：py_compile PASS；S4 runner `54/54 PASS`；S5 activation `5/5 PASS`；full Website Python `120/120 PASS`；`git diff --check` PASS；old Library runtime absent；new runtime/terminal artifact readback PASS。
+- formal evidence：`docs/tasks/article-read-aloud-runtime-workspace-relocation-20261008/`。
+- 未执行：TTS generation、reconcile/worker-once、new request_id/epoch、R2/NAS/deploy、commit/push。
+- 下一 breakpoint：从工作区 artifacts 目录人工试听 WAV/64k/96k；随后再决定播放器/frontmatter + delivery publication。
+
+## 2026-10-08｜有声阅读 P1B — Pilot Operator Resolution + Local Audio Closure
+
+- 状态：`PASS_PILOT_OPERATOR_RESOLUTION_AND_LOCAL_AUDIO_CLOSURE / READY_FOR_MANUAL_LISTENING_AND_PLAYER_PUBLICATION_DECISION`
+- user authority：用户明确授权 bounded operator resolution + exactly one same-id reconcile + Website artifact closure + local WAV QC + local 64/96 kbps MP3；不授权第二 generation、player/frontmatter、R2/NAS/deploy、commit/push。
+- frozen identity保持不变：article_id=`post-32d30724d859c99c`；request_id=`rc-readaloud-v1:49e16f2f1972ea4b4ad3f39534b367ec664584d623cc0d3d985e54e24e397005`；generation_epoch=`pilot-20261007-a1`；render_sha256=`5d7cf8826482b64bd0600d7dd2637d5a4ca3f52c3b53ef04c7b68873c160925a`。
+- pre-mutation revalidation：Website UNKNOWN、claim、owner job/request binding、dead PID 96759、N6 `TERMINAL_PASS`、exact text SHA/run_id/artifact SHA、N3 `generation_count=1 / retry_count=0` 全部 fresh PASS。
+- stale-owner resolution：只删除 exact current `execution-owner.json`；owner-before SHA=`1a8597f05f713b8e7c26babdf2c41329b1aa1488732f2a798dfb9bcc9c126a43`；directory fsync完成；claim/job/provider state未删除。
+- exactly one same-id reconcile：成功返回 Website `TERMINAL_PASS`；没有第二次 reconcile/retry loop；final status/result仅做只读 readback。
+- provider terminal identity：run_id=`n3v1-a3276246f6c748e09d93ef669fdd979e`；artifact_ref=`voice-ai-artifact:n3v1-a3276246f6c748e09d93ef669fdd979e`；artifact_sha256=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`。
+- exactly-once closure：reconcile后 N3 仍 `generation_count=1`、`retry_count=0`；同 frozen request_id 仅一个 N6 request state；无第二 request_id、run、epoch、submit或generation identity。
+- Website artifact：verified=true；cache SHA与 provider terminal SHA exact match；execution owner终态 absent。
+- WAV local QC：24kHz / mono / `pcm_f32le` / 32-bit float；duration=`915.12s`（15:15.12）；bytes=`87851600`；full decode PASS；首5秒 mean/max=-27.9/-6.9 dB，末5秒=-31.0/-10.6 dB，首尾均非静音。
+- local WAV：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot.wav`，SHA=`7e867f541eab83276233377d68d895df3461c047ee4b56a176216d91a9ca25c0`。
+- local MP3 64k：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot-64k.mp3`，bytes=`7321581`，SHA=`71af88368246bfc1bb85d6752f0f1e89ac982602964ca57ffa03e9cfa22db585`。
+- local MP3 96k：`/Users/ronnie/Library/Application Support/RonnieCross/read-aloud/artifact-cache/pilot-local-qc/pilot-96k.mp3`，bytes=`10982349`，SHA=`824f607267234f4dc6e3cbdc8ed04ca9d083f6f8d7720093133f661a37922fe4`。
+- formal task evidence：`docs/tasks/article-read-aloud-p1b-pilot-operator-resolution-local-closure-20261008/verification.md`、`result.md`、`listening-checklist.md`。
+- 未执行：第二 TTS generation、新 request_id/epoch、article player/frontmatter、R2、NAS、deploy、commit/push。
+- next real breakpoint：人工听感比较 64k/96k 与内容完整性；确认后再决定播放器/frontmatter + delivery publication authority。任何再生成必须单独新授权。
+
+
+## 2026-10-08｜有声阅读 P1B-pre — S5 Minimal Pilot Activation Preparation
+
+- 状态：`PASS_S5_MINIMAL_PILOT_ACTIVATION_PREP / READY_FOR_CONTROLLED_SINGLE_ARTICLE_PILOT_AUTHORIZATION`
+- chronology：此前全部 S4 PASS/BLOCKED/intermediate test-error 继续永久保留；S4 fresh independent closure 为 `PASS_S4_MALFORMED_STATUS_TYPE_SAFETY_FRESH_INDEPENDENT_AUDIT / READY_FOR_ACTIVATION_DESIGN`，aggregate material findings=0。
+- scope correction：Master采用 `REVISE_SCOPE_OVERENGINEERED` 纠偏；S5 只服务 exactly one controlled real article Pilot，不建设长期音频平台。
+- implementation choice：直接复用现有 `scripts/read_aloud_s4_runner.py worker-once`；不新增 activation wrapper、daemon loop、launchd、scheduler、queue/watchdog/registry/health framework、Redis/Celery/database或multiworker。
+- start/stop：启动=人工调用一次 `worker-once`；无job时立即返回且不接触provider；停止=one-shot返回后进程已退出，不再调用下一次即可；jobs/claims/owners/evidence全部保留。
+- exactly-once：queued job只进入既有S4 path；request_id/generation epoch不变；terminal不会再次选中；UNKNOWN只允许原request_id语义；stale owner不自动takeover。
+- S5-specific tests：`5/5 PASS`，覆盖idle no-provider-contact、queued exactly-once、terminal second invocation no duplicate speech、provider-not-ready no POST、UNKNOWN same request_id、production root absent。
+- regression：S4 runner `54/54 PASS`；full Website Python含S5为 `120/120 PASS`；py_compile PASS。
+- long-lifecycle chronology：两次S5测试文件写入被CodexPro secret-looking guard在pre-write阶段拒绝、无mutation；首次py_compile引用原宽scope下并未创建的wrapper而FAIL；随后按Pilot-first实际write-set重跑并全部PASS。
+- 5个Pilot-readiness问题全部YES：idle安全；单篇job只走S4 exactly-once；UNKNOWN/stale-owner/terminal不产生新identity或不安全重复成本路径；可明确停止并保留evidence；下一步只差用户对真实 minimal activation + exactly one frozen Pilot generation 的明确授权。
+- S5没有修改 `scripts/read_aloud_s4_runner.py` 或任何S4 closed safety semantics，因此不触发Pilot前额外fresh independent audit。
+- frozen Pilot authorization 仍 `UNCLAIMED / NOT_CONSUMED`；本轮无production runtime、LaunchAgent、persistent worker、Pilot claim/submit、真实 `/v1/speech`、音频、R2/NAS/deploy、commit/push。
+- 当前真正 breakpoint：停止工程建设并交回 `ARTICLE_READ_ALOUD_MASTER_CONTROL / MASTER_CONTROL`；下一项最高价值动作是请求/等待用户对 minimal activation + exactly one frozen Pilot generation 的明确授权，然后尽快完成真实TTS、WAV QC、64/96 kbps MP3对比、人工听感和简单文章播放器。
+
+## 2026-10-04 — Sermon presentation boundary hardening
+
+- 《前方弯道》paragraph-collapse 事故的系统整改已在 Owner-local construction worktree 完成并全量验证：fidelity candidate 与 presentation artifact 正式分层；new sermon publication 强制 `sermon-presentation/v1` binding / `--presentation-file`；Website structural Gate 升级为 `SERMON_PRESENTATION_STRUCTURE_PASS / publication_structure_ready`。
+- 新 hard checks：`paragraph_collapse_guard`、`rendered_block_density`、`heading_render_integrity`；旧 `MECHANICAL_PRESENTATION_PASS` 仅作 legacy chronology，不再是 publication acceptance authority。
+- 验证：Website Python 61/61、Node presentation 14/14、mirrors 600/600、Knowledge 300/0/0、tags 27/27、forced build 344 pages、diff-check PASS。
+- 真实 Curve Ahead cross-project candidate：144/144 text identity，138 p / 6 H2 / 144 blocks，package validator/consumer plan PASS。
+- 历史只读扫描 219 sermon posts，发现 exact1 同类旧结构坍塌：`2026-07-09-马太福音-7-1-6｜论断人.md`（4300 chars / 1 p）；本轮只登记，不自动修复。
+- chronology 保留：Attempt 1=`BLOCKED_INDEPENDENT_AUDIT_WEBSITE_NODE_DEPENDENCIES_NOT_MATERIALIZED`；B-01 targeted re-audit=`PASS_TARGETED_INDEPENDENT_REAUDIT_B01 / READY_FOR_CANONICAL_ADOPTION`。用户已单独授权本整改 canonical adoption + Git commit/push。
+
+## 2026-10-04 — 《前方弯道》presentation-only hotfix
+
+- Incident：首次 publication post 正文被 importer normalization 压成 1 个 4091 字 paragraph（0 blank lines / 0 H2）；现有 `sermon-publication-presentation-mechanical/v1` 未覆盖整篇 paragraph-collapse，因此此前 mechanical PASS 不能代表完整排版 PASS。
+- Hotfix 边界：不改 frozen candidate 任何文字；从 fidelity PASS 的 144 条中文记录重建 Website Markdown block，仅增加 blank-line boundaries、6 个 source-native H2（引言 / 我们的挑战 / 我们的处境——请读第1节到第4节 / 我们的选择 / 我们的把握 / 结论），并用 Markdown emphasis 包裹原有经文题头以满足现有 scripture-label Gate；去除 Markdown 标记后与 frozen candidate 144/144 逐行完全一致。
+- 修复后 rendered evidence：138 `<p>` / 6 `<h2>`；presentation gate PASS；mirror 600/600 PASS；build 344 pages / Complete。
+- articleId、slug、publishedAt、author=`Patrick父亲` 均保持不变；这是 existing-post presentation correction，不是新 publication object。
+- 后续另行整改 presentation Gate 的 paragraph-collapse mechanical hard gate；本轮先恢复当前公开文章可读性。
+
+## 2026-09-27 — Publication Fast Lane governance remediation
+
+- 正式规则已整改：本次 publication 不再等待本次 Cloudflare/live/email terminal；完成 commit/push、deployment/notification trigger、NAS/registry/status/Git closure 后记录 `PUBLISHED_PENDING_NEXT_PREFLIGHT_VERIFY` 并结束。下一次内容发布开始前，先核验上一轮 production deployment、canonical URL、RSS/Sitemap 与 notification result；上一轮未 PASS 时不得叠加新发布。
+- Publication Fast Lane 的计划内人工断点只保留 independent reviewer handoff。Reviewer PASS 后 Owner 自动连续进入 scripture gate → publication preparation → Website consumer → build → commit/push → deployment/notification trigger → NAS archive → registry/Git closure；真实 blocker 仍 fail-closed。
+- 一次 exact-object `授权发布`（或 current task 已明确包含正式发布）是该 frozen publication object 的 bounded transaction authority；不再把 commit、push、deploy、email、NAS 分拆成重复授权。普通开发/治理/修复任务仍保持原有细粒度 Gate。
+- Speaker identity 改为显式完整值：`Patrick` 与 `Patrick父亲` 是不同 identity；显式 speaker 不得被 substring/contains fallback 覆盖；`SPEAKER_TAGS` 仅在没有显式 speaker 时可作为 legacy fallback。
+- 本次为 governance/docs-only remediation；未修改业务代码、未触发 build/publish/deploy/notification，未 commit/push。
+
+## 2026-09-27 — 《路得记 1:1-22｜请加满》Website publication
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS / NAS_ARCHIVED / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED`
+
+讲道 Owner frozen `website-publication-package/v1.2` 已由用户明确授权 Website production publication，package SHA=`ebadb6c7efc458debf84d92316f6e811b7741bd6c317ed7e2495932ca81cb3e3`，candidate SHA=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`。Website `npm run sync` PASS。首次 pre-publish probe 发现 importer 会将显式讲员 `Patrick父亲` 因 substring alias 漂移成 `Patrick`，fail-closed；最小修复为仅在目录未提供显式 speaker suffix 时才启用旧 SPEAKER_TAGS fallback。随后 dry-run 又发现正文首个经文子范围 `路得记 1:1-5` 与主经文 `路得记 1:1-22` 被误判冲突，第二个最小修复仅允许 folder/file 一致且 body 为同书同章被主范围完整包含的子范围通过，超范围/异章 genuine conflict 继续 fail-closed。targeted parser tests 9/9 PASS，全部 Python scripts tests 59/59 PASS；正式 package dry-run PASS 后 exactly one local publish 成功，title=`路得记 1:1-22｜请加满`，author=`Patrick父亲`，articleId=`post-daed26238a75a8d2`，publishedAt=`2026-09-27T11:33:18+09:00`。presentation=`MECHANICAL_PRESENTATION_PASS`；articleId check 298/298 PASS；mirror 596/596 PASS；Knowledge 298 posts / 0 errors / 0 warnings；Tag fixtures 27/27 PASS。前两次 foreground build 被调用层 timeout 截断，确认无残留 build process 后改用单一受控后台 build 并轮询终态，最终 `npm run build -- --force` RC=0，341 pages / Complete。正式 result：`tasks/current/20260927-sermon-ruth-1-fill-it-up-result.json`，status=`built`，push/deployment/notification 均 `not_run`。本轮未执行 Git commit/push、Cloudflare deploy、邮件或 NAS archive；这些继续受独立 Gate。
+
+后续用户明确将“授权发布”解释为标准发布流程全部收口，并补充授权邮件。Website 主发布 commit=`bb52bf0bd1c3952d09b7ed3b81db160753486e4f` 已 normal push 到 `origin/main`；Cloudflare Pages check=`completed/success`，生产 `/deployment.json` 精确绑定该 commit，builtAt=`2026-09-27T02:46:55.227Z`。公开 canonical URL 由 Astro/content slug 规范化为 `/posts/2026-09-27-路得记-1-1-22请加满/`；HTTP 200，title=`路得记 1:1-22｜请加满`、author=`Patrick父亲`、record 18 修复指纹“会使我们从祷告上分心”、record 115 修复指纹“这不是人的努力带来的，也不是天气带来的”均 PASS；RSS 与 Sitemap 均包含新文章。`scripts/verify_publication_release.py` 首次因 Unicode URL 未编码 FAIL、第二次因本机 Python SSL issuer chain FAIL，chronology 保留；随后以 sitemap-derived canonical URL + curl 完成等价 live verification PASS。GitHub Actions `Email published posts` run=`36289462999` success：postCount=1 / recipientCount=2 / successCount=2 / failedCount=0 / skippedSlugs=[]。Sermon Owner NAS protected archive 已完成 3/3 SHA exact：PDF=`5d46847877e31e80c573b3108f874d21f32dcefab4937263ae6152fd3336f682`、English=`dc6aa3931308003a456bebd71242a2b5febd51de9d4d15c58ebaef315002bf62`、Chinese=`02351979f2e547a6fc98f5d96259410a6b3084d3c7e74fb6370c2810aa689662`。正式 website result 已更新为 `status=deployed / push_status=pushed / deployment_status=deployed / notification_status=sent`。
+
+## 2026-09-20 — 《腓立比书 1:12-19｜生命中的喜乐》首次发布
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED_ARCHIVED / LIVE_VERIFY_PASS / SERMON_ATTEMPT_2_INDEPENDENTLY_VERIFIED`
+
+讲道 Owner 已释放 `website-publication-package/v1.2`：source SHA=`5cbc3e17a9b4f7bd45641ea83abd22c17170a6e207445777e1e7e464d9df19c5`，final Chinese SHA=`2aa6390407a58f13df648179955e2e237476c1fd0a16ba89ce36e50af6d2c575`；Attempt 1 E1 111/111 FAIL（2 blocking）后仅做两处 targeted repair，Attempt 2 E1 111/111 PASS / 0 blocking / `independently_verified`。Website `npm run sync` PASS；v1.2 consumer validation PASS。canonical importer dry-run PASS 后正式生成 processed/post，articleId=`post-6db195f9b8296559`，publishedAt=`2026-09-20T09:54:33+09:00`，tags=`腓立比书, Patrick, 喜乐, 信靠, 福音`。首次 presentation Gate 因 H2 数字前缀与 Website TOC 编号重复而 FAIL；只在 Website processed/post 两份 display 副本移除 H2 的 `2.` / `3.` 前缀，正式 sermon candidate 未修改；recheck `MECHANICAL_PRESENTATION_PASS`。mirror=`594/594 PASS`；Knowledge Layer=`297 posts / 0 errors / 0 warnings`。构建 chronology：前两次长 build 被外层 Code Mode timeout 截断但实际进程继续，造成并发竞争 `dist/` 并出现一次 `ENOENT dist/chunks/... FAIL`；清理确认无残留 build process 后，唯一 fresh `npm run build -- --force` 正式终态 `339 pages / Complete`。主发布 commit=`6a066f861937c8c87b8e158cacb93a758428d5de` 已 normal push 到 `origin/main`；Cloudflare Pages=`completed/success`，生产 `deployment.json` 精确绑定该 commit，builtAt=`2026-09-20T01:07:15.075Z`。live verify：HTTP/title PASS，两个 targeted-repair 指纹 PASS，`小组分享` PASS，`WAKACHIAI` absent。GitHub Actions `Email published posts` run=`35480508250` success：postCount=1 / recipientCount=2 / successCount=2 / failedCount=0 / skippedSlugs=[]。NAS protected archive 最终 3/3 SHA exact：PDF=`a6f10d04a2683faa13edb0c13332e30e6c5144777aa923443ca89ca577668c95`、English=`5cbc3e17a9b4f7bd45641ea83abd22c17170a6e207445777e1e7e464d9df19c5`、Chinese=`2aa6390407a58f13df648179955e2e237476c1fd0a16ba89ce36e50af6d2c575`；archive helper 首次 `python -c` quoting FAIL 与后续 NAS timeout/partial-copy chronology 均保留，最终以 append-only 补缺 + SHA readback PASS 闭合。
+
+## 2026-09-16 — ProjectStandard cross-project mutation / repository binding A5 adoption
+
+状态：`PASS_SOURCE_ADOPTION_CLOSED / MINIMAL_GOVERNANCE_ADOPTED / REPOSITORY_CLOSURE_CLOSED / COMMITTED_PUSHED`
+
+按 ProjectStandard matrix `A5 — RonnieCross / 个人网页项目`，已在 Website 现有 root governance entry `AGENTS.md` 做极薄 adoption：cross-project `READ_ONLY` 保持允许；mutation 前必须由 Website/source-local current authority fresh/exact 绑定 `target root + task/role + bounded write-set + operation class`；默认/最近 workspace、聊天/Project 上下文、历史授权、旧 handoff 或 ProjectStandard release/proposal 不能代替本次 mutation authority；`COMMIT` / `PUSH` 额外绑定 exact Website repository identity 且保持独立 Gate。publication/deploy/email/content/runtime authority 与 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION` 完全不变，未增加 validator/service/platform/registry/watcher/daemon，未主动运行 build/publish/deploy/notification。stage 开始前 Website repo=`/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目`、branch=`main`、working tree clean。task-local write-set 仅为 `AGENTS.md`、`STATUS.md`、`docs/tasks/current.md` 与 `tasks/current/projectstandard-cross-project-mutation-binding-source-adoption-20260916/`；exact-scope staging verification 与 `git diff --cached --check` 均 PASS。主 adoption commit=`c2f79ca` 已 normal push 到 `origin/main`；随后仅在同一冻结 governance write-set 内补齐 closure metadata 并单独提交/推送。完整结果与验证见同名 task 目录。
+
+## 2026-09-13 — Sermon presentation list + small-group heading incident remediation
+
+状态：`COMPLETE / TARGETED_REMEDIATION_PASS / 12_OF_12_PRESENTATION_REGRESSION_PASS / CURRENT_ARTICLE_PASS / KNOWLEDGE_PASS / BUILD_PASS / COMMITTED_PUSHED_DEPLOYED / NO_FURTHER_ACTION_REQUIRED`
+
+针对《为爱心祷告》发布后暴露的两类 Website presentation 缺口做最小整改：`scripts/validate_sermon_presentation.mjs` 新增 `pseudo_ordered_list_requires_markdown_list` 与 `small_group_heading_public_label` 两个 fail-closed check。连续两个以上 `1）/2）/...`、`1、/2、/...`、`1．/2．/...` 等非 CommonMark 视觉编号，以及同一行多个此类编号会被拒绝；标准有序列表只接受可稳定渲染的 `1.` / `1)` 语法。公开讲道 H2/H3 的小组分享标题若仍含 `WAKACHIAI` 也会被拒绝。新增 5 个事故 regression fixtures（4 个负向 + 1 个真实 renderer 正向），并保留原 7 项行为，fresh suite 12/12 PASS；正向 fixture 由 Astro Markdown processor 机械证明三个问题渲染为独立 `<li>`、H2 精确为 `小组分享` 且无 `WAKACHIAI`。今天《为爱心祷告》修正后 post 在新 Gate 下 `MECHANICAL_PRESENTATION_PASS`。`npm run check:knowledge`：296 posts / 0 errors / 0 warnings；`npm run build -- --force`：338 pages PASS。整改 commit=`5ad5bcd37d70f8f4ad927023a8ff4f611d411b38` 已 push，fresh readback `HEAD=origin/main`；Cloudflare Pages check 已正式 `completed/success`，生产 `/deployment.json` 精确绑定该 commit，builtAt=`2026-09-13T03:00:34.652Z`。规则已同步写入 `docs/sermon-content-rendering-binding.md` 与 `docs/content-publishing-error-prevention.md`。范围严格停留在 Website presentation/display；未修改 sermon Owner 正式翻译稿、fidelity、Project Bible、经文、metadata、slug/articleId、通知语义或当前线上文章内容。本 bounded incident remediation 至此关闭；未来若出现新的 presentation 反例，应新建独立 bounded task，不自动重开本任务。本次 closure 仅更新状态文档，不修改代码或内容，因此不重复执行 build；采用上一整改 commit 已完成的 fresh 12/12 regression、Knowledge Layer 与 338-page build 作为闭合证据。
+
+## 2026-09-13 — 《为爱心祷告》两项排版修订
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED / LIVE_VERIFY_PASS / NOTIFICATION_SUPPRESSED_AS_REVISION`
+
+仅修正已发布文章的两项 Website presentation：①“我们会回答三个问题”后的三个问题改为 3 个独立有序列表项；②`小组分享（WAKACHIAI）` 改为仅保留 `小组分享`。Website processed / post 副本同步，Website raw 亦按 presentation 规则对齐；未修改讲道整理 Owner 正式中文稿、经文、metadata、slug、articleId、publishedAt 或正文 proposition。`validate_sermon_presentation.mjs` PASS，mirror 592/592 PASS；fresh `npm run build -- --force` 338 pages PASS。revision commit=`26ca90f0eba5b5f69cd24ad5e9ba44ceeaf36a91` 已 push，Cloudflare `/deployment.json` 已切到该 commit（builtAt=`2026-09-13T02:27:46.323Z`），线上机械确认三个问题均为独立 `<li>`、标题仅为 `小组分享`、无 `WAKACHIAI`。GitHub Actions run `34733047392` 明确返回 `No changed published posts were found in this push.`，未重复发送订阅邮件。
+
+## 2026-09-13 — Website Publication Fast Lane dirty-state redecision
+
+状态：`PASS_DIRTY_STATE_REDECISION / P5_PARSER_WRITESET_COMMITTED_SEPARATELY / CANONICAL_CLEAN / SYNC_PASS / READY_FOR_PARENT_PUBLICATION_CONSUMPTION`
+
+按 Sermon Parent handoff，仅处理 Website canonical 既有 P5/parser dirty state；未重做讲道翻译或忠实度审核。fresh evidence 确认 parser remediation 已通过 true separate independent audit，当前 dirty denominator 属于 P4→P5 shadow/preflight/parser 同一已闭合 Website lineage，没有发现未归属 concurrent change；55/55 Python scripts tests fresh PASS。该既有 write-set 已作为独立 Git commit `6fc35cc`（`fix: close P5 scripture parser remediation`）封存，未 stash/reset/覆盖/删除任何变化。随后 `npm run sync` exit=0，`main` 已成功 rebase/check against `origin/main` 且 remote 当时 up to date。当前 publication fast lane 已恢复稳定；本 redecision 不进入文章 import/build/deploy/notification。Git disposition：parser/P5 write-set committed locally；push 未由本 bounded dirty-state task 单独扩大执行，留待 Parent/current production route 按授权处理。
+
+## 2026-09-11 — P5 Website scripture parser targeted remediation
+
+状态：`PASS_TARGETED_REMEDIATION / DETERMINISTIC_TESTS_PASS / PASS_INDEPENDENT_READ_ONLY_AUDIT / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+`WEBSITE_OWNER_DETERMINISTIC_SCRIPTURE_RANGE_PARSER_COMPATIBILITY_GAP` 已按 Parent 限定做最小修复：`scripts/import_sermons.py::title_parts()` 仅扩展 spoken-range parser 对 `至` 的支持，并仅在紧跟 `至` 时允许首个 `节` 省略，使 `罗马书12章1至2节` -> `罗马书 12:1-2`。首轮 targeted test 失败 chronology 已保留；收窄修正后 targeted 5/5 PASS，Python scripts tests 55/55 PASS。只读反例审计直接验证 `至`、既有 `到`、colon、跨章 range 与 genuine conflict fail-closed 均 PASS。未修改 article/package/metadata，未重开 fidelity/Scripture Gate，未执行第二次 Website dry-run，未创建新 operation id，production mutation=false，side_effects=[]，commit/push=0/0。返回 P5 Parent。
+
+## 2026-09-11 — P5 Website successor resume
+
+状态：`CONSUMER_PREFLIGHT_PASS / EXACTLY_ONE_FIXED_NONPRODUCTION_DRY_RUN_CONSUMED / FAIL_CLOSED_WEBSITE_DRY_RUN_SCRIPTURE_CONFLICT / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Hermes path-only successor SHA=`07c11adfead2b98c3143769434f6c1d657c46e7ed71e2725cc727b8001ddaa5b` 已按 current Website boundary byte-exact复制为 task-local carrier，carrier SHA同值且 byte equality=true。完整 consumer preflight PASS；随后 fresh operation id=`p5-same-article-shadow-successor-20260911-v1` 被 exactly one fixed non-production dry-run消费。dry-run 在 `website_dry_run` 阶段 FAIL_CLOSED，原因=`Scripture conflict detected; please confirm metadata manually: folder=罗马书 12:1-2; file=罗马书 12:1-2; body=罗马书 12`。未重试、未 remediation。website-publication-result/v1.1未创建；dry-run evidence SHA=`3c774594db0b35f4f54a1e371b7b52cb169a49f515b0c87dbbe5d85cdea498ea`；zero-side-effect evidence SHA=`e731e3cadecad217eb3411e76150b5c5cd736269ea0be5d406b003ee22e2702e`。build/publish/push/deploy均not_run，notification suppressed_not_run，production mutation=false，side_effects=[]，commit/push=0/0。返回 P5 Parent redecision，不宣告 global closure。
+
+## 2026-09-11 — P5 Website targeted preflight remediation successor
+
+状态：`TARGETED_BLOCKERS_A_B_REMEDIATED / CONSUMER_PREFLIGHT_REQUALIFICATION_FAIL_CLOSED_ON_NEW_REFERENCE_BOUNDARY_BLOCKER / FIXED_DRY_RUN_NOT_ENTERED / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Hermes exact package 已按原始 bytes复制到 Website task-local carrier，source/carrier SHA均为 `8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a` 且 byte equality=true；未重序列化或修改 package。`metadata.website_source` locator保持不变，其 staged Chinese已用 corrected child byte-exact替换，SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9`。完整 consumer preflight requalification 随后 FAIL_CLOSED：package内未修改的 `prepublish.path` 与 `official_chinese.path` 仍位于 Hermes，current Website validator要求二者位于 RonnieCross content-root。当前授权禁止 package semantic rewrite/rebuild，因此没有进入 fixed dry-run；actual operation id=`NOT_CREATED` / consumed=false；publication-result与dry-run evidence未创建；build/publish/push/deploy均not_run，notification suppressed_not_run，production mutation=false，production side_effects=[]，commit/push=0/0。正式返回 P5 Parent redecision，不宣告 global closure。
+
+## 2026-09-11 — P5 same-article Website non-production shadow preflight
+
+状态：`FAIL_CLOSED_WEBSITE_CONSUMER_PREFLIGHT / FIXED_DRY_RUN_NOT_ENTERED / ZERO_PRODUCTION_SIDE_EFFECTS / RETURN_TO_PARENT`
+
+Exact package SHA=`8a4e5472daac057eb74e585fc0134c3997f0699af8206a8c8cbc843c4de5516a`、corrected child SHA=`e91d29548d1d9320927e4a86636eef933dbfac46802cc1ea37deee3916163ca9` 已 fresh-read；interface/version、production_publish_authorized=false、notification_policy=suppress、scope 与 tags 均通过 preflight，current tag policy将 exact tags规范为 `罗马书, Patrick, 心意更新, 服事` 并 PASS。两个 blocker 使本 stage按 Parent route fail-closed：current fixed dry-run wrapper要求 exact contract file位于 RonnieCross，而 package位于 Hermes，机械 probe exit=2 / `contract_path` 且 operation directory未创建；同时 current `metadata.website_source` staged Chinese SHA仍为 P4 `b4ce3d9d...0316a`，不是 corrected child `e91d2954...3ca9`。因此未修包、未做 staging mutation、未进入 fixed dry-run；operation id未创建（probe argument `p5-same-article-shadow-20260911-v1` 未消费），publication-result/dry-run evidence均未创建，build/publish/push/deploy/notification/production/commit/Git push均为0。正式交回 P5 Parent redecision。
+
+## 2026-09-08 — Worktree topology normalization / Publication Fast Lane adoption
+
+状态：`OWNER_ADOPTION_APPLIED / LEGACY_WORKTREE_RETIREMENT_PENDING_ROOT_MASTER`
+
+Website Owner 已采用 `PUBLICATION_FAST_LANE + CONSTRUCTION_ISOLATION`。成熟文章发布继续以 canonical business worktree 为默认 lane；SkillFactory/P4/Agent/SEO/架构等长期并行建设默认进入 Owner-local bounded-stage worktree。2026-09-06 presentation B-min/C-min 已按独立审核接受的 exact bytes 迁入当前 `main`，SHA identities 不变。legacy 20260902 worktree 的物理路径恢复/retirement 仍由 RonnieCross root topology normalization 总控在零未分类 current 内容后执行，本 Owner 不越权做强制清理。
+
+## 当前任务状态（2026-09-06，Sermon Publication Presentation Website Owner Closure）
+
+状态：`OWNER_CLOSURE_COMPLETE / NO_FURTHER_WEBSITE_REMEDIATION_REQUIRED_NOW`
+
+RonnieCross root `Sermon Publication Presentation Minimal Owner Closure` 已正式 PASS。首轮独立审计曾因 B-min `F-01` 裁决 FAIL，随后仅做该 finding 的最小修复，并经 targeted independent re-audit PASS；历史 FAIL chronology 保留。
+
+当前接受且冻结的 Website Owner identities：
+
+- B-min：`scripts/validate_sermon_presentation.mjs`，SHA-256=`be9f36e48ae1c60c730a78b264acbef0247cdf6a8b274f6d6d81448798e93f6e`；
+- C-min：`docs/sermon-content-rendering-binding.md`，SHA-256=`f8d0132d7e97a333cfb46f5691ad054e822b34a70a6c8962d639a35a16272d6f`。
+
+当前不继续 Website remediation：不改 renderer/CSS/layout，不新增 sermon-only TOC，不重做或扩大 B-min，不建通用 Markdown/presentation framework，不扫描历史 sermon，不修改或重新部署《属于基督》。
+
+## 2026-09-06 — 《属于基督》presentation revision closure
+
+状态：`PRESENTATION_REVISION_DEPLOYED / LIVE_PRESENTATION_VERIFY_PASS / SEMANTIC_LOSS_GATE_PASS / DUPLICATE_NOTIFICATION_SUPPRESSED`
+
+首次发布的 fidelity baseline 保持 `c738a970...` 独立审核结论不变；发布稿重排/中文文风编辑产生新 SHA=`9d92ef8f...`，95/95 semantic-loss gate PASS、经文正文 unchanged。Website revision commit=`6eae292deaf61956b6f43096cbd66bb6c1b60eb3` 已部署；线上结构验证为 5 个核心 H2、10 个经文 blockquote、115 个段落、最长段落 134 字、舞台提示 0。此次为既有 post 修改，notification workflow run `34006652657` success 且未重复发送邮件。
+
+---
+
+## 当前任务状态（2026-09-06，《属于基督》讲道正式发布完成）
+
+状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS
+
+Website 已接收并发布 `website-publication-package/v1.2`；本篇 local publish/build gates PASS，commit=`ca3d87bd6ed275151441f10e2ed8933daa7dce9f` 已 normal fast-forward push 到 `origin/main`。Cloudflare Pages 后续自动部署到同一 exact commit，`deployment.json` builtAt=`2026-09-06T01:53:45.682Z`，线上文章 HTTP 200。GitHub Actions Email published posts run `34005008294` success：1 post / 2 recipients / 2 success / 0 failed。正式 `website-publication-result/v1.1` 已更新为 deployed/pushed/sent。讲道 NAS 三文件归档由内容侧 RonnieCross final closure 记录为 archived。
+
+---
+
+## 当前任务状态（2026-09-05，《耶稣为何自称人子》分享文章整理发布）
+
+状态：COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED / LIVE_VERIFY_PASS
+
+已从讲道整理 website-publication-package/v1.2 接收本篇正式中文稿；npm run sync PASS，contract plan PASS。首次 dry-run 因当前 Python 缺少 pypdf/python-docx 依赖 fail-closed，按项目文档安装 requirements.txt 后恢复；第二次 dry-run 因网站 raw/source 尚未交接而 fail-closed，仅复制本篇正式中文稿到 data/raw/分享/20260905_耶稣为何自称人子_Ronnie_中文.txt 后第三次 dry-run PASS。正式本地 publish 成功，slug=2026-09-05-why-jesus-called-himself-son-of-man，articleId=post-3ae5349dbe24efc3，分类=灵命成长，标签=以西结书、但以理书、人子、耶稣基督、圣灵。
+
+本地验证过程中发现全站 17 个既有 body drift。机械追溯确认 17/17 的正式 post 最后正文修改均来自 H8 commit 15a99304d878608213c88dfd00783dba169c0a49，而对应 processed mirror 没有同步 H8 正文；本轮没有改正式 post，只把 H8 已批准 post 正文机械同步到 17 个 processed mirror。修复后：articleId 294/294 PASS；mirror 588/588 PASS；Knowledge Layer 294 篇 0 errors / 0 warnings；npm run build -- --force PASS，336 pages built；git diff --check PASS。
+
+用户明确授权将既有三个 commits normal non-force fast-forward push 到 origin/main。push 成功后 fresh readback 确认 remote main exact SHA=f553ec4fb75478622f971a07ac9e390e08bad20b，本地与 origin/main=0/0。Cloudflare /deployment.json 随后更新到同一 commit，builtAt=2026-09-05T06:39:16.146Z。线上文章 HTTP 200，标题、canonical、正文指纹“枯骨复活与五旬节”以及“人子来，为要寻找拯救失丧的人”全部通过。GitHub Actions Email published posts run 33950361513 自动等待部署后成功发送：postCount=1、recipientCount=2、successCount=2、failedCount=0、skippedSlugs=[]。本篇生产发布闭环已完成。
+
+---
+
+## Current-effective override（2026-08-28）
+
+当前没有待执行的摩西文章生产动作。《希伯来书 11:23-29｜摩西的信心之旅》正式 `website-publication-result/v1.1` 已记录 commit=`a72f499f67be090dc407f0185b8f9946bee80ea4`、`push_status=pushed`、`deployment_status=deployed`、`notification_status=sent`。因此下方 2026-08-23 条目中的 `LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY` 与“下一步仅剩 commit/push/deploy/notify”只保留为原执行 epoch 的历史 chronology，已被本 override superseded，不得重新执行。
+
+正常 cold-start 时，以 `STATUS.md` 顶部 current truth、本区以及 fresh formal task/evidence 为 current authority；历史条目的 `ACTIVE/PENDING` 不覆盖 current-effective truth。没有新的正式网站业务任务时，不为了维持“当前任务”形式而伪造 ACTIVE production task。
+
+## 历史任务状态（2026-08-23，《希伯来书 11:23-29｜摩西的信心之旅》讲道整理发布）
+
+历史状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`（已被 2026-08-28 current-effective override superseded）
+
+已从讲道整理受控流程接收通过独立 E1 忠实度审核的英文源与中文定稿。网站 `npm run sync` PASS；raw/source 单篇目录按可解析的 `希伯来书11:23-29` 命名，只新增原始 PDF、英文源和中文原稿。首次 dry-run 因中文 raw 文件名使用“11章23-29节”被解析为仅第11章而 fail-closed，随后仅将网站 raw 副本文件名改为 `希伯来书11:23-29` 格式，内容 SHA 不变；第二次 dry-run PASS。正式单篇 publish 完成，slug=`2026-08-23-希伯来书-11-23-29｜摩西的信心之旅`，articleId=`post-669ae7b367ddb8ce`，正文结尾展示术语按现行规则规范为“小组讨论 / 荣耀颂”。NAS 受保护归档已只新增 3 文件，共 778765 bytes。
+
+当时本地验证：291 篇文章 0 缺 articleId；mirror 582 项 0 errors；Knowledge Layer 291 篇 0 errors / 0 warnings；`npm run build -- --force` PASS，333 pages built；`git diff --check` PASS。当时记录的后续 commit/push、Cloudflare 部署与邮件通知现均已完成，见顶部 current-effective override。
+
+## 当前任务状态（2026-08-16，《希伯来书 11:22｜像约瑟一样的信心》讲道整理发布）
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED_ARCHIVED`
+
+已从讲道整理受控流程接收《像约瑟一样的信心》正式英文源与中文定稿；独立 E1 忠实度审核按 2026-08-16 当前治理边界确认 `missing=0 / compressed=0 / mistranslated=0 / needs_confirmation=0`，正式记为 `independently_verified`。source boundary 依据 12/12 页均有实质抽取内容与 E1 全文覆盖关闭；未声称人工视觉看页。
+
+网站侧 `npm run sync` PASS。publication contract v1.1 首轮 dry-run 因 raw 文件夹 `希伯来书11-22` 被解析为错误经文范围而 fail-closed，修正为 `希伯来书11:22`；第二轮因通用标签 `讲道` 被 Tag Pipeline 拒绝，收窄为 `希伯来书、约瑟、信心、苦难、盼望` 后第三轮 PASS。正式 publish、articleId、mirror 580/580、Knowledge Layer 290 篇 0 errors / 0 warnings、Astro build 332 pages 全部 PASS。
+
+内容提交 `3b0acb0674c1f2a77b6be0122f212f80ad21b434` 已 push；Cloudflare `/deployment.json` 确认部署到同一 commit，`builtAt=2026-08-16T00:47:27.614Z`。线上文章 HTTP 200，标题、“从悲伤到恩典”、“耶稣是那位更大的约瑟”三项正文指纹均 PASS。GitHub Actions `Email published posts` run `31918018601` 成功：1 篇 / 2 收件人 / 2 成功 / 0 失败。自动部署等待期间手动 Wrangler fallback 因本机无 `CLOUDFLARE_API_TOKEN` fail-closed，未产生手动部署，随后自动部署正常完成。
+
+NAS 受保护归档已完成：`/Volumes/share/教会讲道/20260816_希伯来书11:22_像约瑟一样的信心_Patrick`，只归档原始 PDF、正式英文源、最终中文稿，共 3 文件 / 802600 bytes，SHA-256 3/3 一致。
+
+---
+
+## 当前任务状态（2026-08-15，《不义的管家》分享文章整理发布）
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
+
+已从 `NAS/分享收件` 通过 manifest-only intake 接收 `43不义的管家.docx`，固定 SHA-256=`f89cc2f61d6dc4dc77e7061ab0735e1f55f2edeafed3c6725da1acee8999a3c2`，移动到讲道整理受控原始资料并完成 immutable snapshot / intake closure PASS。源文档本身为中文，无英译中步骤；正式源稿完整保留原文，中文整理稿只做段落层级、标点、明显技术性文字修正，并按受控 Project Bible 核对路加福音 16:1-13。正文实际从 16:1-8 继续解释到 16:13，因此网站主经文登记为 `路加福音 16:1-13`。
+
+网站侧 `npm run sync` PASS；`website-publication-package/v1.1` plan PASS。首次 dry-run 因网站 raw/source 尚未交接而 fail closed；补齐 `data/raw/分享/20260815_不义的管家_Ronnie_中文.txt` 后，第二次 dry-run 又因旧预发布默认标签 `分享/灵命成长/Ronnie` 被统一 Tag Pipeline 拒绝而 fail closed；契约标签收窄为 `路加福音、管家、忠心、钱财、永恒` 后第三次 dry-run PASS。正式 publish 已生成 processed/post，slug=`2026-08-15-unjust-steward-eternal-faithfulness`，articleId=`post-85e0c86c624b24b8`，publishedAt=`2026-08-15T15:23:53+09:00`，分类=`灵命成长`，作者=`Ronnie`。
+
+本地验证：articleId 检查 289 篇、0 缺失；mirror gate 578 项、0 errors；Knowledge Layer 289 篇、0 errors / 0 warnings；`npm run build -- --force` PASS，331 pages built。分享文章不适用教会讲道 NAS 归档，`archive_status=not_applicable`。内容提交 `2be974a5813009f917fc634814ddbb58e60c50f4` 已成功 push 到 `origin/main`；Cloudflare `/deployment.json` 已确认部署到同一提交，`builtAt=2026-08-15T06:29:04.106Z`。线上文章 HTTP 200，标题、`路加福音 16:1-13` 与“耶稣赞的是精明，不是不义”正文指纹均通过。GitHub Actions `Email published posts` run `31869509140` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`。
+
+---
+
+## 当前任务状态（2026-08-11，《箴言 3:5-6｜VBS2026》讲道整理发布）
+
+状态：`LOCAL_PUBLICATION_PASS_PENDING_GIT_PUSH_DEPLOY_NOTIFY_VERIFY`
+
+已从受控讲道整理流程接收《VBS 2026｜箴言 3:5-6》正式英文源与经独立 E1 忠实度复审 PASS 的中文定稿；PDF source visual review 亦已由用户明确确认 PASS。网站侧 `website-publication-package/v1.1` plan/dry-run 经过两次 fail-closed 修正后通过：先修正 raw 目录经文解析为箴言 3:5-6，再移除通用标签，最终使用精准标签 `箴言、信靠神、信心、惧怕、十字架`。
+
+正式本地导入已生成 `data/processed/整理后的讲道文章/2026-08-10-箴言-3-5-6｜vbs2026.md` 与 `src/content/posts/2026-08-10-箴言-3-5-6｜vbs2026.md`；articleId 已补齐。验证：`npm run sync` PASS；contract dry-run PASS；288 篇文章 0 缺 articleId；mirror 576 项 0 errors；Knowledge Layer 288 篇 0 errors / 0 warnings；Astro build 330 pages PASS。受保护 NAS 归档已完成，只写入原始 PDF、正式英文原稿、最终中文原稿三类文件，共 3 文件 / 466700 bytes。当前只剩 Git commit/push、Cloudflare 线上正文与 deployment identity、首次发布通知验证。
+
+---
+
+## 当前任务状态（2026-08-06，《骆驼穿过针眼是什么意思》分享整理发布）
+
+状态：`COMPLETE_COMMITTED_PUSHED_DEPLOYED_NOTIFIED`
+
+已从 `NAS/分享收件` 接收英文 PDF `Camel through the Eye of a Needle.pdf`，完成 SHA 校验入库、英文内容提取、中文忠实整理和网站发布。文章以马太福音 19:23-26 为主经文，完整保留年轻财主的上下文、“针眼之门”与字面针眼两种解释、财富对人的属灵拦阻、救恩唯独出于神的恩典，以及知足和积攒天上财宝的应用。原稿末尾将箴言 30:8-9 误标为箴言 3:8-9，整理稿已按实际经文校正。
+
+生成文件包括原始 PDF、中文 raw、processed mirror 和正式 post。正式文章 slug 为 `2026-08-06-camel-through-eye-of-needle`，`articleId=post-fa05168ade9ea9b8`，作者 Ronnie，分类 `灵命成长`，标签为 `马太福音、救恩、财富、倚靠神、知足`。发布后发现导入器会压缩多行 blockquote 并把独立问句误识别为标题，已对本篇 processed/post 做最小格式修正并保持两处正文一致。
+
+验证：`npm run sync` 通过；分享收件只读检查确认 1 个文件；dry-run 通过；正式 publish 成功；`node scripts/add_article_ids.mjs` 检查 287 篇、0 个缺失；`python3 scripts/check_content_mirrors.py` 检查 574 项、0 errors；`npm run check:knowledge` 为 287 篇、0 errors、0 warnings；首次格式修正后构建出现本地内容缓存重复 ID 警告，随后执行 `npm run build -- --force` 清除 data store，329 pages 构建通过且警告消失。内容提交 `343087002371441dabfb7f74aefb6070369f26ad` 已推送到 `origin/main`；Cloudflare `/deployment.json` 已确认部署到该提交，`builtAt=2026-08-06T08:23:26.944Z`。GitHub Actions `Email published posts` run `31084621309` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`、`skippedSlugs=[]`。本地手动 Wrangler Pages 部署因未配置 `CLOUDFLARE_API_TOKEN` 失败，但 GitHub/Cloudflare 自动部署随后正常完成，不影响生产结果。
+
+---
+
+## 当前任务状态（2026-08-02，统一 Tag Pipeline 最终关闭）
+
+状态：`COMPLETE_INDEPENDENT_REVIEW_PASS_COMMITTED_PUSHED`
+
+第一次 P1 修复后独立复审报告 `tasks/current/content-workflow-tag-pipeline-construction/INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_P1_REMEDIATION.md` 再次裁决 `FAIL`：alias map 已正确，但权威 Tag Dictionary 遗漏 `First John`。
+
+已完成第二次最小同类修复：所有编号书卷在单一权威 JSON 中补入 First/Second/Third 英文序数全称；新增 First/Second/Third John、First Peter 和中英 scripture/人工别名交叉去重/evidence 跨运行时 fixtures。
+
+定向验证：Python 21 tests PASS；Browser fixtures 27/27 PASS；`First John` 现规范化为 `约翰一书`，scripture 去重保留 scripture evidence。完整 Admin、Knowledge、Astro build、语法、diff 与受保护范围验证见任务 `verification.md`。
+
+第二次修复后独立报告 `INDEPENDENT_SECURITY_CONTRACT_REVIEW_AFTER_SECOND_P1_REMEDIATION.md` 已正式裁决 `PASS`：P0/P1/P2 均无，无 P3 实现缺陷；Python 21 tests、Browser 27/27、Admin 0 errors、Knowledge 286 posts 0/0、Astro 328 pages 和 17/17 编号书卷矩阵均通过。
+
+本轮未修改历史文章、Knowledge Layer、publication contract、RonnieAutomation、n8n 或 NAS；未部署、未发布。关闭前 `git fetch origin` 后 `HEAD...origin/main` 为 `0 0`；闭环主提交 `2fab73d fix: close tag pipeline alias remediation` 已成功推送到 `origin/main`。唯一剩余建议是未来将全 17 卷矩阵固化为持久 fixture，不影响本次 `PASS`。
+
+---
+
+## 当前任务状态（2026-08-02，统一 Tag Pipeline P1 定向修复）
+
+状态：`TARGETED_REMEDIATION_COMPLETE_PENDING_NEW_INDEPENDENT_REVIEW`
+
+独立安全与合同复审报告 `tasks/current/content-workflow-tag-pipeline-construction/INDEPENDENT_SECURITY_CONTRACT_REVIEW.md` 正式裁决 `FAIL`：Python 与 Browser 人工 alias map 遗漏 `books[*].aliases`，使 `1 John` 等书卷别名原样写入。
+
+已完成最小定向修复：两端统一登记书卷 canonical 与 aliases；新增 `1 John`、`John`、`约一` 和 `Genesis + scripture` 去重跨运行时 fixtures。原失败探针现在返回 `['信心', '约翰一书', '恩典']`。
+
+验证：Python 21 tests PASS；Browser fixtures 21/21；Admin Save Flow 0 errors；Knowledge Layer 286 篇、0 errors、0 warnings；Astro build PASS；Python/Node 语法与 `git diff --check` PASS；受保护范围 diff 无输出。
+
+本轮未修改历史文章、Knowledge Layer、规则 JSON、publication contract、RonnieAutomation、n8n 或 NAS；未 commit、未 push、未部署、未发布。下一步只能由新的完全独立会话执行修复后复审。
+
+---
+
+## 当前任务状态（2026-08-02，统一 Tag Pipeline 建设）
+
+状态：`CONSTRUCTION_COMMITTED_PUSHED_PENDING_INDEPENDENT_REVIEW`
+
+已按 `tasks/current/content-workflow-tag-pipeline-construction/task.md` 完成统一标签架构设计和建设。新增单一 JSON 权威规则源、Python/浏览器双运行时，并接入分享、讲道、Custom Admin 草稿/发布和备用 Decap preSave；讲道不再默认输出 `讲道`、`教会讲道` 或讲员姓名。CLI/Admin 人工标签继续保留，统一执行书卷、确定性规则、别名、去重、generic、歧义、字符、context-only 和 2–6 fail-closed Gate。
+
+接口边界：未修改 `website-publication-package/v1.1`，`metadata.tags` 继续兼容可选；未收紧全局 content schema，未迁移历史文章。未修改 posts、raw、processed、Knowledge Layer、RonnieAutomation、n8n 或 NAS。
+
+验证：`python3 -m unittest discover -s scripts/tests` 为 21 tests PASS；`npm run check:tags` 为 17/17；`npm run check:admin-save` 为 0 errors；`npm run check:knowledge` 为 286 篇、0 errors、0 warnings；`npm run build` PASS；Python/Node 语法和 `git diff --check` PASS。
+
+用户在建设完成后明确批准 commit 和 push。实现与任务资料提交为 `d47bf6e`（`feat: unify content tag pipeline`），已成功推送到 `origin/main`。未进行真实发布、部署、通知、NAS 或其它生产副作用。完整设计、文件清单、验证、剩余风险和复审攻击面见 `tasks/current/content-workflow-tag-pipeline-construction/`。
+
+下一步：停止建设会话，仅由新的、完全独立会话执行建设后复审。不得自动进入修复、AI 标签、历史标签迁移或生产发布。
+
+---
+
+## 当前任务状态（2026-08-02，Grayson《信仰的殿堂：雅各》整理发布）
+
+已从 NAS 讲道收件读取 8 页双语 PDF《Final - Hebrews 11_21 JACOB-2.pdf》，按完整讲章模式整理 Grayson 的《希伯来书 11:21、39-40｜信仰的殿堂：雅各》。已保留雅各从抓取到安息的生命脉络、信心的姿态/实践/眼光/悖论四个主点、Bryan Johnson、高山右近和阿拉斯加狗拉雪橇的全部例证、创世记 48:12-20 的交叉祝福、福音邀请、两道分组问题和结尾祷告邀请，没有摘要化。原始 PDF、英文提取稿、中文定稿与 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Grayson，日期为 2026-08-02。
+
+验证结果：npm run check:knowledge 通过，286 篇、0 错误、0 警告；npm run build 通过，328 个页面构建完成。正文与发布记录提交为 f62ff19；push 与线上部署结果将在完成后补记。
+
+---
+
+## 当前任务状态（2026-08-01，Search Console robots.txt 屏蔽收敛）
+
+状态：`done`
+
+已对 Search Console 列出的 27 个“已被 robots.txt 屏蔽” URL 完成分类与修复：23 个 `focus` URL 中 22 个对应正式文章、已按既有 middleware 301，`2026-06-12-test` 为已删除测试文章并新增 410；2 个纯 `category` URL 按既有规则 301 到稳定分类页；`/search/?q={search_term_string}` 解除 robots 屏蔽以读取 `noindex,follow`，并从 JSON-LD 移除已停用的 `SearchAction`；`/api/subscribe` 继续屏蔽且不索引，属预期行为。
+
+修改文件：`assets/robots.txt`、`functions/_middleware.js`、`src/lib/knowledge/schema.ts`、`src/layouts/BaseLayout.astro`、`scripts/test-search-console-middleware.mjs`、`scripts/check-knowledge-layer.mjs`、`scripts/audit_seo_urls.mjs`、`SEO.md`、`DEPLOY.md`、`STATUS.md`、`docs/tasks/current.md`、`docs/tasks/search-console-robots-blocked-remediation-2026-08.md`。
+
+验证：`npm run sync` 通过；Search Console middleware 测试通过；`node --check functions/_middleware.js` 通过；`npm run check:knowledge` 为 285 篇、0 errors、0 warnings；`npm run build -- --force` 通过，327 pages built；生成 HTML 不含 `SearchAction` / `search_term_string`；robots.txt 仅保留 `/admin/` 和 `/api/` 屏蔽；23 个 `focus` slug 只有预期删除的 `2026-06-12-test` 无生成页；`git diff --check` 通过。
+
+部署：实现提交 `7b78d7e04a0e85f25cb60fc6ad07be5ed8e036be` 已 push 到 `origin/main`；Cloudflare Pages `/deployment.json` 确认线上 commit 与该提交一致，`builtAt=2026-08-01T14:01:02.084Z`。本地外部访问审批器误拒绝了最后的批量线上 URL 抽查，但线上部署身份与已通过完整验收的本地生成物一致。
+
+未完成：需由用户在 Search Console 启动“已被 robots.txt 屏蔽”验证，并用“测试实际网址”补齐 Googlebot 视角的线上证据。
+
+## 当前任务状态（2026-08-01，Search Console canonical alternate 收敛修复）
+
+状态：`done`
+
+已完成 Search Console 列出的 36 个 canonical alternate URL 的本地核查与修复。既有 `www` 与旧 `focus` URL 的 301 已确认正常；对已于 2026-06-14 删除的《马太福音 21:19｜为什么耶稣要咒诅无花果树？》，其详情 URL 和旧 `focus` URL 现返回 HTTP 410，不再以 HTTP 200 返回首页。新增自定义 404 页保证其他未知路径返回真正的 HTTP 404。robots.txt 已解除 `/posts/?*` 屏蔽，以便 Googlebot 重新抓取并读取 301/410 信号。
+
+修改文件：
+
+- `functions/_middleware.js`
+- `assets/robots.txt`
+- `scripts/test-search-console-middleware.mjs`
+- `src/pages/404.astro`
+- `SEO.md`
+- `STATUS.md`
+- `docs/tasks/current.md`
+
+验证结果：`npm run sync` 通过且远程已是最新；Search Console middleware 测试通过；middleware 语法检查通过；`npm run build -- --force` 通过，327 pages built；Astro 本地预览中未知路径确认返回 HTTP 404；生成 sitemap 不包含 404 或已删除文章；Search Console 列出的 34 个 `focus` slug 中 33 个均存在对应生成文章，唯一缺失项为预期返回 410 的已删除无花果树文章；`git diff --check` 通过。
+
+部署结果：实现提交 `15b3dc957f21fb8e7bc692fc0d747fefe6e53e46` 已 push 到 `origin/main`，Cloudflare Pages 已自动部署到该提交。线上验收确认首页/RSS 200、`www/about/` 301、普通 `focus` URL 301、已删除文章详情与 `focus` URL 410、未知路径 404 + `noindex,follow` + 无 canonical，robots.txt 已允许抓取 `/posts/?*`，sitemap 仍只包含正式 URL。
+
+未完成：需由用户在 Google Search Console 重新提交 sitemap，对正式文章请求编入索引，并在“备用网页（有适当的规范标记）”报告中启动验证。
+
+文档闭环：长期判定规则与 Search Console 固定操作已写入 `SEO.md`，部署后 301/404/410/robots/sitemap 验收已写入 `DEPLOY.md`，问题背景、实现结论和生产证据已写入 `docs/tasks/search-console-canonical-indexing-phase2.md`。本轮只修改文档，没有改动网站源码或生产配置；复用本次功能提交已通过的 327 pages 构建和线上验收，不重复触发构建。
+
+## 当前任务状态（2026-07-26，Nathan《没有道路时的信心》整理发布）
+
+已从 NAS 讲道收件读取 13 页双语 PDF《Heb. 11 Abraham 26-07-26 (side-by-side).pdf》，按完整讲章模式整理 Nathan 的《希伯来书 11:8-11、17-19｜没有道路时的信心》。已保留亚伯拉罕蒙召、等候以撒、献以撒三个主要事件，南加州迁往中西部的个人例证、立约仪式说明、现实需要应用、福音邀请、教会劝勉和完整结束祷告均已译出，没有摘要化。原始 PDF、英文提取稿、中文定稿与 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Nathan，日期为 2026-07-26。
+
+验证结果：npm run check:knowledge 通过，285 篇、0 错误、0 警告；npm run build 通过，326 个页面构建完成。正文与发布记录提交为 14c73d4；push 与线上部署结果将在完成后补记。
+
+---
+
+> 历史任务记录已按月份归档，参见：
+> - [2026年7月任务归档](archive/2026-07.md)
+
+以下仅保留最近 5 条已完成记录以及仍未完成的任务，新的任务开始时应在此处登记目标、范围、状态和下一步；正式状态值遵循 `../../../workspace-control/TASK_STATUS_POLICY.md`。
+
+## 当前任务状态（2026-07-23，我们真能遵行基督的命令吗 分享文章整理发布）
+
+状态：`done`
+
+已完成《我们真能遵行基督的命令吗？》本地整理、网站导入、构建、push、Cloudflare 部署、线上正文验证和邮件发送。文章 `articleId=post-445e95aa051161aa`，slug 为 `2026-07-23-obey-christ-commands`，网站提交 `78f569bce58e9d44efb7a6be47237c6a1f7287f8` 已推送到 `origin/main`。
+
+验证结果：`npm run sync` 通过；`website-publication-package/v1.1` 只读消费校验通过；`python3 scripts/content_workflow.py publish share ... --dry-run` 通过；`node scripts/add_article_ids.mjs --check` 为 284 篇、0 缺失；`python3 scripts/check_content_mirrors.py` 通过，568 项、0 errors；`node scripts/check-knowledge-layer.mjs` 为 284 篇、0 error、0 warning；`npm run build` 通过，325 pages。
+
+线上与通知：Cloudflare `/deployment.json` 已更新为 `78f569bce58e9d44efb7a6be47237c6a1f7287f8`，builtAt=`2026-07-23T06:49:10.179Z`；线上页面标题、canonical、经文、描述和正文指纹均通过。GitHub Actions `Email published posts` run `29986161978` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`、`skippedSlugs=[]`。
+
+备注：本轮还补齐了上一批《工作与安息的七个圣经真理》processed mirror 缺失的 `articleId=post-8a24724dfa8dc662`，使 mirror gate 恢复通过。
+
+## 当前任务状态（2026-07-23，工作与安息分享文章整理发布）
+
+已按 RonnieCross V3 统合后的 manifest-only intake 和 `website-publication-package/v1.1` 受控消费流程，完成《马太福音 11:28-30｜工作与安息的七个圣经真理》整理发布。
+
+输入 PDF 已在 `讲道整理` 项目完成英文抽取、中文逐项整理和忠实度检查；网站新增 raw、processed、post 与本批契约消费记录。文章 `articleId=post-8a24724dfa8dc662`，内容提交 `aa6538a` 已普通 push 到 `origin/main`。
+
+验证结果：Knowledge Layer 283 篇、0 error、0 warning；Python 单测 12 项通过；Astro 强制构建 324 pages。正式页面 HTTP 200，标题以及“在耶稣里可以找到安息”“神的子民将来还有安息”正文指纹均通过。GitHub Actions `Email published posts` run `29980947391` 成功，`postCount=1`、`recipientCount=3`、`successCount=3`、`failedCount=0`。分享文章不适用教会讲道 NAS 归档，`archive_status=not_applicable`。
+
+---
+
+## 当前任务状态（2026-07-22，Psalm 7 V2 生产验收发布）
+
+已完成《诗篇 7:1-17｜大卫为何称自己为义》的真实生产发布和 V2 完整验收。网站 `main` 已推送到 `e09641e79d885db971e5f569c3f2eacf43eea5d7`，Cloudflare deployment 与该 commit 一致；线上页面 HTTP 200、最终 URL 和正文指纹均通过。首次邮件 workflow `29927545169` 为 1 篇、3 名收件人、3 次成功、0 次失败；幂等 workflow `29928285307` 为 0 篇、0 收件人并安全跳过已发布 slug。知识检查为 282 篇 0 error/0 warning，12 项单测通过，构建 323 pages。
+
+输入 PDF 文件名指向 Thessalonica，但正文证据实际为 Psalm 7，元数据已按正文确定。验收结束后已补齐正常 intake move：源文件通过 manifest `--apply` 从 `NAS/分享收件` 移入本批 `讲道整理/原始资料/share/`，分享收件已清空，目标与 immutable snapshot SHA 一致。
+
+---
+
+## 当前任务状态（2026-07-21，分享收件帖撒罗尼迦 PDF 拆分发布）
+
+已按讲道整理流程重新处理 `NAS/分享收件/What Is the Significance of Thessalonica in the Bible.pdf`。复核确认 PDF 抽取源稿实际包含三篇文章，已拆分发布为三篇 `灵命成长` 分享文章：
+
+```text
+使徒行传 17:1-9｜帖撒罗尼迦：在逼迫中持守福音的教会
+帖撒罗尼迦前书 5:17｜不住地祷告是什么意思
+帖撒罗尼迦前书 4:16｜在基督里死了的人必先复活是什么意思
+```
+
+本轮先提交既有网站发布契约治理改动 `4e98602 feat: add publication contract workflow`，再执行 `npm run sync`，随后只发布本次三篇分享文章。为保证干净 slug，`scripts/import_shares.py` 补充帖撒罗尼迦前后书经卷识别、三篇 metadata override，并清洗源稿中已有 Markdown 标题导致的重复 `##`。三篇均由 `content_workflow.py publish share --source-file ...` 生成 raw/processed/posts，`node scripts/add_article_ids.mjs` 已补 3 个 articleId。
+
+验证结果：
+
+```text
+npm run sync：通过，Current branch main is up to date
+三篇 dry-run：通过，标题/经文/slug 均正确
+正式 publish share：三篇均 Imported shares: 1
+node scripts/add_article_ids.mjs：处理 281 篇，补充 3 篇 articleId
+npm run check:knowledge：281 篇，0 错误，0 警告
+python3 -m unittest discover -s scripts/tests：12 tests OK
+npm run build -- --force：322 page(s) built，Build Complete，无 duplicate id warning
+git push origin main：通过，远端 main=c71740cd13ca769c5727bca6a1f56d9e7587960d
+Cloudflare Pages：/deployment.json 已部署到 c71740cd13ca769c5727bca6a1f56d9e7587960d，builtAt=2026-07-21T14:10:51.571Z
+线上验证：三篇 URL 均返回新标题、经文与正文关键词
+Email published posts：GitHub Actions run 29837804445 成功，postCount=3，recipientCount=3，successCount=3，failedCount=0
+```
+
+未完成事项：无。注意本轮新增三篇文章后，网站自动邮件提醒流程已正常发送新文章提醒。
+
+---
+
+## 当前任务状态（2026-07-20，三接口 v1.1 治理闭环）
+
+RonnieCross 三个跨项目接口已经完成 v1.1 治理闭环：`translation-candidate-package/v1.1`、`website-publication-package/v1.1`、`website-publication-result/v1.1`。三个接口的 v1.1 状态均为 `contract_stable`；v1.0 仍保留为 `legacy_compatible`，只用于读取既有记录，不再作为新产物默认版本。
+
+三套不同真实文章已完成全接口 v1.1 连续独立验收，验收计数为 3/3：《记念耶稣》、《为什么受洗》、《耶和华是我的牧者》。个人网页项目已接入发布契约只读验证、受控消费入口和发布结果原子写回。网站正式写入仍必须显式授权；`contract_stable` 不等于自动发布。
+
+C7–C9 恢复演练通过：C7 确认结果写入失败不会留下正式结果文件；C8 确认无效契约会在调用导入器前终止；C9 确认模拟部分网站写入失败后可以恢复原文件。
+
+本次没有执行网站构建、Git 提交、Git push、Cloudflare 部署、邮件发送、NAS 写入或正式网站文章修改。
+
+相关权威状态文件：`workspace-control/STATUS.md`、`workspace-control/INTERFACE_STABLE_ASSESSMENT.md`、`workspace-control/INTERFACE_REGISTRY.md`。
+
+---
+
+## 当前任务状态（2026-07-19，Akira《信仰的殿堂：挪亚》整理发布）
+
+已从 NAS 讲道收件读取一份无扩展名 DOCX 双语讲稿，按完整讲章模式整理 Akira 的《希伯来书 11:1-7｜信仰的殿堂：挪亚》。已保留讲章三个主要论点、全部经文与交叉结构、福音邀请、两道分组分享问题、民数记 6:24-26 与哥林多后书 13:14 的祝祷，没有将正文摘要化。原始 DOCX、英文提取稿、中文定稿和 metadata 已进入 raw，中文定稿已归档 NAS，并生成 processed 与正式 post。文章使用 6 个精准 SEO/GEO 标签，作者为 Akira，日期为 2026-07-19。
+
+验证结果：npm run check:knowledge 通过，276 篇、0 错误、0 警告；npm run build 通过，316 个页面构建完成。正文与发布记录提交为 701b698；push 与线上部署结果将在完成后补记。
+
+---
+
+## 当前任务状态（2026-07-18，分享文章 SEO 标签工作流修复）
+
+已修复分享文章发布时使用通用标签的问题。分享发布现在必须提供精准主题标签，并自动补入经文书卷名、执行数量限制、去重和通用标签拦截。本次也已补正《该隐与挪得之地》的 processed 与正式文章标签，并同步更新 SEO 和发布流程文档。相关语法检查、标签测试、网站构建、知识层检查和后台保存流程检查均通过。
+
+---
+
+## 当前任务状态（2026-07-18，真实发布时间自动记录）
+
+已补齐 publishedAt 的两个发布入口：Admin 新建文章直接发布或草稿首次转为公开时自动写入当前完整时间，后续编辑保留原值；import_shares.py 与 import_sermons.py 生成新正式文章时自动写入日本时区发布时间。旧文章继续在缺少 publishedAt 时回退到 date。已通过 Admin 保存流程检查、Python 语法检查和 315 页构建验证。

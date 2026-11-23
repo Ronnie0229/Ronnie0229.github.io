@@ -1,0 +1,193 @@
+{
+  "archive_label": "realtime-staging-test",
+  "source_worktree": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-realtime-staging-test-20261108",
+  "source_branch": "task/realtime-staging-test-isolation-20261108",
+  "source_head": "92832dd47466a05205c9c941b3c1d0687d15d939",
+  "copied_paths": [
+    "docs/tasks/current.md",
+    "docs/tasks/realtime-staging-test-20261029"
+  ],
+  "files": [
+    {
+      "path": "docs/tasks/current.md",
+      "sha256": "225e3e6082bf946b93bf518de0397cb2074afc5967d6fd96ec86378f716d97fb"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/.DS_Store",
+      "sha256": "b0ddc9482c591fea3416ff56a4bc23bbf58621b682377792318a3335db84e271"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/CHUNK01_INDEPENDENT_AUDIT_20261107.md",
+      "sha256": "ebb30c6de70158029a863027c102a8f50c29638410a50eca2031e0da78bcaaf9"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/DELIVERY_NEXT_ACTION.md",
+      "sha256": "3bfea666a372eab7d47df8cfcb66034d5da1df95bbc5ca64db706471f8829398"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/ENGLISH_SOURCE_INDEPENDENT_REVIEW.md",
+      "sha256": "0eecf7bc7c47ba10cf9a6f46bd166bcad372e1d0081efe9058ac84e121f97391"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES PROBE WITH SPACES.txt",
+      "sha256": "136afa8ff4ae63eee8281e8098b7bf8f25353fb8ecd5ea402a3a93fad77cda7a"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_GEMMA4_POST_REMEDIATION_TRAINING_TASK.md",
+      "sha256": "19a081fabf9f2d1dd5eb2a806d1a80d3eee013a5696228f6d99a9792244bfe1e"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_GEMMA4_RETEST01_INDEPENDENT_AUDIT.md",
+      "sha256": "30c81ed7142fa7ac61f8ce770b59668bfcf4aac6c89edd6b3df1370103a082ab"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_PROBE_NO_SPACES.txt",
+      "sha256": "136afa8ff4ae63eee8281e8098b7bf8f25353fb8ecd5ea402a3a93fad77cda7a"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_RETEST02_MANIFEST_INDEPENDENT_AUDIT.md",
+      "sha256": "03582cd3cca747dc5cac9d8a5f9fc421962b304dfd0486e8d137eae68d077779"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_RETEST02_TRANSLATION_OWNER_GOVERNED_REQUEST.md",
+      "sha256": "3b620e1aa0dcdb4a74a5688842d685393d476abd58ad986b00c5dda535a742dc"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/HERMES_WRITE_PROBE.txt",
+      "sha256": "16178602f51c3684771ef8695561970adef96b3af7e3b748d94477156373b218"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/How Do We Grow in the Grace and Knowledge of Christ.zh.candidate.md",
+      "sha256": "27a7a12e30bddc576649a3fee608102bca3a7cffa3eee94413f04ab877dcfb9b"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/How Do We Grow in the Grace and Knowledge of Christ.zh.hermes-probe.txt",
+      "sha256": "ce7d0a9ecfe2a945d0a6b006e7a84c72583bbf3c6221c8f9e7c746b2d1ab9d8a"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/How Do We Grow in the Grace and Knowledge of Christ.zh.probe.txt",
+      "sha256": "28c960236a5c607f264486a8339bd41af78bb21a15b9002abba830f4fddfd9f4"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/NEXT_SESSION_HANDOFF_20261105.md",
+      "sha256": "3594606d4dfa50a5c71502fe55e5518dbfccfb2634c08de7e0578f8712dddd9c"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/NEXT_TRAINING_TASK.md",
+      "sha256": "784216b1ab7fef69e3d6f6566f4fc37537ef6bdc11340f56f37d166ba0837e11"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/OWNER_CHAT_TRANSLATION_HERMES_WRITE_WORKFLOW_20261105.md",
+      "sha256": "47b88c9cb261347a2a99de264a4a31e415751880c1cd0f9b396a9399cf232948"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/OWNER_TAKEOVER_TRANSLATION_CANDIDATE_20261115.md",
+      "sha256": "c2bd8e31790a9fae08003c8faf0768a71a7e6be77e8c92a720c599477fbc992c"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/OWNER_TRUSTED_INGRESS_THREE_CHUNK_RESTART_20261105.md",
+      "sha256": "133ac75a1b5bb1f5823c52235f3bf7ca0a1f17c4b72278e01f8b35267b2d5aea"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/PROBE WITH SPACES.txt",
+      "sha256": "28c960236a5c607f264486a8339bd41af78bb21a15b9002abba830f4fddfd9f4"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/PROBE_NO_SPACES.txt",
+      "sha256": "28c960236a5c607f264486a8339bd41af78bb21a15b9002abba830f4fddfd9f4"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/SOURCE_ADMISSION_DECISION.md",
+      "sha256": "d84149bb144ade64071e7606e83bc6b2d270340e8b26a658fd5fddc60c7ae66b"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/STEP18_RESULT.md",
+      "sha256": "cede75493956ca1f0acc51c98a3dc638b0a740fea593a2edf6fb16561ff22d37"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/STEP20_DELIVERY_AUDIT_LATEST.md",
+      "sha256": "e4bc4c074073221f320e0fdf24d6bafdf1a0516bfd8cf3b1ee2dbf9e64555c23"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/STEP21_REVIEW_HANDOFF.md",
+      "sha256": "fc25265f68b097f47b71595c2282b77e380c0ce61d68726990a4bd4c0fc28b67"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/TRAINING_TERMINATION_AND_OWNER_TAKEOVER_20261115.md",
+      "sha256": "ba2395232d05e9006379098e3c338d37079262b124a37edf80f495e4b566d844"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_01_zh.txt",
+      "sha256": "55732a5c1bb2d33918e2440868418d3abfe6cb79f84091f5748ab8567f643424"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_01_zh_retest.txt",
+      "sha256": "39d5031423cc490710a1d2d10e322d65414ff5a34203e2d9c9c6977a51bc6a28"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_01_zh_trusted_01.json",
+      "sha256": "428da9cc474397e946a903e86c58d0f0203e9a02b3c6fb11a060f8803f5e39b6"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_01_zh_trusted_01.txt",
+      "sha256": "39d5031423cc490710a1d2d10e322d65414ff5a34203e2d9c9c6977a51bc6a28"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_02_zh.txt",
+      "sha256": "b934aebca9bf72e35f9b862ac48ae8b9d78c50cca91cb8a146837553635862c6"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_02_zh_retest.txt",
+      "sha256": "966b25c59d061b2dada18722d13b010fccc1b4bae3ed232566fd7a9efd8f53b0"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_03_zh.txt",
+      "sha256": "c1881a8ce5a3564cfc17fd424b44cfacb788bd51b4391a6956e0c24272793eda"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_03_zh_retest.txt",
+      "sha256": "8d0629ed5b17a2cf76a296ef57d4b0df11226980ad00e407c39648a09ae02aaf"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/chunk_03_zh_retest_02.txt",
+      "sha256": "032e634f4a1bba700be6b1dcbb4c962cb8fefd71344e42841536dfb3ceac05f8"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/hermes-gemma4-retest-01/STEP21_REVIEW_HANDOFF.md",
+      "sha256": "49eeaa0b06c53c4de8e2119a6ad7381fcacefda804dbfef77002ea828265a184"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/hermes-gemma4-retest-01/execution-evidence.md",
+      "sha256": "ec99530b4324e2a35de3c00e615d5d46ece2bfb926e8eca69051318f7a49ecdd"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/hermes-gemma4-retest-01/translation.zh.candidate.md",
+      "sha256": "2acdeeac663c9161e6db720326a7c96f852e241179ac4898400ad6bb65a2335b"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/hermes-gemma4-retest-02/manifest.json",
+      "sha256": "017df95b4319130689bad4a4452454246a991099494ab8d154d41d54836e56c3"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/manifest.json",
+      "sha256": "1464fb0eb9d2b303c49a697eb5f839def1618faccc869678fb58979f2f916e20"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-01.png",
+      "sha256": "27c344eb4dddb029f249c69f719607a7dc50a3c0f967d70e675df3ab5b276236"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-02.png",
+      "sha256": "ea10f102bcdb3d8fe8decb59a1ed812aa0094e53f87adab567145d6c27b95a07"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-03.png",
+      "sha256": "50d5ee511b76d73195f7a3b4a4fd5771cdd3edd31352dabdd3c003e2d9eaf20f"
+    },
+    {
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-04.png",
+      "sha256": "c48dc9fb20d26fe53387067c590229ef995ce489bc7e45b1e10f47d5dde4c599"
+    }
+  ],
+  "file_count": 45
+}

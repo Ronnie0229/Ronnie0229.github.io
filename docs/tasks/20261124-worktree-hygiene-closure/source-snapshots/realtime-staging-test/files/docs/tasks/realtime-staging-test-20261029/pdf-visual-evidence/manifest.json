@@ -1,0 +1,33 @@
+{
+  "pdf_sha256": "7e98a87c3a359ec4abb4f270b93ed669c692ae4582d3a57e7fd4c590cd94c0ab",
+  "pages": [
+    {
+      "page": 1,
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-01.png",
+      "width": 1240,
+      "height": 1754,
+      "sha256": "27c344eb4dddb029f249c69f719607a7dc50a3c0f967d70e675df3ab5b276236"
+    },
+    {
+      "page": 2,
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-02.png",
+      "width": 1240,
+      "height": 1754,
+      "sha256": "ea10f102bcdb3d8fe8decb59a1ed812aa0094e53f87adab567145d6c27b95a07"
+    },
+    {
+      "page": 3,
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-03.png",
+      "width": 1240,
+      "height": 1754,
+      "sha256": "50d5ee511b76d73195f7a3b4a4fd5771cdd3edd31352dabdd3c003e2d9eaf20f"
+    },
+    {
+      "page": 4,
+      "path": "docs/tasks/realtime-staging-test-20261029/pdf-visual-evidence/page-04.png",
+      "width": 1240,
+      "height": 1754,
+      "sha256": "c48dc9fb20d26fe53387067c590229ef995ce489bc7e45b1e10f47d5dde4c599"
+    }
+  ]
+}

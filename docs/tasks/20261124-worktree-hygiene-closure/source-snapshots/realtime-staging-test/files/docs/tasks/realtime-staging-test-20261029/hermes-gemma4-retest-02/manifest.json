@@ -1,0 +1,28 @@
+{
+  "source_file": "data/raw/\u5206\u4eab/How Do We Grow in the Grace and Knowledge of Christ.en.txt",
+  "source_sha256": "50f1db48355d355608deb32f39b948ed7548ed3cd80912df6576be73bcd23b80",
+  "total_lines": 126,
+  "chunks": [
+    {
+      "id": "chunk-01",
+      "start_line": 1,
+      "end_line": 32,
+      "char_count": 2067,
+      "line_count": 32
+    },
+    {
+      "id": "chunk-02",
+      "start_line": 33,
+      "end_line": 75,
+      "char_count": 2624,
+      "line_count": 43
+    },
+    {
+      "id": "chunk-03",
+      "start_line": 76,
+      "end_line": 126,
+      "char_count": 3240,
+      "line_count": 51
+    }
+  ]
+}

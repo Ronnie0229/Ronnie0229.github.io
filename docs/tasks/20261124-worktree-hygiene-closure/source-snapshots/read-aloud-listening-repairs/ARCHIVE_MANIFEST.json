@@ -1,0 +1,28 @@
+{
+  "archive_label": "read-aloud-listening-repairs",
+  "source_worktree": "/Volumes/DevSSD/RonnieWork/RonnieCross/个人网页项目-read-aloud-listening-repairs-20261108",
+  "source_branch": "task/read-aloud-listening-repairs-isolation-20261108",
+  "source_head": "92832dd47466a05205c9c941b3c1d0687d15d939",
+  "copied_paths": [
+    "docs/tasks/historical-read-aloud-listening-repairs-20261019"
+  ],
+  "files": [
+    {
+      "path": "docs/tasks/historical-read-aloud-listening-repairs-20261019/CHUNK_MAPPING_REVIEW.md",
+      "sha256": "3f32648d63a12d049aa2bf122b2028fed37842162211d0cc3ef078e2f1b30aa6"
+    },
+    {
+      "path": "docs/tasks/historical-read-aloud-listening-repairs-20261019/RECEIPT_ACOUSTIC_CHUNK_MAPPING_18.json",
+      "sha256": "c24239a9e732a8aaf896b2279275a2ae7c4573a9a9cd1ede0e3ea072431db5df"
+    },
+    {
+      "path": "docs/tasks/historical-read-aloud-listening-repairs-20261019/RESULT.md",
+      "sha256": "ef6c72ca3c4ef90f87886d21d43792f0baff641dbbf8f09b4df38c9e3da61655"
+    },
+    {
+      "path": "docs/tasks/historical-read-aloud-listening-repairs-20261019/SECOND_POST_TARGETED_REPAIR_PILOT.json",
+      "sha256": "95f5a49eb38d14f15e7c78907e92d92cc4484ec35e9abba531ccd9971a8d02c9"
+    }
+  ],
+  "file_count": 4
+}

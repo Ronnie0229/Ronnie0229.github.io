@@ -1,5 +1,12 @@
 # 当前任务
 
+## 2026-11-24｜Worktree hygiene closure（ARCHIVE_COMPLETE，待本地 checkpoint 与 retirement）
+
+- 已归档 realtime-staging-test 与 read-aloud-listening-repairs 两个工作树的 49 个文件；SHA-256 回读全部 PASS。
+- 任务记录：`docs/tasks/20261124-worktree-hygiene-closure/`。
+- 用户已授权本地 checkpoint 与退休这两个 exact worktree；保留新文章自动化工作树及所有本地分支；禁止 push。
+
+
 ## 2026-11-21｜分享文章《神如何看待我们的善行？》已发布并完成通知（RELEASE_CLOSED）
 
 - Bible-v2 独立忠实度审核 39/39 Complete、0 material finding，状态机正式接收；CUVMPS Rv2 Project Bible gate 25/25 引用、15/15 直接引语匹配。
